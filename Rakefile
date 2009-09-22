@@ -30,6 +30,9 @@ Rspec::Core::RakeTask.new(:rcov) do |spec|
   spec.rcov_opts = %[--exclude "core,expectations,gems/*,spec/resources,spec/spec,spec/spec_helper.rb,db/*,/Library/Ruby/*,config/*" --text-summary  --sort coverage]
 end
 
+task :clobber do
+  rm_rf 'pkg'
+end
 
 task :default => :spec
 
