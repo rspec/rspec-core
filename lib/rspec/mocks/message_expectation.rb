@@ -28,6 +28,7 @@ module Rspec
         @failed_fast = nil
         @args_to_yield_were_cloned = false
         @return_block = implementation
+        @eval_context = nil
       end
       
       def build_child(expected_from, method_block, expected_received_count, opts={})
@@ -80,10 +81,17 @@ module Rspec
         @symbol_to_throw = symbol
       end
       
-      def and_yield(*args)
+      def and_yield(*args, &block)
         if @args_to_yield_were_cloned
           @args_to_yield.clear
           @args_to_yield_were_cloned = false
+        end
+        
+        if block
+          require 'rspec/core/extensions/instance_exec'
+          @eval_context = Object.new
+          @eval_context.extend Rspec::Core::InstanceExec
+          yield @eval_context
         end
         
         @args_to_yield << args
@@ -107,11 +115,10 @@ module Rspec
           Kernel::raise @exception_to_raise unless @exception_to_raise.nil?
           Kernel::throw @symbol_to_throw unless @symbol_to_throw.nil?
           
-          
           if !@method_block.nil?
             default_return_val = invoke_method_block(args)
-          elsif @args_to_yield.size > 0
-            default_return_val = invoke_with_yield(block)
+          elsif @args_to_yield.size > 0 || @eval_context
+            default_return_val = invoke_with_yield(&block)
           else
             default_return_val = nil
           end
@@ -143,7 +150,7 @@ module Rspec
         end
       end
       
-      def invoke_with_yield(block)
+      def invoke_with_yield(&block)
         if block.nil?
           @error_generator.raise_missing_block_error @args_to_yield
         end
@@ -152,11 +159,19 @@ module Rspec
           if block.arity > -1 && args_to_yield_this_time.length != block.arity
             @error_generator.raise_wrong_arity_error args_to_yield_this_time, block.arity
           end
-          value = block.call(*args_to_yield_this_time)
+          value = eval_block(*args_to_yield_this_time, &block)
         end
         value
       end
-      
+
+      def eval_block(*args, &block)
+        if @eval_context
+          @eval_context.instance_exec(*args, &block)
+        else
+          block.call(*args)
+        end
+      end
+
       def invoke_consecutive_return_block(args, block)
         value = invoke_return_block(args, block)
         index = [@actual_received_count, value.size-1].min
