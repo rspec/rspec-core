@@ -1,6 +1,10 @@
 require 'rubygems'
 require 'rake'
 
+$:.unshift File.expand_path(File.join(File.dirname(__FILE__),'lib'))
+
+require 'rspec/mocks/version'
+
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
@@ -9,16 +13,16 @@ begin
     gem.email = "dchelimsky@gmail.com;chad.humphries@gmail.com"
     gem.homepage = "http://github.com/rspec/mocks"
     gem.authors = ["David Chelimsky", "Chad Humphries"]    
-    gem.add_development_dependency('rspec-core', '>= 2.0.0.a1')
-    gem.add_development_dependency('rspec-expectations', '>= 2.0.0.a1')
+    gem.version = Rspec::Mocks::Version::STRING
+    gem.add_development_dependency('rspec-core', ">= #{Rspec::Mocks::Version::STRING}")
+    gem.add_development_dependency('rspec-expectations', ">= #{Rspec::Mocks::Version::STRING}")
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
+  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
 end
 
-$:.unshift File.join(File.dirname(__FILE__), "/../core/lib")
 require 'rspec/core/rake_task'
 Rspec::Core::RakeTask.new(:spec) do |spec|
   spec.pattern = 'spec/**/*_spec.rb'

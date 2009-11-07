@@ -1,5 +1,6 @@
 require 'rspec/mocks/framework'
 require 'rspec/mocks/extensions/object'
+require 'rspec/mocks/version'
 
 module Rspec
   # == Mocks and Stubs
