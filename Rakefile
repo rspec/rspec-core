@@ -16,6 +16,9 @@ begin
     gem.version = Rspec::Mocks::Version::STRING
     gem.add_development_dependency('rspec-core', ">= #{Rspec::Mocks::Version::STRING}")
     gem.add_development_dependency('rspec-expectations', ">= #{Rspec::Mocks::Version::STRING}")
+    gem.add_development_dependency('mocha')
+    gem.add_development_dependency('flexmock')
+    gem.add_development_dependency('rr')
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
@@ -38,7 +41,7 @@ task :clobber do
   rm_rf 'pkg'
 end
 
-task :default => :spec
+task :default => [:check_dependencies, :spec]
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
