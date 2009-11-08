@@ -26,15 +26,19 @@ rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
 end
 
-require 'rspec/core/rake_task'
-Rspec::Core::RakeTask.new(:spec) do |spec|
-  spec.pattern = 'spec/**/*_spec.rb'
-end
+begin
+  require 'rspec/core/rake_task'
+  Rspec::Core::RakeTask.new(:spec) do |spec|
+    spec.pattern = 'spec/**/*_spec.rb'
+  end
 
-Rspec::Core::RakeTask.new(:rcov) do |spec|
-  spec.pattern = 'spec/**/*_spec.rb'
-  spec.rcov = true
-  spec.rcov_opts = %[--exclude "core,expectations,gems/*,spec/resources,spec/spec,spec/spec_helper.rb,db/*,/Library/Ruby/*,config/*" --text-summary  --sort coverage]
+  Rspec::Core::RakeTask.new(:rcov) do |spec|
+    spec.pattern = 'spec/**/*_spec.rb'
+    spec.rcov = true
+    spec.rcov_opts = %[--exclude "core,expectations,gems/*,spec/resources,spec/spec,spec/spec_helper.rb,db/*,/Library/Ruby/*,config/*" --text-summary  --sort coverage]
+  end
+rescue LoadError
+  puts "Rspec core or one of its dependencies is not installed. Install it with: gem install rspec-meta"
 end
 
 task :clobber do
