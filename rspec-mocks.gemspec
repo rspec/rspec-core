@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rspec-mocks}
-  s.version = "2.0.0.a1"
+  s.version = "2.0.0.a2"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["David Chelimsky", "Chad Humphries"]
@@ -38,6 +38,7 @@ Gem::Specification.new do |s|
      "lib/rspec/mocks/spec_methods.rb",
      "lib/rspec/mocks/version.rb",
      "lib/spec/mocks.rb",
+     "rspec-mocks.gemspec",
      "spec/rspec/mocks/and_yield_spec.rb",
      "spec/rspec/mocks/any_number_of_times_spec.rb",
      "spec/rspec/mocks/argument_expectation_spec.rb",
