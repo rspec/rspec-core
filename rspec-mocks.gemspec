@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["David Chelimsky", "Chad Humphries"]
-  s.date = %q{2009-11-08}
+  s.date = %q{2010-01-24}
   s.email = %q{dchelimsky@gmail.com;chad.humphries@gmail.com}
   s.extra_rdoc_files = [
     "README.markdown"
@@ -20,7 +20,6 @@ Gem::Specification.new do |s|
      "License.txt",
      "README.markdown",
      "Rakefile",
-     "VERSION.yml",
      "lib/rspec/mocks.rb",
      "lib/rspec/mocks/argument_expectation.rb",
      "lib/rspec/mocks/argument_matchers.rb",
