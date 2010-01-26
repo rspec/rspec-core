@@ -28,12 +28,9 @@ end
 
 begin
   require 'rspec/core/rake_task'
-  Rspec::Core::RakeTask.new(:spec) do |spec|
-    spec.pattern = 'spec/**/*_spec.rb'
-  end
+  Rspec::Core::RakeTask.new(:spec)
 
   Rspec::Core::RakeTask.new(:rcov) do |spec|
-    spec.pattern = 'spec/**/*_spec.rb'
     spec.rcov = true
     spec.rcov_opts = %[--exclude "core,expectations,gems/*,spec/resources,spec/spec,spec/spec_helper.rb,db/*,/Library/Ruby/*,config/*" --text-summary  --sort coverage]
   end
@@ -49,15 +46,8 @@ task :default => [:check_dependencies, :spec]
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
-  if File.exist?('VERSION.yml')
-    config = YAML.load(File.read('VERSION.yml'))
-    version = "#{config[:major]}.#{config[:minor]}.#{config[:patch]}"
-  else
-    version = ""
-  end
-
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "rspec-mocks #{version}"
+  rdoc.title = "rspec-mocks #{Rspec::Mocks::Version::STRING}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
