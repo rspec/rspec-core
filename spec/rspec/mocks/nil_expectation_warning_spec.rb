@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../spec_helper.rb'
+require 'spec_helper'
 
       def remove_last_describe_from_world
         Rspec::Core.world.behaviours.pop
