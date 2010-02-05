@@ -8,10 +8,8 @@ module BugReport496
   end
 
   describe "a message expectation on a base class object" do
-    pending "should correctly pick up message sent to it subclass (awaiting fix for http://rspec.lighthouseapp.com/projects/5645/tickets/496)" do
-      BaseClass.should_receive(:new).once
-      SubClass.new
-    end
+    BaseClass.should_receive(:new).once
+    SubClass.new
   end
 end
 
