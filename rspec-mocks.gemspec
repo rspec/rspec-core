@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["David Chelimsky", "Chad Humphries"]
-  s.date = %q{2010-02-07}
+  s.date = %q{2010-02-11}
   s.email = %q{dchelimsky@gmail.com;chad.humphries@gmail.com}
   s.extra_rdoc_files = [
     "README.markdown"
@@ -55,6 +55,7 @@ Gem::Specification.new do |s|
      "spec/rspec/mocks/bug_report_8165_spec.rb",
      "spec/rspec/mocks/bug_report_8302_spec.rb",
      "spec/rspec/mocks/bug_report_830_spec.rb",
+     "spec/rspec/mocks/bug_report_957_spec.rb",
      "spec/rspec/mocks/failing_argument_matchers_spec.rb",
      "spec/rspec/mocks/hash_including_matcher_spec.rb",
      "spec/rspec/mocks/hash_not_including_matcher_spec.rb",
@@ -101,6 +102,7 @@ Gem::Specification.new do |s|
      "spec/rspec/mocks/bug_report_8165_spec.rb",
      "spec/rspec/mocks/bug_report_8302_spec.rb",
      "spec/rspec/mocks/bug_report_830_spec.rb",
+     "spec/rspec/mocks/bug_report_957_spec.rb",
      "spec/rspec/mocks/failing_argument_matchers_spec.rb",
      "spec/rspec/mocks/hash_including_matcher_spec.rb",
      "spec/rspec/mocks/hash_not_including_matcher_spec.rb",
