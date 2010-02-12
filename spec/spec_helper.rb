@@ -43,7 +43,7 @@ module Rspec
   end
 end
 
-Rspec::Core.configure do |config|
+Rspec.configure do |config|
   config.mock_with :rspec
   config.color_enabled = true
   config.extend(Macros)
