@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rspec-mocks}
-  s.version = "2.0.0.a5"
+  s.version = "2.0.0.a6"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["David Chelimsky", "Chad Humphries"]
-  s.date = %q{2010-02-11}
+  s.date = %q{2010-02-15}
   s.email = %q{dchelimsky@gmail.com;chad.humphries@gmail.com}
   s.extra_rdoc_files = [
     "README.markdown"
@@ -133,21 +133,21 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<rspec-core>, [">= 2.0.0.a5"])
-      s.add_development_dependency(%q<rspec-expectations>, [">= 2.0.0.a5"])
+      s.add_development_dependency(%q<rspec-core>, [">= 2.0.0.a6"])
+      s.add_development_dependency(%q<rspec-expectations>, [">= 2.0.0.a6"])
       s.add_development_dependency(%q<mocha>, [">= 0"])
       s.add_development_dependency(%q<flexmock>, [">= 0"])
       s.add_development_dependency(%q<rr>, [">= 0"])
     else
-      s.add_dependency(%q<rspec-core>, [">= 2.0.0.a5"])
-      s.add_dependency(%q<rspec-expectations>, [">= 2.0.0.a5"])
+      s.add_dependency(%q<rspec-core>, [">= 2.0.0.a6"])
+      s.add_dependency(%q<rspec-expectations>, [">= 2.0.0.a6"])
       s.add_dependency(%q<mocha>, [">= 0"])
       s.add_dependency(%q<flexmock>, [">= 0"])
       s.add_dependency(%q<rr>, [">= 0"])
     end
   else
-    s.add_dependency(%q<rspec-core>, [">= 2.0.0.a5"])
-    s.add_dependency(%q<rspec-expectations>, [">= 2.0.0.a5"])
+    s.add_dependency(%q<rspec-core>, [">= 2.0.0.a6"])
+    s.add_dependency(%q<rspec-expectations>, [">= 2.0.0.a6"])
     s.add_dependency(%q<mocha>, [">= 0"])
     s.add_dependency(%q<flexmock>, [">= 0"])
     s.add_dependency(%q<rr>, [">= 0"])
