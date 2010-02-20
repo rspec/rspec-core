@@ -10,7 +10,8 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "rspec-mocks"
     gem.version = Rspec::Mocks::Version::STRING
-    gem.summary = "rspec-mocks"
+    gem.summary = "rspec-mocks-#{Rspec::Mocks::Version::STRING}"
+    gem.description = "Rspec's 'test double' framework, with support for stubbing and mocking"
     gem.email = "dchelimsky@gmail.com;chad.humphries@gmail.com"
     gem.homepage = "http://github.com/rspec/mocks"
     gem.authors = ["David Chelimsky", "Chad Humphries"]    
