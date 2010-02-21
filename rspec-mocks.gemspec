@@ -85,6 +85,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/rspec/mocks}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
+  s.rubyforge_project = %q{rspec}
   s.rubygems_version = %q{1.3.6}
   s.summary = %q{rspec-mocks-2.0.0.a7}
   s.test_files = [

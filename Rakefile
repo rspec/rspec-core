@@ -15,6 +15,7 @@ begin
     gem.email = "dchelimsky@gmail.com;chad.humphries@gmail.com"
     gem.homepage = "http://github.com/rspec/mocks"
     gem.authors = ["David Chelimsky", "Chad Humphries"]    
+    gem.rubyforge_project = "rspec"
     gem.add_development_dependency('rspec-core', ">= #{Rspec::Mocks::Version::STRING}")
     gem.add_development_dependency('rspec-expectations', ">= #{Rspec::Mocks::Version::STRING}")
     gem.add_development_dependency('mocha')
