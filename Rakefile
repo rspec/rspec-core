@@ -21,6 +21,17 @@ begin
     gem.add_development_dependency('mocha')
     gem.add_development_dependency('flexmock')
     gem.add_development_dependency('rr')
+    gem.post_install_message = <<-EOM
+#{"*"*50}
+
+  Thank you for installing #{gem.summary}
+
+  The 'a' in #{gem.version} means this is alpha software.
+  If you are looking for a supported production release,
+  please "gem install rspec" (without --pre).
+  
+#{"*"*50}
+EOM
   end
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
