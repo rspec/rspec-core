@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rspec-mocks}
-  s.version = "2.0.0.a8"
+  s.version = "2.0.0.a9"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["David Chelimsky", "Chad Humphries"]
-  s.date = %q{2010-02-22}
+  s.date = %q{2010-02-25}
   s.description = %q{Rspec's 'test double' framework, with support for stubbing and mocking}
   s.email = %q{dchelimsky@gmail.com;chad.humphries@gmail.com}
   s.extra_rdoc_files = [
@@ -85,9 +85,9 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/rspec/mocks}
   s.post_install_message = %q{**************************************************
 
-  Thank you for installing rspec-mocks-2.0.0.a8
+  Thank you for installing rspec-mocks-2.0.0.a9
 
-  The 'a' in 2.0.0.a8 means this is alpha software.
+  The 'a' in 2.0.0.a9 means this is alpha software.
   If you are looking for a supported production release,
   please "gem install rspec" (without --pre).
   
@@ -97,7 +97,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{rspec}
   s.rubygems_version = %q{1.3.6}
-  s.summary = %q{rspec-mocks-2.0.0.a8}
+  s.summary = %q{rspec-mocks-2.0.0.a9}
   s.test_files = [
     "spec/rspec/mocks/and_yield_spec.rb",
      "spec/rspec/mocks/any_number_of_times_spec.rb",
@@ -146,21 +146,21 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<rspec-core>, [">= 2.0.0.a8"])
-      s.add_development_dependency(%q<rspec-expectations>, [">= 2.0.0.a8"])
+      s.add_development_dependency(%q<rspec-core>, [">= 2.0.0.a9"])
+      s.add_development_dependency(%q<rspec-expectations>, [">= 2.0.0.a9"])
       s.add_development_dependency(%q<mocha>, [">= 0"])
       s.add_development_dependency(%q<flexmock>, [">= 0"])
       s.add_development_dependency(%q<rr>, [">= 0"])
     else
-      s.add_dependency(%q<rspec-core>, [">= 2.0.0.a8"])
-      s.add_dependency(%q<rspec-expectations>, [">= 2.0.0.a8"])
+      s.add_dependency(%q<rspec-core>, [">= 2.0.0.a9"])
+      s.add_dependency(%q<rspec-expectations>, [">= 2.0.0.a9"])
       s.add_dependency(%q<mocha>, [">= 0"])
       s.add_dependency(%q<flexmock>, [">= 0"])
       s.add_dependency(%q<rr>, [">= 0"])
     end
   else
-    s.add_dependency(%q<rspec-core>, [">= 2.0.0.a8"])
-    s.add_dependency(%q<rspec-expectations>, [">= 2.0.0.a8"])
+    s.add_dependency(%q<rspec-core>, [">= 2.0.0.a9"])
+    s.add_dependency(%q<rspec-expectations>, [">= 2.0.0.a9"])
     s.add_dependency(%q<mocha>, [">= 0"])
     s.add_dependency(%q<flexmock>, [">= 0"])
     s.add_dependency(%q<rr>, [">= 0"])
