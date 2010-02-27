@@ -51,6 +51,8 @@ end
 
 task :clobber do
   rm_rf 'pkg'
+  rm_rf 'tmp'
+  rm_rf 'coverage'
 end
 
 task :default => [:check_dependencies, :spec]
