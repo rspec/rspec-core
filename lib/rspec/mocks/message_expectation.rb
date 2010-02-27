@@ -249,6 +249,7 @@ module Rspec
       end
 
       def with(*args, &block)
+        @return_block = block if block_given?
         @args_expectation = ArgumentExpectation.new(args, &block)
         self
       end
