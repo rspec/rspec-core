@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'rake'
+require 'cucumber/rake/task'
 
 $:.unshift File.expand_path(File.join(File.dirname(__FILE__),'lib'))
 
@@ -49,13 +50,15 @@ rescue LoadError
   puts "Rspec core or one of its dependencies is not installed. Install it with: gem install rspec-meta"
 end
 
+Cucumber::Rake::Task.new
+
 task :clobber do
   rm_rf 'pkg'
   rm_rf 'tmp'
   rm_rf 'coverage'
 end
 
-task :default => [:check_dependencies, :spec]
+task :default => [:check_dependencies, :spec, :cucumber]
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
