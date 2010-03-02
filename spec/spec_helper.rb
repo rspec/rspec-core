@@ -1,8 +1,8 @@
-$LOAD_PATH.unshift(File.expand_path('../../../rspec-core/lib', __FILE__))
-require 'rspec/core'
 $LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
+$LOAD_PATH << File.expand_path('../../../rspec-core/lib', __FILE__)
+$LOAD_PATH << File.expand_path('../../../rspec-expectations/lib', __FILE__)
+require 'rspec/core'
 require 'rspec/mocks'
-$LOAD_PATH.unshift(File.expand_path('../../../rspec-expectations/lib', __FILE__))
 require 'rspec/expectations'
 
 module Macros

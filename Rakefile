@@ -1,9 +1,5 @@
-require 'rubygems'
+$LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
 require 'rake'
-require 'cucumber/rake/task'
-
-$:.unshift File.expand_path(File.join(File.dirname(__FILE__),'lib'))
-
 require 'rspec/mocks/version'
 
 begin
@@ -17,17 +13,14 @@ begin
     gem.homepage = "http://github.com/rspec/mocks"
     gem.authors = ["David Chelimsky", "Chad Humphries"]    
     gem.rubyforge_project = "rspec"
-    gem.add_development_dependency('rspec-core', ">= #{Rspec::Mocks::Version::STRING}")
-    gem.add_development_dependency('rspec-expectations', ">= #{Rspec::Mocks::Version::STRING}")
-    gem.add_development_dependency('mocha')
-    gem.add_development_dependency('flexmock')
-    gem.add_development_dependency('rr')
+    gem.add_development_dependency 'rspec-core', Rspec::Mocks::Version::STRING
+    gem.add_development_dependency 'rspec-expectations', Rspec::Mocks::Version::STRING
     gem.post_install_message = <<-EOM
 #{"*"*50}
 
   Thank you for installing #{gem.summary}
 
-  The 'a' in #{gem.version} means this is alpha software.
+  The 'b' in #{gem.version} means this is beta software.
   If you are looking for a supported production release,
   please "gem install rspec" (without --pre).
   
@@ -50,15 +43,20 @@ rescue LoadError
   puts "Rspec core or one of its dependencies is not installed. Install it with: gem install rspec-meta"
 end
 
-Cucumber::Rake::Task.new
+begin
+  require 'cucumber/rake/task'
+  Cucumber::Rake::Task.new do |t|
+    t.cucumber_opts = %w{--format progress}
+  end
+rescue LoadError
+  puts "Cucumber or one of its dependencies is not installed. Install it with: gem install cucumber"
+end
 
 task :clobber do
   rm_rf 'pkg'
   rm_rf 'tmp'
   rm_rf 'coverage'
 end
-
-task :default => [:check_dependencies, :spec, :cucumber]
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
@@ -68,3 +66,4 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
+task :default => [:check_dependencies, :spec, :cucumber]
