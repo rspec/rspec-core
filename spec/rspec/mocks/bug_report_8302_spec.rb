@@ -1,15 +1,15 @@
 require 'spec_helper'
 
 module Bug8302
-  class Foo
-    def Foo.class_method(arg)
-    end
-  
-    def instance_bar(arg)
-    end
-  end
-
   describe "Bug report 8302:" do
+    class Foo
+      def Foo.class_method(arg)
+      end
+  
+      def instance_bar(arg)
+      end
+    end
+
     it "class method is not restored correctly when proxied" do
       Foo.should_not_receive(:class_method).with(Array.new)
       Foo.rspec_verify

@@ -5,7 +5,7 @@ module Rspec
     
     describe "AnyNumberOfTimes" do
       before(:each) do
-        @mock = Mock.new("test mock")
+        @mock = Rspec::Mocks::Mock.new("test mock")
       end
 
       it "should pass if any number of times method is called many times" do

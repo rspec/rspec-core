@@ -5,7 +5,7 @@ module Rspec
   module Mocks
     describe Space do
       before :each do
-        @space = Space.new
+        @space = Rspec::Mocks::Space.new
         klazz = Class.new do
           def rspec_verify
             @verified = true

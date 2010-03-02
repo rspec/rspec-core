@@ -14,7 +14,7 @@ module Rspec
         Foo.should_not_receive :bar
         lambda do
           Foo.foo
-        end.should raise_error(MockExpectationError)
+        end.should raise_error(Rspec::Mocks::MockExpectationError)
       end
     end
   end

@@ -31,11 +31,11 @@ module Rspec
         @object.should_not_receive(:fuhbar)
         lambda do
           @object.fuhbar
-        end.should raise_error(MockExpectationError, /<Object:.*> expected :fuhbar with \(no args\) 0 times/)
+        end.should raise_error(Rspec::Mocks::MockExpectationError, /<Object:.*> expected :fuhbar with \(no args\) 0 times/)
       end
     
       it "should_not_receive should return a negative message expectation" do
-        @object.should_not_receive(:foobar).should be_kind_of(NegativeMessageExpectation)
+        @object.should_not_receive(:foobar).should be_kind_of(Rspec::Mocks::NegativeMessageExpectation)
       end
     
       it "should_receive should mock out the method" do
@@ -55,7 +55,7 @@ module Rspec
       end
     
       it "should_receive should return a message expectation" do
-        @object.should_receive(:foobar).should be_kind_of(MessageExpectation)
+        @object.should_receive(:foobar).should be_kind_of(Rspec::Mocks::MessageExpectation)
         @object.foobar
       end
     

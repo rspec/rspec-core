@@ -4,7 +4,7 @@ module Rspec
   module Mocks
     describe "a mock acting as a NullObject" do
       before(:each) do
-        @mock = Mock.new("null_object", :null_object => true)
+        @mock = Rspec::Mocks::Mock.new("null_object", :null_object => true)
       end
 
       it "should allow explicit expectation" do
@@ -16,7 +16,7 @@ module Rspec
         lambda do
           @mock.should_receive(:something)
           @mock.rspec_verify
-        end.should raise_error(MockExpectationError)
+        end.should raise_error(Rspec::Mocks::MockExpectationError)
       end
 
       it "should ignore unexpected methods" do

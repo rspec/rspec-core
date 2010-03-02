@@ -106,7 +106,7 @@ module Rspec
     describe Methods, "handling non-matcher arguments" do
       
       before(:each) do
-        @mock = Mock.new("test mock")
+        @mock = Rspec::Mocks::Mock.new("test mock")
       end
       
       it "should match non special symbol (can be removed when deprecated symbols are removed)" do
