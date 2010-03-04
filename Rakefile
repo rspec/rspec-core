@@ -31,6 +31,13 @@ rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
 end
 
+namespace :gem do
+  desc "push to gemcutter"
+  task :push => :build do
+    system "gem push pkg/rspec-mocks-#{Rspec::Mocks::Version::STRING}.gem"
+  end
+end
+
 begin
   require 'rspec/core/rake_task'
   Rspec::Core::RakeTask.new(:spec)
