@@ -4,5 +4,4 @@ coverage
 rdoc
 pkg
 doc
-*.gemspec
 tmp
