@@ -20,9 +20,7 @@ module Rspec
         @name = name
         @error_generator = ErrorGenerator.new target, name
         @expectation_ordering = OrderGroup.new @error_generator
-        @expectations = []
         @messages_received = []
-        @stubs = []
         @proxied_methods = []
         @options = options ? DEFAULT_OPTIONS.dup.merge(options) : DEFAULT_OPTIONS
         @already_proxied_respond_to = false
@@ -40,26 +38,29 @@ module Rspec
       def add_message_expectation(expected_from, sym, opts={}, &block)        
         __add sym
         warn_if_nil_class sym
-        if existing_stub = @stubs.detect {|s| s.sym == sym }
+        if existing_stub = expectations_hash[sym][:stubs].detect {|s| s.sym == sym }
           expectation = existing_stub.build_child(expected_from, block_given?? block : nil, 1, opts)
         else
           expectation = MessageExpectation.new(@error_generator, @expectation_ordering, expected_from, sym, block_given? ? block : nil, 1, opts)
         end
-        @expectations << expectation
-        @expectations.last
+        expectations_hash[sym][:expectations] << expectation
+        expectation
       end
 
       def add_negative_message_expectation(expected_from, sym, &block)
         __add sym
         warn_if_nil_class sym
-        @expectations << NegativeMessageExpectation.new(@error_generator, @expectation_ordering, expected_from, sym, block_given? ? block : nil)
-        @expectations.last
+        expectation = NegativeMessageExpectation.new(@error_generator, @expectation_ordering, expected_from, sym, block_given? ? block : nil)
+        expectations_hash[sym][:expectations] << expectation
+        expectation
       end
 
       def add_stub(expected_from, sym, opts={}, &implementation)
         __add sym
-        @stubs.unshift MessageExpectation.new(@error_generator, @expectation_ordering, expected_from, sym, nil, :any, opts, &implementation)
-        @stubs.first
+        
+        stub = MessageExpectation.new(@error_generator, @expectation_ordering, expected_from, sym, nil, :any, opts, &implementation)
+        expectations_hash[sym][:stubs].unshift stub
+        stub
       end
       
       def verify #:nodoc:
@@ -81,7 +82,7 @@ module Rspec
       end
 
       def has_negative_expectation?(sym)
-        @expectations.detect {|expectation| expectation.negative_expectation_for?(sym)}
+        expectations_hash[sym][:expectations].detect {|expectation| expectation.negative_expectation_for?(sym)}
       end
       
       def record_message_received(sym, args, block)
@@ -172,11 +173,15 @@ module Rspec
       end
 
       def clear_expectations
-        @expectations.clear
+        expectations_hash.each do |key, value|
+          value[:expectations].clear
+        end
       end
 
       def clear_stubs
-        @stubs.clear
+        expectations_hash.each do |key, value|
+          value[:stubs].clear
+        end
       end
 
       def clear_proxied_methods
@@ -188,8 +193,10 @@ module Rspec
       end
 
       def verify_expectations
-        @expectations.each do |expectation|
-          expectation.verify_messages_received
+        expectations_hash.each_key do |key|
+          expectations_hash[key][:expectations].each do |expectation|
+            expectation.verify_messages_received
+          end
         end
       end
 
@@ -215,16 +222,25 @@ module Rspec
       end
 
       def find_matching_expectation(sym, *args)
-        @expectations.find {|expectation| expectation.matches(sym, args) && !expectation.called_max_times?} || 
-        @expectations.find {|expectation| expectation.matches(sym, args)}
+        expectations_hash[sym][:expectations].find {|expectation| expectation.matches(sym, args) && !expectation.called_max_times?} || 
+        expectations_hash[sym][:expectations].find {|expectation| expectation.matches(sym, args)}
       end
 
       def find_almost_matching_expectation(sym, *args)
-        @expectations.find {|expectation| expectation.matches_name_but_not_args(sym, args)}
+        expectations_hash[sym][:expectations].find {|expectation| expectation.matches_name_but_not_args(sym, args)}
       end
 
       def find_matching_method_stub(sym, *args)
-        @stubs.find {|stub| stub.matches(sym, args)}
+        expectations_hash[sym][:stubs].find {|stub| stub.matches(sym, args)}
+      end
+
+      def expectations_hash
+        @expectations_hash ||= Hash.new {|h,k|
+          h[k] = {
+            :expectations => [],
+            :stubs => []
+          }
+        }
       end
 
     end

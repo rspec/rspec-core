@@ -57,7 +57,7 @@ module Rspec
       end
       
       it "should clear itself when verified" do
-        @instance.stub!(:this_should_go).and_return(:blah)
+        @instance.stub(:this_should_go).and_return(:blah)
         @instance.this_should_go.should == :blah
         @instance.rspec_verify
         lambda do
