@@ -236,11 +236,17 @@ module Rspec
 
       def expectations_hash
         @expectations_hash ||= Hash.new {|h,k|
-          h[k] = {
-            :expectations => [],
-            :stubs => []
-          }
+          h[k] = MethodDouble.new(@target, k)
         }
+      end
+
+      class MethodDouble < Hash
+        def initialize(target, sym)
+          @target = target
+          @sym = sym
+          store(:expectations, [])
+          store(:stubs, [])
+        end
       end
 
     end
