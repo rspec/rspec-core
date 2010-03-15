@@ -5,25 +5,29 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rspec-mocks}
-  s.version = "2.0.0.beta.3"
+  s.version = "2.0.0.beta.4"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["David Chelimsky", "Chad Humphries"]
-  s.date = %q{2010-03-08}
+  s.date = %q{2010-03-15}
   s.description = %q{Rspec's 'test double' framework, with support for stubbing and mocking}
   s.email = %q{dchelimsky@gmail.com;chad.humphries@gmail.com}
   s.extra_rdoc_files = [
     "README.markdown"
   ]
   s.files = [
-    ".document",
+    ".autotest",
+     ".document",
      ".gitignore",
      "License.txt",
      "README.markdown",
      "Rakefile",
      "VERSION",
+     "autotest/discover.rb",
+     "cucumber.yml",
      "features/mocks/block_local_expectations.feature",
      "features/mocks/mix_stubs_and_mocks.feature",
+     "features/stubs/stub_implementation.feature",
      "features/support/env.rb",
      "lib/rspec/mocks.rb",
      "lib/rspec/mocks/argument_expectation.rb",
@@ -84,12 +88,13 @@ Gem::Specification.new do |s|
      "spec/rspec/mocks/stubbed_message_expectations_spec.rb",
      "spec/rspec/mocks/twice_counts_spec.rb",
      "spec/spec_helper.rb",
-     "spec/support/macros.rb"
+     "spec/support/macros.rb",
+     "specs.watchr"
   ]
   s.homepage = %q{http://github.com/rspec/mocks}
   s.post_install_message = %q{**************************************************
 
-  Thank you for installing rspec-mocks-2.0.0.beta.3
+  Thank you for installing rspec-mocks-2.0.0.beta.4
 
   This is beta software. If you are looking
   for a supported production release, please
@@ -101,7 +106,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{rspec}
   s.rubygems_version = %q{1.3.6}
-  s.summary = %q{rspec-mocks-2.0.0.beta.3}
+  s.summary = %q{rspec-mocks-2.0.0.beta.4}
   s.test_files = [
     "spec/rspec/mocks/and_yield_spec.rb",
      "spec/rspec/mocks/any_number_of_times_spec.rb",
@@ -151,15 +156,15 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<rspec-core>, ["= 2.0.0.beta.3"])
-      s.add_development_dependency(%q<rspec-expectations>, ["= 2.0.0.beta.3"])
+      s.add_development_dependency(%q<rspec-core>, ["= 2.0.0.beta.4"])
+      s.add_development_dependency(%q<rspec-expectations>, ["= 2.0.0.beta.4"])
     else
-      s.add_dependency(%q<rspec-core>, ["= 2.0.0.beta.3"])
-      s.add_dependency(%q<rspec-expectations>, ["= 2.0.0.beta.3"])
+      s.add_dependency(%q<rspec-core>, ["= 2.0.0.beta.4"])
+      s.add_dependency(%q<rspec-expectations>, ["= 2.0.0.beta.4"])
     end
   else
-    s.add_dependency(%q<rspec-core>, ["= 2.0.0.beta.3"])
-    s.add_dependency(%q<rspec-expectations>, ["= 2.0.0.beta.3"])
+    s.add_dependency(%q<rspec-core>, ["= 2.0.0.beta.4"])
+    s.add_dependency(%q<rspec-expectations>, ["= 2.0.0.beta.4"])
   end
 end
 
