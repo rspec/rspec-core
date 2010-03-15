@@ -48,7 +48,6 @@ module Rspec
 
       def add_message_expectation(expected_from, sym, opts={}, &block)        
         __add sym
-        warn_if_nil_class sym
         expectation = if existing_stub = expectations_hash[sym][:stubs].detect {|s| s.sym == sym }
           existing_stub.build_child(expected_from, block_given?? block : nil, 1, opts)
         else
@@ -59,13 +58,11 @@ module Rspec
 
       def add_negative_message_expectation(expected_from, sym, &block)
         __add sym
-        warn_if_nil_class sym
         expectations_hash[sym].add_expectation NegativeMessageExpectation.new(@error_generator, @expectation_ordering, expected_from, sym, block_given? ? block : nil)
       end
 
       def add_stub(expected_from, sym, opts={}, &implementation)
         __add sym
-        warn_if_nil_class sym
         expectations_hash[sym].add_stub MessageExpectation.new(@error_generator, @expectation_ordering, expected_from, sym, nil, :any, opts, &implementation)
       end
       
@@ -124,24 +121,14 @@ module Rspec
     private
 
       def __add(sym)
-        $rspec_mocks.add(@target) unless $rspec_mocks.nil?
-        define_expected_method(sym)
+        $rspec_mocks.add(@target) if $rspec_mocks
+        double_for(sym).proxy_method
       end
       
-      def warn_if_nil_class(sym)
-        if proxy_for_nil_class? & self.class.warn_about_expectations_on_nil
-          Kernel.warn("An expectation of :#{sym} was set on nil. Called from #{caller[2]}. Use allow_message_expectations_on_nil to disable warnings.")
-        end
-      end
-
       def double_for(sym)
         expectations_hash[sym]
       end
       
-      def define_expected_method(sym)
-        double_for(sym).proxy_method
-      end
-
       def method_doubles
         expectations_hash.values
       end
@@ -242,6 +229,7 @@ module Rspec
             define_munged
           end
           redefine
+          warn_if_nil_class
         end
 
         def reset_proxied_method
@@ -283,6 +271,16 @@ module Rspec
         def add_stub(stub)
           self[:stubs] << stub
           stub
+        end
+
+        def proxy_for_nil_class?
+          @target.nil?
+        end
+
+        def warn_if_nil_class
+          if proxy_for_nil_class? & Rspec::Mocks::Proxy.warn_about_expectations_on_nil
+            Kernel.warn("An expectation of :#{@sym} was set on nil. Called from #{caller[4]}. Use allow_message_expectations_on_nil to disable warnings.")
+          end
         end
 
       end
