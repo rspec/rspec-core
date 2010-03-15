@@ -458,7 +458,7 @@ module Rspec
       end
 
       it "should yield multiple values after a similar stub" do
-        File.stub!(:open).and_yield(:stub_value)
+        File.stub(:open).and_yield(:stub_value)
         File.should_receive(:open).and_yield(:first_call).and_yield(:second_call)
         yielded_args = []
         File.open {|v| yielded_args << v }

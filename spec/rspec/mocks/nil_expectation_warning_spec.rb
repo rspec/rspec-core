@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-      def remove_last_describe_from_world
-        Rspec::Core.world.example_groups.pop
-      end
-      
-      def empty_example_group
-        group = Rspec::Core::ExampleGroup.describe(Object, 'Empty Behaviour Group') { }
-        remove_last_describe_from_world
-      end
+def remove_last_describe_from_world
+  Rspec::Core.world.example_groups.pop
+end
+
+def empty_example_group
+  group = Rspec::Core::ExampleGroup.describe(Object, 'Empty Behaviour Group') { }
+  remove_last_describe_from_world
+end
 
 module Rspec
   module Mocks
