@@ -3,8 +3,6 @@ module Rspec
     class Proxy
       DEFAULT_OPTIONS = { :null_object => false }
 
-      attr_accessor :already_proxied_respond_to
-
       class << self
         def warn_about_expectations_on_nil
           defined?(@warn_about_expectations_on_nil) ? @warn_about_expectations_on_nil : true
@@ -27,10 +25,10 @@ module Rspec
         end
       end
 
-      def initialize(target, name=nil, options={})
-        @target = target
+      def initialize(object, name=nil, options={})
+        @object = object
         @name = name
-        @error_generator = ErrorGenerator.new target, name
+        @error_generator = ErrorGenerator.new object, name
         @expectation_ordering = OrderGroup.new @error_generator
         @messages_received = []
         @options = options ? DEFAULT_OPTIONS.dup.merge(options) : DEFAULT_OPTIONS
@@ -43,24 +41,27 @@ module Rspec
       
       def as_null_object
         @options[:null_object] = true
-        @target
+        @object
       end
 
-      def add_message_expectation(expected_from, sym, opts={}, &block)        
-        expectation = if existing_stub = expectations_hash[sym][:stubs].detect {|s| s.sym == sym }
-          existing_stub.build_child(expected_from, block_given?? block : nil, 1, opts)
-        else
-          MessageExpectation.new(@error_generator, @expectation_ordering, expected_from, sym, block_given? ? block : nil, 1, opts)
-        end
-        double_for(sym).add_expectation expectation
+      def already_proxied_respond_to
+        @already_proxied_respond_to = true
       end
 
-      def add_negative_message_expectation(expected_from, sym, &block)
-        double_for(sym).add_expectation NegativeMessageExpectation.new(@error_generator, @expectation_ordering, expected_from, sym, block_given? ? block : nil)
+      def already_proxied_respond_to?
+        @already_proxied_respond_to
       end
 
-      def add_stub(expected_from, sym, opts={}, &implementation)
-        double_for(sym).add_stub MessageExpectation.new(@error_generator, @expectation_ordering, expected_from, sym, nil, :any, opts, &implementation)
+      def add_message_expectation(location, method_name, opts={}, &block)        
+        method_double[method_name].add_expectation @error_generator, @expectation_ordering, location, opts, &block
+      end
+
+      def add_negative_message_expectation(location, method_name, &implementation)
+        method_double[method_name].add_negative_expectation @error_generator, @expectation_ordering, location, &implementation
+      end
+
+      def add_stub(location, method_name, opts={}, &implementation)
+        method_double[method_name].add_stub @error_generator, @expectation_ordering, location, opts, &implementation
       end
       
       def verify #:nodoc:
@@ -73,36 +74,36 @@ module Rspec
         method_doubles.each {|d| d.reset}
       end
 
-      def received_message?(sym, *args, &block)
-        @messages_received.any? {|array| array == [sym, args, block]}
+      def received_message?(method_name, *args, &block)
+        @messages_received.any? {|array| array == [method_name, args, block]}
       end
 
-      def has_negative_expectation?(sym)
-        double_for(sym)[:expectations].detect {|expectation| expectation.negative_expectation_for?(sym)}
+      def has_negative_expectation?(method_name)
+        method_double[method_name].expectations.detect {|expectation| expectation.negative_expectation_for?(method_name)}
       end
       
-      def record_message_received(sym, args, block)
-        @messages_received << [sym, args, block]
+      def record_message_received(method_name, args, block)
+        @messages_received << [method_name, args, block]
       end
 
-      def message_received(sym, *args, &block)
-        expectation = find_matching_expectation(sym, *args)
-        stub = find_matching_method_stub(sym, *args)
+      def message_received(method_name, *args, &block)
+        expectation = find_matching_expectation(method_name, *args)
+        stub = find_matching_method_stub(method_name, *args)
 
         if (stub && expectation && expectation.called_max_times?) || (stub && !expectation)
-          if expectation = find_almost_matching_expectation(sym, *args)
+          if expectation = find_almost_matching_expectation(method_name, *args)
             expectation.advise(args, block) unless expectation.expected_messages_received?
           end
           stub.invoke(args, block)
         elsif expectation
           expectation.invoke(args, block)
-        elsif expectation = find_almost_matching_expectation(sym, *args)
+        elsif expectation = find_almost_matching_expectation(method_name, *args)
           expectation.advise(args, block) if null_object? unless expectation.expected_messages_received?
-          raise_unexpected_message_args_error(expectation, *args) unless (has_negative_expectation?(sym) or null_object?)
-        elsif @target.is_a?(Class)
-          @target.superclass.send(sym, *args, &block)
+          raise_unexpected_message_args_error(expectation, *args) unless (has_negative_expectation?(method_name) or null_object?)
+        elsif @object.is_a?(Class)
+          @object.superclass.send(method_name, *args, &block)
         else
-          @target.__send__ :method_missing, sym, *args, &block
+          @object.__send__ :method_missing, method_name, *args, &block
         end
       end
 
@@ -110,173 +111,33 @@ module Rspec
         @error_generator.raise_unexpected_message_args_error(expectation, *args)
       end
 
-      def raise_unexpected_message_error(sym, *args)
-        @error_generator.raise_unexpected_message_error sym, *args
+      def raise_unexpected_message_error(method_name, *args)
+        @error_generator.raise_unexpected_message_error method_name, *args
       end
       
     private
 
-      def double_for(sym)
-        expectations_hash[sym]
-      end
-      
-      def method_doubles
-        expectations_hash.values
-      end
-      
-      def proxy_for_nil_class?
-        @target.nil?
-      end
-      
-      def find_matching_expectation(sym, *args)
-        double_for(sym)[:expectations].find {|expectation| expectation.matches(sym, args) && !expectation.called_max_times?} || 
-        double_for(sym)[:expectations].find {|expectation| expectation.matches(sym, args)}
-      end
-
-      def find_almost_matching_expectation(sym, *args)
-        double_for(sym)[:expectations].find {|expectation| expectation.matches_name_but_not_args(sym, args)}
-      end
-
-      def find_matching_method_stub(sym, *args)
-        double_for(sym)[:stubs].find {|stub| stub.matches(sym, args)}
-      end
-
-      def expectations_hash
-        @expectations_hash ||= Hash.new {|h,k|
-          h[k] = MethodDouble.new(@target, k, self)
+      def method_double
+        @method_double ||= Hash.new {|h,k|
+          h[k] = MethodDouble.new(@object, k, self)
         }
       end
 
-      class MethodDouble < Hash
-        def initialize(target, sym, proxy)
-          @sym = sym
-          @target = target
-          @proxy = proxy
-          @proxied = false
-          store(:expectations, [])
-          store(:stubs, [])
-        end
+      def method_doubles
+        method_double.values
+      end
+      
+      def find_matching_expectation(method_name, *args)
+        method_double[method_name].expectations.find {|expectation| expectation.matches(method_name, args) && !expectation.called_max_times?} || 
+        method_double[method_name].expectations.find {|expectation| expectation.matches(method_name, args)}
+      end
 
-        def visibility
-          if Mock === @target
-            'public'
-          elsif target_metaclass.private_method_defined?(@sym)
-            'private'
-          elsif target_metaclass.protected_method_defined?(@sym)
-            'protected'
-          else
-            'public'
-          end
-        end
+      def find_almost_matching_expectation(method_name, *args)
+        method_double[method_name].expectations.find {|expectation| expectation.matches_name_but_not_args(method_name, args)}
+      end
 
-        def target_metaclass
-          class << @target; self; end
-        end
-
-        def munge(sym)
-          "proxied_by_rspec__#{sym}"
-        end
-
-        def munged_sym
-          munge(@sym)
-        end
-
-        def target_responds_to?(sym)
-          return @target.__send__(munge(:respond_to?),sym) if @proxy.already_proxied_respond_to
-          return @proxy.already_proxied_respond_to = true if sym == :respond_to?
-          return @target.respond_to?(sym, true)
-        end
-
-        def define_munged
-          munged = munged_sym
-          orig = @sym
-          target_metaclass.instance_eval do
-            alias_method(munged, orig) if method_defined?(orig)
-          end
-        end
-
-        def redefine
-          sym = @sym
-          visibility_string = "#{visibility} :#{sym}"
-          target_metaclass.class_eval(<<-EOF, __FILE__, __LINE__)
-            def #{sym}(*args, &block)
-              __mock_proxy.message_received :#{sym}, *args, &block
-            end
-            #{visibility_string}
-          EOF
-        end
-
-        def proxied?
-          @proxied
-        end
-
-        def proxy_method
-          if target_responds_to?(@sym)
-            @proxied = true
-            define_munged
-          end
-          redefine
-          warn_if_nil_class
-          $rspec_mocks.add(@target) if $rspec_mocks
-        end
-
-        def reset_proxied_method
-          if proxied?
-            sym = @sym
-            munged_sym = self.munged_sym
-            target_metaclass.instance_eval do
-              remove_method sym
-              if method_defined?(munged_sym)
-                alias_method sym, munged_sym
-                remove_method munged_sym
-              end
-            end
-            @proxied = false
-          end
-        end
-
-        def verify
-          self[:expectations].each do |expectation|
-            expectation.verify_messages_received
-          end
-        end
-
-        def reset
-          reset_nil_expectations_warning
-          reset_proxied_method
-          clear
-        end
-
-        def clear
-          self[:expectations].clear
-          self[:stubs].clear
-        end
-
-        def add_expectation(expectation)
-          proxy_method
-          self[:expectations] << expectation
-          expectation
-        end
-
-        def add_stub(stub)
-          proxy_method
-          self[:stubs] << stub
-          stub
-        end
-
-        def proxy_for_nil_class?
-          @target.nil?
-        end
-
-        def warn_if_nil_class
-          if proxy_for_nil_class? & Rspec::Mocks::Proxy.warn_about_expectations_on_nil
-            Kernel.warn("An expectation of :#{@sym} was set on nil. Called from #{caller[4]}. Use allow_message_expectations_on_nil to disable warnings.")
-          end
-        end
-
-        def reset_nil_expectations_warning
-          Rspec::Mocks::Proxy.warn_about_expectations_on_nil = true if proxy_for_nil_class?
-        end
+      def find_matching_method_stub(method_name, *args)
+        method_double[method_name].stubs.find {|stub| stub.matches(method_name, args)}
       end
 
     end

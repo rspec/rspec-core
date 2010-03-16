@@ -2,6 +2,7 @@
 # supports wrapping rspec's mocking functionality without invading every
 # object in the system.
 
+require 'rspec/mocks/method_double'
 require 'rspec/mocks/methods'
 require 'rspec/mocks/argument_matchers'
 require 'rspec/mocks/spec_methods'
