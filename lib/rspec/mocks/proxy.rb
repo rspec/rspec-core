@@ -3,6 +3,8 @@ module Rspec
     class Proxy
       DEFAULT_OPTIONS = { :null_object => false }
 
+      attr_accessor :already_proxied_respond_to
+
       class << self
         def warn_about_expectations_on_nil
           defined?(@warn_about_expectations_on_nil) ? @warn_about_expectations_on_nil : true
@@ -35,8 +37,6 @@ module Rspec
         @already_proxied_respond_to = false
       end
 
-      attr_accessor :already_proxied_respond_to
-
       def null_object?
         @options[:null_object]
       end
@@ -47,23 +47,20 @@ module Rspec
       end
 
       def add_message_expectation(expected_from, sym, opts={}, &block)        
-        __add sym
         expectation = if existing_stub = expectations_hash[sym][:stubs].detect {|s| s.sym == sym }
           existing_stub.build_child(expected_from, block_given?? block : nil, 1, opts)
         else
           MessageExpectation.new(@error_generator, @expectation_ordering, expected_from, sym, block_given? ? block : nil, 1, opts)
         end
-        expectations_hash[sym].add_expectation expectation
+        double_for(sym).add_expectation expectation
       end
 
       def add_negative_message_expectation(expected_from, sym, &block)
-        __add sym
-        expectations_hash[sym].add_expectation NegativeMessageExpectation.new(@error_generator, @expectation_ordering, expected_from, sym, block_given? ? block : nil)
+        double_for(sym).add_expectation NegativeMessageExpectation.new(@error_generator, @expectation_ordering, expected_from, sym, block_given? ? block : nil)
       end
 
       def add_stub(expected_from, sym, opts={}, &implementation)
-        __add sym
-        expectations_hash[sym].add_stub MessageExpectation.new(@error_generator, @expectation_ordering, expected_from, sym, nil, :any, opts, &implementation)
+        double_for(sym).add_stub MessageExpectation.new(@error_generator, @expectation_ordering, expected_from, sym, nil, :any, opts, &implementation)
       end
       
       def verify #:nodoc:
@@ -74,7 +71,6 @@ module Rspec
 
       def reset
         method_doubles.each {|d| d.reset}
-        reset_nil_expectations_warning
       end
 
       def received_message?(sym, *args, &block)
@@ -120,11 +116,6 @@ module Rspec
       
     private
 
-      def __add(sym)
-        $rspec_mocks.add(@target) if $rspec_mocks
-        double_for(sym).proxy_method
-      end
-      
       def double_for(sym)
         expectations_hash[sym]
       end
@@ -137,10 +128,6 @@ module Rspec
         @target.nil?
       end
       
-      def reset_nil_expectations_warning
-        self.class.warn_about_expectations_on_nil = true if proxy_for_nil_class?
-      end
-
       def find_matching_expectation(sym, *args)
         double_for(sym)[:expectations].find {|expectation| expectation.matches(sym, args) && !expectation.called_max_times?} || 
         double_for(sym)[:expectations].find {|expectation| expectation.matches(sym, args)}
@@ -162,8 +149,8 @@ module Rspec
 
       class MethodDouble < Hash
         def initialize(target, sym, proxy)
-          @target = target
           @sym = sym
+          @target = target
           @proxy = proxy
           @proxied = false
           store(:expectations, [])
@@ -230,6 +217,7 @@ module Rspec
           end
           redefine
           warn_if_nil_class
+          $rspec_mocks.add(@target) if $rspec_mocks
         end
 
         def reset_proxied_method
@@ -254,6 +242,7 @@ module Rspec
         end
 
         def reset
+          reset_nil_expectations_warning
           reset_proxied_method
           clear
         end
@@ -264,11 +253,13 @@ module Rspec
         end
 
         def add_expectation(expectation)
+          proxy_method
           self[:expectations] << expectation
           expectation
         end
 
         def add_stub(stub)
+          proxy_method
           self[:stubs] << stub
           stub
         end
@@ -283,6 +274,9 @@ module Rspec
           end
         end
 
+        def reset_nil_expectations_warning
+          Rspec::Mocks::Proxy.warn_about_expectations_on_nil = true if proxy_for_nil_class?
+        end
       end
 
     end
