@@ -9,7 +9,7 @@ module Rspec
         __mock_proxy.add_negative_message_expectation(caller(1)[0], sym.to_sym, &block)
       end
       
-      def stub!(sym_or_hash, opts={}, &block)
+      def stub(sym_or_hash, opts={}, &block)
         if Hash === sym_or_hash
           sym_or_hash.each {|method, value| stub!(method).and_return value }
         else
@@ -17,7 +17,7 @@ module Rspec
         end
       end
       
-      alias_method :stub, :stub!
+      alias_method :stub!, :stub
 
       def stub_chain(*methods)
         if methods.length > 1

@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["David Chelimsky", "Chad Humphries"]
-  s.date = %q{2010-03-15}
+  s.date = %q{2010-03-16}
   s.description = %q{Rspec's 'test double' framework, with support for stubbing and mocking}
   s.email = %q{dchelimsky@gmail.com;chad.humphries@gmail.com}
   s.extra_rdoc_files = [
@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
      "cucumber.yml",
      "features/mocks/block_local_expectations.feature",
      "features/mocks/mix_stubs_and_mocks.feature",
+     "features/mocks/warn_when_expectation_is_set_on_nil.feature",
      "features/stubs/stub_implementation.feature",
      "features/support/env.rb",
      "lib/rspec/mocks.rb",
@@ -39,6 +40,7 @@ Gem::Specification.new do |s|
      "lib/rspec/mocks/extensions/object.rb",
      "lib/rspec/mocks/framework.rb",
      "lib/rspec/mocks/message_expectation.rb",
+     "lib/rspec/mocks/method_double.rb",
      "lib/rspec/mocks/methods.rb",
      "lib/rspec/mocks/mock.rb",
      "lib/rspec/mocks/order_group.rb",
@@ -108,7 +110,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.6}
   s.summary = %q{rspec-mocks-2.0.0.beta.4}
   s.test_files = [
-    "spec/rspec/mocks/and_yield_spec.rb",
+    "spec/spec_helper.rb",
+     "spec/rspec/mocks/and_yield_spec.rb",
      "spec/rspec/mocks/any_number_of_times_spec.rb",
      "spec/rspec/mocks/argument_expectation_spec.rb",
      "spec/rspec/mocks/at_least_spec.rb",
@@ -147,7 +150,6 @@ Gem::Specification.new do |s|
      "spec/rspec/mocks/stub_spec.rb",
      "spec/rspec/mocks/stubbed_message_expectations_spec.rb",
      "spec/rspec/mocks/twice_counts_spec.rb",
-     "spec/spec_helper.rb",
      "spec/support/macros.rb"
   ]
 
