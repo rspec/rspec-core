@@ -28,7 +28,7 @@ module Rspec
       def initialize(object, name=nil, options={})
         @object = object
         @name = name
-        @error_generator = ErrorGenerator.new object, name
+        @error_generator = ErrorGenerator.new object, name, options
         @expectation_ordering = OrderGroup.new @error_generator
         @messages_received = []
         @options = options ? DEFAULT_OPTIONS.dup.merge(options) : DEFAULT_OPTIONS

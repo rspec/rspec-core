@@ -9,7 +9,7 @@ module Rspec
         m.should_receive(:bar).with("message")
         lambda {
           m.bar("different message")
-        }.should raise_error(Rspec::Mocks::MockExpectationError, %Q{Mock 'foo' expected :bar with ("message") but received it with ("different message")})
+        }.should raise_error(Rspec::Mocks::MockExpectationError, %Q{Mock "foo" received :bar with unexpected arguments\n  expected: ("message")\n       got: ("different message")})
         m.bar("message") # allows the spec to pass
       end
 

@@ -20,11 +20,25 @@ module Rspec
       #   stub_person = stub("thing", :name => "Joe", :email => "joe@domain.com")
       #   stub_person.name => "Joe"
       #   stub_person.email => "joe@domain.com"
-      def mock(*args)
-        Rspec::Mocks::Mock.new(*args)
+      def double(*args)
+        __declare_double('Double', *args)
       end
 
-      alias :stub :mock
+      # Alias for double
+      def mock(*args)
+        __declare_double('Mock', *args)
+      end
+
+      # Alias for double
+      def stub(*args)
+        __declare_double('Stub', *args)
+      end
+
+      def __declare_double(declared_as, *args) # :nodoc:
+        args << {} unless Hash === args.last
+        args.last[:__declared_as] = declared_as
+        Rspec::Mocks::Mock.new(*args)
+      end
 
       # Disables warning messages about expectations being set on nil.
       #

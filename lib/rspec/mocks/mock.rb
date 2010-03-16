@@ -7,14 +7,14 @@ module Rspec
       # only) == Options:
       # * <tt>:null_object</tt> - if true, the mock object acts as a forgiving
       #   null object allowing any message to be sent to it.
-      def initialize(name='mock', stubs_and_options={})
+      def initialize(name=nil, stubs_and_options={})
         if name.is_a?(Hash) && stubs_and_options.empty?
           stubs_and_options = name
-          build_name_from_options stubs_and_options
+          @name = nil
         else
           @name = name
         end
-        @options = parse_options(stubs_and_options)
+        @options = extract_options(stubs_and_options)
         assign_stubs(stubs_and_options)
       end
 
@@ -46,8 +46,19 @@ module Rspec
         end
       end
 
-      def parse_options(options)
-        options.has_key?(:null_object) ? {:null_object => options.delete(:null_object)} : {}
+      def extract_options(stubs_and_options)
+        options = {}
+        extract_option(stubs_and_options, options, :null_object)
+        extract_option(stubs_and_options, options, :__declared_as, 'Mock')
+        options
+      end
+      
+      def extract_option(source, target, key, default=nil)
+        if source[key]
+          target[key] = source.delete(key)
+        elsif default
+          target[key] = default
+        end
       end
 
       def assign_stubs(stubs)
@@ -55,11 +66,7 @@ module Rspec
           stub!(message).and_return(response)
         end
       end
-
-      def build_name_from_options(options)
-        vals = options.inject([]) {|coll, pair| coll << "#{pair.first}: #{pair.last.inspect}"}
-        @name = '{' + vals.join(', ') + '}'
-      end
     end
   end
 end
+
