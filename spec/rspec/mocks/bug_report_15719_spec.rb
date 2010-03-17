@@ -10,7 +10,7 @@ module Rspec
         lambda {
           m.bar("different message")
         }.should raise_error(Rspec::Mocks::MockExpectationError, %Q{Mock "foo" received :bar with unexpected arguments\n  expected: ("message")\n       got: ("different message")})
-        m.bar("message") # allows the spec to pass
+        m.rspec_reset # so the example doesn't fail
       end
 
       pending "should tell you when it receives the right message with the wrong args if you stub the method (fix bug 15719)" do
@@ -22,7 +22,7 @@ module Rspec
         lambda {
           m.bar("different message")
         }.should raise_error(Rspec::Mocks::MockExpectationError, %Q{Mock 'foo' expected :bar with ("message") but received it with ("different message")})
-        m.bar("message") # allows the spec to pass
+        m.rspec_reset # so the example doesn't fail
       end
     end
   end
