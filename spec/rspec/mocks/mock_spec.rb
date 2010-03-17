@@ -93,7 +93,7 @@ module Rspec
         lambda {
           @mock.something("a","d","c")
           violated
-        }.should raise_error(MockExpectationError, "Mock \"test mock\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: (\"a\", \"d\", \"c\")")
+        }.should raise_error(Rspec::Mocks::MockExpectationError, "Mock \"test mock\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: (\"a\", \"d\", \"c\")")
       end
 
       it "should raise exception if args don't match when method called even when the method is stubbed" do
@@ -102,7 +102,7 @@ module Rspec
         lambda {
           @mock.something("a","d","c")
           @mock.rspec_verify
-        }.should raise_error(MockExpectationError, "Mock \"test mock\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: ([\"a\", \"d\", \"c\"])")
+        }.should raise_error(Rspec::Mocks::MockExpectationError, "Mock \"test mock\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: ([\"a\", \"d\", \"c\"])")
       end
 
       it "should raise exception if args don't match when method called even when using null_object" do
@@ -111,7 +111,7 @@ module Rspec
         lambda {
           @mock.something("a","d","c")
           @mock.rspec_verify
-        }.should raise_error(MockExpectationError, "Mock \"test mock\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: ([\"a\", \"d\", \"c\"])")
+        }.should raise_error(Rspec::Mocks::MockExpectationError, "Mock \"test mock\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: ([\"a\", \"d\", \"c\"])")
       end
 
       it "should fail if unexpected method called" do
@@ -209,14 +209,14 @@ module Rspec
         @mock.should_receive(:something).with(no_args())
         lambda {
           @mock.something 1
-        }.should raise_error(MockExpectationError, "Mock \"test mock\" received :something with unexpected arguments\n  expected: (no args)\n       got: (1)")
+        }.should raise_error(Rspec::Mocks::MockExpectationError, "Mock \"test mock\" received :something with unexpected arguments\n  expected: (no args)\n       got: (1)")
       end
 
       it "should fail when args are expected but none are received" do
         @mock.should_receive(:something).with(1)
         lambda {
           @mock.something
-        }.should raise_error(MockExpectationError, "Mock \"test mock\" received :something with unexpected arguments\n  expected: (1)\n       got: (no args)")
+        }.should raise_error(Rspec::Mocks::MockExpectationError, "Mock \"test mock\" received :something with unexpected arguments\n  expected: (1)\n       got: (no args)")
       end
 
       it "should return value from block by default" do
