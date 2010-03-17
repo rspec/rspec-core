@@ -25,7 +25,7 @@ module Rspec
       end
 
       it "should report line number of expectation of unreceived message after #should_receive after similar stub" do
-        @mock.stub!(:wont_happen)
+        @mock.stub(:wont_happen)
         expected_error_line = __LINE__; @mock.should_receive(:wont_happen).with("x", 3)
         begin
           @mock.rspec_verify
@@ -97,7 +97,7 @@ module Rspec
       end
 
       it "should raise exception if args don't match when method called even when the method is stubbed" do
-        @mock.stub!(:something)
+        @mock.stub(:something)
         @mock.should_receive(:something).with("a","b","c")
         lambda {
           @mock.something("a","d","c")
@@ -220,7 +220,7 @@ module Rspec
       end
 
       it "should return value from block by default" do
-        @mock.stub!(:method_that_yields).and_yield
+        @mock.stub(:method_that_yields).and_yield
         @mock.method_that_yields { :returned_obj }.should == :returned_obj
         @mock.rspec_verify
       end
@@ -409,7 +409,7 @@ module Rspec
       end
 
       it "should temporarily replace a method stub on a mock" do
-        @mock.stub!(:msg).and_return(:stub_value)
+        @mock.stub(:msg).and_return(:stub_value)
         @mock.should_receive(:msg).with(:arg).and_return(:mock_value)
         @mock.msg(:arg).should equal(:mock_value)
         @mock.msg.should equal(:stub_value)
@@ -418,7 +418,7 @@ module Rspec
       end
 
       it "should not require a different signature to replace a method stub" do
-        @mock.stub!(:msg).and_return(:stub_value)
+        @mock.stub(:msg).and_return(:stub_value)
         @mock.should_receive(:msg).and_return(:mock_value)
         @mock.msg(:arg).should equal(:mock_value)
         @mock.msg.should equal(:stub_value)
@@ -427,14 +427,14 @@ module Rspec
       end
 
       it "should raise an error when a previously stubbed method has a negative expectation" do
-        @mock.stub!(:msg).and_return(:stub_value)
+        @mock.stub(:msg).and_return(:stub_value)
         @mock.should_not_receive(:msg).and_return(:mock_value)
         lambda {@mock.msg(:arg)}.should raise_error(Rspec::Mocks::MockExpectationError)
       end
 
       it "should temporarily replace a method stub on a non-mock" do
         non_mock = Object.new
-        non_mock.stub!(:msg).and_return(:stub_value)
+        non_mock.stub(:msg).and_return(:stub_value)
         non_mock.should_receive(:msg).with(:arg).and_return(:mock_value)
         non_mock.msg(:arg).should equal(:mock_value)
         non_mock.msg.should equal(:stub_value)
@@ -443,14 +443,14 @@ module Rspec
       end
 
       it "should return the stubbed value when no new value specified" do
-        @mock.stub!(:msg).and_return(:stub_value)
+        @mock.stub(:msg).and_return(:stub_value)
         @mock.should_receive(:msg)
         @mock.msg.should equal(:stub_value)
         @mock.rspec_verify
       end
 
       it "should not mess with the stub's yielded values when also mocked" do
-        @mock.stub!(:yield_back).and_yield(:stub_value)
+        @mock.stub(:yield_back).and_yield(:stub_value)
         @mock.should_receive(:yield_back).and_yield(:mock_value)
         @mock.yield_back{|v| v.should == :mock_value }
         @mock.yield_back{|v| v.should == :stub_value }
@@ -493,7 +493,7 @@ module Rspec
       end
 
       it "should call the block after #should_receive after a similar stub" do
-        @mock.stub!(:foo).and_return(:bar)
+        @mock.stub(:foo).and_return(:bar)
         @mock.should_receive(:foo) { add_call }
 
         @mock.foo

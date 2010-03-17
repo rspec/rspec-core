@@ -106,7 +106,7 @@ module Rspec
       
       it "should not raise an error when stubbing the object" do
         o = PartiallyMockedEquals.new :foo
-        lambda { o.stub!(:bar) }.should_not raise_error(NoMethodError)
+        lambda { o.stub(:bar) }.should_not raise_error(NoMethodError)
       end
     end
 

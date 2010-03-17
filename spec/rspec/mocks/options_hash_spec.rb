@@ -25,7 +25,7 @@ module Rspec
       it "should use the message supplied with :message after a similar stub" do
         lambda {
           m = Rspec::Mocks::Mock.new("a mock")
-          m.stub!(:message)
+          m.stub(:message)
           m.should_receive(:message, :message => "from mock")
           m.rspec_verify
         }.should raise_error("from mock")

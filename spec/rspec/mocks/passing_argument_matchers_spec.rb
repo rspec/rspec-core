@@ -3,7 +3,7 @@ require 'spec_helper'
 def include_mock_argument_matchers
   before(:each) do
     @mock = Rspec::Mocks::Mock.new("test mock")
-    Kernel.stub!(:warn)
+    Kernel.stub(:warn)
   end
   
   after(:each) do

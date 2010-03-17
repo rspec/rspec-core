@@ -17,7 +17,7 @@ module Rspec
         # NOTE - for whatever reason, if you use a the block style of pending here,
         # rcov gets unhappy. Don't know why yet.
         m = mock("foo")
-        m.stub!(:bar)
+        m.stub(:bar)
         m.should_receive(:bar).with("message")
         lambda {
           m.bar("different message")

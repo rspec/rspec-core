@@ -8,7 +8,7 @@ module Bug7611
     class Bar < Foo
     end
     it "should respect subclasses" do
-      Foo.stub!(:new).and_return(Object.new)
+      Foo.stub(:new).and_return(Object.new)
     end
 
     it "should" do

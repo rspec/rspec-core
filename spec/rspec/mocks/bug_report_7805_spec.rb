@@ -5,7 +5,7 @@ module Bug7805
 
   describe "Stubs should correctly restore module methods" do
     it "1 - stub the open method" do
-      File.stub!(:open).and_return("something")
+      File.stub(:open).and_return("something")
       File.open.should == "something"
     end
     it "2 - use File.open to create example.txt" do

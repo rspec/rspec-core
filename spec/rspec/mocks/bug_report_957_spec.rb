@@ -7,7 +7,7 @@ module Spec
         @base_class     = Class.new
         @concrete_class = Class.new(@base_class)
 
-        @base_class.stub!(:find).and_return "stubbed_value"
+        @base_class.stub(:find).and_return "stubbed_value"
       end
 
       it "should return the value for the stub on the base class" do

@@ -93,7 +93,7 @@ module Rspec
   # mock expectations to existing classes and objects:
   #
   #   Factory.should_receive(:find).with(id).and_return(value)
-  #   obj.stub!(:to_i).and_return(3)
+  #   obj.stub(:to_i).and_return(3)
   #   etc ...
   #
   # == Expecting Messages
@@ -168,12 +168,12 @@ module Rspec
   # not support any qualifiers about the message received (i.e. you can't specify arguments
   # or receive counts):
   #
-  #   my_mock.stub!(:sym).and_return(value)
-  #   my_mock.stub!(:sym).and_return(value1, value2, value3)
-  #   my_mock.stub!(:sym).and_raise(error)
-  #   my_mock.stub!(:sym).and_throw(:sym)
-  #   my_mock.stub!(:sym).and_yield(values,to,yield)
-  #   my_mock.stub!(:sym).and_yield(values,to,yield).and_yield(some,other,values,this,time)
+  #   my_mock.stub(:sym).and_return(value)
+  #   my_mock.stub(:sym).and_return(value1, value2, value3)
+  #   my_mock.stub(:sym).and_raise(error)
+  #   my_mock.stub(:sym).and_throw(:sym)
+  #   my_mock.stub(:sym).and_yield(values,to,yield)
+  #   my_mock.stub(:sym).and_yield(values,to,yield).and_yield(some,other,values,this,time)
   #
   # == Arbitrary Handling
   #
