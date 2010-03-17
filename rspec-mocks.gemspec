@@ -68,6 +68,7 @@ Gem::Specification.new do |s|
      "spec/rspec/mocks/bug_report_8302_spec.rb",
      "spec/rspec/mocks/bug_report_830_spec.rb",
      "spec/rspec/mocks/bug_report_957_spec.rb",
+     "spec/rspec/mocks/double_spec.rb",
      "spec/rspec/mocks/failing_argument_matchers_spec.rb",
      "spec/rspec/mocks/hash_including_matcher_spec.rb",
      "spec/rspec/mocks/hash_not_including_matcher_spec.rb",
@@ -110,8 +111,7 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.6}
   s.summary = %q{rspec-mocks-2.0.0.beta.4}
   s.test_files = [
-    "spec/spec_helper.rb",
-     "spec/rspec/mocks/and_yield_spec.rb",
+    "spec/rspec/mocks/and_yield_spec.rb",
      "spec/rspec/mocks/any_number_of_times_spec.rb",
      "spec/rspec/mocks/argument_expectation_spec.rb",
      "spec/rspec/mocks/at_least_spec.rb",
@@ -129,6 +129,7 @@ Gem::Specification.new do |s|
      "spec/rspec/mocks/bug_report_8302_spec.rb",
      "spec/rspec/mocks/bug_report_830_spec.rb",
      "spec/rspec/mocks/bug_report_957_spec.rb",
+     "spec/rspec/mocks/double_spec.rb",
      "spec/rspec/mocks/failing_argument_matchers_spec.rb",
      "spec/rspec/mocks/hash_including_matcher_spec.rb",
      "spec/rspec/mocks/hash_not_including_matcher_spec.rb",
@@ -150,6 +151,7 @@ Gem::Specification.new do |s|
      "spec/rspec/mocks/stub_spec.rb",
      "spec/rspec/mocks/stubbed_message_expectations_spec.rb",
      "spec/rspec/mocks/twice_counts_spec.rb",
+     "spec/spec_helper.rb",
      "spec/support/macros.rb"
   ]
 
