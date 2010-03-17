@@ -21,7 +21,7 @@ describe "An object where respond_to? is true and does not have method" do
   end
 
   it "should not raise an exception for mock" do
-    obj = mock("obj")
+    obj = double("obj")
     obj.should_receive(:respond_to?).with(:foobar).and_return(true)
     obj.should_receive(:foobar).and_return(:baz)
     obj.respond_to?(:foobar).should be_true

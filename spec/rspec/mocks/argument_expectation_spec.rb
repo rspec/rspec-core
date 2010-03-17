@@ -5,7 +5,7 @@ module Rspec
     describe ArgumentExpectation do
       it "should consider an object that responds to #matches? and #description to be a matcher" do
         argument_expecatation = Rspec::Mocks::ArgumentExpectation.new([])
-        obj = mock("matcher")
+        obj = double("matcher")
         obj.should_receive(:respond_to?).with(:matches?).and_return(true)
         obj.should_receive(:respond_to?).with(:description).and_return(true)
         argument_expecatation.is_matcher?(obj).should be_true
@@ -13,7 +13,7 @@ module Rspec
 
       it "should NOT consider an object that only responds to #matches? to be a matcher" do
         argument_expecatation = Rspec::Mocks::ArgumentExpectation.new([])
-        obj = mock("matcher")
+        obj = double("matcher")
         obj.should_receive(:respond_to?).with(:matches?).and_return(true)
         obj.should_receive(:respond_to?).with(:description).and_return(false)
         argument_expecatation.is_matcher?(obj).should be_false

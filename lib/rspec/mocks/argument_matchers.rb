@@ -172,7 +172,7 @@ module Rspec
       # == Examples
       #
       #   array = []
-      #   display = mock('display')
+      #   display = double('display')
       #   display.should_receive(:present_names).with(duck_type(:length, :each))
       #   => passes
       def duck_type(*args)

@@ -1,26 +1,26 @@
 describe "Mock" do
   before do
-    @mock = mock("test mock")
+    @double = double("test double")
   end
   
   specify "when one example has an expectation (non-mock) inside the block passed to the mock" do
-    @mock.should_receive(:msg) do |b|
+    @double.should_receive(:msg) do |b|
       b.should be_true #this call exposes the problem
     end
     begin
-      @mock.msg(false)
+      @double.msg(false)
     rescue Exception
     end
   end
   
   specify "then the next example should behave as expected instead of saying" do
-    @mock.should_receive(:foobar)
-    @mock.foobar
-    @mock.rspec_verify
+    @double.should_receive(:foobar)
+    @double.foobar
+    @double.rspec_verify
     begin
-      @mock.foobar
+      @double.foobar
     rescue Exception => e
-      e.message.should == "Mock \"test mock\" received unexpected message :foobar with (no args)"
+      e.message.should == "Double \"test double\" received unexpected message :foobar with (no args)"
     end
   end 
 end

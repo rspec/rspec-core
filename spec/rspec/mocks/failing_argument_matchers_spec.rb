@@ -4,7 +4,7 @@ module Rspec
   module Mocks
     describe "failing MockArgumentMatchers" do
       before(:each) do
-        @mock = mock("test mock")
+        @mock = double("test double")
         @reporter = Rspec::Mocks::Mock.new("reporter", :null_object => true)
       end
       
@@ -52,35 +52,35 @@ module Rspec
         @mock.should_receive(:random_call).with(:a => "b", :c => "d")
         lambda do
           @mock.random_call(:a => "b", :c => "e")
-        end.should raise_error(Rspec::Mocks::MockExpectationError, /Mock "test mock" received :random_call with unexpected arguments\n  expected: \(\{(:a=>\"b\", :c=>\"d\"|:c=>\"d\", :a=>\"b\")\}\)\n       got: \(\{(:a=>\"b\", :c=>\"e\"|:c=>\"e\", :a=>\"b\")\}\)/)
+        end.should raise_error(Rspec::Mocks::MockExpectationError, /Double "test double" received :random_call with unexpected arguments\n  expected: \(\{(:a=>\"b\", :c=>\"d\"|:c=>\"d\", :a=>\"b\")\}\)\n       got: \(\{(:a=>\"b\", :c=>\"e\"|:c=>\"e\", :a=>\"b\")\}\)/)
       end
       
       it "should fail for a hash w/ wrong keys" do
         @mock.should_receive(:random_call).with(:a => "b", :c => "d")
         lambda do
           @mock.random_call("a" => "b", "c" => "d")
-        end.should raise_error(Rspec::Mocks::MockExpectationError, /Mock "test mock" received :random_call with unexpected arguments\n  expected: \(\{(:a=>\"b\", :c=>\"d\"|:c=>\"d\", :a=>\"b\")\}\)\n       got: \(\{(\"a\"=>\"b\", \"c\"=>\"d\"|\"c\"=>\"d\", \"a\"=>\"b\")\}\)/)
+        end.should raise_error(Rspec::Mocks::MockExpectationError, /Double "test double" received :random_call with unexpected arguments\n  expected: \(\{(:a=>\"b\", :c=>\"d\"|:c=>\"d\", :a=>\"b\")\}\)\n       got: \(\{(\"a\"=>\"b\", \"c\"=>\"d\"|\"c\"=>\"d\", \"a\"=>\"b\")\}\)/)
       end
       
       it "should match against a Matcher" do
         lambda do
           @mock.should_receive(:msg).with(equal(3))
           @mock.msg(37)
-        end.should raise_error(Rspec::Mocks::MockExpectationError, "Mock \"test mock\" received :msg with unexpected arguments\n  expected: (equal 3)\n       got: (37)")
+        end.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :msg with unexpected arguments\n  expected: (equal 3)\n       got: (37)")
       end
       
       it "should fail no_args with one arg" do
         lambda do
           @mock.should_receive(:msg).with(no_args)
           @mock.msg(37)
-        end.should raise_error(Rspec::Mocks::MockExpectationError, "Mock \"test mock\" received :msg with unexpected arguments\n  expected: (no args)\n       got: (37)")
+        end.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :msg with unexpected arguments\n  expected: (no args)\n       got: (37)")
       end
       
       it "should fail hash_including with missing key" do
          lambda do
            @mock.should_receive(:msg).with(hash_including(:a => 1))
            @mock.msg({})
-         end.should raise_error(Rspec::Mocks::MockExpectationError, "Mock \"test mock\" received :msg with unexpected arguments\n  expected: (hash_including(:a=>1))\n       got: ({})")
+         end.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :msg with unexpected arguments\n  expected: (hash_including(:a=>1))\n       got: ({})")
       end
 
       it "should fail with block matchers" do

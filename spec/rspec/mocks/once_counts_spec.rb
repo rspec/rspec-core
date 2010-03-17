@@ -4,7 +4,7 @@ module Rspec
   module Mocks
     describe "OnceCounts" do
       before(:each) do
-        @mock = mock("test mock")
+        @mock = double("test mock")
       end
 
       it "once should fail when called once with wrong args" do

@@ -3,90 +3,90 @@ require 'spec_helper'
 module Rspec
   module Mocks
 
-    describe "Mock ordering" do
+    describe "ordering" do
 
       before do
-        @mock = mock("test mock")
+        @double = double("test double")
       end
       
       after do
-        @mock.rspec_reset
+        @double.rspec_reset
       end
 
       it "should pass two calls in order" do
-        @mock.should_receive(:one).ordered
-        @mock.should_receive(:two).ordered
-        @mock.one
-        @mock.two
-        @mock.rspec_verify
+        @double.should_receive(:one).ordered
+        @double.should_receive(:two).ordered
+        @double.one
+        @double.two
+        @double.rspec_verify
       end
 
       it "should pass three calls in order" do
-        @mock.should_receive(:one).ordered
-        @mock.should_receive(:two).ordered
-        @mock.should_receive(:three).ordered
-        @mock.one
-        @mock.two
-        @mock.three
-        @mock.rspec_verify
+        @double.should_receive(:one).ordered
+        @double.should_receive(:two).ordered
+        @double.should_receive(:three).ordered
+        @double.one
+        @double.two
+        @double.three
+        @double.rspec_verify
       end
 
       it "should fail if second call comes first" do
-        @mock.should_receive(:one).ordered
-        @mock.should_receive(:two).ordered
+        @double.should_receive(:one).ordered
+        @double.should_receive(:two).ordered
         lambda do
-          @mock.two
-        end.should raise_error(Rspec::Mocks::MockExpectationError, "Mock \"test mock\" received :two out of order")
+          @double.two
+        end.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :two out of order")
       end
 
       it "should fail if third call comes first" do
-        @mock.should_receive(:one).ordered
-        @mock.should_receive(:two).ordered
-        @mock.should_receive(:three).ordered
-        @mock.one
+        @double.should_receive(:one).ordered
+        @double.should_receive(:two).ordered
+        @double.should_receive(:three).ordered
+        @double.one
         lambda do
-          @mock.three
-        end.should raise_error(Rspec::Mocks::MockExpectationError, "Mock \"test mock\" received :three out of order")
+          @double.three
+        end.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :three out of order")
       end
       
       it "should fail if third call comes second" do
-        @mock.should_receive(:one).ordered
-        @mock.should_receive(:two).ordered
-        @mock.should_receive(:three).ordered
-        @mock.one
+        @double.should_receive(:one).ordered
+        @double.should_receive(:two).ordered
+        @double.should_receive(:three).ordered
+        @double.one
         lambda do
-          @mock.three
-        end.should raise_error(Rspec::Mocks::MockExpectationError, "Mock \"test mock\" received :three out of order")
+          @double.three
+        end.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :three out of order")
       end
 
       it "should ignore order of non ordered calls" do
-        @mock.should_receive(:ignored_0)
-        @mock.should_receive(:ordered_1).ordered
-        @mock.should_receive(:ignored_1)
-        @mock.should_receive(:ordered_2).ordered
-        @mock.should_receive(:ignored_2)
-        @mock.should_receive(:ignored_3)
-        @mock.should_receive(:ordered_3).ordered
-        @mock.should_receive(:ignored_4)
-        @mock.ignored_3
-        @mock.ordered_1
-        @mock.ignored_0
-        @mock.ordered_2
-        @mock.ignored_4
-        @mock.ignored_2
-        @mock.ordered_3
-        @mock.ignored_1
-        @mock.rspec_verify
+        @double.should_receive(:ignored_0)
+        @double.should_receive(:ordered_1).ordered
+        @double.should_receive(:ignored_1)
+        @double.should_receive(:ordered_2).ordered
+        @double.should_receive(:ignored_2)
+        @double.should_receive(:ignored_3)
+        @double.should_receive(:ordered_3).ordered
+        @double.should_receive(:ignored_4)
+        @double.ignored_3
+        @double.ordered_1
+        @double.ignored_0
+        @double.ordered_2
+        @double.ignored_4
+        @double.ignored_2
+        @double.ordered_3
+        @double.ignored_1
+        @double.rspec_verify
       end
       
       it "should pass when duplicates exist" do
-        @mock.should_receive(:a).ordered
-        @mock.should_receive(:b).ordered
-        @mock.should_receive(:a).ordered
+        @double.should_receive(:a).ordered
+        @double.should_receive(:b).ordered
+        @double.should_receive(:a).ordered
         
-        @mock.a
-        @mock.b
-        @mock.a
+        @double.a
+        @double.b
+        @double.a
       end
             
     end

@@ -68,13 +68,13 @@ module Rspec
   #
   # You can create a mock in any specification (or setup) using:
   #
-  #   mock(name, options={})
+  #   double(name, options={})
   #
   # The optional +options+ argument is a +Hash+. Currently the only supported
   # option is +:null_object+. Setting this to true instructs the mock to ignore
   # any messages it hasn’t been told to expect – and quietly return itself. For example:
   #
-  #   mock("person", :null_object => true)
+  #   double("person", :null_object => true)
   #
   # == Creating a Stub
   #

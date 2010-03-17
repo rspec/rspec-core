@@ -14,7 +14,7 @@ Feature: Spec and test together
 
       describe "a stub in before" do
         before(:each) do
-          @messenger = mock('messenger').as_null_object
+          @messenger = double('messenger').as_null_object
         end
 
         it "a" do

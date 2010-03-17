@@ -4,7 +4,7 @@ module Rspec
   module Mocks
     describe "PreciseCounts" do
       before(:each) do
-        @mock = mock("test mock")
+        @mock = double("test mock")
       end
 
       it "should fail when exactly n times method is called less than n times" do

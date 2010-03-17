@@ -39,14 +39,14 @@ module Rspec
 
     describe "#null_object?" do
       it "should default to false" do
-        obj = mock('anything')
+        obj = double('anything')
         obj.should_not be_null_object
       end
     end
     
     describe "#as_null_object" do
       it "should set the object to null_object" do
-        obj = mock('anything').as_null_object
+        obj = double('anything').as_null_object
         obj.should be_null_object
       end
     end

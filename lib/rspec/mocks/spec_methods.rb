@@ -14,7 +14,7 @@ module Rspec
       #
       # == Examples
       #
-      #   stub_thing = mock("thing", :a => "A")
+      #   stub_thing = double("thing", :a => "A")
       #   stub_thing.a == "A" => true
       #
       #   stub_person = stub("thing", :name => "Joe", :email => "joe@domain.com")

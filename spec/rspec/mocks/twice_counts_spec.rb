@@ -4,7 +4,7 @@ module Rspec
   module Mocks
     describe "TwiceCounts" do
       before(:each) do
-        @mock = mock("test mock")
+        @mock = double("test mock")
       end
 
       it "twice should fail when call count is higher than expected" do

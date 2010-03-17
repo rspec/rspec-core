@@ -117,7 +117,7 @@ module Rspec
       end
       
       it "should yield a specified object and return another specified object" do
-        yielded_obj = mock("my mock")
+        yielded_obj = double("my mock")
         yielded_obj.should_receive(:foo).with(:bar)
         @instance.stub(:method_that_yields_and_returns).and_yield(yielded_obj).and_return(:baz)
         @instance.method_that_yields_and_returns { |o| o.foo :bar }.should == :baz

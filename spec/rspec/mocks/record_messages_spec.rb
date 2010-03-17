@@ -4,7 +4,7 @@ module Rspec
   module Mocks
     describe "a mock" do
       before(:each) do
-        @mock = mock("mock", :null_object => true)
+        @mock = double("mock", :null_object => true)
       end
       it "should answer false for received_message? when no messages received" do
         @mock.received_message?(:message).should be_false
