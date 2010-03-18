@@ -21,23 +21,17 @@ module Rspec
       #   stub_person.name => "Joe"
       #   stub_person.email => "joe@domain.com"
       def double(*args)
-        __declare_double('Double', *args)
+        declare_double('Double', *args)
       end
 
-      # Alias for double
+      # Just like double, but use double
       def mock(*args)
-        __declare_double('Mock', *args)
+        declare_double('Mock', *args)
       end
 
-      # Alias for double
+      # Just like double, but use double
       def stub(*args)
-        __declare_double('Stub', *args)
-      end
-
-      def __declare_double(declared_as, *args) # :nodoc:
-        args << {} unless Hash === args.last
-        args.last[:__declared_as] = declared_as
-        Rspec::Mocks::Mock.new(*args)
+        declare_double('Stub', *args)
       end
 
       # Disables warning messages about expectations being set on nil.
@@ -46,6 +40,14 @@ module Rspec
       # prevent false-positives and to catch potential bugs early on.
       def allow_message_expectations_on_nil
         Proxy.allow_message_expectations_on_nil
+      end
+
+    private
+      
+      def declare_double(declared_as, *args) # :nodoc:
+        args << {} unless Hash === args.last
+        args.last[:__declared_as] = declared_as
+        Rspec::Mocks::Mock.new(*args)
       end
 
     end
