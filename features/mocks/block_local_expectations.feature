@@ -1,9 +1,5 @@
 Feature: block local expectations
 
-  In order to set message expectations on ...
-  As an RSpec user
-  I want to configure the evaluation context
-
   Background:
     Given a file named "account.rb" with:
       """
@@ -22,13 +18,8 @@ Feature: block local expectations
       """
       require 'account'
 
-      Rspec.configure do |config|
-        config.mock_framework = :rspec
-      end
-
       describe "account DSL" do
         it "it succeeds when the block local receives the given call" do
-          account = Account.new
           Account.should_receive(:create).and_yield do |account|
             account.should_receive(:opening_balance).with(100, :USD)
           end
@@ -47,13 +38,8 @@ Feature: block local expectations
       """
       require 'account'
 
-      Rspec.configure do |config|
-        config.mock_framework = :rspec
-      end
-
       describe "account DSL" do
         it "fails when the block local does not receive the expected call" do
-          account = Account.new
           Account.should_receive(:create).and_yield do |account|
             account.should_receive(:opening_balance).with(100, :USD)
           end
