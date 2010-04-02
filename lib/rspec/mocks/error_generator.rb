@@ -30,7 +30,7 @@ module Rspec
       end
       
       def raise_expectation_error(sym, expected_received_count, actual_received_count, *args)
-        __raise "#{intro} expected :#{sym}#{arg_message(*args)} #{count_message(expected_received_count)}, but received it #{count_message(actual_received_count)}"
+        __raise "(#{intro}).#{sym}#{format_args(*args)}\n    expected: #{count_message(expected_received_count)}\n    received: #{count_message(actual_received_count)}"
       end
       
       def raise_out_of_order_error(sym)
@@ -88,9 +88,7 @@ module Rspec
       end
 
       def pretty_print(count)
-        return "once" if count == 1
-        return "twice" if count == 2
-        return "#{count} times"
+        "#{count} time#{count == 1 ? '' : 's'}"
       end
 
     end

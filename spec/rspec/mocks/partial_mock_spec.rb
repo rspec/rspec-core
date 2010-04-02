@@ -9,9 +9,9 @@ module Rspec
     
       it "should name the class in the failure message" do
         @object.should_receive(:foo)
-        lambda do
+        expect do
           @object.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError, /<Object:.*> expected/)
+        end.to raise_error(Rspec::Mocks::MockExpectationError, /\(#<Object:.*>\).foo/)
       end
     
       it "should name the class in the failure message when expectation is on class" do
@@ -29,9 +29,12 @@ module Rspec
             
       it "should_not_receive should mock out the method" do
         @object.should_not_receive(:fuhbar)
-        lambda do
+        expect {
           @object.fuhbar
-        end.should raise_error(Rspec::Mocks::MockExpectationError, /<Object:.*> expected :fuhbar with \(no args\) 0 times/)
+        }.to raise_error(
+          Rspec::Mocks::MockExpectationError, 
+          /expected\: 0 times\n    received\: 1 time/
+        )
       end
     
       it "should_not_receive should return a negative message expectation" do
@@ -82,9 +85,12 @@ module Rspec
         allow_message_expectations_on_nil
         
         @this_will_resolve_to_nil.should_receive(:foobar)
-        lambda do
+        expect {
           @this_will_resolve_to_nil.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError, /nil expected :foobar with/)
+        }.to raise_error(
+          Rspec::Mocks::MockExpectationError, 
+          %Q|(nil).foobar(any args)\n    expected: 1 time\n    received: 0 times|
+        )
       end
     end
     

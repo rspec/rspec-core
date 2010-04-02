@@ -50,18 +50,24 @@ module Rspec
 
       it "should fail when receiving message specified as not to be received" do
         @mock.should_not_receive(:not_expected)
-        lambda {
+        expect {
           @mock.not_expected
           violated
-        }.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" expected :not_expected with (no args) 0 times, but received it once")
+        }.to raise_error(
+          Rspec::Mocks::MockExpectationError, 
+          %Q|(Double "test double").not_expected(no args)\n    expected: 0 times\n    received: 1 time|
+        )
       end
 
       it "should fail when receiving message specified as not to be received with args" do
         @mock.should_not_receive(:not_expected).with("unexpected text")
-        lambda {
+        expect {
           @mock.not_expected("unexpected text")
           violated
-        }.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" expected :not_expected with (\"unexpected text\") 0 times, but received it once")
+        }.to raise_error(
+          Rspec::Mocks::MockExpectationError, 
+          %Q|(Double "test double").not_expected("unexpected text")\n    expected: 0 times\n    received: 1 time|
+        )
       end
 
       it "should pass when receiving message specified as not to be received with wrong args" do
@@ -133,23 +139,25 @@ module Rspec
 
       it "should fail if expectation block fails" do
         @mock.should_receive(:something) {| bool | bool.should be_true}
-        lambda {
+        expect {
           @mock.something false
-        }.should raise_error(Rspec::Mocks::MockExpectationError, /Double \"test double\" received :something but passed block failed with: expected false to be true/)
+        }.to raise_error(Rspec::Mocks::MockExpectationError, /Double \"test double\" received :something but passed block failed with: expected false to be true/)
       end
 
       it "should fail right away when method defined as never is received" do
         @mock.should_receive(:not_expected).never
-        lambda {
-          @mock.not_expected
-        }.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" expected :not_expected with (no args) 0 times, but received it once")
+        expect { @mock.not_expected }.to raise_error(
+          Rspec::Mocks::MockExpectationError, 
+          %Q|(Double "test double").not_expected(no args)\n    expected: 0 times\n    received: 1 time|
+        )
       end
 
       it "should eventually fail when method defined as never is received" do
         @mock.should_receive(:not_expected).never
-        lambda {
-          @mock.not_expected
-        }.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" expected :not_expected with (no args) 0 times, but received it once")
+        expect { @mock.not_expected }.to raise_error(
+          Rspec::Mocks::MockExpectationError, 
+          %Q|(Double "test double").not_expected(no args)\n    expected: 0 times\n    received: 1 time|
+        )
       end
 
       it "should raise when told to" do
