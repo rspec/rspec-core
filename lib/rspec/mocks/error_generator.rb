@@ -19,7 +19,13 @@ module Rspec
       
       def raise_unexpected_message_args_error(expectation, *args)
         expected_args = format_args(*expectation.expected_args)
-        actual_args = args.empty? ? "(no args)" : format_args(*args)
+        actual_args = format_args(*args)
+        __raise "#{intro} received #{expectation.sym.inspect} with unexpected arguments\n  expected: #{expected_args}\n       got: #{actual_args}"
+      end
+      
+      def raise_similar_message_args_error(expectation, *args)
+        expected_args = format_args(*expectation.expected_args)
+        actual_args = args.collect {|a| format_args(*a)}.join(", ")
         __raise "#{intro} received #{expectation.sym.inspect} with unexpected arguments\n  expected: #{expected_args}\n       got: #{actual_args}"
       end
       

@@ -102,7 +102,7 @@ module Rspec
         lambda {
           @mock.something("a","d","c")
           @mock.rspec_verify
-        }.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: ([\"a\", \"d\", \"c\"])")
+        }.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: (\"a\", \"d\", \"c\")")
       end
 
       it "should raise exception if args don't match when method called even when using null_object" do
@@ -111,7 +111,7 @@ module Rspec
         lambda {
           @mock.something("a","d","c")
           @mock.rspec_verify
-        }.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: ([\"a\", \"d\", \"c\"])")
+        }.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: (\"a\", \"d\", \"c\")")
       end
 
       it "should fail if unexpected method called" do

@@ -17,7 +17,7 @@ module Rspec
         double.foo('third')
         lambda do
           double.rspec_verify
-        end.should raise_error(%Q|Double "double" received :foo with unexpected arguments\n  expected: ("first")\n       got: (["second"], ["third"])|)
+        end.should raise_error(%Q|Double "double" received :foo with unexpected arguments\n  expected: ("first")\n       got: ("second"), ("third")|)
         double.rspec_reset
       end
     end
