@@ -67,7 +67,7 @@ module Rspec
 
       it "should return values in order to consecutive calls" do
         return_values = ["1",2,Object.new]
-        @instance.stub(:msg).and_return(return_values[0],return_values[1],return_values[2])
+        @instance.stub(:msg).and_return(*return_values)
         @instance.msg.should == return_values[0]
         @instance.msg.should == return_values[1]
         @instance.msg.should == return_values[2]
@@ -130,9 +130,15 @@ module Rspec
         end.should throw_symbol(:up)
       end
       
-      it "should override a pre-existing stub" do
+      it "should override a pre-existing method" do
         @stub.stub(:existing_instance_method).and_return(:updated_stub_value)
         @stub.existing_instance_method.should == :updated_stub_value
+      end
+
+      it "should override a pre-existing stub" do
+        @stub.stub(:foo) { 'bar' }
+        @stub.stub(:foo) { 'baz' }
+        @stub.foo.should == 'baz'
       end
       
       it "should limit " do

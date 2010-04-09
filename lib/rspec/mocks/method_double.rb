@@ -127,14 +127,14 @@ module Rspec
       def add_negative_expectation(error_generator, expectation_ordering, expected_from, &implementation)
         configure_method
         expectation = NegativeMessageExpectation.new(error_generator, expectation_ordering, expected_from, @method_name, implementation)
-        expectations << expectation
+        expectations.unshift expectation
         expectation
       end
 
       def add_stub(error_generator, expectation_ordering, expected_from, opts={}, &implementation)
         configure_method
         stub = MessageExpectation.new(error_generator, expectation_ordering, expected_from, @method_name, nil, :any, opts, &implementation)
-        stubs << stub
+        stubs.unshift stub
         stub
       end
 
