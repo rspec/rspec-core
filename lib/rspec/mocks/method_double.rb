@@ -57,8 +57,10 @@ module Rspec
       def configure_method
         $rspec_mocks.add(@object) if $rspec_mocks
         warn_if_nil_class
-        stash_original_method
-        define_proxy_method
+        unless @stashed
+          stash_original_method
+          define_proxy_method
+        end
       end
 
       def stash_original_method
