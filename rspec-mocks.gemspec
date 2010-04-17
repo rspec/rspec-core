@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["David Chelimsky", "Chad Humphries"]
-  s.date = %q{2010-04-11}
+  s.date = %q{2010-04-17}
   s.description = %q{Rspec's 'test double' framework, with support for stubbing and mocking}
   s.email = %q{dchelimsky@gmail.com;chad.humphries@gmail.com}
   s.extra_rdoc_files = [
@@ -85,6 +85,7 @@ Gem::Specification.new do |s|
      "spec/rspec/mocks/passing_argument_matchers_spec.rb",
      "spec/rspec/mocks/precise_counts_spec.rb",
      "spec/rspec/mocks/record_messages_spec.rb",
+     "spec/rspec/mocks/stash_spec.rb",
      "spec/rspec/mocks/stub_chain_spec.rb",
      "spec/rspec/mocks/stub_implementation_spec.rb",
      "spec/rspec/mocks/stub_spec.rb",
@@ -146,6 +147,7 @@ Gem::Specification.new do |s|
      "spec/rspec/mocks/passing_argument_matchers_spec.rb",
      "spec/rspec/mocks/precise_counts_spec.rb",
      "spec/rspec/mocks/record_messages_spec.rb",
+     "spec/rspec/mocks/stash_spec.rb",
      "spec/rspec/mocks/stub_chain_spec.rb",
      "spec/rspec/mocks/stub_implementation_spec.rb",
      "spec/rspec/mocks/stub_spec.rb",
