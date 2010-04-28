@@ -5,11 +5,23 @@ module RSpec
     describe "A method stub" do
       before(:each) do
         @class = Class.new do
-          def self.existing_class_method
-            :original_value
+          class << self
+            def existing_class_method
+              existing_private_class_method
+            end
+
+            private
+            def existing_private_class_method
+              :original_value
+            end
           end
 
           def existing_instance_method
+            existing_private_instance_method
+          end
+
+          private
+          def existing_private_instance_method
             :original_value
           end
         end
@@ -90,10 +102,26 @@ module RSpec
         @instance.rspec_verify
         @instance.existing_instance_method.should equal(:original_value)
       end
-      
+
+      it "should revert to original private instance method if there is one" do
+        @instance.existing_instance_method.should equal(:original_value)
+        @instance.stub(:existing_private_instance_method).and_return(:mock_value)
+        @instance.existing_instance_method.should equal(:mock_value)
+        @instance.rspec_verify
+        @instance.existing_instance_method.should equal(:original_value)
+      end
+
       it "should revert to original class method if there is one" do
         @class.existing_class_method.should equal(:original_value)
         @class.stub(:existing_class_method).and_return(:mock_value)
+        @class.existing_class_method.should equal(:mock_value)
+        @class.rspec_verify
+        @class.existing_class_method.should equal(:original_value)
+      end
+
+      it "should revert to original private class method if there is one" do
+        @class.existing_class_method.should equal(:original_value)
+        @class.stub(:existing_private_class_method).and_return(:mock_value)
         @class.existing_class_method.should equal(:mock_value)
         @class.rspec_verify
         @class.existing_class_method.should equal(:original_value)

@@ -68,7 +68,7 @@ module RSpec
           stashed = stashed_method_name
           orig = @method_name
           object_singleton_class.class_eval do
-            alias_method(stashed, orig) if method_defined?(orig)
+            alias_method(stashed, orig) if method_defined?(orig) || private_method_defined?(orig)
           end
           @stashed = true
         end
@@ -91,7 +91,7 @@ module RSpec
           stashed_method_name = self.stashed_method_name
           object_singleton_class.instance_eval do
             remove_method method_name
-            if method_defined?(stashed_method_name)
+            if method_defined?(stashed_method_name) || private_method_defined?(stashed_method_name)
               alias_method method_name, stashed_method_name
               remove_method stashed_method_name
             end
