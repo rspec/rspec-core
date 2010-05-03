@@ -34,6 +34,8 @@ module Rspec
         inspect.gsub('<','[').gsub('>',']')
       end
 
+      alias_method :to_str, :to_s
+
     private
 
       def method_missing(sym, *args, &block)
