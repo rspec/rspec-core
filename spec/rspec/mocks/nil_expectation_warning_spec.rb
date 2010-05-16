@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 def remove_last_describe_from_world
-  Rspec::Core.world.example_groups.pop
+  Rspec::world.example_groups.pop
 end
 
 def empty_example_group
