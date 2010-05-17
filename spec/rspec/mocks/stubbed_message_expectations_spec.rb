@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-module Rspec
+module RSpec
   module Mocks
     describe "Example with stubbed and then called message" do
       it "fails if the message is expected and then subsequently not called again" do
         double = double("mock", :msg => nil)
         double.msg
         double.should_receive(:msg)
-        lambda { double.rspec_verify }.should raise_error(Rspec::Mocks::MockExpectationError)
+        lambda { double.rspec_verify }.should raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       it "outputs arguments of all similar calls" do

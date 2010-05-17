@@ -1,4 +1,4 @@
-module Rspec
+module RSpec
   module Mocks
     class MethodDouble < Hash
       attr_reader :method_name
@@ -145,13 +145,13 @@ module Rspec
       end
 
       def warn_if_nil_class
-        if proxy_for_nil_class? & Rspec::Mocks::Proxy.warn_about_expectations_on_nil
+        if proxy_for_nil_class? & RSpec::Mocks::Proxy.warn_about_expectations_on_nil
           Kernel.warn("An expectation of :#{@method_name} was set on nil. Called from #{caller[4]}. Use allow_message_expectations_on_nil to disable warnings.")
         end
       end
 
       def reset_nil_expectations_warning
-        Rspec::Mocks::Proxy.warn_about_expectations_on_nil = true if proxy_for_nil_class?
+        RSpec::Mocks::Proxy.warn_about_expectations_on_nil = true if proxy_for_nil_class?
       end
     end
   end

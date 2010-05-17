@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-module Rspec
+module RSpec
   module Mocks
     describe "a Mock expectation with multiple return values and no specified count" do
       before(:each) do
-        @mock = Rspec::Mocks::Mock.new("mock")
+        @mock = RSpec::Mocks::Mock.new("mock")
         @return_values = ["1",2,Object.new]
         @mock.should_receive(:message).and_return(@return_values[0],@return_values[1],@return_values[2])
       end
@@ -21,7 +21,7 @@ module Rspec
         @mock.message.should == @return_values[0]
         @mock.message.should == @return_values[1]
         expect { @mock.rspec_verify }.to raise_error(
-          Rspec::Mocks::MockExpectationError, 
+          RSpec::Mocks::MockExpectationError, 
           %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 2 times|
         )
       end
@@ -33,7 +33,7 @@ module Rspec
         @mock.message.should == @return_values[2]
         @mock.message.should == @return_values[2]
         expect { @mock.rspec_verify }.to raise_error(
-          Rspec::Mocks::MockExpectationError, 
+          RSpec::Mocks::MockExpectationError, 
           %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 4 times|
         )
       end
@@ -41,7 +41,7 @@ module Rspec
 
     describe "a Mock expectation with multiple return values with a specified count equal to the number of values" do
       before(:each) do
-        @mock = Rspec::Mocks::Mock.new("mock")
+        @mock = RSpec::Mocks::Mock.new("mock")
         @return_values = ["1",2,Object.new]
         @mock.should_receive(:message).exactly(3).times.and_return(@return_values[0],@return_values[1],@return_values[2])
       end
@@ -58,7 +58,7 @@ module Rspec
         @mock.message.should == @return_values[0]
         @mock.message.should == @return_values[1]
         expect { @mock.rspec_verify }.to raise_error(
-          Rspec::Mocks::MockExpectationError, 
+          RSpec::Mocks::MockExpectationError, 
           %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 2 times|
         )
       end
@@ -70,7 +70,7 @@ module Rspec
         @mock.message.should == @return_values[2]
         @mock.message.should == @return_values[2]
         expect { @mock.rspec_verify }.to raise_error(
-          Rspec::Mocks::MockExpectationError, 
+          RSpec::Mocks::MockExpectationError, 
           %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 4 times|
         )
       end
@@ -78,7 +78,7 @@ module Rspec
 
     describe "a Mock expectation with multiple return values specifying at_least less than the number of values" do
       before(:each) do
-        @mock = Rspec::Mocks::Mock.new("mock")
+        @mock = RSpec::Mocks::Mock.new("mock")
         @mock.should_receive(:message).at_least(:twice).with(no_args).and_return(11, 22)
       end
       
@@ -92,7 +92,7 @@ module Rspec
       it "should fail when called less than the specified number" do
         @mock.message.should equal(11)
         expect { @mock.rspec_verify }.to raise_error(
-          Rspec::Mocks::MockExpectationError, 
+          RSpec::Mocks::MockExpectationError, 
           %Q|(Mock "mock").message(no args)\n    expected: 2 times\n    received: 1 time|
         )
       end
@@ -100,7 +100,7 @@ module Rspec
 
     describe "a Mock expectation with multiple return values with a specified count larger than the number of values" do
       before(:each) do
-        @mock = Rspec::Mocks::Mock.new("mock")
+        @mock = RSpec::Mocks::Mock.new("mock")
         @mock.should_receive(:message).exactly(3).times.and_return(11, 22)
       end
       
@@ -114,7 +114,7 @@ module Rspec
       it "should fail when called less than the specified number" do
         @mock.message.should equal(11)
         expect { @mock.rspec_verify }.to raise_error(
-          Rspec::Mocks::MockExpectationError, 
+          RSpec::Mocks::MockExpectationError, 
           %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 1 time|
         )
       end
@@ -125,7 +125,7 @@ module Rspec
         @mock.message.should equal(22)
         @mock.message.should equal(22)
         expect { @mock.rspec_verify }.to raise_error(
-          Rspec::Mocks::MockExpectationError, 
+          RSpec::Mocks::MockExpectationError, 
           %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 4 times|
         )
       end

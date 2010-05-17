@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Rspec
+module RSpec
   module Mocks
     describe "mock failure" do
       
@@ -9,7 +9,7 @@ module Rspec
         double.should_receive(:bar).with("message")
         lambda {
           double.bar("different message")
-        }.should raise_error(Rspec::Mocks::MockExpectationError, %Q{Double "foo" received :bar with unexpected arguments\n  expected: ("message")\n       got: ("different message")})
+        }.should raise_error(RSpec::Mocks::MockExpectationError, %Q{Double "foo" received :bar with unexpected arguments\n  expected: ("message")\n       got: ("different message")})
         double.rspec_reset # so the example doesn't fail
       end
 
@@ -21,7 +21,7 @@ module Rspec
         double.should_receive(:bar).with("message")
         lambda {
           double.bar("different message")
-        }.should raise_error(Rspec::Mocks::MockExpectationError, %Q{Double 'foo' expected :bar with ("message") but received it with ("different message")})
+        }.should raise_error(RSpec::Mocks::MockExpectationError, %Q{Double 'foo' expected :bar with ("message") but received it with ("different message")})
         double.rspec_reset # so the example doesn't fail
       end
     end

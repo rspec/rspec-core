@@ -3,7 +3,7 @@ def obj
   @obj ||= mock
 end
 
-describe Rspec::Mocks::Mock do
+describe RSpec::Mocks::Mock do
   describe "#and_yield" do
     context "with eval context as block argument" do
       
@@ -63,7 +63,7 @@ describe Rspec::Mocks::Mock do
             # foo is not called here
           end
 
-          lambda {configured_eval_context.rspec_verify}.should raise_error(Rspec::Mocks::MockExpectationError)
+          lambda {configured_eval_context.rspec_verify}.should raise_error(RSpec::Mocks::MockExpectationError)
         end
 
       end
@@ -102,8 +102,8 @@ describe Rspec::Mocks::Mock do
             # foo is not called here
           end
 
-          lambda {configured_eval_context.rspec_verify}.should raise_error(Rspec::Mocks::MockExpectationError)
-          lambda {yielded_arg.rspec_verify}.should raise_error(Rspec::Mocks::MockExpectationError)
+          lambda {configured_eval_context.rspec_verify}.should raise_error(RSpec::Mocks::MockExpectationError)
+          lambda {yielded_arg.rspec_verify}.should raise_error(RSpec::Mocks::MockExpectationError)
         end
 
       end

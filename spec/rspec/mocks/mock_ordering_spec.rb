@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Rspec
+module RSpec
   module Mocks
 
     describe "ordering" do
@@ -36,7 +36,7 @@ module Rspec
         @double.should_receive(:two).ordered
         lambda do
           @double.two
-        end.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :two out of order")
+        end.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :two out of order")
       end
 
       it "should fail if third call comes first" do
@@ -46,7 +46,7 @@ module Rspec
         @double.one
         lambda do
           @double.three
-        end.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :three out of order")
+        end.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :three out of order")
       end
       
       it "should fail if third call comes second" do
@@ -56,7 +56,7 @@ module Rspec
         @double.one
         lambda do
           @double.three
-        end.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :three out of order")
+        end.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :three out of order")
       end
 
       it "should ignore order of non ordered calls" do

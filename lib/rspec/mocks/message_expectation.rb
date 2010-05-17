@@ -1,4 +1,4 @@
-module Rspec
+module RSpec
   module Mocks
 
     class BaseExpectation
@@ -90,7 +90,7 @@ module Rspec
         if block
           require 'rspec/mocks/extensions/instance_exec'
           @eval_context = Object.new
-          @eval_context.extend Rspec::Core::InstanceExec
+          @eval_context.extend RSpec::Core::InstanceExec
           yield @eval_context
         end
         
@@ -206,7 +206,7 @@ module Rspec
         return if expected_messages_received? || failed_fast?
     
         generate_error
-      rescue Rspec::Mocks::MockExpectationError => error
+      rescue RSpec::Mocks::MockExpectationError => error
         error.backtrace.insert(0, @expected_from)
         Kernel::raise error
       end

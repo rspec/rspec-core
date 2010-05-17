@@ -35,7 +35,7 @@ module Macros
   end
 end
 
-module Rspec  
+module RSpec  
   module Matchers
     def with_ruby(version)
       yield if RUBY_VERSION =~ Regexp.compile("^#{version.to_s}")
@@ -43,10 +43,10 @@ module Rspec
   end
 end
 
-Rspec.configure do |config|
+RSpec.configure do |config|
   config.mock_with :rspec
   config.color_enabled = true
   config.extend(Macros)
-  config.include(Rspec::Matchers)
-  config.include(Rspec::Mocks::Methods)
+  config.include(RSpec::Matchers)
+  config.include(RSpec::Mocks::Methods)
 end

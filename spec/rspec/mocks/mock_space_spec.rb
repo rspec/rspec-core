@@ -1,11 +1,11 @@
 require 'spec_helper'
 require 'rspec/mocks'
 
-module Rspec
+module RSpec
   module Mocks
     describe Space do
       before :each do
-        @space = Rspec::Mocks::Space.new
+        @space = RSpec::Mocks::Space.new
         klazz = Class.new do
           def rspec_verify
             @verified = true

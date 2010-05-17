@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Rspec
+module RSpec
   module Mocks
     describe "using a Partial Mock," do
       before(:each) do
@@ -11,14 +11,14 @@ module Rspec
         @object.should_receive(:foo)
         expect do
           @object.rspec_verify
-        end.to raise_error(Rspec::Mocks::MockExpectationError, /\(#<Object:.*>\).foo/)
+        end.to raise_error(RSpec::Mocks::MockExpectationError, /\(#<Object:.*>\).foo/)
       end
     
       it "should name the class in the failure message when expectation is on class" do
         Object.should_receive(:foo)
         lambda do
           Object.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError, /<Object \(class\)>/)
+        end.should raise_error(RSpec::Mocks::MockExpectationError, /<Object \(class\)>/)
       end
     
       it "should not conflict with @options in the object" do
@@ -32,13 +32,13 @@ module Rspec
         expect {
           @object.fuhbar
         }.to raise_error(
-          Rspec::Mocks::MockExpectationError, 
+          RSpec::Mocks::MockExpectationError, 
           /expected\: 0 times\n    received\: 1 time/
         )
       end
     
       it "should_not_receive should return a negative message expectation" do
-        @object.should_not_receive(:foobar).should be_kind_of(Rspec::Mocks::NegativeMessageExpectation)
+        @object.should_not_receive(:foobar).should be_kind_of(RSpec::Mocks::NegativeMessageExpectation)
       end
     
       it "should_receive should mock out the method" do
@@ -58,7 +58,7 @@ module Rspec
       end
     
       it "should_receive should return a message expectation" do
-        @object.should_receive(:foobar).should be_kind_of(Rspec::Mocks::MessageExpectation)
+        @object.should_receive(:foobar).should be_kind_of(RSpec::Mocks::MessageExpectation)
         @object.foobar
       end
     
@@ -66,7 +66,7 @@ module Rspec
         @object.should_receive(:foobar).with(:test_param).and_return(1)
         lambda do
           @object.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
     
       it "should_receive should also take a String argument" do
@@ -78,7 +78,7 @@ module Rspec
         @object.should_not_receive('foobar')
         lambda do
           @object.foobar   
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
       
       it "should use report nil in the error message" do
@@ -88,7 +88,7 @@ module Rspec
         expect {
           @this_will_resolve_to_nil.rspec_verify
         }.to raise_error(
-          Rspec::Mocks::MockExpectationError, 
+          RSpec::Mocks::MockExpectationError, 
           %Q|(nil).foobar(any args)\n    expected: 1 time\n    received: 0 times|
         )
       end

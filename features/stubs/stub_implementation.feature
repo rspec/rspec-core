@@ -6,7 +6,7 @@ Feature: stub implementation
   Scenario: stub implementation
     Given a file named "stub_implementation_spec.rb" with:
       """
-      Rspec.configure do |c|
+      RSpec.configure do |c|
         c.mock_with :rspec
       end
 

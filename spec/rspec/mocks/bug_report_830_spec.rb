@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Rspec
+module RSpec
   module Mocks
     describe 'Calling a method that catches StandardError' do
       class Foo
@@ -14,7 +14,7 @@ module Rspec
         Foo.should_not_receive :bar
         lambda do
           Foo.foo
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
     end
   end

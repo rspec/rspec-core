@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-module Rspec
+module RSpec
   module Mocks
     describe "a mock acting as a NullObject" do
       before(:each) do
-        @mock = Rspec::Mocks::Mock.new("null_object", :null_object => true)
+        @mock = RSpec::Mocks::Mock.new("null_object", :null_object => true)
       end
 
       it "should allow explicit expectation" do
@@ -16,7 +16,7 @@ module Rspec
         lambda do
           @mock.should_receive(:something)
           @mock.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       it "should ignore unexpected methods" do

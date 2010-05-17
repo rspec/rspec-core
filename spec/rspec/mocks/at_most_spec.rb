@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-module Rspec
+module RSpec
   module Mocks
     describe "at_most" do
       before(:each) do
-        @mock = Rspec::Mocks::Mock.new("test mock")
+        @mock = RSpec::Mocks::Mock.new("test mock")
       end
 
       it "should fail when at most n times method is called n plus 1 times" do
@@ -16,7 +16,7 @@ module Rspec
         @mock.random_call
         lambda do
           @mock.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       it "should fail when at most once method is called twice" do
@@ -25,7 +25,7 @@ module Rspec
         @mock.random_call
         lambda do
           @mock.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       it "should fail when at most twice method is called three times" do
@@ -35,7 +35,7 @@ module Rspec
         @mock.random_call
         lambda do
           @mock.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       it "should pass when at most n times method is called exactly n times" do

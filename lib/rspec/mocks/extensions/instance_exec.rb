@@ -1,4 +1,4 @@
-module Rspec
+module RSpec
   module Core
     module InstanceExec
       unless respond_to?(:instance_exec)

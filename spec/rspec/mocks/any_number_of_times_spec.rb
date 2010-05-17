@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-module Rspec
+module RSpec
   module Mocks
     
     describe "AnyNumberOfTimes" do
       before(:each) do
-        @mock = Rspec::Mocks::Mock.new("test mock")
+        @mock = RSpec::Mocks::Mock.new("test mock")
       end
 
       it "should pass if any number of times method is called many times" do

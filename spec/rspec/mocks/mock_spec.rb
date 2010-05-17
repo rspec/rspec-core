@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-module Rspec
+module RSpec
   module Mocks
     describe Mock do
-      treats_method_missing_as_private :subject => Rspec::Mocks::Mock.new, :noop => false
+      treats_method_missing_as_private :subject => RSpec::Mocks::Mock.new, :noop => false
       
       before(:each) do
         @mock = double("test double")
@@ -18,7 +18,7 @@ module Rspec
         begin
           @mock.rspec_verify
           violated
-        rescue Rspec::Mocks::MockExpectationError => e
+        rescue RSpec::Mocks::MockExpectationError => e
           # NOTE - this regexp ended w/ $, but jruby adds extra info at the end of the line
           e.backtrace[0].should match(/#{File.basename(__FILE__)}:#{expected_error_line}/)
         end
@@ -30,7 +30,7 @@ module Rspec
         begin
           @mock.rspec_verify
           violated
-        rescue Rspec::Mocks::MockExpectationError => e
+        rescue RSpec::Mocks::MockExpectationError => e
           # NOTE - this regexp ended w/ $, but jruby adds extra info at the end of the line
           e.backtrace[0].should match(/#{File.basename(__FILE__)}:#{expected_error_line}/)
         end
@@ -54,7 +54,7 @@ module Rspec
           @mock.not_expected
           violated
         }.to raise_error(
-          Rspec::Mocks::MockExpectationError, 
+          RSpec::Mocks::MockExpectationError, 
           %Q|(Double "test double").not_expected(no args)\n    expected: 0 times\n    received: 1 time|
         )
       end
@@ -65,7 +65,7 @@ module Rspec
           @mock.not_expected("unexpected text")
           violated
         }.to raise_error(
-          Rspec::Mocks::MockExpectationError, 
+          RSpec::Mocks::MockExpectationError, 
           %Q|(Double "test double").not_expected("unexpected text")\n    expected: 0 times\n    received: 1 time|
         )
       end
@@ -99,7 +99,7 @@ module Rspec
         lambda {
           @mock.something("a","d","c")
           violated
-        }.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: (\"a\", \"d\", \"c\")")
+        }.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: (\"a\", \"d\", \"c\")")
       end
 
       it "should raise exception if args don't match when method called even when the method is stubbed" do
@@ -108,7 +108,7 @@ module Rspec
         lambda {
           @mock.something("a","d","c")
           @mock.rspec_verify
-        }.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: (\"a\", \"d\", \"c\")")
+        }.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: (\"a\", \"d\", \"c\")")
       end
 
       it "should raise exception if args don't match when method called even when using null_object" do
@@ -117,14 +117,14 @@ module Rspec
         lambda {
           @mock.something("a","d","c")
           @mock.rspec_verify
-        }.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: (\"a\", \"d\", \"c\")")
+        }.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: (\"a\", \"d\", \"c\")")
       end
 
       it "should fail if unexpected method called" do
         lambda {
           @mock.something("a","b","c")
           violated
-        }.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received unexpected message :something with (\"a\", \"b\", \"c\")")
+        }.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received unexpected message :something with (\"a\", \"b\", \"c\")")
       end
 
       it "should use block for expectation if provided" do
@@ -141,13 +141,13 @@ module Rspec
         @mock.should_receive(:something) {| bool | bool.should be_true}
         expect {
           @mock.something false
-        }.to raise_error(Rspec::Mocks::MockExpectationError, /Double \"test double\" received :something but passed block failed with: expected false to be true/)
+        }.to raise_error(RSpec::Mocks::MockExpectationError, /Double \"test double\" received :something but passed block failed with: expected false to be true/)
       end
 
       it "should fail right away when method defined as never is received" do
         @mock.should_receive(:not_expected).never
         expect { @mock.not_expected }.to raise_error(
-          Rspec::Mocks::MockExpectationError, 
+          RSpec::Mocks::MockExpectationError, 
           %Q|(Double "test double").not_expected(no args)\n    expected: 0 times\n    received: 1 time|
         )
       end
@@ -155,7 +155,7 @@ module Rspec
       it "should eventually fail when method defined as never is received" do
         @mock.should_receive(:not_expected).never
         expect { @mock.not_expected }.to raise_error(
-          Rspec::Mocks::MockExpectationError, 
+          RSpec::Mocks::MockExpectationError, 
           %Q|(Double "test double").not_expected(no args)\n    expected: 0 times\n    received: 1 time|
         )
       end
@@ -186,7 +186,7 @@ module Rspec
         @mock.should_receive(:something).with(2).and_raise(RuntimeError)
         lambda {
           @mock.something 1
-        }.should raise_error(Rspec::Mocks::MockExpectationError)
+        }.should raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       it "should throw when told to" do
@@ -201,7 +201,7 @@ module Rspec
           @mock.should_receive(:fruit) do |colour|
             :strawberry
           end.and_return :apple
-        }.should raise_error(Rspec::Mocks::AmbiguousReturnError)
+        }.should raise_error(RSpec::Mocks::AmbiguousReturnError)
       end
 
       it "should ignore args on any args" do
@@ -217,14 +217,14 @@ module Rspec
         @mock.should_receive(:something).with(no_args())
         lambda {
           @mock.something 1
-        }.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (no args)\n       got: (1)")
+        }.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (no args)\n       got: (1)")
       end
 
       it "should fail when args are expected but none are received" do
         @mock.should_receive(:something).with(1)
         lambda {
           @mock.something
-        }.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (1)\n       got: (no args)")
+        }.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (1)\n       got: (no args)")
       end
 
       it "should return value from block by default" do
@@ -332,7 +332,7 @@ module Rspec
         @mock.should_receive(:yield_back).with(no_args()).once.and_yield('wha', 'zup')
         lambda {
           @mock.yield_back {|a|}
-        }.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" yielded |\"wha\", \"zup\"| to block with arity of 1")
+        }.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" yielded |\"wha\", \"zup\"| to block with arity of 1")
       end
 
       it "should fail when calling yielding method consecutively with wrong arity" do
@@ -343,14 +343,14 @@ module Rspec
           a, b = nil
           c = []
           @mock.yield_back {|a,b| c << [a, b]}
-        }.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" yielded |\"down\"| to block with arity of 2")
+        }.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" yielded |\"down\"| to block with arity of 2")
       end
 
       it "should fail when calling yielding method without block" do
         @mock.should_receive(:yield_back).with(no_args()).once.and_yield('wha', 'zup')
         lambda {
           @mock.yield_back
-        }.should raise_error(Rspec::Mocks::MockExpectationError, "Double \"test double\" asked to yield |[\"wha\", \"zup\"]| but no block was passed")
+        }.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" asked to yield |[\"wha\", \"zup\"]| but no block was passed")
       end
 
       it "should be able to mock send" do
@@ -377,7 +377,7 @@ module Rspec
         @mock.rspec_verify
         lambda {
           @mock.foobar
-        }.should raise_error(Rspec::Mocks::MockExpectationError, %q|Double "test double" received unexpected message :foobar with (no args)|)
+        }.should raise_error(RSpec::Mocks::MockExpectationError, %q|Double "test double" received unexpected message :foobar with (no args)|)
       end
 
       it "should restore objects to their original state on rspec_reset" do
@@ -413,7 +413,7 @@ module Rspec
         @mock.rspec_verify
 
         lambda { @mock.foobar }.should_not raise_error(NameError)
-        lambda { @mock.foobar }.should raise_error(Rspec::Mocks::MockExpectationError)
+        lambda { @mock.foobar }.should raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       it "should temporarily replace a method stub on a mock" do
@@ -437,7 +437,7 @@ module Rspec
       it "should raise an error when a previously stubbed method has a negative expectation" do
         @mock.stub(:msg).and_return(:stub_value)
         @mock.should_not_receive(:msg).and_return(:mock_value)
-        lambda {@mock.msg(:arg)}.should raise_error(Rspec::Mocks::MockExpectationError)
+        lambda {@mock.msg(:arg)}.should raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       it "should temporarily replace a method stub on a non-mock" do
@@ -476,7 +476,7 @@ module Rspec
       end
 
       it "should assign stub return values" do
-        mock = Rspec::Mocks::Mock.new('name', :message => :response)
+        mock = RSpec::Mocks::Mock.new('name', :message => :response)
         mock.message.should == :response
       end
 

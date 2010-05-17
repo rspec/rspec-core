@@ -1,4 +1,4 @@
-module Rspec
+module RSpec
   module Mocks
     class Space
       def add(obj)

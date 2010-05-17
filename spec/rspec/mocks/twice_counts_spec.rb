@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Rspec
+module RSpec
   module Mocks
     describe "TwiceCounts" do
       before(:each) do
@@ -14,7 +14,7 @@ module Rspec
         @mock.random_call
         lambda do
           @mock.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
       
       it "twice should fail when call count is lower than expected" do
@@ -22,14 +22,14 @@ module Rspec
         @mock.random_call
         lambda do
           @mock.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
       
       it "twice should fail when called twice with wrong args on the first call" do
         @mock.should_receive(:random_call).twice.with("1", 1)
         lambda do
           @mock.random_call(1, "1")
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
         @mock.rspec_reset
       end
       
@@ -38,7 +38,7 @@ module Rspec
         @mock.random_call("1", 1)
         lambda do
           @mock.random_call(1, "1")
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
         @mock.rspec_reset
       end
       

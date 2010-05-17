@@ -6,15 +6,15 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "rspec-mocks"
-    gem.version = Rspec::Mocks::Version::STRING
-    gem.summary = "rspec-mocks-#{Rspec::Mocks::Version::STRING}"
-    gem.description = "Rspec's 'test double' framework, with support for stubbing and mocking"
+    gem.version = RSpec::Mocks::Version::STRING
+    gem.summary = "rspec-mocks-#{RSpec::Mocks::Version::STRING}"
+    gem.description = "RSpec's 'test double' framework, with support for stubbing and mocking"
     gem.email = "dchelimsky@gmail.com;chad.humphries@gmail.com"
     gem.homepage = "http://github.com/rspec/mocks"
     gem.authors = ["David Chelimsky", "Chad Humphries"]    
     gem.rubyforge_project = "rspec"
-    gem.add_development_dependency 'rspec-core', Rspec::Mocks::Version::STRING
-    gem.add_development_dependency 'rspec-expectations', Rspec::Mocks::Version::STRING
+    gem.add_development_dependency 'rspec-core', RSpec::Mocks::Version::STRING
+    gem.add_development_dependency 'rspec-expectations', RSpec::Mocks::Version::STRING
     gem.post_install_message = <<-EOM
 #{"*"*50}
 
@@ -34,20 +34,20 @@ end
 namespace :gem do
   desc "push to gemcutter"
   task :push => :build do
-    system "gem push pkg/rspec-mocks-#{Rspec::Mocks::Version::STRING}.gem"
+    system "gem push pkg/rspec-mocks-#{RSpec::Mocks::Version::STRING}.gem"
   end
 end
 
 begin
   require 'rspec/core/rake_task'
-  Rspec::Core::RakeTask.new(:spec)
+  RSpec::Core::RakeTask.new(:spec)
 
-  Rspec::Core::RakeTask.new(:rcov) do |spec|
+  RSpec::Core::RakeTask.new(:rcov) do |spec|
     spec.rcov = true
     spec.rcov_opts = %[--exclude "core,expectations,gems/*,spec/resources,spec/spec,spec/spec_helper.rb,db/*,/Library/Ruby/*,config/*" --text-summary  --sort coverage]
   end
 rescue LoadError
-  puts "Rspec core or one of its dependencies is not installed. Install it with: gem install rspec-meta"
+  puts "RSpec core or one of its dependencies is not installed. Install it with: gem install rspec-meta"
 end
 
 begin
@@ -68,7 +68,7 @@ end
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "rspec-mocks #{Rspec::Mocks::Version::STRING}"
+  rdoc.title = "rspec-mocks #{RSpec::Mocks::Version::STRING}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end

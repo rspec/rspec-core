@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Rspec
+module RSpec
   module Mocks
     module ArgumentMatchers
       describe HashIncludingMatcher do

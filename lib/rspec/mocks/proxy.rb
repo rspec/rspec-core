@@ -1,4 +1,4 @@
-module Rspec
+module RSpec
   module Mocks
     class Proxy
       DEFAULT_OPTIONS = { :null_object => false }

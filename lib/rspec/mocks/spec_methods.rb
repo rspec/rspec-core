@@ -1,9 +1,9 @@
-module Rspec
+module RSpec
   module Mocks
     module ExampleMethods
-      include Rspec::Mocks::ArgumentMatchers
+      include RSpec::Mocks::ArgumentMatchers
 
-      # Shortcut for creating an instance of Rspec::Mocks::Mock.
+      # Shortcut for creating an instance of RSpec::Mocks::Mock.
       #
       # +name+ is used for failure reporting, so you should use the
       # role that the mock is playing in the example.
@@ -47,7 +47,7 @@ module Rspec
       def declare_double(declared_as, *args) # :nodoc:
         args << {} unless Hash === args.last
         args.last[:__declared_as] = declared_as
-        Rspec::Mocks::Mock.new(*args)
+        RSpec::Mocks::Mock.new(*args)
       end
 
     end

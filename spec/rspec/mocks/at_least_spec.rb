@@ -1,17 +1,17 @@
 require 'spec_helper'
 
-module Rspec
+module RSpec
   module Mocks
     describe "at_least" do
       before(:each) do
-        @mock = Rspec::Mocks::Mock.new("test mock")
+        @mock = RSpec::Mocks::Mock.new("test mock")
       end
 
       it "should fail if method is never called" do
         @mock.should_receive(:random_call).at_least(4).times
           lambda do
         @mock.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       it "should fail when called less than n times" do
@@ -21,14 +21,14 @@ module Rspec
         @mock.random_call
         lambda do
           @mock.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       it "should fail when at least once method is never called" do
         @mock.should_receive(:random_call).at_least(:once)
         lambda do
           @mock.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       it "should fail when at least twice method is called once" do
@@ -36,14 +36,14 @@ module Rspec
         @mock.random_call
         lambda do
           @mock.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       it "should fail when at least twice method is never called" do
         @mock.should_receive(:random_call).at_least(:twice)
         lambda do
           @mock.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       it "should pass when at least n times method is called exactly n times" do

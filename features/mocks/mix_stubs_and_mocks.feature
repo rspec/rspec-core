@@ -8,7 +8,7 @@ Feature: Spec and test together
       """
       require 'rspec/expectations'
 
-      Rspec.configure do |config|
+      RSpec.configure do |config|
         config.mock_framework = :rspec
       end
 

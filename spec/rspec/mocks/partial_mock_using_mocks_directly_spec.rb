@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Rspec
+module RSpec
 module Mocks
 describe "PartialMockUsingMocksDirectly" do
     before(:each) do
@@ -29,14 +29,14 @@ describe "PartialMockUsingMocksDirectly" do
         @obj.should_receive(:msg)
         lambda do
           @obj.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       
     end
     it "should fail when message is received with incorrect args" do
         @obj.should_receive(:msg).with(:correct_arg)
         lambda do
           @obj.msg(:incorrect_arg)
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
         @obj.msg(:correct_arg)
       
     end

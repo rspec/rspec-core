@@ -1,3 +1,3 @@
 class Object
-  include Rspec::Mocks::Methods
+  include RSpec::Mocks::Methods
 end

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 def include_mock_argument_matchers
   before(:each) do
-    @mock = Rspec::Mocks::Mock.new("test mock")
+    @mock = RSpec::Mocks::Mock.new("test mock")
     Kernel.stub(:warn)
   end
   
@@ -10,7 +10,7 @@ def include_mock_argument_matchers
     @mock.rspec_verify
   end
 end
-module Rspec
+module RSpec
   module Mocks
     
     describe Methods, "handling argument matchers" do
@@ -106,7 +106,7 @@ module Rspec
     describe Methods, "handling non-matcher arguments" do
       
       before(:each) do
-        @mock = Rspec::Mocks::Mock.new("test mock")
+        @mock = RSpec::Mocks::Mock.new("test mock")
       end
       
       it "should match non special symbol (can be removed when deprecated symbols are removed)" do

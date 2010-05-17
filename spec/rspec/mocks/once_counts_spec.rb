@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Rspec
+module RSpec
   module Mocks
     describe "OnceCounts" do
       before(:each) do
@@ -11,7 +11,7 @@ module Rspec
         @mock.should_receive(:random_call).once.with("a", "b", "c")
         lambda do
           @mock.random_call("d", "e", "f")
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
         @mock.rspec_reset
       end
 
@@ -21,14 +21,14 @@ module Rspec
         @mock.random_call
         lambda do
           @mock.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
       
       it "once should fail when not called" do
         @mock.should_receive(:random_call).once
         lambda do
           @mock.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       it "once should pass when called once" do

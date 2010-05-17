@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Rspec
+module RSpec
   module Mocks
     describe "PreciseCounts" do
       before(:each) do
@@ -13,14 +13,14 @@ module Rspec
         @mock.random_call
         lambda do
           @mock.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       it "should fail when exactly n times method is never called" do
         @mock.should_receive(:random_call).exactly(3).times
         lambda do
           @mock.rspec_verify
-        end.should raise_error(Rspec::Mocks::MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       it "should pass if exactly n times method is called exactly n times" do

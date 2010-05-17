@@ -2,7 +2,7 @@ require 'rspec/mocks/framework'
 require 'rspec/mocks/extensions/object'
 require 'rspec/mocks/version'
 
-module Rspec
+module RSpec
   # == Mocks and Stubs
   #
   # RSpec will create Mock Objects and Stubs for you at runtime, or attach stub/mock behaviour
@@ -112,11 +112,11 @@ module Rspec
   # using == by default. In cases in which you want to specify things about the arguments
   # rather than the arguments themselves, you can use any of RSpec's Expression Matchers.
   # They don't all make syntactic sense (they were primarily designed for use with
-  # Rspec::Expectations), but you are free to create your own custom Rspec::Matchers.
+  # RSpec::Expectations), but you are free to create your own custom RSpec::Matchers.
   #
-  # Rspec::Mocks does provide one additional Matcher method named #ducktype.
+  # RSpec::Mocks does provide one additional Matcher method named #ducktype.
   #
-  # In addition, Rspec::Mocks adds some keyword Symbols that you can use to
+  # In addition, RSpec::Mocks adds some keyword Symbols that you can use to
   # specify certain kinds of arguments:
   #
   #   my_mock.should_receive(:sym).with(no_args())

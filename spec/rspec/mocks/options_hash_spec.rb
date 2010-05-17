@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-module Rspec
+module RSpec
   module Mocks
     describe "calling :should_receive with an options hash" do
       it "should report the file and line submitted with :expected_from" do
         begin
-          mock = Rspec::Mocks::Mock.new("a mock")
+          mock = RSpec::Mocks::Mock.new("a mock")
           mock.should_receive(:message, :expected_from => "/path/to/blah.ext:37")
           mock.rspec_verify
         rescue Exception => e
@@ -16,7 +16,7 @@ module Rspec
 
       it "should use the message supplied with :message" do
         lambda {
-          m = Rspec::Mocks::Mock.new("a mock")
+          m = RSpec::Mocks::Mock.new("a mock")
           m.should_receive(:message, :message => "recebi nada")
           m.rspec_verify
         }.should raise_error("recebi nada")
@@ -24,7 +24,7 @@ module Rspec
       
       it "should use the message supplied with :message after a similar stub" do
         lambda {
-          m = Rspec::Mocks::Mock.new("a mock")
+          m = RSpec::Mocks::Mock.new("a mock")
           m.stub(:message)
           m.should_receive(:message, :message => "from mock")
           m.rspec_verify

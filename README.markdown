@@ -1,4 +1,4 @@
-# Rspec Mocks
+# RSpec Mocks
 
 rspec-mocks provides a test-double framework for rspec including support
 for method stubs, fakes, and message expectations.
