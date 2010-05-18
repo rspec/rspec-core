@@ -1,5 +1,5 @@
 module RSpec
-  module Core
+  module Mocks
     module InstanceExec
       unless respond_to?(:instance_exec)
         # based on Bounded Spec InstanceExec (Mauricio Fernandez)
