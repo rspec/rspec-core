@@ -5,7 +5,7 @@ module RSpec
     describe "failing MockArgumentMatchers" do
       before(:each) do
         @mock = double("test double")
-        @reporter = RSpec::Mocks::Mock.new("reporter", :null_object => true)
+        @reporter = RSpec::Mocks::Mock.new("reporter").as_null_object
       end
       
       after(:each) do

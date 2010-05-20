@@ -3,23 +3,21 @@ module RSpec
     module ExampleMethods
       include RSpec::Mocks::ArgumentMatchers
 
-      # Shortcut for creating an instance of RSpec::Mocks::Mock.
+      # Creates an instance of RSpec::Mocks::Mock.
       #
-      # +name+ is used for failure reporting, so you should use the
-      # role that the mock is playing in the example.
+      # +name+ is used for failure reporting, so you should use the role that
+      # the mock is playing in the example.
       #
-      # +stubs_and_options+ lets you assign options and stub values
-      # at the same time. The only option available is :null_object.
-      # Anything else is treated as a stub value.
+      # Use +stubs+ to declare one or more method stubs in one statement.
       #
       # == Examples
       #
-      #   stub_thing = double("thing", :a => "A")
-      #   stub_thing.a == "A" => true
+      #   book = double("book", :title => "The RSpec Book")
+      #   book.title => "The RSpec Book"
       #
-      #   stub_person = stub("thing", :name => "Joe", :email => "joe@domain.com")
-      #   stub_person.name => "Joe"
-      #   stub_person.email => "joe@domain.com"
+      #   card = double("card", :suit => "Spades", :rank => "A"
+      #   card.suit => "Spades"
+      #   card.rank => "A"
       def double(*args)
         declare_double('Double', *args)
       end
@@ -44,7 +42,7 @@ module RSpec
 
     private
       
-      def declare_double(declared_as, *args) # :nodoc:
+      def declare_double(declared_as, *args)
         args << {} unless Hash === args.last
         args.last[:__declared_as] = declared_as
         RSpec::Mocks::Mock.new(*args)

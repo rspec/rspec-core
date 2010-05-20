@@ -3,10 +3,8 @@ module RSpec
     class Mock
       include Methods
 
-      # Creates a new mock with a +name+ (that will be used in error messages
-      # only) == Options:
-      # * <tt>:null_object</tt> - if true, the mock object acts as a forgiving
-      #   null object allowing any message to be sent to it.
+      # Creates a new test double with a +name+ (that will be used in error messages
+      # only)
       def initialize(name=nil, stubs_and_options={})
         if name.is_a?(Hash) && stubs_and_options.empty?
           stubs_and_options = name
@@ -49,8 +47,11 @@ module RSpec
       end
 
       def extract_options(stubs_and_options)
+        if stubs_and_options[:null_object]
+          @null_object = stubs_and_options.delete(:null_object)
+          RSpec.deprecate(%Q["double('name', :null_object => true)"], %Q["double('name').as_null_object"])
+        end
         options = {}
-        extract_option(stubs_and_options, options, :null_object)
         extract_option(stubs_and_options, options, :__declared_as, 'Mock')
         options
       end

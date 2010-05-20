@@ -1,8 +1,6 @@
 module RSpec
   module Mocks
     class Proxy
-      DEFAULT_OPTIONS = { :null_object => false }
-
       class << self
         def warn_about_expectations_on_nil
           defined?(@warn_about_expectations_on_nil) ? @warn_about_expectations_on_nil : true
@@ -31,24 +29,27 @@ module RSpec
         @error_generator = ErrorGenerator.new object, name, options
         @expectation_ordering = OrderGroup.new @error_generator
         @messages_received = []
-        @options = options ? DEFAULT_OPTIONS.dup.merge(options) : DEFAULT_OPTIONS
+        @options = options
         @already_proxied_respond_to = false
+        @null_object = false
       end
 
       def null_object?
-        @options[:null_object]
+        @null_object
       end
       
+      # Tells the object to ignore any messages that aren't explicitly set as
+      # stubs or message expectations.
       def as_null_object
-        @options[:null_object] = true
+        @null_object = true
         @object
       end
 
-      def already_proxied_respond_to
+      def already_proxied_respond_to # :nodoc:
         @already_proxied_respond_to = true
       end
 
-      def already_proxied_respond_to?
+      def already_proxied_respond_to? # :nodoc:
         @already_proxied_respond_to
       end
 

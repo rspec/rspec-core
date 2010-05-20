@@ -4,7 +4,7 @@ module RSpec
   module Mocks
     describe "a mock acting as a NullObject" do
       before(:each) do
-        @mock = RSpec::Mocks::Mock.new("null_object", :null_object => true)
+        @mock = RSpec::Mocks::Mock.new("null_object").as_null_object
       end
 
       it "should allow explicit expectation" do

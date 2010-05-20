@@ -112,7 +112,7 @@ module RSpec
       end
 
       it "should raise exception if args don't match when method called even when using null_object" do
-        @mock = double("test double", :null_object => true)
+        @mock = double("test double").as_null_object
         @mock.should_receive(:something).with("a","b","c")
         lambda {
           @mock.something("a","d","c")
