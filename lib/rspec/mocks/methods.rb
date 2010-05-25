@@ -17,7 +17,12 @@ module RSpec
         end
       end
       
+      def unstub(sym)
+        __mock_proxy.remove_stub(sym)
+      end
+      
       alias_method :stub!, :stub
+      alias_method :unstub!, :unstub
 
       def stub_chain(*methods)
         if methods.length > 1

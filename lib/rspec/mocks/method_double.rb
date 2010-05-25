@@ -139,6 +139,11 @@ module RSpec
         stubs.unshift stub
         stub
       end
+      
+      def remove_stub
+        raise_method_not_stubbed_error if stubs.empty?
+        expectations.empty? ? reset : stubs.clear
+      end
 
       def proxy_for_nil_class?
         @object.nil?
@@ -148,6 +153,10 @@ module RSpec
         if proxy_for_nil_class? & RSpec::Mocks::Proxy.warn_about_expectations_on_nil
           Kernel.warn("An expectation of :#{@method_name} was set on nil. Called from #{caller[4]}. Use allow_message_expectations_on_nil to disable warnings.")
         end
+      end
+      
+      def raise_method_not_stubbed_error
+        raise MockExpectationError, "The method `#{method_name}` was not stubbed or was already unstubbed" 
       end
 
       def reset_nil_expectations_warning

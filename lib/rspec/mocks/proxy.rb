@@ -65,6 +65,10 @@ module RSpec
         method_double[method_name].add_stub @error_generator, @expectation_ordering, location, opts, &implementation
       end
       
+      def remove_stub(method_name)
+        method_double[method_name].remove_stub
+      end
+      
       def verify #:nodoc:
         method_doubles.each {|d| d.verify}
       ensure
