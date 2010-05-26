@@ -26,5 +26,5 @@ Feature: stub implementation
         end
       end
       """
-    When I run "rspec stub_implementation_spec.rb"
+    When I run "rspec ./stub_implementation_spec.rb"
     Then I should see "1 example, 0 failures"

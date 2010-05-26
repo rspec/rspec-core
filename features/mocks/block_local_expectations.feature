@@ -1,7 +1,7 @@
 Feature: block local expectations
 
   Background:
-    Given a file named "account.rb" with:
+    Given a file named "lib/account.rb" with:
       """
       class Account
         def self.create
@@ -14,7 +14,7 @@ Feature: block local expectations
       """
 
   Scenario: passing example
-    Given a file named "account_passing_spec.rb" with:
+    Given a file named "spec/account_passing_spec.rb" with:
       """
       require 'account'
 
@@ -29,12 +29,12 @@ Feature: block local expectations
         end
       end
       """
-    When I run "rspec account_passing_spec.rb"
+    When I run "rspec ./spec/account_passing_spec.rb"
     Then I should see "1 example, 0 failures"
     
   Scenario: failing example
     
-    Given a file named "account_failing_spec.rb" with:
+    Given a file named "spec/account_failing_spec.rb" with:
       """
       require 'account'
 
@@ -50,5 +50,5 @@ Feature: block local expectations
       end
       """
 
-    When I run "rspec account_failing_spec.rb"
+    When I run "rspec ./spec/account_failing_spec.rb"
     Then I should see "1 example, 1 failure"
