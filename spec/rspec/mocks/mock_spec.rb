@@ -458,7 +458,7 @@ module RSpec
       end
 
       it "should return the stubbed value when stubbed with args and no new value specified" do
-        @mock.stub!(:msg).with(:arg).and_return(:stub_value)
+        @mock.stub(:msg).with(:arg).and_return(:stub_value)
         @mock.should_receive(:msg).with(:arg)
         @mock.msg(:arg).should equal(:stub_value)
         @mock.rspec_verify
