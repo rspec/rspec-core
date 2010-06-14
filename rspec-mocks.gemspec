@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["David Chelimsky", "Chad Humphries"]
-  s.date = %q{2010-06-06}
+  s.date = %q{2010-06-12}
   s.description = %q{RSpec's 'test double' framework, with support for stubbing and mocking}
   s.email = %q{dchelimsky@gmail.com;chad.humphries@gmail.com}
   s.extra_rdoc_files = [
@@ -99,10 +99,6 @@ Gem::Specification.new do |s|
   s.post_install_message = %q{**************************************************
 
   Thank you for installing rspec-mocks-2.0.0.beta.11
-
-  This is beta software. If you are looking
-  for a supported production release, please
-  "gem install rspec" (without --pre).
   
 **************************************************
 }
