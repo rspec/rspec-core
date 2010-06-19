@@ -5,21 +5,14 @@
 
 require 'flexmock/rspec'
 
-module RSpec
-  module Core
-    module MockFrameworkAdapter
+RSpec.subscribe(:before_befores) do |example|
+  example.extend FlexMock::MockContainer
+end
 
-      include FlexMock::MockContainer
-      def setup_mocks_for_rspec
-        # No setup required
-      end
-      def verify_mocks_for_rspec
-        flexmock_verify
-      end
-      def teardown_mocks_for_rspec
-        flexmock_close
-      end
-
-    end
+RSpec.subscribe(:before_afters) do |example|
+  begin
+    example.flexmock_verify
+  ensure
+    example.flexmock_close
   end
 end

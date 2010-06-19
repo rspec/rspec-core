@@ -40,7 +40,7 @@ module RSpec
         /bin\/spec/,
         /lib\/rspec\/(core|expectations|matchers|mocks)/
       ]
-    
+
       # :call-seq:
       #   add_setting(:name)
       #   add_setting(:name, :default => "default_value")
@@ -97,6 +97,10 @@ module RSpec
 
       def cleaned_from_backtrace?(line)
         backtrace_clean_patterns.any? { |regex| line =~ regex }
+      end
+
+      def mock_with(mock_framework)
+        self.mock_framework = mock_framework
       end
 
       def require_mock_framework_adapter
@@ -243,7 +247,6 @@ EOM
 
       def configure_mock_framework
         require_mock_framework_adapter
-        RSpec::Core::ExampleGroup.send(:include, RSpec::Core::MockFrameworkAdapter)
       end
 
       def require_files_to_run
