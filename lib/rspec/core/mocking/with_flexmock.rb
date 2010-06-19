@@ -5,11 +5,11 @@
 
 require 'flexmock/rspec'
 
-RSpec.subscribe(:before_befores) do |example|
+RSpec.subscribe(:example_started) do |example|
   example.extend FlexMock::MockContainer
 end
 
-RSpec.subscribe(:before_afters) do |example|
+RSpec.subscribe(:example_finished) do |example|
   begin
     example.flexmock_verify
   ensure

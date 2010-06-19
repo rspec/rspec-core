@@ -1,7 +1,7 @@
 require 'mocha/standalone'
 require 'mocha/object'
 
-RSpec.subscribe(:before_befores) do |example|
+RSpec.subscribe(:example_started) do |example|
   # Mocha::Standalone was deprecated as of Mocha 0.9.7.  
   begin
     example.extend Mocha::API
@@ -11,7 +11,7 @@ RSpec.subscribe(:before_befores) do |example|
   example.mocha_setup
 end
 
-RSpec.subscribe(:before_afters) do |example|
+RSpec.subscribe(:example_finished) do |example|
   begin
     example.mocha_verify
   ensure

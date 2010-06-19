@@ -64,6 +64,12 @@ module RSpec
     @subscriptions ||= Hash.new {|h,k| h[k] = []}
   end
 
+  # Supported events:
+  #   example_group_started
+  #   example_started
+  #   example_initialized
+  #   example_finished
+  #   example_finalized
   def self.subscribe(event, &callback)
     subscriptions[event] << callback
   end
