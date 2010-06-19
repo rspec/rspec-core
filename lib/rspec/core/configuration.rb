@@ -193,7 +193,7 @@ EOM
       def string_const?(str)
         str.is_a?(String) && /\A[A-Z][a-zA-Z0-9_:]*\z/ =~ str
       end
-      
+
       def formatter
         @formatter ||= formatter_class.new(output)
       end

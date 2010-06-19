@@ -22,17 +22,12 @@ module RSpec
           @failed_examples ||= ::RSpec.world.find(examples, :execution_result => { :status => 'failed' })
         end
 
-        def report(count)
-          sync_output do
-            start(count)
-            begin
-              yield self
-            ensure
-              stop
-              dump(@duration)
-              close
-            end
-          end
+        def start_sync_output
+          @old_sync, output.sync = output.sync, true if output_supports_sync
+        end
+
+        def restore_sync_status
+          output.sync = @old_sync if output_supports_sync
         end
 
         # This method is invoked before any examples are run, right after
@@ -42,12 +37,16 @@ module RSpec
         # This method will only be invoked once, and the next one to be invoked
         # is #add_example_group
         def start(example_count)
+          start_sync_output
           @start = Time.now
           @example_count = example_count
         end
 
         def stop
           @duration = Time.now - @start
+          dump(@duration)
+          close
+          restore_sync_status
         end
 
         def example_finished(example)
@@ -126,15 +125,6 @@ module RSpec
             open(file_path, 'r') { |f| f.readlines[line_number.to_i - 1] }
           else
             "Unable to find #{file_path} to read failed line"
-          end
-        end
-
-        def sync_output
-          begin
-            old_sync, output.sync = output.sync, true if output_supports_sync
-            yield
-          ensure
-            output.sync = old_sync if output_supports_sync
           end
         end
 

@@ -18,14 +18,17 @@ module RSpec
         configuration.output_stream = out
         world.announce_inclusion_filter
 
-        configuration.reporter.report(example_count) do |reporter|
-          begin
-            configuration.run_hook(:before, :suite)
-            example_groups.run_examples(reporter)
-          ensure
-            configuration.run_hook(:after, :suite)
-          end
+        reporter = configuration.reporter
+        reporter.start(example_count)
+
+        begin
+          configuration.run_hook(:before, :suite)
+          example_groups.run_examples(reporter)
+        ensure
+          configuration.run_hook(:after, :suite)
         end
+
+        reporter.stop
 
         example_groups.success?
       end
