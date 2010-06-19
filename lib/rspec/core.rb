@@ -59,6 +59,18 @@ module RSpec
   def self.configure
     yield configuration if block_given?
   end
+
+  def self.subscriptions
+    @subscriptions ||= Hash.new {|h,k| h[k] = []}
+  end
+
+  def self.subscribe(event, &callback)
+    subscriptions[event] << callback
+  end
+
+  def self.publish(event, target)
+    subscriptions[event].each {|callback| callback.call(target)}
+  end
 end
 
 require 'rspec/core/backward_compatibility'
