@@ -69,8 +69,8 @@ module RSpec
   #   example_group_started
   #   example_started
   #   example_initialized
+  #   example_executed
   #   example_finished
-  #   example_finalized
   def self.subscribe(event, &callback)
     subscriptions[event] << callback
   end
