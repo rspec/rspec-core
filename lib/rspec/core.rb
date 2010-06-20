@@ -74,8 +74,8 @@ module RSpec
     subscriptions[event] << callback
   end
 
-  def self.publish(event, target)
-    subscriptions[event].each {|callback| callback.call(target)}
+  def self.publish(event, *args)
+    subscriptions[event].each {|callback| callback.call(*args)}
   end
 end
 

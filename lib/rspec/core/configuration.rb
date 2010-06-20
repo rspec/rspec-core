@@ -205,6 +205,7 @@ EOM
 
         def method_missing(method, *args, &block)
           subscribers.each do |s|
+            RSpec.publish(method, *args)
             s.send(method, *args, &block) if s.respond_to?(method)
           end
         end

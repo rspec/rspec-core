@@ -1,4 +1,5 @@
 require "spec_helper"
+require "stringio"
 
 module RSpec::Core::Formatters
 
@@ -32,7 +33,8 @@ module RSpec::Core::Formatters
         group = RSpec::Core::ExampleGroup.describe
         example = group.example { "this".should eq("that") }
         formatter = RSpec::Core::Formatters::BaseTextFormatter.new(output)
-        group.run_all(formatter)
+        notifier = RSpec::Core::Configuration::Notifier.new(formatter)
+        group.run_all(notifier)
 
         RSpec.configuration.stub(:color_enabled?) { false }
         formatter.dump_failures

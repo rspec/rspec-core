@@ -40,7 +40,7 @@ module RSpec
         exception = nil
 
         begin
-          RSpec.publish(:example_started, @example_group_instance)
+          reporter.example_started(@example_group_instance)
           run_before_each
           RSpec.publish(:example_initialized, @example_group_instance)
           pending_declared_in_example = catch(:pending_declared_in_example) do
