@@ -42,7 +42,7 @@ module RSpec
         begin
           reporter.example_started(@example_group_instance)
           run_before_each
-          RSpec.publish(:example_initialized, @example_group_instance)
+          reporter.example_initialized(@example_group_instance)
           pending_declared_in_example = catch(:pending_declared_in_example) do
             @in_block = true
             if @example_group_class.hooks[:around][:each].empty?
@@ -60,9 +60,9 @@ module RSpec
         end
 
         begin
-          RSpec.publish(:example_finished, @example_group_instance)
+          reporter.example_executed(@example_group_instance)
           run_after_each
-          RSpec.publish(:example_finalized, @example_group_instance)
+          reporter.example_finalized(@example_group_instance)
         rescue Exception => e
           exception ||= e
         ensure
