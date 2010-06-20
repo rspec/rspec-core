@@ -84,8 +84,7 @@ module RSpec
       end
 
       def using_attribute?
-        example.in_block? &&
-        example.metadata[:attribute_of_subject]
+        example.specifies_attribute?
       end
 
     end

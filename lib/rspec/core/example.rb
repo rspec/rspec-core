@@ -1,8 +1,15 @@
 module RSpec
   module Core
     class Example
+      RSpec.subscribe(:example_initialized) {|e| e.example.in_block = true}
+      RSpec.subscribe(:example_executed) {|e| e.example.in_block = false}
 
       attr_reader :metadata, :example_block, :options
+      attr_accessor :in_block
+      
+      def in_block?
+        !!in_block
+      end
 
       def self.delegate_to_metadata(*keys)
         keys.each do |key|
@@ -24,14 +31,13 @@ module RSpec
         @example_group_class
       end
 
-      def in_block?
-        @in_block
+      def specifies_attribute?
+        in_block && metadata[:attribute_of_subject]
       end
 
       alias_method :behaviour, :example_group
 
       def run(example_group_instance, reporter)
-        @in_block = false
         @example_group_instance = example_group_instance
         @example_group_instance.example = self
 
@@ -44,7 +50,6 @@ module RSpec
           run_before_each
           reporter.example_initialized(@example_group_instance)
           pending_declared_in_example = catch(:pending_declared_in_example) do
-            @in_block = true
             if @example_group_class.hooks[:around][:each].empty?
               @example_group_instance.instance_eval(&example_block) unless pending
             else
@@ -55,12 +60,11 @@ module RSpec
         rescue Exception => e
           exception = e
         ensure
-          @in_block = false
+          reporter.example_executed(@example_group_instance)
           assign_auto_description
         end
 
         begin
-          reporter.example_executed(@example_group_instance)
           run_after_each
         rescue Exception => e
           exception ||= e
@@ -125,7 +129,6 @@ module RSpec
       def record_results(results={})
         execution_result.update(results)
       end
-
     end
   end
 end
