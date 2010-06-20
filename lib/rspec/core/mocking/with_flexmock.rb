@@ -9,7 +9,7 @@ RSpec.subscribe(:example_started) do |example|
   example.extend FlexMock::MockContainer
 end
 
-RSpec.subscribe(:example_finished) do |example|
+RSpec.subscribe(:example_executed) do |example|
   begin
     example.flexmock_verify
   ensure

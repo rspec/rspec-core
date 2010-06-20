@@ -12,6 +12,7 @@ require 'rspec/core/pending'
 
 require 'rspec/core/around_proxy'
 require 'rspec/core/world'
+require 'rspec/core/notifier'
 require 'rspec/core/configuration'
 require 'rspec/core/option_parser'
 require 'rspec/core/configuration_options'

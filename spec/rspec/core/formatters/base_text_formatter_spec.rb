@@ -33,7 +33,7 @@ module RSpec::Core::Formatters
         group = RSpec::Core::ExampleGroup.describe
         example = group.example { "this".should eq("that") }
         formatter = RSpec::Core::Formatters::BaseTextFormatter.new(output)
-        notifier = RSpec::Core::Configuration::Notifier.new(formatter)
+        notifier = RSpec::Core::Notifier.new(formatter)
         group.run_all(notifier)
 
         RSpec.configuration.stub(:color_enabled?) { false }

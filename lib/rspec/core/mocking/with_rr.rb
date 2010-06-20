@@ -7,7 +7,7 @@ RSpec.subscribe(:example_started) do |example|
   RR::Space.instance.reset
 end
 
-RSpec.subscribe(:example_finished) do |example|
+RSpec.subscribe(:example_executed) do |example|
   begin
     RR::Space.instance.verify_doubles
   ensure

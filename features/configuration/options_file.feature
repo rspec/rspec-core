@@ -57,7 +57,7 @@ Feature: spec/spec.opts
       describe "formatter" do
         context "when set with RSpec.configure and in spec.opts" do
           it "takes the value set in spec.opts" do
-            RSpec.configuration.formatter.should be_an(RSpec::Core::Formatters::DocumentationFormatter)
+            RSpec.configuration.formatter.subscribers.first.should be_an(RSpec::Core::Formatters::DocumentationFormatter)
           end
         end
       end
