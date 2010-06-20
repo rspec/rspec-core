@@ -58,6 +58,7 @@ module RSpec
       alias_example_to :specify
       alias_example_to :focused, :focused => true
       alias_example_to :pending, :pending => true
+      alias_example_to :xit, :pending => true
 
       def self.it_should_behave_like(*names)
         names.each do |name|
