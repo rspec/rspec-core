@@ -29,27 +29,6 @@ module RSpec
       yield configuration if block_given?
     end
   end
-
-  module Core
-    def self.install_directory
-      @install_directory ||= File.expand_path(File.dirname(__FILE__))
-    end
-
-    def self.configuration
-      RSpec.deprecate('RSpec::Core.configuration', 'RSpec.configuration', '2.0.0')
-      RSpec.configuration
-    end
-
-    def self.configure
-      RSpec.deprecate('RSpec::Core.configure', 'RSpec.configure', '2.0.0')
-      yield RSpec.configuration if block_given?
-    end
-
-    def self.world
-      RSpec.deprecate('RSpec::Core.world', 'RSpec.world', '2.0.0')
-      RSpec.world
-    end
-  end
 end
 
 require 'rspec/core/kernel_extensions'
