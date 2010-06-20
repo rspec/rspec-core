@@ -194,8 +194,24 @@ EOM
         str.is_a?(String) && /\A[A-Z][a-zA-Z0-9_:]*\z/ =~ str
       end
 
+      class Notifier
+        def initialize(*subscribers)
+          self.subscribers.push(*subscribers)
+        end
+
+        def subscribers
+          @subscribers ||= []
+        end
+
+        def method_missing(method, *args, &block)
+          subscribers.each do |s|
+            s.send(method, *args, &block) if s.respond_to?(method)
+          end
+        end
+      end
+
       def formatter
-        @formatter ||= formatter_class.new(output)
+        @formatter ||= Notifier.new(formatter_class.new(output))
       end
 
       alias_method :reporter, :formatter

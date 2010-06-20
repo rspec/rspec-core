@@ -235,21 +235,21 @@ module RSpec::Core
 
       it "sets formatter_to_use based on name" do
         config.formatter = :documentation
-        config.formatter.should be_an_instance_of(Formatters::DocumentationFormatter)
+        config.formatter.subscribers.first.should be_an_instance_of(Formatters::DocumentationFormatter)
         config.formatter = 'documentation'
-        config.formatter.should be_an_instance_of(Formatters::DocumentationFormatter)
+        config.formatter.subscribers.first.should be_an_instance_of(Formatters::DocumentationFormatter)
       end
 
       it "sets a formatter based on its class" do
         formatter_class = Class.new(Formatters::BaseTextFormatter)
         config.formatter = formatter_class
-        config.formatter.should be_an_instance_of(formatter_class)
+        config.formatter.subscribers.first.should be_an_instance_of(formatter_class)
       end
       
       it "sets a formatter based on its class name" do
         Object.const_set("CustomFormatter",Class.new(Formatters::BaseFormatter))
         config.formatter = "CustomFormatter"
-        config.formatter.should be_an_instance_of(CustomFormatter)
+        config.formatter.subscribers.first.should be_an_instance_of(CustomFormatter)
       end
       
       it "raises ArgumentError if formatter is unknown" do
