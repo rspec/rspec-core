@@ -1,0 +1,8 @@
+gem "rake"
+gem "jeweler"
+gem "cucumber"
+gem "aruba"
+gem "autotest"
+gem "rspec-mocks", :path => "."
+gem "rspec-core", :path => "../rspec-core"
+gem "rspec-expectations", :path => "../rspec-expectations"

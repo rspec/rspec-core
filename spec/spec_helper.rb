@@ -1,6 +1,6 @@
-$LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
-$LOAD_PATH << File.expand_path('../../../rspec-core/lib', __FILE__)
-$LOAD_PATH << File.expand_path('../../../rspec-expectations/lib', __FILE__)
+require 'bundler'
+Bundler.setup
+
 require 'rspec/core'
 require 'rspec/mocks'
 require 'rspec/expectations'
