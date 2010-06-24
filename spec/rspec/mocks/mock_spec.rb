@@ -3,12 +3,12 @@ require 'spec_helper'
 module RSpec
   module Mocks
     describe Mock do
-      treats_method_missing_as_private :subject => RSpec::Mocks::Mock.new, :noop => false
-      
       before(:each) do
         @mock = double("test double")
       end
 
+      treats_method_missing_as_private :subject => RSpec::Mocks::Mock.new, :noop => false
+      
       after(:each) do
         @mock.rspec_reset
       end
@@ -597,5 +597,47 @@ module RSpec
         second == first
       end
     end
+
+    describe "with" do
+      before { @mock = double('double') }
+      context "with args" do
+        context "with matching args" do
+          it "passes" do
+            @mock.should_receive(:foo).with('bar')
+            @mock.foo('bar')
+          end
+        end
+
+        context "with non-matching args" do
+          it "fails" do
+            @mock.should_receive(:foo).with('bar')
+            expect do
+              @mock.foo('baz')
+            end.to raise_error
+            @mock.rspec_reset
+          end
+        end
+      end
+
+      context "with a block" do
+        context "with matching args" do
+          it "returns the result of the block" do
+            @mock.should_receive(:foo).with('bar') { 'baz' }
+            @mock.foo('bar').should eq('baz')
+          end
+        end
+
+        context "with non-matching args" do
+          it "fails" do
+            @mock.should_receive(:foo).with('bar') { 'baz' }
+            expect do
+              @mock.foo('wrong').should eq('baz')
+            end.to raise_error(/received :foo with unexpected arguments/)
+            @mock.rspec_reset
+          end
+        end
+      end
+    end
+
   end
 end

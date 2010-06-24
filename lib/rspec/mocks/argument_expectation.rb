@@ -6,7 +6,7 @@ module RSpec
       
       def initialize(args, &block)
         @args = args
-        @matchers_block = block
+        @matchers_block = block if args.empty?
         @match_any_args = false
         @matchers = nil
         
