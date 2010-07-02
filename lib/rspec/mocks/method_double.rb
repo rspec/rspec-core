@@ -55,7 +55,7 @@ module RSpec
       end
 
       def configure_method
-        $rspec_mocks.add(@object) if $rspec_mocks
+        RSpec::Mocks::space.add(@object) if RSpec::Mocks::space
         warn_if_nil_class
         unless @stashed
           stash_original_method

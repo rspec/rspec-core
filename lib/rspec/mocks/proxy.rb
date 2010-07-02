@@ -15,7 +15,7 @@ module RSpec
           
           # ensure nil.rspec_verify is called even if an expectation is not set in the example
           # otherwise the allowance would effect subsequent examples
-          $rspec_mocks.add(nil) unless $rspec_mocks.nil?
+          RSpec::Mocks::space.add(nil) unless RSpec::Mocks::space.nil?
         end
 
         def allow_message_expectations_on_nil?

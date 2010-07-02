@@ -173,5 +173,20 @@ module RSpec
   # * Test Double Patterns: http://xunitpatterns.com/Test%20Double%20Patterns.html
   # * Mocks aren't stubs: http://www.martinfowler.com/articles/mocksArentStubs.html
   module Mocks
+    class << self
+      attr_accessor :space
+
+      def setup
+        self.space ||= RSpec::Mocks::Space.new
+      end
+
+      def verify
+        space.verify_all
+      end
+
+      def teardown
+        space.reset_all
+      end
+    end
   end
 end
