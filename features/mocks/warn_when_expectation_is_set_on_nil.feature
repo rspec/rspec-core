@@ -12,7 +12,7 @@ Feature: warn when expectation is set on nil
       end
       """
     When I run "rspec ./example_spec.rb"
-    Then I should see "An expectation of :foo was set on nil"
+    Then the output should contain "An expectation of :foo was set on nil"
 
   Scenario: allow
     Given a file named "example_spec.rb" with:
@@ -27,7 +27,7 @@ Feature: warn when expectation is set on nil
       end
       """
     When I run "rspec ./example_spec.rb"
-    Then I should not see "An expectation"
+    Then the output should not contain "An expectation"
 
   Scenario: allow in one example, but not on another
     Given a file named "example_spec.rb" with:
@@ -46,5 +46,5 @@ Feature: warn when expectation is set on nil
       end
       """
     When I run "rspec ./example_spec.rb"
-    Then I should see "An expectation of :bar"
-    And  I should not see "An expectation of :foo"
+    Then the output should contain "An expectation of :bar"
+    And  the output should not contain "An expectation of :foo"

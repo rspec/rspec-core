@@ -12,9 +12,9 @@ describe RSpec::Mocks do
       end
 
       it "memoizes the space" do
-        RSpec::Mocks::setup
+        RSpec::Mocks::setup(Object.new)
         space = RSpec::Mocks::space
-        RSpec::Mocks::setup
+        RSpec::Mocks::setup(Object.new)
         RSpec::Mocks::space.should equal(space)
       end
     end
@@ -22,7 +22,7 @@ describe RSpec::Mocks do
     context "with no pre-existing Mock::Space" do
       it "initializes a Mock::Space" do
         RSpec::Mocks::space = nil
-        RSpec::Mocks::setup
+        RSpec::Mocks::setup(Object.new)
         RSpec::Mocks::space.should_not be_nil
       end
     end

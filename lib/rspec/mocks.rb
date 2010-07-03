@@ -1,5 +1,4 @@
 require 'rspec/mocks/framework'
-require 'rspec/mocks/extensions'
 require 'rspec/mocks/version'
 
 module RSpec
@@ -176,7 +175,12 @@ module RSpec
     class << self
       attr_accessor :space
 
-      def setup
+      def setup(includer)
+        require 'rspec/mocks/extensions/object'
+        require 'rspec/mocks/spec_methods'
+        (class << includer; self; end).class_eval do
+          include RSpec::Mocks::ExampleMethods
+        end
         self.space ||= RSpec::Mocks::Space.new
       end
 

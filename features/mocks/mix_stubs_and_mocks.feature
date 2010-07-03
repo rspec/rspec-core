@@ -25,4 +25,4 @@ Feature: Spec and test together
       end
       """
     When I run "rspec ./stub_and_mocks_spec.rb -fs"
-    Then I should see "received :foo with unexpected arguments"
+    Then the output should contain "received :foo with unexpected arguments"
