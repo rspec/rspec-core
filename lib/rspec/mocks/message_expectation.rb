@@ -88,7 +88,6 @@ module RSpec
         end
         
         if block
-          require 'rspec/mocks/extensions/instance_exec'
           @eval_context = Object.new
           @eval_context.extend RSpec::Mocks::InstanceExec
           yield @eval_context
