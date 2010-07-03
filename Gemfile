@@ -1,7 +1,7 @@
 gem "rake"
 gem "jeweler"
 gem "cucumber"
-gem "aruba"
+gem "aruba", :git => "git://github.com/dchelimsky/aruba.git", :branch => "add-gemspec"
 gem "autotest"
 gem "rspec-mocks", :path => "."
 gem "rspec-core", :path => "../rspec-core"
