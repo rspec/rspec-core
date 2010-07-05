@@ -64,14 +64,12 @@ module RSpec
       end
 
       def stash_original_method
-        if object_responds_to?(@method_name)
-          stashed = stashed_method_name
-          orig = @method_name
-          object_singleton_class.class_eval do
-            alias_method(stashed, orig) if method_defined?(orig) || private_method_defined?(orig)
-          end
-          @stashed = true
+        stashed = stashed_method_name
+        orig = @method_name
+        object_singleton_class.class_eval do
+          alias_method(stashed, orig) if method_defined?(orig) || private_method_defined?(orig)
         end
+        @stashed = true
       end
 
       def define_proxy_method
