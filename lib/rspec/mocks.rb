@@ -18,7 +18,7 @@ module RSpec
   #   double.stub(:title) { "The RSpec Book" }
   #   double.title => "The RSpec Book"
   #
-  # When we declare a stub, we way we "stubbing" a method.
+  # When we declare a stub, we say we are "stubbing" a method.
   #
   # == Message Expectations
   #
@@ -31,7 +31,7 @@ module RSpec
   #   zipcode = Zipcode.new("02134", validator)
   #   zipcode.valid?
   #   
-  # When we declare a message expectation, we way we "mocking" a method.
+  # When we declare a message expectation, we say we are "mocking" a method.
   #
   # == Mock Objects and Test Stubs
   #
