@@ -17,7 +17,6 @@ module RSpec
       end
 
       it "should complain when there are too few calls" do
-        third = Object.new
         @mock.message.should == @return_values[0]
         @mock.message.should == @return_values[1]
         expect { @mock.rspec_verify }.to raise_error(
@@ -27,7 +26,6 @@ module RSpec
       end
 
       it "should complain when there are too many calls" do
-        third = Object.new
         @mock.message.should == @return_values[0]
         @mock.message.should == @return_values[1]
         @mock.message.should == @return_values[2]
