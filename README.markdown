@@ -3,22 +3,43 @@
 rspec-mocks provides a test-double framework for rspec including support
 for method stubs, fakes, and message expectations.
 
-rspec-mocks is currently in alpha release. While you are welcome to
-track, fork, explore, etc, we're too early in the process to start fielding
-pull requests and or issues from outside the core development team, so please
-don't waste your time until this notice changes.
-
 ## Install
 
-    [sudo] gem install rspec --prerelease
+    gem install rspec --prerelease
 
 This will install rspec, rspec-core, rspec-expectations and rspec-mocks.
 
+## Method Stubs
 
-#### Also see
+    describe "consumer" do
+      it "gets stuff from a service" do
+        service = double('service')
+        service.stub(:find) { 'value' }
+        consumer = Consumer.new(service)
+        consumer.consume
+        consumer.aquired_stuff.should eq(['value'])
+      end
+    end
+
+## Message Expectations
+
+    describe "some action" do
+      context "when bad stuff happens" do
+        it "logs the error" do
+          logger = double('logger')
+          doer = Doer.new(logger)
+          logger.should_receive(:log).with('oops')
+          doer.do_something_with(:bad_data)
+        end
+      end
+    end
+
+## Contribute
+
+See [http://github.com/rspec/rspec-dev](http://github.com/rspec/rspec-dev)
+
+## Also see
 
 * [http://github.com/rspec/rspec](http://github.com/rspec/rspec)
 * [http://github.com/rspec/rspec-core](http://github.com/rspec/rspec-core)
 * [http://github.com/rspec/rspec-expectations](http://github.com/rspec/rspec-expectations)
-* [http://github.com/rspec/rspec-dev](http://github.com/rspec/rspec-dev)
-
