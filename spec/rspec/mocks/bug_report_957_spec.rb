@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Spec
+module RSpec
   module Mocks
     describe "stubbing a base class class method" do
       before do
