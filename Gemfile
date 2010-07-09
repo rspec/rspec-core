@@ -1,7 +1,9 @@
+source "http://rubygems.org"
+
 gem "rake"
 gem "jeweler"
 gem "cucumber"
-gem "aruba", :git => "git://github.com/dchelimsky/aruba.git", :branch => "add-gemspec"
+gem "aruba", ">= 0.2.0"
 gem "autotest"
 gem "rspec-mocks", :path => "."
 gem "rspec-core", :path => "../rspec-core"
