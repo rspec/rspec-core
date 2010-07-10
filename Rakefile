@@ -3,6 +3,8 @@ Bundler.setup
 
 require 'rake'
 require 'rspec/mocks/version'
+require 'rspec/core/rake_task'
+require 'cucumber/rake/task'
 
 begin
   require 'jeweler'
@@ -36,25 +38,23 @@ namespace :gem do
   end
 end
 
-begin
-  require 'rspec/core/rake_task'
-  RSpec::Core::RakeTask.new(:spec)
+RSpec::Core::RakeTask.new(:spec)
 
-  RSpec::Core::RakeTask.new(:rcov) do |spec|
-    spec.rcov = true
-    spec.rcov_opts = %[--exclude "core,expectations,gems/*,spec/resources,spec/spec,spec/spec_helper.rb,db/*,/Library/Ruby/*,config/*" --text-summary  --sort coverage]
-  end
-rescue LoadError
-  puts "RSpec core or one of its dependencies is not installed. Install it with: gem install rspec-meta"
+RSpec::Core::RakeTask.new(:rcov) do |spec|
+  spec.rcov = true
+  spec.rcov_opts = %[--exclude "core,expectations,gems/*,spec/resources,spec/spec,spec/spec_helper.rb,db/*,/Library/Ruby/*,config/*" --text-summary  --sort coverage]
 end
 
-begin
-  require 'cucumber/rake/task'
-  Cucumber::Rake::Task.new do |t|
-    t.cucumber_opts = %w{--format progress}
+class Cucumber::Rake::Task::ForkedCucumberRunner
+  # When cucumber shells out, we still need it to run in the context of our
+  # bundle.
+  def run
+    sh "bundle exec #{RUBY} " + args.join(" ")
   end
-rescue LoadError
-  puts "Cucumber or one of its dependencies is not installed. Install it with: gem install cucumber"
+end
+
+Cucumber::Rake::Task.new do |t|
+  t.cucumber_opts = %w{--format progress}
 end
 
 task :clobber do
