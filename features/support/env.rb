@@ -1,3 +1,6 @@
+require 'bundler'
+Bundler.setup
+
 require 'aruba'
 require 'rspec/expectations'
 
@@ -14,5 +17,3 @@ module ArubaOverrides
 end
 
 World(ArubaOverrides)
-
-
