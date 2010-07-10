@@ -1,6 +1,3 @@
-require 'bundler'
-Bundler.setup
-
 require 'rspec/core'
 require 'rspec/mocks'
 require 'rspec/expectations'

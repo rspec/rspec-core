@@ -1,6 +1,3 @@
-require "bundler"
-Bundler.setup
-
 require 'rake'
 require 'rspec/mocks/version'
 
