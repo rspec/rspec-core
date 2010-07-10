@@ -8,4 +8,8 @@ gem "autotest"
 gem "rspec-mocks", :path => "."
 gem "rspec-core", :path => "../rspec-core"
 gem "rspec-expectations", :path => "../rspec-expectations"
-gem "ruby-debug"
+if RUBY_VERSION.to_s =~ /1.9/
+  gem "ruby-debug19"
+else
+  gem "ruby-debug"
+end
