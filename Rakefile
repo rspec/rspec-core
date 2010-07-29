@@ -19,13 +19,6 @@ begin
     gem.rubyforge_project = "rspec"
     gem.add_development_dependency 'rspec-core', RSpec::Mocks::Version::STRING
     gem.add_development_dependency 'rspec-expectations', RSpec::Mocks::Version::STRING
-    gem.post_install_message = <<-EOM
-#{"*"*50}
-
-  Thank you for installing #{gem.summary}
-  
-#{"*"*50}
-EOM
   end
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
