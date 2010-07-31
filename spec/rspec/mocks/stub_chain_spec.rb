@@ -34,7 +34,6 @@ module RSpec
         @subject.stub_chain("msg1.msg2.msg3").and_return(:return_value)
         @subject.msg1.msg2.msg3.should equal(:return_value)
       end
-
     end
   end
 end
