@@ -24,13 +24,24 @@ module RSpec
       alias_method :stub!, :stub
       alias_method :unstub!, :unstub
       
-      def stub_chain(*methods)
-        if methods = methods.join('.').split('.') and methods.length > 1
+      # :call-seq:
+      #   double.stub_chain("foo.bar") { :baz }
+      #   double.stub_chain(:foo, :bar) { :baz }
+      #
+      # Stubs a chain of methods. Especially useful with fluent and/or
+      # composable interfaces.
+      #
+      # == Examples
+      #
+      #   Article.stub_chain("recent.published") { [Article.new] }
+      def stub_chain(*chain)
+        methods = chain.join('.').split('.')
+        if methods.length > 1
           next_in_chain = Object.new
-          stub!(methods.shift) {next_in_chain}
+          stub(methods.shift) { next_in_chain }
           next_in_chain.stub_chain(*methods)
         else
-          stub!(methods.shift)
+          stub(methods.shift)
         end
       end
       
