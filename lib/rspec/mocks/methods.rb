@@ -37,9 +37,14 @@ module RSpec
       def stub_chain(*chain)
         methods = chain.join('.').split('.')
         if methods.length > 1
-          next_in_chain = Object.new
-          stub(methods.shift) { next_in_chain }
-          next_in_chain.stub_chain(*methods)
+          if matching_stub = __mock_proxy.__send__(:find_matching_method_stub, methods[0].to_sym)
+            methods.shift
+            matching_stub.__send__(:invoke, [], nil).stub_chain(*methods)
+          else
+            next_in_chain = Object.new
+            stub(methods.shift) { next_in_chain }
+            next_in_chain.stub_chain(*methods)
+          end
         else
           stub(methods.shift)
         end
