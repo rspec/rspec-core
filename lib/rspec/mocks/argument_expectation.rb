@@ -1,10 +1,9 @@
 module RSpec
   module Mocks
-    
     class ArgumentExpectation
       attr_reader :args
       
-      def initialize(args, &block)
+      def initialize(*args, &block)
         @args = args
         @matchers_block = block if args.empty?
         @match_any_args = false
@@ -29,23 +28,21 @@ module RSpec
         return obj.respond_to?(:matches?) & obj.respond_to?(:description)
       end
       
-      def args_match?(given_args)
-        match_any_args? || matchers_block_matches?(given_args) || matchers_match?(given_args)
+      def args_match?(*args)
+        match_any_args? || matchers_block_matches?(*args) || matchers_match?(*args)
       end
       
-      def matchers_block_matches?(given_args)
-        @matchers_block ? @matchers_block.call(*given_args) : nil
+      def matchers_block_matches?(*args)
+        @matchers_block ? @matchers_block.call(*args) : nil
       end
       
-      def matchers_match?(given_args)
-        @matchers == given_args
+      def matchers_match?(*args)
+        @matchers == args
       end
       
       def match_any_args?
         @match_any_args
       end
-      
     end
-    
   end
 end

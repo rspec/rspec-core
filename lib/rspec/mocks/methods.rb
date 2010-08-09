@@ -39,7 +39,7 @@ module RSpec
         if methods.length > 1
           if matching_stub = __mock_proxy.__send__(:find_matching_method_stub, methods[0].to_sym)
             methods.shift
-            matching_stub.__send__(:invoke, [], nil).stub_chain(*methods)
+            matching_stub.invoke.stub_chain(*methods)
           else
             next_in_chain = Object.new
             stub(methods.shift) { next_in_chain }

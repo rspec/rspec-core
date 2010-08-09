@@ -87,7 +87,7 @@ module RSpec
         method_double[method_name].expectations.detect {|expectation| expectation.negative_expectation_for?(method_name)}
       end
       
-      def record_message_received(method_name, args, block)
+      def record_message_received(method_name, *args, &block)
         @messages_received << [method_name, args, block]
       end
 
@@ -97,18 +97,18 @@ module RSpec
 
         if (stub && expectation && expectation.called_max_times?) || (stub && !expectation)
           if expectation = find_almost_matching_expectation(method_name, *args)
-            expectation.advise(args, block) unless expectation.expected_messages_received?
+            expectation.advise(*args) unless expectation.expected_messages_received?
           end
-          stub.invoke(args, block)
+          stub.invoke(*args, &block)
         elsif expectation
-          expectation.invoke(args, block)
+          expectation.invoke(*args, &block)
         elsif expectation = find_almost_matching_expectation(method_name, *args)
-          expectation.advise(args, block) if null_object? unless expectation.expected_messages_received?
+          expectation.advise(*args) if null_object? unless expectation.expected_messages_received?
           raise_unexpected_message_args_error(expectation, *args) unless (has_negative_expectation?(method_name) or null_object?)
         elsif @object.is_a?(Class)
           @object.superclass.send(method_name, *args, &block)
         else
-          @object.__send__ :method_missing, method_name, *args, &block
+          @object.__send__(:method_missing, method_name, *args, &block)
         end
       end
 
@@ -133,16 +133,16 @@ module RSpec
       end
       
       def find_matching_expectation(method_name, *args)
-        method_double[method_name].expectations.find {|expectation| expectation.matches(method_name, args) && !expectation.called_max_times?} || 
-        method_double[method_name].expectations.find {|expectation| expectation.matches(method_name, args)}
+        method_double[method_name].expectations.find {|expectation| expectation.matches?(method_name, *args) && !expectation.called_max_times?} || 
+        method_double[method_name].expectations.find {|expectation| expectation.matches?(method_name, *args)}
       end
 
       def find_almost_matching_expectation(method_name, *args)
-        method_double[method_name].expectations.find {|expectation| expectation.matches_name_but_not_args(method_name, args)}
+        method_double[method_name].expectations.find {|expectation| expectation.matches_name_but_not_args(method_name, *args)}
       end
 
       def find_matching_method_stub(method_name, *args)
-        method_double[method_name].stubs.find {|stub| stub.matches(method_name, args)}
+        method_double[method_name].stubs.find {|stub| stub.matches?(method_name, *args)}
       end
 
     end

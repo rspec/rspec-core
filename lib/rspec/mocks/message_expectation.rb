@@ -17,7 +17,7 @@ module RSpec
         @return_block = nil
         @actual_received_count = 0
         @expected_received_count = expected_received_count
-        @args_expectation = ArgumentExpectation.new([ArgumentMatchers::AnyArgsMatcher.new])
+        @args_expectation = ArgumentExpectation.new(ArgumentMatchers::AnyArgsMatcher.new)
         @consecutive = false
         @exception_to_raise = nil
         @symbol_to_throw = nil
@@ -40,7 +40,7 @@ module RSpec
         new_gen = error_generator.clone
         new_gen.opts = opts
         child.error_generator = new_gen
-        child.clone_args_to_yield @args_to_yield
+        child.clone_args_to_yield *@args_to_yield
         child
       end
       
@@ -97,15 +97,15 @@ module RSpec
         self
       end
       
-      def matches(sym, args)
-        @sym == sym and @args_expectation.args_match?(args)
+      def matches?(sym, *args)
+        @sym == sym and @args_expectation.args_match?(*args)
       end
       
-      def invoke(args, block)
+      def invoke(*args, &block)
         if @expected_received_count == 0
           @failed_fast = true
           @actual_received_count += 1
-          @error_generator.raise_expectation_error @sym, @expected_received_count, @actual_received_count, *args
+          @error_generator.raise_expectation_error(@sym, @expected_received_count, @actual_received_count, *args)
         end
         
         @order_group.handle_order_constraint self
@@ -114,20 +114,20 @@ module RSpec
           Kernel::raise @exception_to_raise unless @exception_to_raise.nil?
           Kernel::throw @symbol_to_throw unless @symbol_to_throw.nil?
           
-          if !@method_block.nil?
-            default_return_val = invoke_method_block(args)
-          elsif @args_to_yield.size > 0 || @eval_context
-            default_return_val = invoke_with_yield(&block)
-          else
-            default_return_val = nil
-          end
+          default_return_val = if !@method_block.nil?
+                                 invoke_method_block(*args)
+                               elsif !@args_to_yield.empty? || @eval_context
+                                 invoke_with_yield(&block)
+                               else
+                                 nil
+                               end
           
           if @consecutive
-            return invoke_consecutive_return_block(args, block)
+            invoke_consecutive_return_block(*args, &block)
           elsif @return_block
-            return invoke_return_block(args, block)
+            invoke_return_block(*args, &block)
           else
-            return default_return_val
+            default_return_val
           end
         ensure
           @actual_received_count += 1
@@ -141,11 +141,11 @@ module RSpec
       
       protected
 
-      def invoke_method_block(args)
+      def invoke_method_block(*args)
         begin
           @method_block.call(*args)
         rescue => detail
-          @error_generator.raise_block_failed_error @sym, detail.message
+          @error_generator.raise_block_failed_error(@sym, detail.message)
         end
       end
       
@@ -171,13 +171,13 @@ module RSpec
         end
       end
 
-      def invoke_consecutive_return_block(args, block)
-        value = invoke_return_block(args, block)
+      def invoke_consecutive_return_block(*args, &block)
+        value = invoke_return_block(*args, &block)
         index = [@actual_received_count, value.size-1].min
         value[index]
       end
       
-      def invoke_return_block(args, block)
+      def invoke_return_block(*args, &block)
         args << block unless block.nil?
         # Ruby 1.9 - when we set @return_block to return values
         # regardless of arguments, any arguments will result in
@@ -185,7 +185,7 @@ module RSpec
         @return_block.arity == 0 ? @return_block.call : @return_block.call(*args)
       end
       
-      def clone_args_to_yield(args)
+      def clone_args_to_yield(*args)
         @args_to_yield = args.clone
         @args_to_yield_were_cloned = true
       end
@@ -197,8 +197,8 @@ module RSpec
     
     class MessageExpectation < BaseExpectation
       
-      def matches_name_but_not_args(sym, args)
-        @sym == sym and not @args_expectation.args_match?(args)
+      def matches_name_but_not_args(sym, *args)
+        @sym == sym and not @args_expectation.args_match?(*args)
       end
        
       def verify_messages_received
@@ -235,7 +235,7 @@ module RSpec
         @similar_messages ||= []
       end
 
-      def advise(args, block)
+      def advise(*args)
         similar_messages << args
       end
       
@@ -249,7 +249,7 @@ module RSpec
 
       def with(*args, &block)
         @return_block = block if block_given?
-        @args_expectation = ArgumentExpectation.new(args, &block)
+        @args_expectation = ArgumentExpectation.new(*args, &block)
         self
       end
       
