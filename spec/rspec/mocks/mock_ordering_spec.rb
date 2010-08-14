@@ -13,7 +13,7 @@ module RSpec
         @double.rspec_reset
       end
 
-      it "should pass two calls in order" do
+      it "passes two calls in order" do
         @double.should_receive(:one).ordered
         @double.should_receive(:two).ordered
         @double.one
@@ -21,7 +21,7 @@ module RSpec
         @double.rspec_verify
       end
 
-      it "should pass three calls in order" do
+      it "passes three calls in order" do
         @double.should_receive(:one).ordered
         @double.should_receive(:two).ordered
         @double.should_receive(:three).ordered
@@ -31,7 +31,7 @@ module RSpec
         @double.rspec_verify
       end
 
-      it "should fail if second call comes first" do
+      it "fails if second call comes first" do
         @double.should_receive(:one).ordered
         @double.should_receive(:two).ordered
         lambda do
@@ -39,7 +39,7 @@ module RSpec
         end.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :two out of order")
       end
 
-      it "should fail if third call comes first" do
+      it "fails if third call comes first" do
         @double.should_receive(:one).ordered
         @double.should_receive(:two).ordered
         @double.should_receive(:three).ordered
@@ -49,7 +49,7 @@ module RSpec
         end.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :three out of order")
       end
       
-      it "should fail if third call comes second" do
+      it "fails if third call comes second" do
         @double.should_receive(:one).ordered
         @double.should_receive(:two).ordered
         @double.should_receive(:three).ordered
@@ -59,7 +59,7 @@ module RSpec
         end.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :three out of order")
       end
 
-      it "should ignore order of non ordered calls" do
+      it "ignores order of non ordered calls" do
         @double.should_receive(:ignored_0)
         @double.should_receive(:ordered_1).ordered
         @double.should_receive(:ignored_1)
@@ -79,7 +79,7 @@ module RSpec
         @double.rspec_verify
       end
       
-      it "should pass when duplicates exist" do
+      it "passes when duplicates exist" do
         @double.should_receive(:a).ordered
         @double.should_receive(:b).ordered
         @double.should_receive(:a).ordered

@@ -4,7 +4,7 @@ require 'rspec/expectations'
 
 module Macros
   def treats_method_missing_as_private(options = {:noop => true, :subject => nil})
-    it "should have method_missing as private" do
+    it "has method_missing as private" do
       with_ruby 1.8 do
         self.class.describes.private_instance_methods.should include("method_missing")
       end
@@ -13,7 +13,7 @@ module Macros
       end
     end
 
-    it "should not respond_to? method_missing (because it's private)" do
+    it "does not respond_to? method_missing (because it's private)" do
       formatter = options[:subject] || described_class.new({ }, StringIO.new)
       formatter.should_not respond_to(:method_missing)
     end

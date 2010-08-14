@@ -30,7 +30,7 @@ module RSpec
 
   
     describe "unstub implementation" do      
-      it "should replace the stubbed method with the original method" do
+      it "replaces the stubbed method with the original method" do
         obj = Object.new
         def obj.foo; :original; end
         obj.stub(:foo)
@@ -38,7 +38,7 @@ module RSpec
         obj.foo.should == :original
       end
     
-      it "should remove all stubs with the supplied method name" do
+      it "removes all stubs with the supplied method name" do
         obj = Object.new
         def obj.foo; :original; end
         obj.stub(:foo).with(1)
@@ -47,7 +47,7 @@ module RSpec
         obj.foo.should == :original
       end
     
-      it "should not remove any expectations with the same method name" do
+      it "does not remove any expectations with the same method name" do
         obj = Object.new
         def obj.foo; :original; end
         obj.should_receive(:foo).with(3).and_return(:three)
@@ -57,7 +57,7 @@ module RSpec
         obj.foo(3).should == :three
       end
     
-      it "should raise a MockExpectationError if the method has not been stubbed" do
+      it "raises a MockExpectationError if the method has not been stubbed" do
         obj = Object.new
         lambda do
           obj.unstub(:foo)

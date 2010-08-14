@@ -15,17 +15,17 @@ describe 'should_receive' do
     @liar = LiarLiarPantsOnFire.new
   end
   
-  it "should work when object lies about responding to a method" do
+  it "works when object lies about responding to a method" do
     @liar.should_receive(:something)
     @liar.something
   end
 
-  it 'should work when class lies about responding to a method' do
+  it 'works when class lies about responding to a method' do
     LiarLiarPantsOnFire.should_receive(:something)
     LiarLiarPantsOnFire.something
   end
   
-  it 'should cleanup after itself' do
+  it 'cleans up after itself' do
     (class << LiarLiarPantsOnFire; self; end).instance_methods.should_not include("something")
   end
 end

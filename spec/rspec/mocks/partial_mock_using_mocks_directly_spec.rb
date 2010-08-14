@@ -63,7 +63,7 @@ module RSpec::Mocks
       obj.rspec_verify
     end
 
-    it "should restore original method if existed" do
+    it "restores the original method if it existed" do
       obj.existing_method.should equal(:original_value)
       obj.should_receive(:existing_method).and_return(:mock_value)
       obj.existing_method.should equal(:mock_value)

@@ -7,27 +7,27 @@ module RSpec
         @object = Object.new
       end
     
-      it "should name the class in the failure message" do
+      it "names the class in the failure message" do
         @object.should_receive(:foo)
         expect do
           @object.rspec_verify
         end.to raise_error(RSpec::Mocks::MockExpectationError, /\(#<Object:.*>\).foo/)
       end
     
-      it "should name the class in the failure message when expectation is on class" do
+      it "names the class in the failure message when expectation is on class" do
         Object.should_receive(:foo)
         lambda do
           Object.rspec_verify
         end.should raise_error(RSpec::Mocks::MockExpectationError, /<Object \(class\)>/)
       end
     
-      it "should not conflict with @options in the object" do
+      it "does not conflict with @options in the object" do
         @object.instance_eval { @options = Object.new }
         @object.should_receive(:blah)
         @object.blah
       end
             
-      it "should_not_receive should mock out the method" do
+      it "should_not_receive mocks out the method" do
         @object.should_not_receive(:fuhbar)
         expect {
           @object.fuhbar
@@ -37,51 +37,51 @@ module RSpec
         )
       end
     
-      it "should_not_receive should return a negative message expectation" do
+      it "should_not_receive returns a negative message expectation" do
         @object.should_not_receive(:foobar).should be_kind_of(RSpec::Mocks::NegativeMessageExpectation)
       end
     
-      it "should_receive should mock out the method" do
+      it "should_receive mocks out the method" do
         @object.should_receive(:foobar).with(:test_param).and_return(1)
         @object.foobar(:test_param).should equal(1)
       end
     
-      it "should_receive should handle a hash" do
+      it "should_receive handles a hash" do
         @object.should_receive(:foobar).with(:key => "value").and_return(1)
         @object.foobar(:key => "value").should equal(1)
       end
     
-      it "should_receive should handle an inner hash" do
+      it "should_receive handles an inner hash" do
         hash = {:a => {:key => "value"}}
         @object.should_receive(:foobar).with(:key => "value").and_return(1)
         @object.foobar(hash[:a]).should equal(1)
       end
     
-      it "should_receive should return a message expectation" do
+      it "should_receive returns a message expectation" do
         @object.should_receive(:foobar).should be_kind_of(RSpec::Mocks::MessageExpectation)
         @object.foobar
       end
     
-      it "should_receive should verify method was called" do
+      it "should_receive verifies method was called" do
         @object.should_receive(:foobar).with(:test_param).and_return(1)
         lambda do
           @object.rspec_verify
         end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
     
-      it "should_receive should also take a String argument" do
+      it "should_receive also takes a String argument" do
         @object.should_receive('foobar')
         @object.foobar
       end
       
-      it "should_not_receive should also take a String argument" do
+      it "should_not_receive also takes a String argument" do
         @object.should_not_receive('foobar')
         lambda do
           @object.foobar   
         end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
       
-      it "should use report nil in the error message" do
+      it "uses reports nil in the error message" do
         allow_message_expectations_on_nil
         
         @this_will_resolve_to_nil.should_receive(:foobar)
@@ -110,7 +110,7 @@ module RSpec
         end
       end
       
-      it "should not raise an error when stubbing the object" do
+      it "does not raise an error when stubbing the object" do
         o = PartiallyMockedEquals.new :foo
         lambda { o.stub(:bar) }.should_not raise_error(NoMethodError)
       end
@@ -132,7 +132,7 @@ module RSpec
         @object = MockableClass.new
       end
 
-      it 'should keep public methods public' do
+      it 'keeps public methods public' do
         @object.should_receive(:public_method)
         with_ruby('1.9') do
           @object.public_methods.should include(:public_method)
@@ -143,7 +143,7 @@ module RSpec
         @object.public_method
       end
 
-      it 'should keep private methods private' do
+      it 'keeps private methods private' do
         @object.should_receive(:private_method)
         with_ruby('1.9') do
           @object.private_methods.should include(:private_method)
@@ -154,7 +154,7 @@ module RSpec
         @object.public_method
       end
 
-      it 'should keep protected methods protected' do
+      it 'keeps protected methods protected' do
         @object.should_receive(:protected_method)
         with_ruby('1.9') do
           @object.protected_methods.should include(:protected_method)

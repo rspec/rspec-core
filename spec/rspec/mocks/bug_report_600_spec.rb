@@ -10,12 +10,12 @@ module BugReport600
       end
     end
  
-    it "should work" do
+    it "works" do
       ExampleClass.should_receive(:define_method).with("defined_method")
       ExampleClass.method_that_uses_define_method
     end
 
-    it "should restore the original method" do
+    it "restores the original method" do
       ExampleClass.method_that_uses_define_method
     end
   end

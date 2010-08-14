@@ -9,14 +9,14 @@ module RSpec
         @mock.should_receive(:message).and_return(@return_values[0],@return_values[1],@return_values[2])
       end
       
-      it "should return values in order to consecutive calls" do
+      it "returns values in order to consecutive calls" do
         @mock.message.should == @return_values[0]
         @mock.message.should == @return_values[1]
         @mock.message.should == @return_values[2]
         @mock.rspec_verify
       end
 
-      it "should complain when there are too few calls" do
+      it "complains when there are too few calls" do
         @mock.message.should == @return_values[0]
         @mock.message.should == @return_values[1]
         expect { @mock.rspec_verify }.to raise_error(
@@ -25,7 +25,7 @@ module RSpec
         )
       end
 
-      it "should complain when there are too many calls" do
+      it "complains when there are too many calls" do
         @mock.message.should == @return_values[0]
         @mock.message.should == @return_values[1]
         @mock.message.should == @return_values[2]
@@ -44,14 +44,14 @@ module RSpec
         @mock.should_receive(:message).exactly(3).times.and_return(@return_values[0],@return_values[1],@return_values[2])
       end
 
-      it "should return values in order to consecutive calls" do
+      it "returns values in order to consecutive calls" do
         @mock.message.should == @return_values[0]
         @mock.message.should == @return_values[1]
         @mock.message.should == @return_values[2]
         @mock.rspec_verify
       end
 
-      it "should complain when there are too few calls" do
+      it "complains when there are too few calls" do
         third = Object.new
         @mock.message.should == @return_values[0]
         @mock.message.should == @return_values[1]
@@ -61,7 +61,7 @@ module RSpec
         )
       end
 
-      it "should complain when there are too many calls" do
+      it "complains when there are too many calls" do
         third = Object.new
         @mock.message.should == @return_values[0]
         @mock.message.should == @return_values[1]
@@ -80,14 +80,14 @@ module RSpec
         @mock.should_receive(:message).at_least(:twice).with(no_args).and_return(11, 22)
       end
       
-      it "should use last return value for subsequent calls" do
+      it "uses the last return value for subsequent calls" do
         @mock.message.should equal(11)
         @mock.message.should equal(22)
         @mock.message.should equal(22)
         @mock.rspec_verify
       end
 
-      it "should fail when called less than the specified number" do
+      it "fails when called less than the specified number" do
         @mock.message.should equal(11)
         expect { @mock.rspec_verify }.to raise_error(
           RSpec::Mocks::MockExpectationError, 
@@ -102,14 +102,14 @@ module RSpec
         @mock.should_receive(:message).exactly(3).times.and_return(11, 22)
       end
       
-      it "should use last return value for subsequent calls" do
+      it "uses the last return value for subsequent calls" do
         @mock.message.should equal(11)
         @mock.message.should equal(22)
         @mock.message.should equal(22)
         @mock.rspec_verify
       end
 
-      it "should fail when called less than the specified number" do
+      it "fails when called less than the specified number" do
         @mock.message.should equal(11)
         expect { @mock.rspec_verify }.to raise_error(
           RSpec::Mocks::MockExpectationError, 
@@ -117,7 +117,7 @@ module RSpec
         )
       end
 
-      it "should fail when called greater than the specified number" do
+      it "fails when called greater than the specified number" do
         @mock.message.should equal(11)
         @mock.message.should equal(22)
         @mock.message.should equal(22)

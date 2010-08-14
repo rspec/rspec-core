@@ -14,7 +14,7 @@ module RSpec
 
     describe "an expectation set on nil" do
       
-      it "should issue a warning with file and line number information" do
+      it "issues a warning with file and line number information" do
         expected_warning = %r%An expectation of :foo was set on nil. Called from #{__FILE__}:#{__LINE__+3}(:in `block \(2 levels\) in <module:Mocks>')?. Use allow_message_expectations_on_nil to disable warnings.%
         Kernel.should_receive(:warn).with(expected_warning)
 
@@ -22,13 +22,13 @@ module RSpec
         nil.foo
       end
       
-      it "should issue a warning when the expectation is negative" do
+      it "issues a warning when the expectation is negative" do
         Kernel.should_receive(:warn)
 
         nil.should_not_receive(:foo)
       end
       
-      it "should not issue a warning when expectations are set to be allowed" do
+      it "does not issue a warning when expectations are set to be allowed" do
         allow_message_expectations_on_nil
         Kernel.should_not_receive(:warn)
         
@@ -42,7 +42,7 @@ module RSpec
     describe "#allow_message_expectations_on_nil" do
       
 
-      it "should not effect subsequent examples" do
+      it "does not effect subsequent examples" do
         example_group = empty_example_group
         example_group.it("when called in one example that doesn't end up setting an expectation on nil") do
                         allow_message_expectations_on_nil

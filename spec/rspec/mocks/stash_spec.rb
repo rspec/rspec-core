@@ -11,7 +11,7 @@ module RSpec
           end
         end
       end
-      it "should keep the original method intact after multiple expectations are added on the same method" do
+      it "keeps the original method intact after multiple expectations are added on the same method" do
         klass.should_receive(:foo).with(:fizbaz).and_return(:wowwow)
         klass.should_receive(:foo).with(:bazbar).and_return(:okay)
 
