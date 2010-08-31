@@ -134,34 +134,19 @@ module RSpec
 
       it 'keeps public methods public' do
         @object.should_receive(:public_method)
-        with_ruby('1.9') do
-          @object.public_methods.should include(:public_method)
-        end
-        with_ruby('1.8') do
-          @object.public_methods.should include('public_method')
-        end
+        @object.public_methods.should include_method(:public_method)
         @object.public_method
       end
 
       it 'keeps private methods private' do
         @object.should_receive(:private_method)
-        with_ruby('1.9') do
-          @object.private_methods.should include(:private_method)
-        end
-        with_ruby('1.8') do
-          @object.private_methods.should include('private_method')
-        end
+        @object.private_methods.should include_method(:private_method)
         @object.public_method
       end
 
       it 'keeps protected methods protected' do
         @object.should_receive(:protected_method)
-        with_ruby('1.9') do
-          @object.protected_methods.should include(:protected_method)
-        end
-        with_ruby('1.8') do
-          @object.protected_methods.should include('protected_method')
-        end
+        @object.protected_methods.should include_method(:protected_method)
         @object.public_method
       end
 

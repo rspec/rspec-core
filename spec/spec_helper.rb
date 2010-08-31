@@ -5,12 +5,7 @@ require 'rspec/expectations'
 module Macros
   def treats_method_missing_as_private(options = {:noop => true, :subject => nil})
     it "has method_missing as private" do
-      with_ruby 1.8 do
-        self.class.describes.private_instance_methods.should include("method_missing")
-      end
-      with_ruby 1.9 do
-        self.class.describes.private_instance_methods.should include(:method_missing)
-      end
+      self.class.describes.private_instance_methods.should include_method(:method_missing)
     end
 
     it "does not respond_to? method_missing (because it's private)" do
@@ -32,11 +27,9 @@ module Macros
   end
 end
 
-module RSpec  
-  module Matchers
-    def with_ruby(version)
-      yield if RUBY_VERSION =~ Regexp.compile("^#{version.to_s}")
-    end
+RSpec::Matchers.define :include_method do |expected|
+  match do |actual|
+    actual.map { |m| m.to_s }.include?(expected.to_s)
   end
 end
 
@@ -44,6 +37,5 @@ RSpec.configure do |config|
   config.mock_with :rspec
   config.color_enabled = true
   config.extend(Macros)
-  config.include(RSpec::Matchers)
   config.include(RSpec::Mocks::Methods)
 end
