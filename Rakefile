@@ -1,35 +1,10 @@
 require 'bundler'
 Bundler.setup
+Bundler::GemHelper.install_tasks
 
 require 'rake'
-require 'rspec/mocks/version'
 require 'rspec/core/rake_task'
 require 'cucumber/rake/task'
-
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = "rspec-mocks"
-    gem.version = RSpec::Mocks::Version::STRING
-    gem.summary = "rspec-mocks-#{RSpec::Mocks::Version::STRING}"
-    gem.description = "RSpec's 'test double' framework, with support for stubbing and mocking"
-    gem.email = "dchelimsky@gmail.com;chad.humphries@gmail.com"
-    gem.homepage = "http://github.com/rspec/mocks"
-    gem.authors = ["David Chelimsky", "Chad Humphries"]    
-    gem.rubyforge_project = "rspec"
-    gem.add_development_dependency 'rspec-core', RSpec::Mocks::Version::STRING
-    gem.add_development_dependency 'rspec-expectations', RSpec::Mocks::Version::STRING
-  end
-rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
-end
-
-namespace :gem do
-  desc "push to gemcutter"
-  task :push => :build do
-    system "gem push pkg/rspec-mocks-#{RSpec::Mocks::Version::STRING}.gem"
-  end
-end
 
 RSpec::Core::RakeTask.new(:spec)
 
@@ -64,4 +39,4 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-task :default => [:check_dependencies, :spec, :cucumber]
+task :default => [:spec, :cucumber]
