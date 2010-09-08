@@ -61,7 +61,7 @@ module RSpec
         obj = Object.new
         lambda do
           obj.unstub(:foo)
-        end.should raise_error(MockExpectationError)
+        end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
     end
   end
