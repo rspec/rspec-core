@@ -34,7 +34,7 @@ module RSpec
       # == Examples
       #
       #   Article.stub_chain("recent.published") { [Article.new] }
-      def stub_chain(*chain)
+      def stub_chain(*chain, &blk)
         methods = chain.join('.').split('.')
         if methods.length > 1
           if matching_stub = __mock_proxy.__send__(:find_matching_method_stub, methods[0].to_sym)
@@ -43,10 +43,10 @@ module RSpec
           else
             next_in_chain = Object.new
             stub(methods.shift) { next_in_chain }
-            next_in_chain.stub_chain(*methods)
+            next_in_chain.stub_chain(*methods, &blk)
           end
         else
-          stub(methods.shift)
+          stub(methods.shift, &blk)
         end
       end
       

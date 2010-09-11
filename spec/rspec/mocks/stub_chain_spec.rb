@@ -7,14 +7,53 @@ module RSpec
         @subject = Object.new
       end
 
-      it "returns expected value from chaining only one method call" do
-        @subject.stub_chain(:msg1).and_return(:return_value)
-        @subject.msg1.should equal(:return_value)
+
+      context "with one method in chain" do
+        context "using and_return" do
+          it "returns expected value from chaining only one method call" do
+            @subject.stub_chain(:msg1).and_return(:return_value)
+            @subject.msg1.should equal(:return_value)
+          end
+        end
+
+        context "using a block" do
+          it "returns the correct value" do
+            @subject.stub_chain(:msg1) { :return_value }
+            @subject.msg1.should equal(:return_value)
+          end
+        end
       end
 
-      it "returns expected value from chaining two method calls" do
-        @subject.stub_chain(:msg1, :msg2).and_return(:return_value)
-        @subject.msg1.msg2.should equal(:return_value)
+      context "with two methods in chain" do
+        context "using and_return" do
+          it "returns expected value from chaining two method calls" do
+            @subject.stub_chain(:msg1, :msg2).and_return(:return_value)
+            @subject.msg1.msg2.should equal(:return_value)
+          end
+        end
+
+        context "using a block" do
+          it "returns the correct value" do
+            @subject.stub_chain(:msg1, :msg2) { :return_value }
+            @subject.msg1.msg2.should equal(:return_value)
+          end
+        end
+      end
+
+      context "with four methods in chain" do
+        context "using and_return" do
+          it "returns expected value from chaining two method calls" do
+            @subject.stub_chain(:msg1, :msg2, :msg3, :msg4).and_return(:return_value)
+            @subject.msg1.msg2.msg3.msg4.should equal(:return_value)
+          end
+        end
+
+        context "using a block" do
+          it "returns the correct value" do
+            @subject.stub_chain(:msg1, :msg2, :msg3, :msg4) { :return_value }
+            @subject.msg1.msg2.msg3.msg4.should equal(:return_value)
+          end
+        end
       end
 
       it "returns expected value from chaining four method calls" do
