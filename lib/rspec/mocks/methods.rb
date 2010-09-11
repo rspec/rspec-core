@@ -35,18 +35,18 @@ module RSpec
       #
       #   Article.stub_chain("recent.published") { [Article.new] }
       def stub_chain(*chain, &blk)
-        methods = chain.join('.').split('.')
-        if methods.length > 1
-          if matching_stub = __mock_proxy.__send__(:find_matching_method_stub, methods[0].to_sym)
-            methods.shift
-            matching_stub.invoke.stub_chain(*methods)
+        chain, blk = format_chain(*chain, &blk)
+        if chain.length > 1
+          if matching_stub = __mock_proxy.__send__(:find_matching_method_stub, chain[0].to_sym)
+            chain.shift
+            matching_stub.invoke.stub_chain(*chain)
           else
             next_in_chain = Object.new
-            stub(methods.shift) { next_in_chain }
-            next_in_chain.stub_chain(*methods, &blk)
+            stub(chain.shift) { next_in_chain }
+            next_in_chain.stub_chain(*chain, &blk)
           end
         else
-          stub(methods.shift, &blk)
+          stub(chain.shift, &blk)
         end
       end
       
@@ -78,6 +78,17 @@ module RSpec
         else
           @mock_proxy ||= Proxy.new(self)
         end
+      end
+
+      def format_chain(*chain, &blk)
+        if Hash === chain.last
+          hash = chain.pop
+          hash.each do |k,v|
+            chain << k
+            blk = lambda { v }
+          end
+        end
+        return chain.join('.').split('.'), blk
       end
     end
   end

@@ -22,6 +22,13 @@ module RSpec
             @subject.msg1.should equal(:return_value)
           end
         end
+
+        context "using a hash" do
+          it "returns the value of the key/value pair" do
+            @subject.stub_chain(:msg1 => :return_value)
+            @subject.msg1.should equal(:return_value)
+          end
+        end
       end
 
       context "with two methods in chain" do
@@ -38,6 +45,13 @@ module RSpec
             @subject.msg1.msg2.should equal(:return_value)
           end
         end
+
+        context "using a hash" do
+          it "returns the value of the key/value pair" do
+            @subject.stub_chain(:msg1, :msg2 => :return_value)
+            @subject.msg1.msg2.should equal(:return_value)
+          end
+        end
       end
 
       context "with four methods in chain" do
@@ -51,6 +65,20 @@ module RSpec
         context "using a block" do
           it "returns the correct value" do
             @subject.stub_chain(:msg1, :msg2, :msg3, :msg4) { :return_value }
+            @subject.msg1.msg2.msg3.msg4.should equal(:return_value)
+          end
+        end
+
+        context "using a hash" do
+          it "returns the value of the key/value pair" do
+            @subject.stub_chain(:msg1, :msg2, :msg3, :msg4 => :return_value)
+            @subject.msg1.msg2.msg3.msg4.should equal(:return_value)
+          end
+        end
+
+        context "using a hash with a string key" do
+          it "returns the value of the key/value pair" do
+            @subject.stub_chain("msg1.msg2.msg3.msg4" => :return_value)
             @subject.msg1.msg2.msg3.msg4.should equal(:return_value)
           end
         end
