@@ -35,6 +35,10 @@ module RSpec
         @mock.message(:expected_arg)
         @mock.message(:unexpected_arg)
       end
+
+      it "responds to everything" do
+        @mock.should respond_to(:any_message_it_gets)
+      end
     end
 
     describe "#null_object?" do

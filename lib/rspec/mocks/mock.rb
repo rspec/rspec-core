@@ -34,6 +34,10 @@ module RSpec
 
       alias_method :to_str, :to_s
 
+      def respond_to?(sym, incl_private=false)
+        __mock_proxy.respond_to?(sym, incl_private)
+      end
+
     private
 
       def method_missing(sym, *args, &block)
