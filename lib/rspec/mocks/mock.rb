@@ -35,7 +35,7 @@ module RSpec
       alias_method :to_str, :to_s
 
       def respond_to?(sym, incl_private=false)
-        __mock_proxy.respond_to?(sym, incl_private)
+        __mock_proxy.null_object? ? true : super
       end
 
     private

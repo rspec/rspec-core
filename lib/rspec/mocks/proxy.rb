@@ -38,10 +38,6 @@ module RSpec
         @null_object
       end
 
-      def respond_to?(sym, incl_private=false)
-        null_object? ? true : super
-      end
-      
       # Tells the object to ignore any messages that aren't explicitly set as
       # stubs or message expectations.
       def as_null_object
