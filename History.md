@@ -1,8 +1,8 @@
 ## rspec-mocks release history (incomplete)
 
-### 2.0.0.beta.21 / 2010-09-12
+### 2.0.0.beta.22 / 2010-09-12
 
-[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.0.0.beta.20...v2.0.0.beta.21)
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.0.0.beta.20...v2.0.0.beta.22)
 
 * Bug fixes
   * fixed regression that broke obj.stub_chain(:a, :b => :c)
