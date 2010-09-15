@@ -115,7 +115,7 @@ module RSpec
           Kernel::throw @symbol_to_throw unless @symbol_to_throw.nil?
           
           default_return_val = if !@method_block.nil?
-                                 invoke_method_block(*args)
+                                 invoke_method_block(*args, &block)
                                elsif !@args_to_yield.empty? || @eval_context
                                  invoke_with_yield(&block)
                                else
@@ -141,9 +141,9 @@ module RSpec
       
       protected
 
-      def invoke_method_block(*args)
+      def invoke_method_block(*args, &block)
         begin
-          @method_block.call(*args)
+          @method_block.call(*args, &block)
         rescue => detail
           @error_generator.raise_block_failed_error(@sym, detail.message)
         end

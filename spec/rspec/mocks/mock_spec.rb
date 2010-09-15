@@ -144,6 +144,15 @@ module RSpec
         }.to raise_error(RSpec::Mocks::MockExpectationError, /Double \"test double\" received :something but passed block failed with: expected false to be true/)
       end
 
+      it "passes block to expectation block" do
+        a = nil
+        @mock.should_receive(:something) { |&block| a = block }
+        b = lambda { }
+        @mock.something(&b)
+        a.should == b
+        @moc.rspec_verify
+      end
+
       it "fails right away when method defined as never is received" do
         @mock.should_receive(:not_expected).never
         expect { @mock.not_expected }.to raise_error(
