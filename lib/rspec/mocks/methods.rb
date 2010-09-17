@@ -73,10 +73,15 @@ module RSpec
     private
 
       def __mock_proxy
-        if Mock === self
-          @mock_proxy ||= Proxy.new(self, @name, @options)
-        else
-          @mock_proxy ||= Proxy.new(self)
+        @mock_proxy ||= begin
+          mp = if Mock === self
+            Proxy.new(self, @name, @options)
+          else
+            Proxy.new(self)
+          end
+
+          Serialization.fix_for(self)
+          mp
         end
       end
 
