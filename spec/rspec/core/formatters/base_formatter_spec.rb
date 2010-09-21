@@ -27,7 +27,9 @@ describe RSpec::Core::Formatters::BaseFormatter do
         "/some/line/of/ruby.rb:14"
       ])
       example = mock(:Example, :file_path => __FILE__)
-      formatter.send(:read_failed_line, exception, example)
+      lambda {
+        formatter.send(:read_failed_line, exception, example)
+      }.should_not raise_error
     end
   end
 
