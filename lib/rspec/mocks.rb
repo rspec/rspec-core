@@ -26,7 +26,7 @@ module RSpec
   # message some time before the example ends. If the message is received, the
   # expectation is satisfied. If not, the example fails.
   #
-  #   registrar = double("registrar")
+  #   validator = double("validator")
   #   validator.should_receive(:validate).with("02134")
   #   zipcode = Zipcode.new("02134", validator)
   #   zipcode.valid?
