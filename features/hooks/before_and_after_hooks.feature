@@ -135,6 +135,31 @@ Feature: before and after hooks
       after all ran
       """
 
+  @wip
+  Scenario: failure in after(:all) block
+    Given a file named "after_all_spec.rb" with:
+      """
+      describe "an error in after(:all)" do
+        after(:all) do
+          raise "Oops"
+        end
+
+        it "fails this example" do
+        end
+
+        it "fails this example, too" do
+        end
+      end
+      """
+    When I run "rspec ./after_all_spec.rb --format documentation"
+    Then the output should contain "2 examples, 2 failures"
+    And the output should contain:
+      """
+      an error in after(:all)
+        fails this example
+        fails this example, too
+      """
+
   Scenario: define before and after blocks in configuration
     Given a file named "befores_in_configuration_spec.rb" with:
       """

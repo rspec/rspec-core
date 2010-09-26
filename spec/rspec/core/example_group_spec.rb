@@ -336,6 +336,20 @@ module RSpec::Core
         example.metadata[:execution_result][:exception_encountered].message.should == "error in before all"
       end
 
+      it "treats an error in after(:all) as a failure" do
+        pending "this may require significant architecture changes" do
+          group = ExampleGroup.describe
+          group.after(:all) { raise "error in after all" }
+          example = group.example("equality") { 1.should == 1}
+          group.run_all
+
+          example.metadata.should_not be_nil
+          example.metadata[:execution_result].should_not be_nil
+          example.metadata[:execution_result][:exception_encountered].should_not be_nil
+          example.metadata[:execution_result][:exception_encountered].message.should == "error in after all"
+        end
+      end
+
       it "has no 'running example' within before(:all)" do
         group = ExampleGroup.describe
         running_example = :none
