@@ -72,12 +72,18 @@ module RSpec
 
     private
 
-      def __mock_proxy
-        if Mock === self
-          @mock_proxy ||= Proxy.new(self, @name, @options)
-        else
-          @mock_proxy ||= Proxy.new(self)
+      @@mock_proxies = Hash.new do |hash, key|
+        hash[key] = key.instance_eval do
+          if Mock === self
+            Proxy.new(self, @name, @options)
+          else
+            Proxy.new(self)
+          end
         end
+      end
+
+      def __mock_proxy
+        @@mock_proxies[self]
       end
 
       def format_chain(*chain, &blk)
