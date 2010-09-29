@@ -212,22 +212,23 @@ a {
       <span class="failed_spec_name">fails</span>
       <div class="failure" id="failure_0">
         <div class="message"><pre>RSpec::Core::PendingExampleFixedError</pre></div>
-        <div class="backtrace"><pre><a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/rspec/core/resources/formatter_specs.rb&line=19">./spec/rspec/core/resources/formatter_specs.rb:19</a>
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=23">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:23</a>
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=38">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:38</a>
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=38">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:38</a> :in `open'
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=38">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:38</a>
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=37">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:37</a> :in `chdir'
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=37">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:37</a>
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/spec_helper.rb&line=73">./spec/spec_helper.rb:73</a>
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/spec_helper.rb&line=49">./spec/spec_helper.rb:49</a> :in `instance_eval'
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/spec_helper.rb&line=49">./spec/spec_helper.rb:49</a> :in `sandboxed'
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/spec_helper.rb&line=73">./spec/spec_helper.rb:73</a> </pre></div>
-    <pre class="ruby"><code><span class="linenum">11</span>          <span class="keyword">rescue</span> <span class="constant">Exception</span> <span class="punct">=&gt;</span> <span class="ident">e</span>
-<span class="linenum">12</span>          <span class="keyword">end</span>
-<span class="offending"><span class="linenum">13</span>          <span class="keyword">raise</span> <span class="constant">RSpec</span><span class="punct">::</span><span class="constant">Core</span><span class="punct">::</span><span class="constant">PendingExampleFixedError</span><span class="punct">.</span><span class="ident">new</span> <span class="keyword">if</span> <span class="ident">result</span></span>
-<span class="linenum">14</span>        <span class="keyword">end</span>
-<span class="linenum">15</span>        <span class="ident">throw</span> <span class="symbol">:pending_declared_in_example</span><span class="punct">,</span> <span class="ident">message</span></code></pre>
+        <div class="backtrace"><pre><a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/rspec/core/resources/formatter_specs.rb&line=19">./spec/rspec/core/resources/formatter_specs.rb:19</a> 
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=24">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:24</a> 
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=46">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:46</a> 
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=46">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:46</a> :in `open'
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=46">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:46</a> 
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=45">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:45</a> :in `chdir'
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=45">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:45</a> 
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/spec_helper.rb&line=71">./spec/spec_helper.rb:71</a> 
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/spec_helper.rb&line=45">./spec/spec_helper.rb:45</a> :in `instance_eval'
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/spec_helper.rb&line=45">./spec/spec_helper.rb:45</a> :in `sandboxed'
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/spec_helper.rb&line=71">./spec/spec_helper.rb:71</a> 
+<a href="txmt://open?url=file:///Users/mmarston/.rvm/gems/ruby-1.8.7-p302/gems/rake-0.8.7/lib/rake.rb&line=2503">/Users/mmarston/.rvm/gems/ruby-1.8.7-p302/gems/rake-0.8.7/lib/rake.rb:2503</a> :in `inject'</pre></div>
+    <pre class="ruby"><code><span class="linenum">20</span>          <span class="keyword">rescue</span> <span class="constant">Exception</span> <span class="punct">=&gt;</span> <span class="ident">e</span>
+<span class="linenum">21</span>          <span class="keyword">end</span>
+<span class="offending"><span class="linenum">22</span>          <span class="keyword">raise</span> <span class="constant">RSpec</span><span class="punct">::</span><span class="constant">Core</span><span class="punct">::</span><span class="constant">PendingExampleFixedError</span><span class="punct">.</span><span class="ident">new</span> <span class="keyword">if</span> <span class="ident">result</span></span>
+<span class="linenum">23</span>        <span class="keyword">end</span>
+<span class="linenum">24</span>        <span class="ident">throw</span> <span class="symbol">:pending_declared_in_example</span><span class="punct">,</span> <span class="ident">message</span></code></pre>
       </div>
     </dd>
   </dl>
@@ -253,17 +254,18 @@ expected 2
 
 (compared using ==)
 </pre></div>
-        <div class="backtrace"><pre><a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/rspec/core/resources/formatter_specs.rb&line=34">./spec/rspec/core/resources/formatter_specs.rb:34</a>
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=23">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:23</a>
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=38">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:38</a>
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=38">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:38</a> :in `open'
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=38">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:38</a>
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=37">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:37</a> :in `chdir'
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=37">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:37</a>
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/spec_helper.rb&line=73">./spec/spec_helper.rb:73</a>
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/spec_helper.rb&line=49">./spec/spec_helper.rb:49</a> :in `instance_eval'
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/spec_helper.rb&line=49">./spec/spec_helper.rb:49</a> :in `sandboxed'
-<a href="txmt://open?url=file:///Users/dchelimsky/projects/ruby/rspec2/repos/rspec-core/spec/spec_helper.rb&line=73">./spec/spec_helper.rb:73</a> </pre></div>
+        <div class="backtrace"><pre><a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/rspec/core/resources/formatter_specs.rb&line=34">./spec/rspec/core/resources/formatter_specs.rb:34</a> 
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=24">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:24</a> 
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=46">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:46</a> 
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=46">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:46</a> :in `open'
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=46">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:46</a> 
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=45">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:45</a> :in `chdir'
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/rspec/core/formatters/text_mate_formatter_spec.rb&line=45">./spec/rspec/core/formatters/text_mate_formatter_spec.rb:45</a> 
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/spec_helper.rb&line=71">./spec/spec_helper.rb:71</a> 
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/spec_helper.rb&line=45">./spec/spec_helper.rb:45</a> :in `instance_eval'
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/spec_helper.rb&line=45">./spec/spec_helper.rb:45</a> :in `sandboxed'
+<a href="txmt://open?url=file:///Users/mmarston/code/rspec-dev/repos/rspec-core/spec/spec_helper.rb&line=71">./spec/spec_helper.rb:71</a> 
+<a href="txmt://open?url=file:///Users/mmarston/.rvm/gems/ruby-1.8.7-p302/gems/rake-0.8.7/lib/rake.rb&line=2503">/Users/mmarston/.rvm/gems/ruby-1.8.7-p302/gems/rake-0.8.7/lib/rake.rb:2503</a> :in `inject'</pre></div>
     <pre class="ruby"><code><span class="linenum">27</span>        <span class="keyword">end</span>
 <span class="linenum">28</span>
 <span class="offending"><span class="linenum">29</span>        <span class="keyword">raise</span><span class="punct">(</span><span class="constant">RSpec</span><span class="punct">::</span><span class="constant">Expectations</span><span class="punct">::</span><span class="constant">ExpectationNotMetError</span><span class="punct">.</span><span class="ident">new</span><span class="punct">(</span><span class="ident">message</span><span class="punct">))</span></span>
