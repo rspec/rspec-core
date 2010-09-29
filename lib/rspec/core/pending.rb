@@ -8,7 +8,7 @@ module RSpec
         message = args.first || DEFAULT_MESSAGE
 
         if options[:unless] || (options.has_key?(:if) && !options[:if])
-          return if block_given? ? yield : nil
+          return block_given? ? yield : nil
         end
 
         example.metadata[:pending] = true
