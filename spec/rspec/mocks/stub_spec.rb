@@ -199,13 +199,13 @@ module RSpec
       it "complains if called with no arg" do
         lambda do
           @stub.foo
-        end.should raise_error
+        end.should raise_error(/received :foo with unexpected arguments/)
       end
 
       it "complains if called with other arg" do
         lambda do
           @stub.foo("other")
-        end.should raise_error
+        end.should raise_error(/received :foo with unexpected arguments/)
       end
 
       it "does not complain if also mocked w/ different args" do

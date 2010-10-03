@@ -105,6 +105,9 @@ module RSpec
         elsif expectation = find_almost_matching_expectation(method_name, *args)
           expectation.advise(*args) if null_object? unless expectation.expected_messages_received?
           raise_unexpected_message_args_error(expectation, *args) unless (has_negative_expectation?(method_name) or null_object?)
+        elsif stub = find_almost_matching_stub(method_name, *args)
+          stub.advise(*args)
+          raise_unexpected_message_args_error(stub, *args)
         elsif @object.is_a?(Class)
           @object.superclass.send(method_name, *args, &block)
         else
@@ -143,6 +146,10 @@ module RSpec
 
       def find_matching_method_stub(method_name, *args)
         method_double[method_name].stubs.find {|stub| stub.matches?(method_name, *args)}
+      end
+
+      def find_almost_matching_stub(method_name, *args)
+        method_double[method_name].stubs.find {|stub| stub.matches_name_but_not_args(method_name, *args)}
       end
 
     end
