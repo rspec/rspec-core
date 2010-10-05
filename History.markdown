@@ -1,8 +1,8 @@
 ## rspec-mocks release history (incomplete)
 
-### 2.0.0.beta.23 / in development
+### 2.0.0.rc / 2010-10-05
 
-[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.0.0.beta.22...master)
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.0.0.beta.22...v2.0.0.rc)
 
 * Enhancements
   * support passing a block to an expecttation block (Nicolas Braem)
