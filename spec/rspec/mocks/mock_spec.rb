@@ -88,7 +88,14 @@ module RSpec
         @mock.rspec_verify
       end
 
-      it "returns nil if no return value set" do
+      it "returns the previously stubbed value if no return value is set" do
+        @mock.stub!(:something).with("a","b","c").and_return(:stubbed_value)
+        @mock.should_receive(:something).with("a","b","c")
+        @mock.something("a","b","c").should == :stubbed_value
+        @mock.rspec_verify
+      end
+
+      it "returns nil if no return value is set and there is no previously stubbed value" do
         @mock.should_receive(:something).with("a","b","c")
         @mock.something("a","b","c").should be_nil
         @mock.rspec_verify
