@@ -151,9 +151,11 @@ module RSpec
         }.to raise_error(RSpec::Mocks::MockExpectationError, /Double \"test double\" received :something but passed block failed with: expected false to be true/)
       end
 
-      it "passes block to expectation block" do
+      it "passes block to expectation block", :ruby => '> 1.8.6' do
         a = nil
-        @mock.should_receive(:something) { |&block| a = block }
+        # We eval this because Ruby 1.8.6's syntax parser barfs on { |&block| ... }
+        # and prevents the entire spec suite from running.
+        eval("@mock.should_receive(:something) { |&block| a = block }")
         b = lambda { }
         @mock.something(&b)
         a.should == b
