@@ -7,6 +7,7 @@ gem "autotest"
 gem "rspec-mocks", :path => "."
 gem "rspec-core", :path => "../rspec-core"
 gem "rspec-expectations", :path => "../rspec-expectations"
+gem "relish"
 
 case RUBY_VERSION.to_s
 when '1.9.2'
