@@ -1,5 +1,9 @@
 ## rspec-mocks release history (incomplete)
 
+### 2.0.0 / 2010-10-10
+
+[full changelog](http://github.com/rspec/rspec-expectations/compare/v2.0.0.beta.22...v2.0.0)
+
 ### 2.0.0.rc / 2010-10-05
 
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.0.0.beta.22...v2.0.0.rc)
