@@ -1,4 +1,4 @@
-Feature: configure a test frawework to use rspec-mocks
+Feature: configure a test framework to use rspec-mocks
 
   Test frameworks that want to use rspec-mocks can use
   RSpec::Mocks::setup(self) to hook into rspec-mocks. Doing so adds the
