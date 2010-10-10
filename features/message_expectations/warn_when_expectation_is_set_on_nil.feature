@@ -1,4 +1,4 @@
-Feature: warn when expectation is set on nil
+Feature: Warn when expectation is set on nil
 
   Scenario: nil instance variable
     Given a file named "example_spec.rb" with:

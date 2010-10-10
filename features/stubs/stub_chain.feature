@@ -1,4 +1,4 @@
-Feature: stub_chain
+Feature: Stub a chain of methods
 
   The stub_chain method lets you to stub a chain of methods in one statement.
   Method chains are considered a design smell, but it's not really the method
