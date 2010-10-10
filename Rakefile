@@ -7,13 +7,6 @@ require 'rspec/core/rake_task'
 require 'rspec/mocks/version'
 require 'cucumber/rake/task'
 
-RSpec::Core::RakeTask.new(:spec)
-
-RSpec::Core::RakeTask.new(:rcov) do |spec|
-  spec.rcov = true
-  spec.rcov_opts = %[--exclude "core,expectations,gems/*,spec/resources,spec/spec,spec/spec_helper.rb,db/*,/Library/Ruby/*,config/*" --text-summary  --sort coverage]
-end
-
 class Cucumber::Rake::Task::ForkedCucumberRunner
   # When cucumber shells out, we still need it to run in the context of our
   # bundle.
@@ -22,9 +15,37 @@ class Cucumber::Rake::Task::ForkedCucumberRunner
   end
 end
 
-Cucumber::Rake::Task.new do |t|
-  t.cucumber_opts = %w{--format progress}
+task :cleanup_rcov_files do
+  rm_rf 'coverage.data'
 end
+
+desc "Run all examples"
+RSpec::Core::RakeTask.new(:spec) do |t|
+  t.rspec_opts = %w[--color]
+end
+
+Cucumber::Rake::Task.new(:cucumber)
+
+namespace :spec do
+  desc "Run all examples using rcov"
+  RSpec::Core::RakeTask.new :rcov => :cleanup_rcov_files do |t|
+    t.rcov = true
+    t.rcov_opts =  %[-Ilib -Ispec --exclude "gems/*,features"]
+    t.rcov_opts << %[--text-report --sort coverage --no-html --aggregate coverage.data]
+  end
+end
+
+namespace :cucumber do
+  desc "Run cucumber features using rcov"
+  Cucumber::Rake::Task.new :rcov => :cleanup_rcov_files do |t|
+    t.cucumber_opts = %w{--format progress}
+    t.rcov = true
+    t.rcov_opts =  %[-Ilib -Ispec --exclude "gems/*,features"]
+    t.rcov_opts << %[--text-report --sort coverage --aggregate coverage.data]
+  end
+end
+
+task :default => [:spec, :cucumber]
 
 task :clobber do
   rm_rf 'pkg'
@@ -45,6 +66,5 @@ task :relish, :version do |t, args|
   raise "rake relish[VERSION]" unless args[:version]
   sh "bundle exec relish --organization rspec --project rspec-mocks -v #{args[:version]} push"
 end
-
 
 task :default => [:spec, :cucumber]
