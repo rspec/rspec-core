@@ -20,11 +20,11 @@ module RSpec
       #   'spec/**/*_spec.rb'
       attr_accessor :pattern
        
-      # Whether or not to allow rspec to explicitly run 'bundle exec' when executing.
+      # Whether or not rpec will run 'bundle exec' when executing.
       # 
       # default:
-      #   true
-      attr_accessor :allow_bundler
+      #   false
+      attr_accessor :bundler
 
       # Deprecated. Use ruby_opts="-w" instead.
       # When true, requests that the specs be run with the warning flag set.
@@ -100,8 +100,8 @@ module RSpec
       def initialize(*args)
         @name = args.shift || :spec
         @pattern, @rcov_path, @rcov_opts, @ruby_opts, @rspec_opts = nil, nil, nil, nil, nil
-        @warning, @rcov = false, false
-        @verbose, @fail_on_error, @allow_bundler = true, true, true
+        @warning, @rcov, @bundler = false, false, false
+        @verbose, @fail_on_error = true, true
 
         yield self if block_given?
 
@@ -142,7 +142,7 @@ module RSpec
                             cmd_parts = [ruby_opts]
                             cmd_parts << "-w" if warning?
                             cmd_parts << "-S"
-                            cmd_parts << "bundle exec" if run_with_bundler?
+                            cmd_parts << "bundle exec" if bundler
                             cmd_parts << runner
                             if rcov
                               cmd_parts << ["-Ispec", rcov_opts]
@@ -161,10 +161,6 @@ module RSpec
 
       def runner
         rcov ? rcov_path : rspec_path
-      end
-
-      def run_with_bundler?
-        File.exist?("./Gemfile") && allow_bundler
       end
 
       def warning?

@@ -9,8 +9,8 @@ module RSpec::Core
       File.stub(:exist?) { false }
     end
 
-    def with_gemfile
-      File.stub(:exist?) { true }
+    def with_bundler
+      task.bundler = true
       yield
     end
 
@@ -29,19 +29,10 @@ module RSpec::Core
       end
     end
 
-    context "with bundler Gemfile and bundler task option set to default" do
+    context "with bundler" do
       it "renders bundle exec rspec" do
-        with_gemfile do
+        with_bundler do
           spec_command.should =~ /^-S bundle exec rspec/
-        end
-      end
-    end
-
-    context "with bundler Gemfile but bundler task option set to false" do
-      it "does not render bundle exec" do
-        with_gemfile do
-          task.allow_bundler = false
-          spec_command.should_not =~ /bundle exec/
         end
       end
     end
@@ -54,9 +45,9 @@ module RSpec::Core
       end
     end
 
-    context "with bundler Gemfile and rcov" do
+    context "with bundler and rcov" do
       it "renders bundle exec rcov" do
-        with_gemfile do
+        with_bundler do
           with_rcov do
             spec_command.should =~ /^-S bundle exec rcov/
           end
