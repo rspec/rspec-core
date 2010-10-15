@@ -60,9 +60,7 @@ module RSpec
       end
 
       it 'marshals the same with and without stubbing' do
-        pending("not sure how to fix this yet") do
-          expect { set_stub }.to_not change { Marshal.dump(subject) }
-        end
+        expect { set_stub }.to_not change { Marshal.dump(subject) }
       end
     end
   end

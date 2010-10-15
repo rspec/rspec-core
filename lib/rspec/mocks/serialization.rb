@@ -1,3 +1,5 @@
+require 'rspec/mocks/extensions/marshal'
+
 module RSpec
   module Mocks
     module Serialization
