@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.rdoc_options     = ["--charset=UTF-8"]
   s.require_path     = "lib"
 
-  s.add_dependency "rspec-core",         RSpec::Mocks::Version::STRING
-  s.add_dependency "rspec-expectations", RSpec::Mocks::Version::STRING
+  s.add_dependency "rspec-core",         "2.1.0.pre"
+  s.add_dependency "rspec-expectations", "2.1.0.pre"
 end
 
