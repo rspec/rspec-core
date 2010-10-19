@@ -33,8 +33,8 @@ Gem::Specification.new do |s|
 **************************************************
 }
 
-  s.add_development_dependency "rspec-expectations", "~> 2.0.0"
-  s.add_development_dependency "rspec-mocks",        "~> 2.0.0"
+  s.add_development_dependency "rspec-expectations", "~> 2.0.1"
+  s.add_development_dependency "rspec-mocks",        "~> 2.0.1"
   s.add_development_dependency "cucumber",           "~> 0.9.2"
   s.add_development_dependency "autotest",           "~> 4.2.9"
   s.add_development_dependency "syntax",             "~> 1.0.0"
