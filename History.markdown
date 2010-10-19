@@ -9,6 +9,7 @@
   * Pending examples without docstrings render the correct message (Josep M. Bach)
   * Fixed bug where a failure in a spec file ending in anything but _spec.rb would
     fail in a confusing way.
+  * Support backtrace lines from erb templates in html formatter (Alex Crichton)
 
 ### 2.0.0 / 2010-10-10
 
