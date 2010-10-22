@@ -21,8 +21,5 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = [ "README.markdown" ]
   s.rdoc_options     = ["--charset=UTF-8"]
   s.require_path     = "lib"
-
-  s.add_dependency "rspec-core",         "2.1.0.pre"
-  s.add_dependency "rspec-expectations", "2.1.0.pre"
 end
 
