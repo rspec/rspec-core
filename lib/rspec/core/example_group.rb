@@ -10,11 +10,6 @@ module RSpec
 
       attr_accessor :example
 
-      def running_example
-        RSpec.deprecate('running_example', 'example')
-        example
-      end
-
       def self.world
         RSpec.world
       end
@@ -42,7 +37,6 @@ module RSpec
         module_eval(<<-END_RUBY, __FILE__, __LINE__)
           def self.#{name}(desc=nil, options={}, &block)
             options.update(:pending => true) unless block
-            options.update(:caller => caller)
             options.update(#{extra_options.inspect})
             examples << RSpec::Core::Example.new(self, desc, options, block)
             examples.last
@@ -95,7 +89,7 @@ module RSpec
       end
 
       def self.descendant_filtered_examples
-        @descendant_filtered_examples ||= filtered_examples + children.collect{|c| c.descendant_filtered_examples}.flatten
+        @descendant_filtered_examples ||= filtered_examples + children.inject([]){|l,c| l + c.descendant_filtered_examples}
       end
 
       def self.metadata
@@ -111,7 +105,6 @@ module RSpec
         @_subclass_count += 1
         args << {} unless args.last.is_a?(Hash)
         args.last.update(:example_group_block => example_group_block)
-        args.last.update(:caller => caller)
 
         # TODO 2010-05-05: Because we don't know if const_set is thread-safe
         child = const_set(
@@ -138,7 +131,7 @@ module RSpec
       end
 
       def self.descendants
-        @_descendants ||= [self] + children.collect {|c| c.descendants}.flatten
+        @_descendants ||= [self] + children.inject([]) {|list, c| list + c.descendants}
       end
 
       def self.ancestors
@@ -216,7 +209,7 @@ An error occurred in an after(:all) hook.
       end
 
       def self.around_hooks
-        @around_hooks ||= (world.find_hook(:around, :each, self) + ancestors.reverse.map{|a| a.find_hook(:around, :each, self)}).flatten
+        @around_hooks ||= (world.find_hook(:around, :each, self) + ancestors.reverse.inject([]){|l,a| l + a.find_hook(:around, :each, self)})
       end
 
       def self.run(reporter)
@@ -276,7 +269,7 @@ An error occurred in an after(:all) hook.
       def self.declaration_line_numbers
         @declaration_line_numbers ||= [metadata[:example_group][:line_number]] +
           examples.collect {|e| e.metadata[:line_number]} +
-          children.collect {|c| c.declaration_line_numbers}.flatten
+          children.inject([]) {|l,c| l + c.declaration_line_numbers}
       end
 
       def self.top_level_description

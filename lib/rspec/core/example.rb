@@ -23,11 +23,6 @@ module RSpec
         @example_group_class
       end
 
-      def behaviour
-        RSpec.deprecate("behaviour", "example_group")
-        example_group
-      end
-
       def pending?
         !!pending
       end
@@ -129,7 +124,7 @@ module RSpec
       end
 
       def assign_auto_description
-        if description.empty?
+        if description.empty? and !pending?
           metadata[:description] = RSpec::Matchers.generated_description
           RSpec::Matchers.clear_generated_description
         end

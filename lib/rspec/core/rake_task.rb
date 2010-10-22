@@ -26,6 +26,12 @@ module RSpec
       #   false
       attr_accessor :bundler
 
+      # Whether or not to include 'bundle exec' in the command
+      #
+      # default:
+      #   false
+      attr_accessor :bundler
+
       # Deprecated. Use ruby_opts="-w" instead.
       # When true, requests that the specs be run with the warning flag set.
       # e.g. "ruby -w"
@@ -33,11 +39,6 @@ module RSpec
       # default:
       #   false
       attr_reader :warning
-
-      def warning=(true_or_false)
-        RSpec.deprecate("warning", 'ruby_opts="-w"')
-        @warning = true_or_false
-      end
 
       # Whether or not to fail Rake when an error occurs (typically when examples fail).
       #
@@ -92,11 +93,6 @@ module RSpec
       attr_accessor :rspec_opts
 
       # Deprecated. Use rspec_opts instead.
-      def spec_opts=(opts)
-        RSpec.deprecate("spec_opts","rspec_opts")
-        @rspec_opts = opts
-      end
-
       def initialize(*args)
         @name = args.shift || :spec
         @pattern, @rcov_path, @rcov_opts, @ruby_opts, @rspec_opts = nil, nil, nil, nil, nil
