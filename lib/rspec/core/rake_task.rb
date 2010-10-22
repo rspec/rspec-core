@@ -20,12 +20,6 @@ module RSpec
       #   'spec/**/*_spec.rb'
       attr_accessor :pattern
        
-      # Whether or not rpec will run 'bundle exec' when executing.
-      # 
-      # default:
-      #   false
-      attr_accessor :bundler
-
       # Whether or not to include 'bundle exec' in the command
       #
       # default:
