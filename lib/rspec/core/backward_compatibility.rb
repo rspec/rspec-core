@@ -9,11 +9,11 @@ module RSpec
 DEPRECATION WARNING: you are using a deprecated constant that will
 be removed from a future version of RSpec.
 
+#{caller(0)[2]}
+
 * #{name} is deprecated.
 * RSpec is the new top-level module in RSpec-2
-
-#{caller(0)[1]}
-*****************************************************************
+***************************************************************
 WARNING
           RSpec
         else
@@ -21,9 +21,14 @@ WARNING
         end
       end
     end
-
   end
 
+  module Runner
+    def self.configure(&block)
+      RSpec.deprecate("Spec::Runner.configure", "RSpec.configure")
+      RSpec.configure(&block)
+    end
+  end
 end
 
 Object.extend(RSpec::Core::ConstMissing)

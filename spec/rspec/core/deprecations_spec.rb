@@ -16,7 +16,7 @@ describe "deprecations" do
   describe RSpec::Core::ExampleGroup do
     describe 'running_example' do
       it 'is deprecated' do
-        RSpec.should_receive(:warn_deprecation).with(/running_example.*example/m)
+        RSpec.should_receive(:warn_deprecation)
         self.running_example
       end
 
@@ -24,6 +24,14 @@ describe "deprecations" do
         RSpec.stub(:warn_deprecation)
         running_example.should == example
       end
+    end
+  end
+
+  describe "Spec::Runner.configure" do
+    it "is deprecated" do
+      RSpec.stub(:warn_deprecation)
+      RSpec.should_receive(:deprecate)
+      Spec::Runner.configure
     end
   end
 end
