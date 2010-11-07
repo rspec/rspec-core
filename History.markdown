@@ -1,5 +1,12 @@
 ## rspec-mocks release history (incomplete)
 
+### 2.1.0 / in development
+
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.0.0...v2.1.0)
+
+* Bug fixes
+  * Fix serialization of stubbed object (Josep M Bach)
+
 ### 2.0.0 / 2010-10-10
 
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.0.0.beta.22...v2.0.0)
