@@ -5,6 +5,18 @@ module RSpec
   module Mocks
     class SerializableStruct < Struct.new(:foo, :bar); end
 
+    class SerializableMockProxy
+      attr_reader :mock_proxy
+
+      def initialize(mock_proxy)
+        @mock_proxy = mock_proxy
+      end
+
+      def ==(other)
+        other.class == self.class && other.mock_proxy == mock_proxy
+      end
+    end
+
     describe Serialization do
       def self.with_yaml_loaded(&block)
         context 'with YAML loaded' do
@@ -61,6 +73,15 @@ module RSpec
 
       it 'marshals the same with and without stubbing' do
         expect { set_stub }.to_not change { Marshal.dump(subject) }
+      end
+
+      describe "an object that has its own mock_proxy instance variable" do
+        subject { SerializableMockProxy.new(:my_mock_proxy) }
+
+        it 'does not interfere with its marshalling' do
+          marshalled_copy = Marshal.load(Marshal.dump(subject))
+          marshalled_copy.should == subject
+        end
       end
     end
   end
