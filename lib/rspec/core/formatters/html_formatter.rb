@@ -193,6 +193,13 @@ EOF
   </div>
 </div>
 
+<div id="rspec-filters">
+  Show only :
+  <input id="passed_checkbox" name="passed_checkbox" type="checkbox" checked onchange="filter_test()" value="1"> <label for="passed_checkbox">Passed tests</label>
+  <input id="failed_checkbox" name="failed_checkbox" type="checkbox" checked onchange="filter_test()" value="2"> <label for="failed_checkbox">Failed tests</label>
+  <input id="pending_checkbox" name="pending_checkbox" type="checkbox" checked onchange="filter_test()" value="3"> <label for="pending_checkbox">Pending tests</label>
+</div>
+
 <div class="results">
 EOF
         end
@@ -219,6 +226,42 @@ function makeYellow(element_id) {
     document.getElementById(element_id).style.color = '#000000';
   }
 }
+
+function filter_test() {
+  var passed_filter = document.getElementById('passed_checkbox').checked;
+  var failed_filter = document.getElementById('failed_checkbox').checked;
+  var pending_filter = document.getElementById('pending_checkbox').checked;
+  // alert("filter_test " + passed_filter + "," + failed_filter + "," + pending_filter);
+
+  assign_display_style("spec passed", passed_filter);
+  assign_display_style("spec failed", failed_filter);
+  assign_display_style("spec not_implemented", pending_filter);
+
+  // example_group
+  var example_group = document.getElementsByClassName('example_group');
+  for (var i=0; i<example_group.length;i++) {
+    var style_mode = 'none';
+    var dd_tags = example_group[i].getElementsByTagName('dd');
+    for (var j=0; j<dd_tags.length;j++) {
+      if (dd_tags[j].style.display != 'none') {
+        style_mode = 'block';
+        break;
+      }
+    }
+    example_group[i].style.display = style_mode;
+  }
+}
+
+function assign_display_style(classname, display_flag) {
+  var style_mode = 'none';
+  if (display_flag == true) {
+    style_mode = 'block';
+  }
+  var elems = document.getElementsByClassName(classname)
+  for (var i=0; i<elems.length;i++) {
+    elems[i].style.display = style_mode;
+  }
+}
 EOF
         end
 
@@ -234,6 +277,12 @@ EOF
   font-family: "Lucida Grande", Helvetica, sans-serif;
   font-size: 1.8em;
   position: absolute;
+}
+
+#rspec-filters {
+  margin: 0; padding: 5px 10px;
+  font-family: "Lucida Grande", Helvetica, sans-serif;
+  text-align: right;
 }
 
 #summary {
