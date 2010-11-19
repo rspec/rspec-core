@@ -1,5 +1,6 @@
 require 'rspec/mocks/framework'
 require 'rspec/mocks/version'
+require 'rspec/mocks/spec_methods'
 
 module RSpec
   # == Test Doubles
@@ -176,8 +177,7 @@ module RSpec
       attr_accessor :space
 
       def setup(includer)
-        require 'rspec/mocks/extensions/object'
-        require 'rspec/mocks/spec_methods'
+        Object.class_eval { include RSpec::Mocks::Methods } unless Object < RSpec::Mocks::Methods
         (class << includer; self; end).class_eval do
           include RSpec::Mocks::ExampleMethods
         end

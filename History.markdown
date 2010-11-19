@@ -1,5 +1,12 @@
 ## rspec-mocks release history (incomplete)
 
+### 2.2.0 / in development
+
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.1.0...v2.2.0)
+
+* Enhancements
+  * Added "rspec/mocks/standalone" for exploring the rspec-mocks in irb.
+
 ### 2.1.0 / 2010-11-07
 
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.0.1...v2.1.0)
