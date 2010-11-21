@@ -40,7 +40,7 @@ module RSpec
         new_gen = error_generator.clone
         new_gen.opts = opts
         child.error_generator = new_gen
-        child.clone_args_to_yield *@args_to_yield
+        child.clone_args_to_yield(*@args_to_yield)
         child
       end
       
