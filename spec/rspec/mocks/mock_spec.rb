@@ -635,6 +635,30 @@ module RSpec
             @mock.rspec_reset
           end
         end
+
+        context "with non-matching doubles" do
+          it "fails" do
+            d1 = double('1')
+            d2 = double('2')
+            @mock.should_receive(:foo).with(d1)
+            expect do
+              @mock.foo(d2)
+            end.to raise_error
+            @mock.rspec_reset
+          end
+        end
+
+        context "with non-matching doubles as_null_object" do
+          it "fails" do
+            d1 = double('1').as_null_object
+            d2 = double('2').as_null_object
+            @mock.should_receive(:foo).with(d1)
+            expect do
+              @mock.foo(d2)
+            end.to raise_error
+            @mock.rspec_reset
+          end
+        end
       end
 
       context "with a block" do

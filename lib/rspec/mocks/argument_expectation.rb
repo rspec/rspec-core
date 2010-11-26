@@ -9,9 +9,10 @@ module RSpec
         @match_any_args = false
         @matchers = nil
         
-        if ArgumentMatchers::AnyArgsMatcher === args.first
+        case args.first
+        when ArgumentMatchers::AnyArgsMatcher
           @match_any_args = true
-        elsif ArgumentMatchers::NoArgsMatcher === args.first
+        when ArgumentMatchers::NoArgsMatcher
           @matchers = []
         else
           @matchers = args.collect {|arg| matcher_for(arg)}
@@ -19,13 +20,17 @@ module RSpec
       end
       
       def matcher_for(arg)
-        return ArgumentMatchers::MatcherMatcher.new(arg)   if is_matcher?(arg)
-        return ArgumentMatchers::RegexpMatcher.new(arg) if arg.is_a?(Regexp)
+        return ArgumentMatchers::MatcherMatcher.new(arg) if is_matcher?(arg)
+        return ArgumentMatchers::RegexpMatcher.new(arg)  if arg.is_a?(Regexp)
         return ArgumentMatchers::EqualityProxy.new(arg)
       end
       
       def is_matcher?(obj)
-        return obj.respond_to?(:matches?) & obj.respond_to?(:description)
+        !is_stub_as_null_object?(obj) & obj.respond_to?(:matches?) & obj.respond_to?(:description)
+      end
+
+      def is_stub_as_null_object?(obj)
+        obj.respond_to?(:__rspec_double_acting_as_null_object?) && obj.__rspec_double_acting_as_null_object?
       end
       
       def args_match?(*args)
