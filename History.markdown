@@ -9,6 +9,8 @@
 
 * Bug fix
   * Eliminate warning on splat args without parens (Gioele Barabucci)
+  * Fix bug where obj.should_receive(:foo).with(stub.as_null_object) would                                                                                                      
+    pass with a false positive.
 
 ### 2.1.0 / 2010-11-07
 
