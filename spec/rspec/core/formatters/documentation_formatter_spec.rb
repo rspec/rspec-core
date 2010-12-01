@@ -62,5 +62,36 @@ root
     nested example 2.2
 "
     end
+
+    it "tracks contexts across restarts" do
+
+      output = StringIO.new
+      RSpec.configuration.stub(:color_enabled?) { false }
+
+      formatter = RSpec::Core::Formatters::DocumentationFormatter.new(output)
+
+      group = RSpec::Core::ExampleGroup.describe("root")
+      context1  = group.describe("context 1")
+      context11 = context1.describe("nested")
+      context11.example("nested example 1.1"){}
+      context11.example("nested example 1.2"){}
+
+      context2  = group.describe("context 1")
+      context22 = context2.describe("nested")
+      context22.example("nested example 1.3"){}
+      context22.example("nested example 1.4"){}
+
+      group.run(RSpec::Core::Reporter.new(formatter))
+
+      output.string.should eql "
+root
+  context 1
+    nested
+      nested example 1.1
+      nested example 1.2
+      nested example 1.3
+      nested example 1.4
+"
+    end
   end
 end
