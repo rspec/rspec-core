@@ -81,6 +81,10 @@ root
       context22.example("nested example 1.3"){}
       context22.example("nested example 1.4"){}
 
+      context3 = group.describe("context 2")
+      context33 = context3.describe("nested") # if the context stack is not cleared, this won't be printed.
+      context33.example("different context 1") {}
+      context33.example("different context 2") {}
       group.run(RSpec::Core::Reporter.new(formatter))
 
       output.string.should eql "
@@ -91,6 +95,10 @@ root
       nested example 1.2
       nested example 1.3
       nested example 1.4
+  context 2
+    nested
+      different context 1
+      different context 2
 "
     end
   end
