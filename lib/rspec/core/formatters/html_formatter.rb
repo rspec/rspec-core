@@ -45,7 +45,8 @@ module RSpec
           super(example_group)
           @example_group_red = false
           @example_group_number += 1
-          if @previous_groups.empty? || !(example_group.description == @previous_groups.pop.description)
+          if @previous_groups.empty? || !(example_group.description == @previous_groups.pop)
+            @previous_groups.clear
             unless example_group_number == 1
               @output.puts "  </dl>"
               @output.puts "</div>"
@@ -58,7 +59,7 @@ module RSpec
         end
 
         def example_group_finished(example_group)
-          @previous_groups.push example_group
+          @previous_groups.push example_group.description
         end
 
         def start_dump
