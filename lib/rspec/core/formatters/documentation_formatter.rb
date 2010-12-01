@@ -15,9 +15,9 @@ module RSpec
         def example_group_started(example_group)
           super(example_group)
 
-          output.puts if @group_level == 0
           if @previous_groups.empty? || example_group.description != @previous_groups.pop
             @previous_groups.clear
+            output.puts if @group_level == 0
             output.puts "#{'  ' * @group_level}#{example_group.description}" 
           end
 
