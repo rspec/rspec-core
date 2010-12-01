@@ -12,6 +12,7 @@ module RSpec
           @example_group_number = 0
           @example_number = 0
           @header_red = nil
+          @previous_groups = []
         end
 
         private
@@ -44,14 +45,20 @@ module RSpec
           super(example_group)
           @example_group_red = false
           @example_group_number += 1
-          unless example_group_number == 1
-            @output.puts "  </dl>"
-            @output.puts "</div>"
+          if @previous_groups.empty? || !(example_group.description == @previous_groups.pop.description)
+            unless example_group_number == 1
+              @output.puts "  </dl>"
+              @output.puts "</div>"
+            end
+            @output.puts "<div class=\"example_group\">"
+            @output.puts "  <dl>"
+            @output.puts "  <dt id=\"example_group_#{example_group_number}\">#{h(example_group.description)}</dt>"
+            @output.flush
           end
-          @output.puts "<div class=\"example_group\">"
-          @output.puts "  <dl>"
-          @output.puts "  <dt id=\"example_group_#{example_group_number}\">#{h(example_group.description)}</dt>"
-          @output.flush
+        end
+
+        def example_group_finished(example_group)
+          @previous_groups.push example_group
         end
 
         def start_dump
