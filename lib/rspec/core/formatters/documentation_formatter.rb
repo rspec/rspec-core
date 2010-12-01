@@ -9,19 +9,23 @@ module RSpec
         def initialize(output)
           super(output)
           @group_level = 0
+          @previous_groups = []
         end
 
         def example_group_started(example_group)
           super(example_group)
 
           output.puts if @group_level == 0
-          output.puts "#{'  ' * @group_level}#{example_group.description}"
+          if @previous_groups.empty? || !(example_group.description == @previous_groups.pop.description)
+            output.puts "#{'  ' * @group_level}#{example_group.description}" 
+          end
 
           @group_level += 1
         end
 
         def example_group_finished(example_group)
           @group_level -= 1
+          @previous_groups.push example_group
         end
 
         def example_passed(example)
