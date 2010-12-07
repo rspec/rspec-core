@@ -26,6 +26,11 @@ module RSpec
         @double.should respond_to(:any_message_it_gets)
       end
 
+      it "allows explicit stubs" do
+        @double.stub(:foo) { "bar" }
+        @double.foo.should eq("bar")
+      end
+
       it "allows explicit expectation" do
         @double.should_receive(:something)
         @double.something
