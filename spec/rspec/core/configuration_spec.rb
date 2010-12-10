@@ -227,6 +227,19 @@ module RSpec::Core
           group.new.you_call_this_a_blt?.should == "egad man, where's the mayo?!?!?"
         end
       end
+      
+      context "with a contradiction as filter" do
+        it "displays a warning" do
+          RSpec.configure do |c|
+            c.include(InstanceLevelMethods, :magic_key => :noinclude)
+            c.should_receive(:puts).with("You included the module #{InstanceLevelMethods.to_s} with a filter, which is never fullfilled.")
+          end
+          
+          group = ExampleGroup.describe('does like, stuff and junk', :magic_key => :include) { }
+          group.should_not respond_to(:you_call_this_a_blt?)
+          group.new.should_not respond_to(:you_call_this_a_blt?)
+        end
+      end
 
     end
 
