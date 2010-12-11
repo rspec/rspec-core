@@ -1,5 +1,13 @@
 ## rspec-mocks release history (incomplete)
 
+### 2.3.0 / in development
+
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.2.0...master)
+
+* Bug fixes 
+  * Fix our Marshal extension so that it does not interfere with objects that
+    have their own @mock_proxy instance variable. (Myron Marston)
+
 ### 2.2.0 / 2010-11-28
 
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.1.0...v2.2.0)
