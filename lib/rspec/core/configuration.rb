@@ -36,7 +36,7 @@ module RSpec
 
       def initialize
         @color_enabled = false
-        self.include_or_extend_modules = []
+        self.include_or_extend_modules = {}
         self.files_to_run = []
         self.backtrace_clean_patterns = [
           /\/lib\d*\/ruby\//,
@@ -354,11 +354,11 @@ EOM
       end
 
       def include(mod, filters={})
-        include_or_extend_modules << [:include, mod, filters]
+        include_or_extend_modules[[:include, mod, filters]] = :not_fulfilled
       end
 
       def extend(mod, filters={})
-        include_or_extend_modules << [:extend, mod, filters]
+        include_or_extend_modules[[:extend, mod, filters]] = :not_fulfilled
       end
 
       def configure_group(group)
@@ -366,11 +366,21 @@ EOM
           :include => group.included_modules.dup,
           :extend  => group.ancestors.dup
         }
-
-        include_or_extend_modules.each do |include_or_extend, mod, filters|
+        
+        include_or_extend_modules.each_key do |include_or_extend, mod, filters|
           next unless filters.empty? || group.apply?(:any?, filters)
           next if self.class < mod
           group.send(include_or_extend, mod)
+          register_filters_as_fulfilled([include_or_extend, mod, filters])
+        end
+      end
+      
+      def announce_not_fulfilled_filters()
+        include_or_extend_modules.reject do |k, maybe_fulfilled|
+          maybe_fulfilled == :was_fulfilled
+        end.each_key do |include_or_extend, mod, filters|
+          included_or_extended = if include_or_extend == :include then 'included' else 'extended' end
+          puts "You #{included_or_extended} the module #{mod} with #{filters.inspect} as filter, which is never fullfilled." unless filters.empty?
         end
       end
 
@@ -405,6 +415,10 @@ EOM
 #{'*'*80}
 MESSAGE
         end
+      end
+      
+      def register_filters_as_fulfilled(include_or_extend_module)
+        include_or_extend_modules[include_or_extend_module] = :was_fulfilled
       end
 
       def output_to_tty?

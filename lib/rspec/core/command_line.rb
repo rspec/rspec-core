@@ -20,6 +20,7 @@ module RSpec
         @configuration.configure_expectation_framework
         @world.announce_inclusion_filter
         @world.announce_exclusion_filter
+        @configuration.announce_not_fulfilled_filters
 
         @configuration.reporter.report(@world.example_count) do |reporter|
           begin
