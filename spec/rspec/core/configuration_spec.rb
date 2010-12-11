@@ -230,10 +230,12 @@ module RSpec::Core
       
       context "with a contradiction as filter" do
         it "displays a warning" do
+          filter = {:magic_key => :noinclude}
           RSpec.configure do |c|
-            c.include(InstanceLevelMethods, :magic_key => :noinclude)
-            c.should_receive(:puts).with("You included the module #{InstanceLevelMethods.to_s} with a filter, which is never fullfilled.")
+            c.include(InstanceLevelMethods, filter)
+            c.should_receive(:puts).with("You included the module #{InstanceLevelMethods.to_s} with #{filter.inspect} as filter, which is never fullfilled.")
           end
+          RSpec.configuration.announce_not_fulfilled_filters()
           
           group = ExampleGroup.describe('does like, stuff and junk', :magic_key => :include) { }
           group.should_not respond_to(:you_call_this_a_blt?)
