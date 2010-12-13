@@ -182,7 +182,7 @@ module RSpec
 
       # Sets the expectation framework module(s).
       #
-      # +frameworks+ can be :rspec, :stdlib, or both 
+      # +frameworks+ can be :rspec, :stdlib, or both
       #
       # Given :rspec, configures rspec/expectations.
       # Given :stdlib, configures test/unit/assertions
@@ -262,7 +262,7 @@ EOM
         filter_run({ :full_description => /#{description}/ }, true)
       end
 
-      attr_writer :formatter_class
+      attr_writer :formatter_class, :reporter
 
       def formatter_class
         @formatter_class ||= begin

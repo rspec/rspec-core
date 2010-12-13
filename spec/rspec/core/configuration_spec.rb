@@ -395,6 +395,14 @@ module RSpec::Core
 
     end
 
+    describe 'reporter=' do
+      it 'sets the reporter' do
+        reporter_class = Class.new
+        config.reporter = reporter_class
+        config.reporter.should == reporter_class
+      end
+    end
+
     describe "#filter_run" do
       it "sets the filter" do
         config.filter_run :focus => true
