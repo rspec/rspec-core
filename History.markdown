@@ -1,5 +1,13 @@
 ## rspec-core release history (incomplete)
 
+### 2.3.1 / in development
+
+[full changelog](http://github.com/rspec/rspec-core/compare/v2.3.0...master)
+
+* Bug fixes
+  * send debugger warning message to $stdout if RSpec.configuration.error_stream
+    has not been defined yet. 
+
 ### 2.3.0 / 2010-12-12
 
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.2.1...v2.3.0)
