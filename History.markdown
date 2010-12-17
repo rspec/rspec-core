@@ -1,4 +1,4 @@
-## rspec-core release history (incomplete)
+## rspec-core release history
 
 ### 2.3.1 / 2010-12-16
 
