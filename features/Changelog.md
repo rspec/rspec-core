@@ -1,5 +1,15 @@
 ## rspec-core release history (incomplete)
 
+### 2.3.1 / 2010-12-16
+
+[full changelog](http://github.com/rspec/rspec-core/compare/v2.3.0...v2.3.1)
+
+* Bug fixes
+  * send debugger warning message to $stdout if RSpec.configuration.error_stream
+    has not been defined yet. 
+  * HTML Formatter _finally_ properly displays nested groups (Jarmo Pertman)
+  * eliminate some warnings when running RSpec's own suite (Jarmo Pertman)
+
 ### 2.3.0 / 2010-12-12
 
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.2.1...v2.3.0)
