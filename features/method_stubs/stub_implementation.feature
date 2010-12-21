@@ -1,4 +1,4 @@
-Feature: Stub with substitute implementation
+Feature: stub with substitute implementation
 
   You can stub an implementation of a method (a.k.a. fake) by passing a block
   to the stub() method.

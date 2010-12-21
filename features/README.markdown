@@ -1,6 +1,6 @@
 rspec-mocks is used to create dynamic "doubles", which stand in for real
-objects in examples. You can set message expectations on them (i.e. mock
-methods), and/or stub return values for arbitrary messages:
+objects in examples. You can stub return values and/or set message
+expectations:
 
     describe Account do
       context "when closed" do
@@ -15,9 +15,6 @@ methods), and/or stub return values for arbitrary messages:
         end
       end
     end
-
-Message expectations like the one in the example above are verified at
-the end of each example.
 
 ## Issues
 

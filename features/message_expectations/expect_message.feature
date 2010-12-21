@@ -1,4 +1,4 @@
-Feature: Expect a message
+Feature: expect a message
 
   Use should_receive() to set an expectation that a receiver should receive a
   message before the example is completed.

@@ -4,7 +4,7 @@ Feature: standalone
   outside the RSpec environment. This is especially useful for
   exploring rspec-mocks in irb.
 
-  Scenario: stub outside rspec
+  Scenario: method stub outside rspec
     Given a file named "example.rb" with:
       """
       require "rspec/mocks/standalone"

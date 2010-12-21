@@ -1,6 +1,6 @@
-Feature: Stub with simple return value
+Feature: stub with a simple return value
 
-  Use the stub() method on a test double or a real object to tell the object to
+  Use the `stub` method on a test double or a real object to tell the object to
   return a value (or values) in response to a given message. If the message is
   never received, nothing happens.
 
