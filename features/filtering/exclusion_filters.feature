@@ -24,6 +24,28 @@ Feature: exclusion filters
     Then the output should contain "does one thing"
     And the output should not contain "does another thing"
 
+  @wip
+  Scenario: exclude implicit examples
+  Given a file named "spec/sample_spec.rb" with:
+    """
+    RSpec.configure do |c|
+      # declare an exclusion filter
+      c.filter_run_excluding :broken => true
+    end
+
+    describe "something" do
+      it "does one thing" do
+      end
+
+      # An example with an implicit description
+      it(:broken => true) { should == true}
+    end
+    """
+  When I run "rspec ./spec/sample_spec.rb --format doc"
+  Then the output should contain "does one thing"
+  And the output should not contain "brokentrue"
+
+
   Scenario: exclude a group
     Given a file named "spec/sample_spec.rb" with:
       """
