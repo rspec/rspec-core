@@ -102,6 +102,60 @@ Feature: around hooks
       around each after
       """
 
+  @wip
+  Scenario: define a global around hook to put a pending block around tagged examples
+    Given a file named "example_spec.rb" with:
+      """
+      RSpec.configure do |c|
+        c.around(:each) do |example|
+          if example.metadata.has_key?(:pending_example)
+            pending "Impossible?"
+          end
+        end        
+      end
+
+      describe "around filter" do
+        it "gets run in order", :pending_example => true do
+          (1 + 1).should == 3
+        end
+      end
+      """
+    When I run "rspec example_spec.rb"
+    Then the output should contain:
+      """
+      Pending:
+        around filter gets run in order
+          # Impossible?
+      """
+    
+    @wip
+    Scenario: define a global around hook to put a pending block around tagged examples
+      Given a file named "example_spec.rb" with:
+        """
+        RSpec.configure do |c|
+          c.around(:each) do |example|
+            if example.metadata.has_key?(:pending_example)
+              pending "Impossible?" do
+                example.run
+              end
+            end
+          end        
+        end
+
+        describe "around filter" do
+          it "gets run in order", :pending_example => true do
+            (1 + 1).should == 3
+          end
+        end
+        """
+      When I run "rspec example_spec.rb"
+      Then the output should contain:
+        """
+        Pending:
+          around filter gets run in order
+            # Impossible?
+        """
+
   Scenario: before/after(:each) hooks are wrapped by the around hook
     Given a file named "example_spec.rb" with:
       """
