@@ -15,12 +15,7 @@ Feature: hash key of subject
       end
       """
     When I run "rspec example_spec.rb --format documentation"
-    Then the output should contain:
-      """
-      Hash
-        size
-          should == 2
-      """
+    Then the output should contain "1 example, 0 failures"
 
   Scenario: hash keys
     Given a file named "example_spec.rb" with:
@@ -35,11 +30,4 @@ Feature: hash key of subject
       end
       """
     When I run "rspec example_spec.rb --format documentation"
-    Then the output should contain:
-      """
-      Hash
-        [:one]
-          should == "one"
-        ["two"]
-          should == "two"
-      """
+    Then the output should contain "2 examples, 0 failures"
