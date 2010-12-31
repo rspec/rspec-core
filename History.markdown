@@ -1,8 +1,12 @@
 ## rspec-mocks release history (incomplete)
 
+### 2.4.0 / in development
+
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.3.0...master)
+
 ### 2.3.0 / 2010-12-12
 
-[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.2.1...v2.3.0)
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.2.0...v2.3.0)
 
 * Bug fixes 
   * Fix our Marshal extension so that it does not interfere with objects that
