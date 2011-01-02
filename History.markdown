@@ -1,8 +1,11 @@
 ## rspec-mocks release history (incomplete)
 
-### 2.4.0 / in development
+### 2.4.0 / 2011-01-02
 
-[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.3.0...master)
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.3.0...v2.4.0)
+
+No functional changes in this release, which was made to align with the
+rspec-core-2.4.0 release.
 
 ### 2.3.0 / 2010-12-12
 
