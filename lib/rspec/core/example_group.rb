@@ -58,7 +58,7 @@ module RSpec
 
       alias_example_to :it
       alias_example_to :specify
-      alias_example_to :focused, :focused => true
+      alias_example_to :focused, :focused => true, :focus => true
       alias_example_to :pending, :pending => true
       alias_example_to :xit,     :pending => true
 
