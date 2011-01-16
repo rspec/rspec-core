@@ -96,6 +96,7 @@ module RSpec
         stub = find_matching_method_stub(method_name, *args)
 
         if (stub && expectation && expectation.called_max_times?) || (stub && !expectation)
+          expectation.increase_actual_received_count! if expectation && expectation.actual_received_count_matters?
           if expectation = find_almost_matching_expectation(method_name, *args)
             expectation.advise(*args) unless expectation.expected_messages_received?
           end

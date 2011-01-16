@@ -24,6 +24,7 @@ module RSpec
         @order_group = expectation_ordering
         @at_least = nil
         @at_most = nil
+        @exactly = nil
         @args_to_yield = []
         @failed_fast = nil
         @args_to_yield_were_cloned = false
@@ -286,13 +287,13 @@ module RSpec
   
       def once(&block)
         @method_block = block if block
-        @expected_received_count = 1
+        set_expected_received_count :exactly, 1
         self
       end
   
       def twice(&block)
         @method_block = block if block
-        @expected_received_count = 2
+        set_expected_received_count :exactly, 2
         self
       end
   
@@ -307,10 +308,19 @@ module RSpec
         return false
       end
       
+      def actual_received_count_matters?
+        @at_least || @at_most || @exactly
+      end
+
+      def increase_actual_received_count!
+        @actual_received_count += 1
+      end
+
       protected
         def set_expected_received_count(relativity, n)
           @at_least = (relativity == :at_least)
           @at_most = (relativity == :at_most)
+          @exactly = (relativity == :exactly)
           @expected_received_count = case n
             when Numeric
               n
@@ -324,7 +334,7 @@ module RSpec
         def clear_actual_received_count!
           @actual_received_count = 0
         end
-      
+
     end
     
     class NegativeMessageExpectation < MessageExpectation
