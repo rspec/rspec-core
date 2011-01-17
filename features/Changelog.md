@@ -1,6 +1,6 @@
 ## rspec-mocks release history
 
-### 2.4.1 / in dev
+### dev
 
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.4.0...master)
 
