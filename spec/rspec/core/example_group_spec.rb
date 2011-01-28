@@ -244,6 +244,17 @@ module RSpec::Core
     end
 
     describe "#before, after, and around hooks" do
+      describe "scope aliasing" do
+        it "aliases the `:any` hook scope to `:all`" do
+          group = ExampleGroup.describe
+          order = []
+          group.before(:any) { order << 1 }
+          group.example("example") {}
+
+          group.hooks[:before][:all].run_all(group)
+          order.should == [1]
+        end
+      end
 
       it "runs the before alls in order" do
         group = ExampleGroup.describe

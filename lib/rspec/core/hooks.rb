@@ -142,7 +142,17 @@ module RSpec
           options = scope
           scope = :each
         end
-        return scope, options
+        return normalized_scope_for(scope), options
+      end
+
+      def scope_aliases
+        @scope_aliases ||= {
+          :any => :all
+        }
+      end
+
+      def normalized_scope_for(scope)
+        scope_aliases[scope] || scope
       end
     end
   end
