@@ -109,6 +109,17 @@ module RSpec
         }.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: (\"a\", \"d\", \"c\")")
       end
 
+      describe "even when a similar expectation with different arguments exist" do
+        it "raises exception if args don't match when method called, correctly reporting the offending arguments" do
+          @mock.should_receive(:something).with("a","b","c").once
+          @mock.should_receive(:something).with("z","x","c").once
+          lambda {
+            @mock.something("a","b","c")
+            @mock.something("z","x","g")
+          }.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (\"z\", \"x\", \"c\")\n       got: (\"z\", \"x\", \"g\")")
+        end
+      end
+
       it "raises exception if args don't match when method called even when the method is stubbed" do
         @mock.stub(:something)
         @mock.should_receive(:something).with("a","b","c")
