@@ -1,8 +1,6 @@
-## rspec-mocks release history
+### 2.5.0 / 2011-02-05
 
-### dev
-
-[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.4.0...master)
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.4.0...v2.5.0)
 
 * Bug fixes
   * message expectation counts now work in combination with a stub (Damian
