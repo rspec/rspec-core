@@ -1,5 +1,4 @@
-We're working on improving these docs. In the mean time, here's a cheat sheet
-to cover the basics.
+### Basics
 
     # create a double
     obj = double()
