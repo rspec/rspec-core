@@ -7,6 +7,8 @@
 * Bug fixes
   * message expectation counts now work in combination with a stub (Damian
     Nurzynski)
+  * fix failure message when message received with incorrect args (Josep M.
+    Bach)
 
 ### 2.4.0 / 2011-01-02
 
