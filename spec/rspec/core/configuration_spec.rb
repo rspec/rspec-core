@@ -712,5 +712,20 @@ module RSpec::Core
         group.included_modules.should include(mod2)
       end
     end
+
+    describe "#define_implicit_subject" do
+      it "defines new implicit subject rule for filtred example groups" do
+        config.define_implicit_subject(:factory => true) { |described| described.to_s.upcase }
+
+        group = ExampleGroup.describe(Array, :factory => true)
+        different_group = ExampleGroup.describe(Array)
+
+        [group, different_group].each {|g| config.configure_group(g) }
+
+        group.subject.call.should == 'ARRAY'
+        different_group.subject.call.should == []
+      end
+    end
+
   end
 end

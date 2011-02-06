@@ -372,6 +372,14 @@ EOM
         end
       end
 
+      def define_implicit_subject(options = {}, &block)
+        mod = Module.new
+        (class << mod; self; end).send(:define_method, :included) do |base|
+          base.subject { block.call(base.described) }
+        end
+        self.include(mod, options)
+      end
+
       def configure_mock_framework
         RSpec::Core::ExampleGroup.send(:include, mock_framework)
       end
