@@ -1,3 +1,4 @@
+@before @after
 Feature: before and after hooks
 
   Use `before` and `after` hooks to execute arbitrary code before and/or
@@ -21,6 +22,7 @@ Feature: before and after hooks
   `before` and `after` hooks can be defined directly in the example groups they
   should run in, or in a global RSpec.configure block.
 
+  @before @each
   Scenario: define before(:each) block
     Given a file named "before_each_spec.rb" with:
       """
@@ -55,6 +57,7 @@ Feature: before and after hooks
     When I run "rspec ./before_each_spec.rb"
     Then the examples should all pass
 
+  @before @all
   Scenario: define before(:all) block in example group
     Given a file named "before_all_spec.rb" with:
       """

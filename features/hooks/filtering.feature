@@ -1,3 +1,4 @@
+@before @after @filters
 Feature: filters
 
   `before`/`after`/`around` hooks defined in the RSpec configuration block can
