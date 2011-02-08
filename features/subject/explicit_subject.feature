@@ -1,3 +1,4 @@
+@subject
 Feature: explicit subject
 
   Use subject() in the group scope to explicitly define the value that is
@@ -31,6 +32,7 @@ Feature: explicit subject
     When I run "rspec nested_subject_spec.rb"
     Then the examples should all pass
 
+  @before
   Scenario: access subject from before block
     Given a file named "top_level_subject_spec.rb" with:
       """
@@ -45,6 +47,7 @@ Feature: explicit subject
     When I run "rspec top_level_subject_spec.rb"
     Then the examples should all pass
 
+  @helper_method
   Scenario: invoke helper method from subject block
     Given a file named "helper_subject_spec.rb" with:
       """

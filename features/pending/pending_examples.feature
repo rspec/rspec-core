@@ -1,4 +1,4 @@
-@pending
+@pending_examples
 Feature: pending examples
 
   RSpec offers four ways to indicate that an example is disabled pending

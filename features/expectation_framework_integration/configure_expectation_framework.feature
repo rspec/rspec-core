@@ -1,4 +1,4 @@
-@configuration
+@configuration @expectations
 Feature: configure expectation framework
 
   By default, RSpec is configured to include rspec-expectations for expressing
@@ -10,7 +10,7 @@ Feature: configure expectation framework
     * minitest assertions in ruby 1.9
   * rspec/expecations _and_ stlib assertions
 
-  @expectations
+  @rspec
   Scenario: configure rspec-expectations (explicitly)
     Given a file named "example_spec.rb" with:
       """
@@ -27,7 +27,7 @@ Feature: configure expectation framework
     When I run "rspec example_spec.rb"
     Then the examples should all pass
 
-  @expectations
+  @test_unit
   Scenario: configure test/unit assertions
     Given a file named "example_spec.rb" with:
       """
@@ -44,7 +44,7 @@ Feature: configure expectation framework
     When I run "rspec example_spec.rb"
     Then the examples should all pass
 
-  @expectations
+  @rspec @test_unit
   Scenario: configure rspec/expecations AND test/unit assertions
     Given a file named "example_spec.rb" with:
       """

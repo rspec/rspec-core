@@ -1,3 +1,4 @@
+@described_class
 Feature: described class
 
   If the first argument to the outermost example group is a class, the class is

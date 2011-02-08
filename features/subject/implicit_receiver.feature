@@ -1,3 +1,4 @@
+@subject
 Feature: implicit receiver
 
   When should() is called in an example without an explicit receiver, it is

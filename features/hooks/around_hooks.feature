@@ -1,3 +1,4 @@
+@hooks @around
 Feature: around hooks
 
   Around hooks receive the example as a block argument, extended to behave like
@@ -77,6 +78,7 @@ Feature: around hooks
     When I run "rspec example_spec.rb"
     Then the output should contain "this should show up in the output"
 
+  @configuration
   Scenario: define a global around hook
     Given a file named "example_spec.rb" with:
       """
@@ -102,6 +104,7 @@ Feature: around hooks
       around each after
       """
 
+  @before @after
   Scenario: before/after(:each) hooks are wrapped by the around hook
     Given a file named "example_spec.rb" with:
       """
@@ -135,6 +138,7 @@ Feature: around hooks
       around each after
       """
 
+  @before @after
   Scenario: before/after(:all) hooks are NOT wrapped by the around hook
     Given a file named "example_spec.rb" with:
       """
@@ -168,6 +172,7 @@ Feature: around hooks
       .after all
       """
 
+  @configuration
   Scenario: examples run by an around block are run in the configured context
     Given a file named "example_spec.rb" with:
       """
@@ -192,6 +197,7 @@ Feature: around hooks
     When I run "rspec example_spec.rb"
     Then the output should contain "1 example, 0 failure"
 
+  @pending_examples
   Scenario: implicitly pending examples are detected as Not Yet Implemented
     Given a file named "example_spec.rb" with:
       """

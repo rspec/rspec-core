@@ -1,3 +1,4 @@
+@its
 Feature: attribute of subject
 
   Use the its() method as a short-hand to generate a nested example group with
@@ -36,7 +37,7 @@ Feature: attribute of subject
           size
             should == 0
       """
-
+  @subject
   Scenario: specify value of a nested attribute
     Given a file named "example_spec.rb" with:
       """
@@ -68,6 +69,7 @@ Feature: attribute of subject
             should == 555-1212
       """
 
+  @subject
   Scenario: specify value of an attribute of a hash
     Given a file named "example_spec.rb" with:
       """
@@ -84,6 +86,7 @@ Feature: attribute of subject
     When I run "rspec example_spec.rb"
     Then the examples should all pass
 
+  @subject
   Scenario: specify value for key in a hash
     Given a file named "example_spec.rb" with:
       """

@@ -1,40 +1,64 @@
 @shared_examples_for @it_behaves_like
 Feature: shared example group
+  
+  While describing the behaviour of an object or module you may find similar
+  functionality within another context. Instead of re-defining the examples 
+  in this new context, you can instead extract the set of examples and place 
+  them into their own group 'shared_example_for'. 
 
-  Shared example groups let you describe behaviour of types or modules. When
-  declared, a shared group's content is stored. It is only realized in the
-  context of another example group, which provides any context the shared group
-  needs to run.
+  Within each context you are describing, you can declare that it exhibits 
+  this shared behavior by stating that 'it_behaves_like'.
   
-  While describing the behaviour of object or module you may find that the 
-  functionality is similar to another set of examples you previously described.
-  Instead of repeating yourself, you can instead extract the set of examples
-  and place them into their own group 'shared_example_for'. 
+  Because shared example groups are external examples, bringing them into a new
+  context requires:
   
-  For each of the objects you are attempting to describe, you can now declare
-  that they exhibit this behavior by stating that 'it_behaves_like'.
-  
+  * Using member variables
+  * Utilizing the helper method 'described_class' within the shared example group
+  * Within the context define the 'it_behaves_like' with a block
+  * Define the 'shared_example_for' with parameters
   
   Scenario: shared examples group
     Given a file named "dangerous_items.rb" with:
     """
+    class Radiation
+      def large_dose
+        "lethal"
+      end
+      
+      def license_required?
+        true
+      end
+    end
+    
+    class Love
+      def large_dose
+        "lethal"
+      end
+      
+      def license_required?
+        true
+      end
+    end
+    
     shared_examples_for "something that is dangerous" do
       
       it "should be lethal if used in large doses" do
-        true
+        @source.large_dose.should == 'lethal'
       end
       
       it "should require a license to operate" do
-        true
+        @source.should be_license_required
       end
       
     end
     
     describe "Radiation" do
+      before(:each) { @source = Radiation.new }
       it_behaves_like "something that is dangerous"
     end
     
     describe "Love" do
+      before(:each) { @source = Love.new }
       it_behaves_like "something that is dangerous"
     end
 

@@ -1,3 +1,4 @@
+@subject
 Feature: implicit subject
 
   If the first argument to the outermost example group is a class, an instance

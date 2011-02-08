@@ -1,4 +1,4 @@
-@before @after
+@hooks @before @after
 Feature: before and after hooks
 
   Use `before` and `after` hooks to execute arbitrary code before and/or
@@ -22,7 +22,6 @@ Feature: before and after hooks
   `before` and `after` hooks can be defined directly in the example groups they
   should run in, or in a global RSpec.configure block.
 
-  @before @each
   Scenario: define before(:each) block
     Given a file named "before_each_spec.rb" with:
       """
@@ -57,7 +56,6 @@ Feature: before and after hooks
     When I run "rspec ./before_each_spec.rb"
     Then the examples should all pass
 
-  @before @all
   Scenario: define before(:all) block in example group
     Given a file named "before_all_spec.rb" with:
       """
@@ -95,6 +93,7 @@ Feature: before and after hooks
     When I run "rspec ./before_all_spec.rb:15"
     Then the examples should all pass
 
+  @failures
   Scenario: failure in before(:all) block
     Given a file named "before_all_spec.rb" with:
       """
@@ -153,6 +152,7 @@ Feature: before and after hooks
       after all ran
       """
 
+  @failures
   Scenario: failure in after(:all) block
     Given a file named "after_all_spec.rb" with:
       """
@@ -176,6 +176,7 @@ Feature: before and after hooks
         StandardError: Boom!
       """
 
+  @configuration
   Scenario: define before and after blocks in configuration
     Given a file named "befores_in_configuration_spec.rb" with:
       """
@@ -242,6 +243,7 @@ Feature: before and after hooks
       .after all
       """
   
+  @configuration
   Scenario: before/after blocks defined in config are run in order
     Given a file named "configuration_spec.rb" with:
       """
@@ -413,6 +415,7 @@ Feature: before and after hooks
     When I run "rspec ./before_and_after_all_spec.rb"
     Then the examples should all pass
 
+  @failures
   Scenario: exception in before(:each) is captured and reported as failure
     Given a file named "error_in_before_each_spec.rb" with:
       """
