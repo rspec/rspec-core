@@ -1,4 +1,5 @@
 require 'rspec/mocks/extensions/marshal'
+require 'rspec/mocks/extensions/psych' if defined?(::Psych)
 
 module RSpec
   module Mocks
@@ -8,14 +9,15 @@ module RSpec
       end
 
       module YAML
-        def to_yaml(*a)
-          return super(*a) unless instance_variable_defined?(:@mock_proxy)
+        def to_yaml(options = {})
+          return nil if defined?(::Psych) && options.respond_to?(:[]) && options[:nodump]
+          return super(options) unless instance_variable_defined?(:@mock_proxy)
 
           mp = @mock_proxy
           remove_instance_variable(:@mock_proxy)
 
           begin
-            super(*a)
+            super(options)
           ensure
             @mock_proxy = mp
           end

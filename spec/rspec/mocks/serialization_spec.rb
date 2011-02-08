@@ -53,13 +53,31 @@ module RSpec
         subject.stub(:bazz => 5)
       end
 
-      with_yaml_loaded do
+      shared_examples_for 'normal YAML serialization' do
         it 'serializes to yaml the same with and without stubbing, using #to_yaml' do
           expect { set_stub }.to_not change { subject.to_yaml }
         end
 
         it 'serializes to yaml the same with and without stubbing, using YAML.dump' do
           expect { set_stub }.to_not change { YAML.dump(subject) }
+        end
+      end
+
+      with_yaml_loaded do
+        compiled_with_psych = RbConfig::CONFIG['configure_args'] =~ /with-libyaml/
+
+        if compiled_with_psych
+          context 'using Syck as the YAML engine' do
+            before(:each) { YAML::ENGINE.yamler = 'syck' }
+            it_behaves_like 'normal YAML serialization'
+          end
+
+          context 'using Psych as the YAML engine' do
+            before(:each) { YAML::ENGINE.yamler = 'psych' }
+            it_behaves_like 'normal YAML serialization'
+          end
+        else
+          it_behaves_like 'normal YAML serialization'
         end
       end
 
