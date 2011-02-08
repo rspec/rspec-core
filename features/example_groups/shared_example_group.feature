@@ -1,14 +1,60 @@
-@shared_examples_for
+@shared_examples_for @it_behaves_like
 Feature: shared example group
 
   Shared example groups let you describe behaviour of types or modules. When
   declared, a shared group's content is stored. It is only realized in the
   context of another example group, which provides any context the shared group
   needs to run.
+  
+  While describing the behaviour of object or module you may find that the 
+  functionality is similar to another set of examples you previously described.
+  Instead of repeating yourself, you can instead extract the set of examples
+  and place them into their own group 'shared_example_for'. 
+  
+  For each of the objects you are attempting to describe, you can now declare
+  that they exhibit this behavior by stating that 'it_behaves_like'.
+  
+  
+  Scenario: shared examples group
+    Given a file named "dangerous_items.rb" with:
+    """
+    shared_examples_for "something that is dangerous" do
+      
+      it "should be lethal if used in large doses" do
+        true
+      end
+      
+      it "should require a license to operate" do
+        true
+      end
+      
+    end
+    
+    describe "Radiation" do
+      it_behaves_like "something that is dangerous"
+    end
+    
+    describe "Love" do
+      it_behaves_like "something that is dangerous"
+    end
 
-  A shared group is included in another group using the it_behaves_like() or
-  it_should_behave_like() methods.
+    """
+    When I run "rspec dangerous_items.rb --format documentation"
+    Then the examples should all pass
+    And the output should contain:
+      """
+      Radiation
+        behaves like something that is dangerous
+          should be lethal if used in large doses
+          should require a license to operate
 
+      Love
+        behaves like something that is dangerous
+          should be lethal if used in large doses
+          should require a license to operate
+      """
+  
+  @described_class
   Scenario: shared example group applied to two groups
     Given a file named "collection_spec.rb" with:
     """
@@ -149,6 +195,7 @@ Feature: shared example group
           should return 6 from #length
       """
 
+  @aliasing @configuration
   Scenario: Aliasing "it_should_behave_like" to "it_has_behavior"
     Given a file named "shared_example_group_spec.rb" with:
       """
