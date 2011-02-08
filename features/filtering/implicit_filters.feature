@@ -1,3 +1,4 @@
+@filters
 Feature: implicit filters
 
   The `:if` and `:unless` metadata keys can be used to filter examples without

@@ -1,3 +1,4 @@
+@option
 Feature: --example option
 
   Use the --example (or -e) option to filter examples by name.

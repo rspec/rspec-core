@@ -1,3 +1,4 @@
+@describe @it
 Feature: basic structure (describe/it)
 
   RSpec is a DSL for creating executable examples of how code is expected to

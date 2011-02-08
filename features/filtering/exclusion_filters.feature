@@ -1,3 +1,4 @@
+@configuration @filters
 Feature: exclusion filters
 
   You can exclude examples from a run by declaring an exclusion filter and

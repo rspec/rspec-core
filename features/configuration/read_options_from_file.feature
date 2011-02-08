@@ -1,3 +1,4 @@
+@configuration
 Feature: read command line configuration options from files
 
   RSpec reads command line configuration options from files in two different
@@ -9,6 +10,7 @@ Feature: read command line configuration options from files
   Options declared in the local file override those in the global file, while
   those declared in RSpec.configure will override any ".rspec" file.
 
+  @color
   Scenario: color set in .rspec
     Given a file named ".rspec" with:
       """

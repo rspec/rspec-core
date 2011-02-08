@@ -1,3 +1,4 @@
+@mock @flexmock
 Feature: mock with flexmock
 
   As an RSpec user who likes to mock

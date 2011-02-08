@@ -1,3 +1,4 @@
+@mock @rr
 Feature: mock with rr
 
   As an RSpec user who likes to mock

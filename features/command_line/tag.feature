@@ -1,3 +1,4 @@
+@option @tag @filters
 Feature: --tag option
 
   Use the --tag (or -t) option to filter the examples by tags.
@@ -25,7 +26,6 @@ Feature: --tag option
         it "untagged example" do; end
       end
       """
-
   Scenario: filter examples with non-existent tag
     When I run "rspec . --tag mytag"
     And the examples should all pass

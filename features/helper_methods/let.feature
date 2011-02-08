@@ -1,3 +1,4 @@
+@helper_methods @let
 Feature: let and let!
 
   Use `let` to define a memoized helper method.  The value will be cached

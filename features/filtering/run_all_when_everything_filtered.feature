@@ -1,3 +1,4 @@
+@configuration @filters
 Feature: run all when everything filtered
 
   Use the run_all_when_everything_filtered configuration option to do just

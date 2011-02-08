@@ -1,3 +1,4 @@
+@configuration
 Feature: custom settings
 
   Extensions like rspec-rails can add their own configuration settings.

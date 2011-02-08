@@ -1,3 +1,4 @@
+@configuration @filters
 Feature: inclusion filters
 
   You can restrict which examples are run by declaring an inclusion filter. The

@@ -1,3 +1,4 @@
+@mock @rspec
 Feature: mock with rspec
 
   As an RSpec user who likes to mock

@@ -1,3 +1,4 @@
+@mock @mocha
 Feature: mock with mocha
 
   As an RSpec user who likes to mock

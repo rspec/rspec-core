@@ -1,3 +1,4 @@
+@formatters
 Feature: custom formatters
 
   RSpec ships with general purpose output formatters. You can tell RSpec which

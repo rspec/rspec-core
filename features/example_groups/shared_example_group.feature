@@ -1,3 +1,4 @@
+@shared_examples_for
 Feature: shared example group
 
   Shared example groups let you describe behaviour of types or modules. When

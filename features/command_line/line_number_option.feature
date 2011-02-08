@@ -1,3 +1,4 @@
+@option
 Feature: --line_number option
 
   To run a single example or group, you can use the --line_number option:
