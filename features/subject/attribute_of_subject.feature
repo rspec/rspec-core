@@ -14,6 +14,13 @@ Feature: attribute of subject
 
       its("phone_numbers.size") { should eq(2) }
 
+  You can pass additional arguments that will be passed along to the send call
+  and thus the underlying attribute (method). This will only occur for the top
+  level if using nested attributes.
+
+      its(:at, 1) { should eq('b') }
+      its("slice.first", 1, 1) { should eq('b') }
+
   When the subject is a hash, you can pass in an array with a single key to
   access the value at that key in the hash.
 
@@ -100,3 +107,22 @@ Feature: attribute of subject
       """
     When I run "rspec example_spec.rb"
     Then the examples should all pass
+
+  Scenario: specify additional arguments of an attribute
+    Given a file named "example_spec.rb" with:
+      """
+      describe Array do
+        context "when populated" do
+          subject { ['a', 'b', 'c'] }
+          its(:at, 1) { should eq('b') }
+        end
+      end
+      """
+    When I run "rspec example_spec.rb --format documentation"
+    Then the output should contain:
+      """
+      Array
+        when populated
+          at 1
+            should == b
+      """

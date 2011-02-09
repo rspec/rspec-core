@@ -119,8 +119,8 @@ module RSpec
         #     its(:keys) { should include(:max_users) }
         #     its(:count) { should == 2 }
         #   end
-        def its(attribute, &block)
-          describe(attribute) do
+        def its(attribute, *args, &block)
+          describe(attribute, *args) do
             example do
               self.class.class_eval do
                 define_method(:subject) do
@@ -128,7 +128,13 @@ module RSpec
                                   OpenStruct.new(super()).send(attribute.first)
                                 else
                                   attribute.to_s.split('.').inject(super()) do |target, method|
-                                    target.send(method)
+                                    if args
+                                      temp = args
+                                      args = nil
+                                      target.send(method, *temp)
+                                    else
+                                      target.send(method)
+                                    end
                                   end
                                 end
                 end

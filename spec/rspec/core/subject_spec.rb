@@ -103,6 +103,10 @@ module RSpec::Core
           def call_count
             @call_count += 1
           end
+          
+          def idiot_bird(*args)
+            return *args
+          end
         end.new
       end
 
@@ -173,6 +177,13 @@ module RSpec::Core
         end
       end
 
+      context "passing arguments" do
+        its(:idiot_bird) { should eql(nil) }
+        its(:idiot_bird, 1) { should eql(1) }
+        its(:idiot_bird, nil) { should eql(nil) }
+        its(:idiot_bird, 1, 2) { should eql([1,2]) }
+        its(:'idiot_bird.first', [1, 2]) { should eql(1) }
+      end
     end
   end
 end
