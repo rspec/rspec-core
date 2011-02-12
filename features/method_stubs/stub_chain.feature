@@ -1,9 +1,9 @@
 Feature: stub a chain of methods
 
-  The `stub_chain` method lets you to stub a chain of methods in one statement.
-  Method chains are considered a design smell, but it's not really the method
-  chain that is the problem - it's the dependency chain represented by a chain
-  of messages to different objects:
+  Use the `stub_chain` method to stub a chain of two or more methods in one
+  statement.  Method chains are considered a design smell, but it's not really
+  the method chain itself that is the problem - it's the dependency chain
+  represented by a chain of messages to different objects:
 
       foo.get_bar.get_baz
 
@@ -32,6 +32,13 @@ Feature: stub a chain of methods
           end
         end
 
+        context "given a hash at the end" do
+          it "returns the correct value" do
+            subject.stub_chain(:one, :two, :three => :four)
+            subject.one.two.three.should eq(:four)
+          end
+        end
+
         context "given a string of methods separated by dots" do
           it "returns the correct value" do
             subject.stub_chain("one.two.three").and_return(:four)
@@ -41,4 +48,4 @@ Feature: stub a chain of methods
       end
       """
     When I run "rspec stub_chain_spec.rb"
-    Then the output should contain "2 examples, 0 failures"
+    Then the examples should all pass
