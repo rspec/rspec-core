@@ -16,6 +16,7 @@ class Autotest::Rspec2 < Autotest
     # Example for Ruby 1.9: http://rubular.com/r/85ag5AZ2jP
     self.failed_results_re = /^\s*\d+\).*\n\s+(?:\e\[\d*m)?Failure.*(\n(?:\e\[\d*m)?\s+#\s(.*)?:\d+(?::.*)?(?:\e\[\d*m)?)+$/m
     self.completed_re = /\n(?:\e\[\d*m)?\d* examples?/m
+    self.libs = %w[. lib spec].join(File::PATH_SEPARATOR)
   end
 
   def setup_rspec_project_mappings
@@ -42,7 +43,7 @@ class Autotest::Rspec2 < Autotest
 
   def make_test_cmd(files_to_test)
     files_to_test.empty? ? '' :
-      "#{prefix}#{ruby}#{suffix} -S #{SPEC_PROGRAM} --tty #{normalize(files_to_test).keys.flatten.map { |f| "'#{f}'"}.join(' ')}"
+      "#{prefix}#{ruby}#{suffix} -I#{libs} -S #{SPEC_PROGRAM} --tty #{normalize(files_to_test).keys.flatten.map { |f| "'#{f}'"}.join(' ')}"
   end
 
   def normalize(files_to_test)
