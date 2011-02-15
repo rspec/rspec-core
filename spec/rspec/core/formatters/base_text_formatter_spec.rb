@@ -47,11 +47,11 @@ module RSpec::Core::Formatters
       end
 
       context "with an exception without a message" do
-        it "does not throw no method exception" do
+        it "does not throw NoMethodError" do
           exception_without_message = Exception.new()
           exception_without_message.stub(:message){nil}
           group.example("example name") { raise exception_without_message }
-          run_all_and_dump_failures
+          expect { run_all_and_dump_failures }.to_not raise_error(NoMethodError)
         end
       end
 
