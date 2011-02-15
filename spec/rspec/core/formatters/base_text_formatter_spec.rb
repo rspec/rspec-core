@@ -46,6 +46,15 @@ module RSpec::Core::Formatters
         output.string.should =~ /(\s+)expected \"that\"\n\1     got \"this\"/m
       end
 
+      context "with an exception without a message" do
+        it "does not throw no method exception" do
+          exception_without_message = Exception.new()
+          exception_without_message.stub(:message){nil}
+          group.example("example name") { raise exception_without_message }
+          run_all_and_dump_failures
+        end
+      end
+
       context "with an exception class other than RSpec" do
         it "does not show the error class" do
           group.example("example name") { raise NameError.new('foo') }
