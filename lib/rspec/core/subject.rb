@@ -154,10 +154,6 @@ module RSpec
           block ? @explicit_subject_block = block : explicit_subject || implicit_subject
         end
 
-        def described
-          describes || description
-        end
-
         attr_reader :explicit_subject_block # :nodoc:
 
         private
@@ -171,7 +167,7 @@ module RSpec
         end
 
         def implicit_subject
-          described = self.described
+          described = describes || description
           Class === described ? proc { described.new } : proc { described }
         end
       end

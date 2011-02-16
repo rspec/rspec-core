@@ -372,10 +372,10 @@ EOM
         end
       end
 
-      def define_implicit_subject(options = {}, &block)
+      def for_groups_matching(options = {}, &block)
         mod = Module.new
         (class << mod; self; end).send(:define_method, :included) do |base|
-          base.subject { block.call(base.described) }
+          base.instance_eval(&block)
         end
         self.include(mod, options)
       end
