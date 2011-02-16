@@ -372,12 +372,24 @@ EOM
         end
       end
 
-      def for_groups_matching(options = {}, &block)
+      # Allows user to define a block evaluated in the context of any
+      # example group that match filters given.
+      #
+      # Example:
+      #
+      # RSpec.configure do |c|
+      #   c.for_matching_groups :type => :model do
+      #     subject { Factory described_class.to_s.underscore }
+      #     let(:valid_attributes) { Factory.attributes_for described_class.to_sym }
+      #   end
+      # end
+      #
+      def for_groups_matching(filters = {}, &block)
         mod = Module.new
         (class << mod; self; end).send(:define_method, :included) do |base|
           base.instance_eval(&block)
         end
-        self.include(mod, options)
+        self.include(mod, filters)
       end
 
       def configure_mock_framework
