@@ -31,6 +31,12 @@ module RSpec
         @mock.rspec_verify
       end
 
+      it "returns the value given by a block when the exactly once method is called" do
+        @mock.should_receive(:to_s).exactly(:once) { "testing" }
+        @mock.to_s.should == "testing"
+        @mock.rspec_verify
+      end
+
       it "passes multiple calls with different args and counts" do
         @mock.should_receive(:random_call).twice.with(1)
         @mock.should_receive(:random_call).once.with(2)

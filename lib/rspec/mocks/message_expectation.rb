@@ -254,17 +254,20 @@ module RSpec
         self
       end
       
-      def exactly(n)
+      def exactly(n, &block)
+        @method_block = block if block
         set_expected_received_count :exactly, n
         self
       end
       
-      def at_least(n)
+      def at_least(n, &block)
+        @method_block = block if block
         set_expected_received_count :at_least, n
         self
       end
       
-      def at_most(n)
+      def at_most(n, &block)
+        @method_block = block if block
         set_expected_received_count :at_most, n
         self
       end

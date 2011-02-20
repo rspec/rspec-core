@@ -88,6 +88,12 @@ module RSpec
         @mock.should_receive(:random_call).at_most(:twice)
         @mock.rspec_verify
       end
+
+      it "returns the value given by a block when the at most once method is called" do
+        @mock.should_receive(:to_s).at_most(:once) { "testing" }
+        @mock.to_s.should == "testing"
+        @mock.rspec_verify
+      end
     end
   end
 end
