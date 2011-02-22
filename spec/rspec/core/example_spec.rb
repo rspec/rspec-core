@@ -93,6 +93,14 @@ describe RSpec::Core::Example, :parent_metadata => 'sample' do
   end
 
   describe "#run" do
+    it "sets its reference to the example group instance to nil" do
+      group = RSpec::Core::ExampleGroup.describe do
+        example('example') { 1.should eq(1) }
+      end
+      group.run
+      group.examples.first.instance_variable_get("@example_group_instance").should be_nil
+    end
+
     it "runs after(:each) when the example passes" do
       after_run = false
       group = RSpec::Core::ExampleGroup.describe do
