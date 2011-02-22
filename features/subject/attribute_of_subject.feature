@@ -107,9 +107,9 @@ Feature: attribute of subject
       require 'matrix'
 
       describe Matrix do
-        context "with values [[1, 2] [3, 4]]" do
+        context "with values [[1, 2], [3, 4]]" do
           subject do
-            Matrix[[1, 2] [3, 4]]
+            Matrix[[1, 2], [3, 4]]
           end
 
           its([0, 1]) { should eq(2) }
