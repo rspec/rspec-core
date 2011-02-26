@@ -1,9 +1,9 @@
 require 'spec_helper'
-def obj
-  @obj ||= mock
-end
 
 describe RSpec::Mocks::Mock do
+
+  let(:obj) { double }
+
   describe "#and_yield" do
     context "with eval context as block argument" do
       

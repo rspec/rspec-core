@@ -31,7 +31,7 @@ module RSpec
       
       [:stub!, :stub].each do |method|
         describe "using #{method}" do
-          it "returns expected value when expected message is received" do
+          it "returns declared value when message is received" do
             @instance.send(method, :msg).and_return(:return_value)
             @instance.msg.should equal(:return_value)
             @instance.rspec_verify
@@ -39,92 +39,95 @@ module RSpec
         end
       end
 
-      it "ignores when expected message is received" do
+      it "instructs an instance to respond_to the message" do
+        @instance.stub(:msg)
+        @instance.should respond_to(:msg)
+      end
+
+      it "instructs a class object to respond_to the message" do
+        @class.stub(:msg)
+        @class.should respond_to(:msg)
+      end
+
+      it "ignores when expected message is received with no args" do
         @instance.stub(:msg)
         @instance.msg
-        lambda do
+        expect do
           @instance.rspec_verify
-        end.should_not raise_error
+        end.not_to raise_error
       end
 
       it "ignores when message is received with args" do
         @instance.stub(:msg)
         @instance.msg(:an_arg)
-        lambda do
+        expect do
           @instance.rspec_verify
-        end.should_not raise_error
+        end.not_to raise_error
       end
 
       it "ignores when expected message is not received" do
         @instance.stub(:msg)
-        lambda do
+        expect do
           @instance.rspec_verify
-        end.should_not raise_error
+        end.not_to raise_error
       end
 
       it "handles multiple stubbed methods" do
         @instance.stub(:msg1 => 1, :msg2 => 2)
-        @instance.msg1.should == 1
-        @instance.msg2.should == 2
+        @instance.msg1.should eq(1)
+        @instance.msg2.should eq(2)
       end
-      
-      it "clears itself when verified" do
-        @instance.stub(:this_should_go).and_return(:blah)
-        @instance.this_should_go.should == :blah
-        @instance.rspec_verify
-        lambda do
-          @instance.this_should_go
-        end.should raise_error(NameError)
+
+      describe "#rspec_reset" do
+        it "removes stubbed methods that didn't exist" do
+          @instance.stub(:non_existent_method)
+          @instance.rspec_reset
+          @instance.should_not respond_to(:non_existent_method)
+        end
+
+        it "restores existing instance methods" do
+          # See bug reports 8302 adn 7805
+          @instance.stub(:existing_instance_method) { :stub_value }
+          @instance.rspec_reset
+          @instance.existing_instance_method.should eq(:original_value)
+        end
+
+        it "restores existing private instance methods" do
+          # See bug reports 8302 adn 7805
+          @instance.stub(:existing_private_instance_method) { :stub_value }
+          @instance.rspec_reset
+          @instance.send(:existing_private_instance_method).should eq(:original_value)
+        end
+
+        it "restores existing class methods" do
+          # See bug reports 8302 adn 7805
+          @class.stub(:existing_class_method) { :stub_value }
+          @class.rspec_reset
+          @class.existing_class_method.should eq(:original_value)
+        end
+
+        it "restores existing private class methods" do
+          # See bug reports 8302 adn 7805
+          @class.stub(:existing_private_class_method) { :stub_value }
+          @class.rspec_reset
+          @class.send(:existing_private_class_method).should eq(:original_value)
+        end
       end
 
       it "returns values in order to consecutive calls" do
-        return_values = ["1",2,Object.new]
-        @instance.stub(:msg).and_return(*return_values)
-        @instance.msg.should == return_values[0]
-        @instance.msg.should == return_values[1]
-        @instance.msg.should == return_values[2]
+        @instance.stub(:msg).and_return("1",2,:three)
+        @instance.msg.should eq("1")
+        @instance.msg.should eq(2)
+        @instance.msg.should eq(:three)
       end
 
       it "keeps returning last value in consecutive calls" do
-        return_values = ["1",2,Object.new]
-        @instance.stub(:msg).and_return(return_values[0],return_values[1],return_values[2])
-        @instance.msg.should == return_values[0]
-        @instance.msg.should == return_values[1]
-        @instance.msg.should == return_values[2]
-        @instance.msg.should == return_values[2]
-        @instance.msg.should == return_values[2]
-      end
-
-      it "reverts to original instance method if there is one" do
-        @instance.existing_instance_method.should equal(:original_value)
-        @instance.stub(:existing_instance_method).and_return(:mock_value)
-        @instance.existing_instance_method.should equal(:mock_value)
-        @instance.rspec_verify
-        @instance.existing_instance_method.should equal(:original_value)
-      end
-
-      it "reverts to original private instance method if there is one" do
-        @instance.existing_instance_method.should equal(:original_value)
-        @instance.stub(:existing_private_instance_method).and_return(:mock_value)
-        @instance.existing_instance_method.should equal(:mock_value)
-        @instance.rspec_verify
-        @instance.existing_instance_method.should equal(:original_value)
-      end
-
-      it "reverts to original class method if there is one" do
-        @class.existing_class_method.should equal(:original_value)
-        @class.stub(:existing_class_method).and_return(:mock_value)
-        @class.existing_class_method.should equal(:mock_value)
-        @class.rspec_verify
-        @class.existing_class_method.should equal(:original_value)
-      end
-
-      it "reverts to original private class method if there is one" do
-        @class.existing_class_method.should equal(:original_value)
-        @class.stub(:existing_private_class_method).and_return(:mock_value)
-        @class.existing_class_method.should equal(:mock_value)
-        @class.rspec_verify
-        @class.existing_class_method.should equal(:original_value)
+        @instance.stub(:msg).and_return("1",2,:three)
+        @instance.msg.should eq("1")
+        @instance.msg.should eq(2)
+        @instance.msg.should eq(:three)
+        @instance.msg.should eq(:three)
+        @instance.msg.should eq(:three)
       end
 
       it "yields a specified object" do
