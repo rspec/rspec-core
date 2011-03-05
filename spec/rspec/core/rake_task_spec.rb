@@ -137,7 +137,7 @@ module RSpec::Core
       end
     end
 
-    context "with paths with quotes" do
+    context "with multiple files to run" do
       before do
         @tmp_dir = File.expand_path('./tmp/rake_task_example/')
         FileUtils.mkdir_p @tmp_dir
@@ -149,12 +149,16 @@ module RSpec::Core
         end
       end
 
-      it "escapes the quotes" do
-        @task.__send__(:files_to_run).sort.should eq([
-          File.join(@tmp_dir, "first_spec.rb"),
-          File.join(@tmp_dir, "second_\\\"spec.rb"),
-          File.join(@tmp_dir, "third_\\\'spec.rb") 
-        ])
+      context "with paths with quotes" do
+        it "sorts spec files to run in alphabetical order" do
+          @task.__send__(:files_to_run).should == @task.__send__(:files_to_run).sort
+        end
+
+        it "escapes the quotes" do
+          @task.__send__(:files_to_run).should include(File.join(@tmp_dir, "first_spec.rb"));
+          @task.__send__(:files_to_run).should include(File.join(@tmp_dir, "second_\\\"spec.rb"));
+          @task.__send__(:files_to_run).should include(File.join(@tmp_dir, "third_\\\'spec.rb"));
+        end
       end
     end
   end
