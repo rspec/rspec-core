@@ -290,7 +290,7 @@ EOM
         self.files_to_run = files.flatten.collect do |file|
           if File.directory?(file)
             filename_pattern.split(",").collect do |pattern|
-              Dir["#{file}/#{pattern.strip}"]
+              Dir["#{file}/#{pattern.strip}"].sort
             end
           else
             if file =~ /(\:(\d+))$/
