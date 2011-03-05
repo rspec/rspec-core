@@ -150,7 +150,7 @@ module RSpec
           FileList[ ENV['SPEC'] ]
         else
           FileList[ pattern ].map { |f| f.gsub(/"/, '\"').gsub(/'/, "\\\\'") }
-        end
+        end.sort
       end
 
       def spec_command
