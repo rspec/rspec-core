@@ -3,7 +3,8 @@
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.5.0...master)
 
 * Bug fixes
-  * fix bug in which multiple chains with shared messages ending in hashes failed to return the correct value
+  * fix bug in which multiple chains with shared messages ending in hashes
+    failed to return the correct value
 
 ### 2.5.0 / 2011-02-05
 
