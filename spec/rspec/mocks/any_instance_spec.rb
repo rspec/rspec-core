@@ -335,11 +335,11 @@ module RSpec
           space.add(klass)
 
           klass.any_instance.stub(:ooga).and_return(1)
-          klass.instance_methods.should include(:__ooga_without_any_instance__)
-
+          klass.should be_method_defined(:__ooga_without_any_instance__)
+          
           space.reset_all
-
-          klass.instance_methods.grep(/ooga/).should_not include(:__ooga_without_any_instance__)
+          
+          klass.should_not be_method_defined(:__ooga_without_any_instance__)
           klass.new.ooga.should == 2
         end
 
