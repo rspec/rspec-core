@@ -13,9 +13,8 @@ module RSpec
   module Mocks
 
     describe "an expectation set on nil" do
-      
       it "issues a warning with file and line number information" do
-        expected_warning = %r%An expectation of :foo was set on nil. Called from #{__FILE__}:#{__LINE__+3}(:in `block \(2 levels\) in <module:Mocks>')?. Use allow_message_expectations_on_nil to disable warnings.%
+        expected_warning = %r%An expectation of :foo was set on nil. Called from #{__FILE__}:#{__LINE__+3}(:in .+)?. Use allow_message_expectations_on_nil to disable warnings.%
         Kernel.should_receive(:warn).with(expected_warning)
 
         nil.should_receive(:foo)
