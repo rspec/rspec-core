@@ -11,7 +11,7 @@ module RSpec
         let(:suffix) { jruby? ? '-jruby' : '' }
 
         let(:expected_file) do
-          "#{File.dirname(__FILE__)}/html_formatted-#{::RUBY_VERSION}#{suffix}.html"
+          "#{File.dirname(__FILE__)}/html_formatted-#{::RUBY_VERSION}.html"
         end
 
         let(:generated_html) do
