@@ -51,7 +51,7 @@ describe "a failing spec with odd backtraces" do
     
     def e.message
       # Redefining message steps around this behaviour 
-      # on JRuby: https://gist.github.com/883882
+      # on JRuby: http://jira.codehaus.org/browse/JRUBY-5637
       self.class.name
     end
     
