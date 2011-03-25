@@ -20,7 +20,7 @@ Feature: stub with a simple return value
         end
       end
       """
-    When I run "rspec example_spec.rb"
+    When I run `rspec example_spec.rb`
     Then the output should contain "0 failures"
 
   Scenario: single return value
@@ -51,5 +51,5 @@ Feature: stub with a simple return value
         end
       end
       """
-    When I run "rspec example_spec.rb"
+    When I run `rspec example_spec.rb`
     Then the output should contain "0 failures"

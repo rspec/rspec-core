@@ -42,7 +42,7 @@ Feature: configure any test framework to use rspec-mocks
       puts example.respond_to?(:stub)
       """
 
-    When I run "ruby foo.rb"
+    When I run `ruby foo.rb`
     Then the output should contain "true"
     But  the output should not contain "false"
 
@@ -60,7 +60,7 @@ Feature: configure any test framework to use rspec-mocks
       puts obj.respond_to?(:stub)
       """
 
-    When I run "ruby foo.rb"
+    When I run `ruby foo.rb`
     Then the output should contain "true"
     But  the output should not contain "false"
 
@@ -76,7 +76,7 @@ Feature: configure any test framework to use rspec-mocks
       puts obj.respond_to?(:stub)
       """
 
-    When I run "ruby foo.rb"
+    When I run `ruby foo.rb`
     Then the output should contain "false"
     But  the output should not contain "true"
 

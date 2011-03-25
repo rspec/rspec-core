@@ -32,7 +32,7 @@ Feature: expect a message
         end
       end
       """
-    When I run "rspec spec/account_spec.rb"
+    When I run `rspec spec/account_spec.rb`
     Then the output should contain "1 example, 0 failures"
 
   Scenario: expect a message with an argument
@@ -64,7 +64,7 @@ Feature: expect a message
         end
       end
       """
-    When I run "rspec spec/account_spec.rb"
+    When I run `rspec spec/account_spec.rb`
     Then the output should contain "1 example, 0 failures"
 
   Scenario: provide a return value
@@ -90,5 +90,5 @@ Feature: expect a message
         end
       end
       """
-    When I run "rspec message_expectation_spec.rb"
+    When I run `rspec message_expectation_spec.rb`
     Then the output should contain "2 examples, 0 failures"

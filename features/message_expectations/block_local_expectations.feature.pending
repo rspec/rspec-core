@@ -30,7 +30,7 @@ Feature: block local expectations
         end
       end
       """
-    When I run "rspec ./spec/account_spec.rb"
+    When I run `rspec spec/account_spec.rb`
     Then the output should contain "1 example, 0 failures"
     
   Scenario: failing example
@@ -51,5 +51,5 @@ Feature: block local expectations
       end
       """
 
-    When I run "rspec ./spec/account_spec.rb"
+    When I run `rspec spec/account_spec.rb`
     Then the output should contain "1 example, 1 failure"

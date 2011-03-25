@@ -22,5 +22,5 @@ Feature: stub with substitute implementation
         end
       end
       """
-    When I run "rspec ./stub_implementation_spec.rb"
+    When I run `rspec stub_implementation_spec.rb`
     Then the output should contain "1 example, 0 failures"

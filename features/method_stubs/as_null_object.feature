@@ -24,5 +24,5 @@ Feature: as_null_object method stub
         end
       end
       """
-    When I run "rspec as_null_object_spec.rb"
+    When I run `rspec as_null_object_spec.rb`
     Then the examples should all pass

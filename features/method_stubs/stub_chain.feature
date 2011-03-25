@@ -47,5 +47,5 @@ Feature: stub a chain of methods
         end
       end
       """
-    When I run "rspec stub_chain_spec.rb"
+    When I run `rspec stub_chain_spec.rb`
     Then the examples should all pass
