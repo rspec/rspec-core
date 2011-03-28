@@ -176,6 +176,35 @@ describe RSpec::Core::Example, :parent_metadata => 'sample' do
         "around (after)"
       ])
     end
+
+    context "clearing ivars" do
+      it "sets ivars to nil to prep them for GC" do
+        group = RSpec::Core::ExampleGroup.describe do
+          before(:all)  { @before_all  = :before_all }
+          before(:each) { @before_each = :before_each }
+          after(:each)  { @after_each = :after_each }
+          after(:all)   { @after_all  = :after_all }
+        end
+        example = group.example("does something") do
+          @in_example = :in_example
+        end
+        example_group_instance = group.new
+        example.run(example_group_instance, double('reporter').as_null_object)
+
+        %w[@before_all @before_each @after_each @after_all].each do |ivar|
+          example_group_instance.instance_variable_get(ivar).should be_nil
+        end
+      end
+
+      it "does not impact the before_all_ivars which are copied to each example" do
+        group = RSpec::Core::ExampleGroup.describe do
+          before(:all) { @before_all = "abc" }
+          example("first") { @before_all.should_not be_nil }
+          example("second") { @before_all.should_not be_nil }
+        end
+        group.run.should be_true
+      end
+    end
   end
 
   describe "#pending" do
