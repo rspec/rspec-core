@@ -249,7 +249,7 @@ module RSpec
       end
 
       def with(*args, &block)
-        @return_block = block if block_given?
+        @return_block = block if block_given? unless args.empty?
         @args_expectation = ArgumentExpectation.new(*args, &block)
         self
       end

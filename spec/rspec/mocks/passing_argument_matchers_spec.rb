@@ -95,6 +95,13 @@ module RSpec
           }
           @double.random_call 5, "hello", [1,2,3], :fee, "fi", 4
         end
+
+        it "does not eval the block as the return value" do
+          eval_count = 0
+          @double.should_receive(:msg).with {|a| eval_count += 1}
+          @double.msg(:ignore)
+          eval_count.should eq(1)
+        end
       end
 
       context "handling non-matcher arguments" do
