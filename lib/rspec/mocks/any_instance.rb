@@ -28,12 +28,12 @@ module RSpec
         end
 
         def received_rspec_method?(rspec_method_name)
-          @messages.find do |message|
+          !!@messages.find do |message|
             message.first.first == rspec_method_name
           end
         end
         
-        def expectation_fulfilled_at_least_once
+        def expectation_fulfilled_at_least_once?
           # implement in subclasses
           raise NotImplementedError
         end
@@ -70,7 +70,7 @@ module RSpec
           super(:stub, *args, &block)
         end
 
-        def expectation_fulfilled_at_least_once
+        def expectation_fulfilled_at_least_once?
           true
         end
 
@@ -98,11 +98,11 @@ module RSpec
         end
 
         def expectation_fulfilled!
-          @expectation_fulfilled = true unless (received_rspec_method?(:never) || received_rspec_method?(:any_number_of_times))
+          @expectation_fulfilled = true
         end
         
-        def expectation_fulfilled_at_least_once
-          @expectation_fulfilled
+        def expectation_fulfilled_at_least_once?
+          (received_rspec_method?(:never) || received_rspec_method?(:any_number_of_times)) || @expectation_fulfilled
         end
         
         private
@@ -112,7 +112,8 @@ module RSpec
 
       class Recorder
         def initialize(klass)
-          @observed_methods = {}
+          @message_chains = {}
+          @observed_methods = []
           @played_methods = {}
           @klass = klass
           @expectation_set = false
@@ -120,14 +121,16 @@ module RSpec
         end
 
         def stub(method_name, *args, &block)
-          observe!(method_name)
-          @observed_methods[method_name.to_sym] = StubChain.new(method_name, *args, &block)
+          method_name_symbol = method_name.to_sym
+          observe!(method_name_symbol)
+          @message_chains[method_name_symbol] = StubChain.new(method_name_symbol, *args, &block)
         end
 
         def should_receive(method_name, *args, &block)
-          observe!(method_name)
+          method_name_symbol = method_name.to_sym
+          observe!(method_name_symbol)
           @expectation_set = true
-          @observed_methods[method_name.to_sym] = ExpectationChain.new(method_name, *args, &block)
+          @message_chains[method_name_symbol] = ExpectationChain.new(method_name, *args, &block)
         end
 
         def stop_observing_currently_observed_methods!
@@ -136,9 +139,9 @@ module RSpec
           end
         end
 
-        def playback_to_uninvoked_observed_methods_with_expectations!(instance)
-          @observed_methods.each do |method_name, chain|
-            case chain
+        def playback_to_uninvoked_observed_methods_with_stubs_or_expectations!(instance)
+          @observed_methods.each do |method_name|
+            case chain = @message_chains[method_name]
             when ExpectationChain
               chain.playback!(instance) unless @played_methods[method_name]
             end
@@ -147,7 +150,7 @@ module RSpec
 
         def playback!(instance, method_name)
           RSpec::Mocks::space.add(instance) if RSpec::Mocks::space
-          @observed_methods[method_name].playback!(instance)
+          @message_chains[method_name].playback!(instance)
           @played_methods[method_name] = instance
           received_message_for_a_method_with_an_expectation!(method_name) if has_expectation?(method_name)
         end
@@ -158,28 +161,27 @@ module RSpec
         
         def verify
           if @expectation_set && !each_expectation_fulfilled_at_least_once?
-            raise RSpec::Mocks::MockExpectationError, "Exactly one instance should have received the following message(s) but didn't: #{methods_with_expectations.join(', ')}"
+            raise RSpec::Mocks::MockExpectationError, "Exactly one instance should have received the following message(s) but didn't: #{methods_with_uninvoked_expectations.join(', ')}"
           end
         end
         
         private
         def each_expectation_fulfilled_at_least_once?
-          # @observed_methods.detect do |method_name, chain|
-          #   chain.expectation_fulfilled? == false
-          # end
-          @expectation_fulfilled
+          !@message_chains.find do |method_name, chain|
+            not chain.expectation_fulfilled_at_least_once?
+          end
         end
         
         def has_expectation?(method_name)
-          @observed_methods[method_name].is_a?(ExpectationChain)
+          @message_chains[method_name].is_a?(ExpectationChain)
         end
         
-        def methods_with_expectations
-          @observed_methods.map{|method_name, chain| method_name if chain.is_a?(ExpectationChain)}.compact
+        def methods_with_uninvoked_expectations
+          @message_chains.map{|method_name, chain| method_name if chain.is_a?(ExpectationChain) && !chain.expectation_fulfilled_at_least_once? }.compact
         end
         
         def received_message_for_a_method_with_an_expectation!(method_name)
-          @observed_methods[method_name].expectation_fulfilled!
+          @message_chains[method_name].expectation_fulfilled!
           @expectation_fulfilled = true
           restore_method!(method_name)
           mark_invoked!(method_name)
@@ -195,7 +197,7 @@ module RSpec
         end
         
         def observed_method_names
-          @observed_methods.keys
+          @observed_methods
         end
 
         def build_alias_method_name(method_name)
@@ -226,6 +228,7 @@ module RSpec
         end
         
         def observe!(method_name)
+          @observed_methods << method_name
           backup_method!(method_name)
           method = <<-EOM
             def #{method_name}(*args, &blk)
@@ -252,7 +255,7 @@ module RSpec
 
       module ExpectationEnsurer
         def rspec_verify
-          self.class.__recorder.playback_to_uninvoked_observed_methods_with_expectations!(self)
+          self.class.__recorder.playback_to_uninvoked_observed_methods_with_stubs_or_expectations!(self)
           super
         end
       end

@@ -57,7 +57,10 @@ module RSpec
         context "with #and_return" do
           it "stubs a method that doesn't exist" do
             klass.any_instance.stub(:foo).and_return(1)
+            begin
             klass.new.foo.should eq(1)
+          rescue Exception => e
+          end
           end
 
           it "stubs a method that exists" do
@@ -383,10 +386,8 @@ module RSpec
 
           context "the 'never' constraint" do
             it "passes for 0 invocations" do
-              pending do
-                klass.any_instance.should_receive(:foo).never
-                klass.rspec_verify
-              end
+              klass.any_instance.should_receive(:foo).never
+              klass.rspec_verify
             end
 
             it "fails on the first invocation" do
@@ -395,11 +396,26 @@ module RSpec
                 klass.new.foo
               end.to raise_error(RSpec::Mocks::MockExpectationError)
             end
+            
+            context "when combined with other expectations" do
+              it "passes when the other expecations are met" do
+                klass.any_instance.should_receive(:foo).never
+                klass.any_instance.should_receive(:existing_method).and_return(5)
+                klass.new.existing_method.should eq(5)
+              end
+
+              it "fails when the other expecations are not met" do
+                expect do
+                  klass.any_instance.should_receive(:foo).never
+                  klass.any_instance.should_receive(:existing_method).and_return(5)
+                  klass.rspec_verify
+                end.to raise_error(RSpec::Mocks::MockExpectationError, existing_method_expectation_error_message)
+              end
+            end
           end
 
           context "the 'any_number_of_times' constraint" do
             it "passes for 0 invocations" do
-              pending
               klass.any_instance.should_receive(:foo).any_number_of_times
               klass.new.rspec_verify
             end
@@ -409,6 +425,28 @@ module RSpec
               instance = klass.new
               instance.foo
               instance.rspec_verify
+            end
+            
+            it "does not interfere with other expectations" do
+              klass.any_instance.should_receive(:foo).any_number_of_times
+              klass.any_instance.should_receive(:existing_method).and_return(5)
+              klass.new.existing_method.should eq(5)
+            end
+            
+            context "when combined with other expectations" do
+              it "passes when the other expecations are met" do
+                klass.any_instance.should_receive(:foo).any_number_of_times
+                klass.any_instance.should_receive(:existing_method).and_return(5)
+                klass.new.existing_method.should eq(5)
+              end
+
+              it "fails when the other expecations are not met" do
+                expect do
+                  klass.any_instance.should_receive(:foo).any_number_of_times
+                  klass.any_instance.should_receive(:existing_method).and_return(5)
+                  klass.rspec_verify
+                end.to raise_error(RSpec::Mocks::MockExpectationError, existing_method_expectation_error_message)
+              end
             end
           end
         end
