@@ -161,7 +161,7 @@ module RSpec
         
         def verify
           if @expectation_set && !each_expectation_fulfilled_at_least_once?
-            raise RSpec::Mocks::MockExpectationError, "Exactly one instance should have received the following message(s) but didn't: #{methods_with_uninvoked_expectations.join(', ')}"
+            raise RSpec::Mocks::MockExpectationError, "Exactly one instance should have received the following message(s) but didn't: #{methods_with_uninvoked_expectations.sort.join(', ')}"
           end
         end
         
@@ -177,7 +177,7 @@ module RSpec
         end
         
         def methods_with_uninvoked_expectations
-          @message_chains.map{|method_name, chain| method_name if chain.is_a?(ExpectationChain) && !chain.expectation_fulfilled_at_least_once? }.compact
+          @message_chains.map{|method_name, chain| method_name.to_s if chain.is_a?(ExpectationChain) && !chain.expectation_fulfilled_at_least_once? }.compact
         end
         
         def received_message_for_a_method_with_an_expectation!(method_name)

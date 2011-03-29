@@ -152,7 +152,7 @@ module RSpec
         let(:foo_expectation_error_message) { 'Exactly one instance should have received the following message(s) but didn\'t: foo' }
         let(:existing_method_expectation_error_message) { 'Exactly one instance should have received the following message(s) but didn\'t: existing_method' }
         
-        context "when an expectation is set on a method does not exist" do
+        context "and an expectation is set on a method which does not exist" do
           it "returns the expected value" do
             klass.any_instance.should_receive(:foo).and_return(1)
             klass.new.foo(1).should eq(1)
@@ -166,7 +166,7 @@ module RSpec
             end.to raise_error(RSpec::Mocks::MockExpectationError, foo_expectation_error_message)
           end
           
-          context "number of instances" do
+          context "when dealing with different numbers of instances" do
             it "fails if no instance is created" do
               expect do
                 klass.any_instance.should_receive(:foo).and_return(1)
@@ -179,7 +179,7 @@ module RSpec
                 klass.any_instance.should_receive(:foo)
                 klass.any_instance.should_receive(:bar)
                 klass.rspec_verify
-              end.to raise_error(RSpec::Mocks::MockExpectationError, 'Exactly one instance should have received the following message(s) but didn\'t: foo, bar')
+              end.to raise_error(RSpec::Mocks::MockExpectationError, 'Exactly one instance should have received the following message(s) but didn\'t: bar, foo')
             end
             
             context "after any one instance has received a message" do
@@ -203,7 +203,7 @@ module RSpec
           end
         end
 
-        context "when an expectation is set on a method that exists" do
+        context "and an expectation is set on a method that exists" do
           it "returns the expected value" do
             klass.any_instance.should_receive(:existing_method).and_return(1)
             klass.new.existing_method(1).should eq(1)
@@ -217,7 +217,7 @@ module RSpec
             end.to raise_error(RSpec::Mocks::MockExpectationError, existing_method_expectation_error_message)
           end
 
-          context "number of instances" do
+          context "when dealing with different numbers of instances" do
             it "fails if no instance is created" do
               expect do
                 klass.any_instance.should_receive(:existing_method)
@@ -230,7 +230,7 @@ module RSpec
                 klass.any_instance.should_receive(:existing_method)
                 klass.any_instance.should_receive(:another_existing_method)
                 klass.rspec_verify
-              end.to raise_error(RSpec::Mocks::MockExpectationError, 'Exactly one instance should have received the following message(s) but didn\'t: existing_method, another_existing_method')
+              end.to raise_error(RSpec::Mocks::MockExpectationError, 'Exactly one instance should have received the following message(s) but didn\'t: another_existing_method, existing_method')
             end
 
             context "after any one instance has received a message" do
