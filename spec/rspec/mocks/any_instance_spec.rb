@@ -58,9 +58,9 @@ module RSpec
           it "stubs a method that doesn't exist" do
             klass.any_instance.stub(:foo).and_return(1)
             begin
-            klass.new.foo.should eq(1)
-          rescue Exception => e
-          end
+              klass.new.foo.should eq(1)
+            rescue Exception => e
+            end
           end
 
           it "stubs a method that exists" do
@@ -151,8 +151,8 @@ module RSpec
       context "with #should_receive" do
         let(:foo_expectation_error_message) { 'Exactly one instance should have received the following message(s) but didn\'t: foo' }
         let(:existing_method_expectation_error_message) { 'Exactly one instance should have received the following message(s) but didn\'t: existing_method' }
-        
-        context "and an expectation is set on a method which does not exist" do
+
+        context "with an expectation is set on a method which does not exist" do
           it "returns the expected value" do
             klass.any_instance.should_receive(:foo).and_return(1)
             klass.new.foo(1).should eq(1)
@@ -165,45 +165,43 @@ module RSpec
               klass.rspec_verify
             end.to raise_error(RSpec::Mocks::MockExpectationError, foo_expectation_error_message)
           end
-          
-          context "when dealing with different numbers of instances" do
-            it "fails if no instance is created" do
-              expect do
-                klass.any_instance.should_receive(:foo).and_return(1)
-                klass.rspec_verify
-              end.to raise_error(RSpec::Mocks::MockExpectationError, foo_expectation_error_message)
+
+          it "fails if no instance is created" do
+            expect do
+              klass.any_instance.should_receive(:foo).and_return(1)
+              klass.rspec_verify
+            end.to raise_error(RSpec::Mocks::MockExpectationError, foo_expectation_error_message)
+          end
+
+          it "fails if no instance is created and there are multiple expectations" do
+            expect do
+              klass.any_instance.should_receive(:foo)
+              klass.any_instance.should_receive(:bar)
+              klass.rspec_verify
+            end.to raise_error(RSpec::Mocks::MockExpectationError, 'Exactly one instance should have received the following message(s) but didn\'t: bar, foo')
+          end
+
+          context "after any one instance has received a message" do
+            it "passes if subsequent invocations do not receive that message" do
+              klass.any_instance.should_receive(:foo)
+              klass.new.foo
+              klass.new
             end
 
-            it "fails if no instance is created and there are multiple expectations" do
+            it "fails if the method is invoked on a second instance" do
+              instance_one = klass.new
+              instance_two = klass.new
               expect do
                 klass.any_instance.should_receive(:foo)
-                klass.any_instance.should_receive(:bar)
-                klass.rspec_verify
-              end.to raise_error(RSpec::Mocks::MockExpectationError, 'Exactly one instance should have received the following message(s) but didn\'t: bar, foo')
-            end
-            
-            context "after any one instance has received a message" do
-              it "passes if subsequent invocations do not receive that message" do
-                klass.any_instance.should_receive(:foo)
-                klass.new.foo
-                klass.new
-              end
 
-              it "fails if the method is invoked on a second instance" do
-                instance_one = klass.new
-                instance_two = klass.new
-                expect do
-                  klass.any_instance.should_receive(:foo)
-
-                  instance_one.foo
-                  instance_two.foo
-                end.to raise_error(RSpec::Mocks::MockExpectationError, "The message 'foo' was received by #{instance_two.inspect} but has already been received by #{instance_one.inspect}")
-              end
+                instance_one.foo
+                instance_two.foo
+              end.to raise_error(RSpec::Mocks::MockExpectationError, "The message 'foo' was received by #{instance_two.inspect} but has already been received by #{instance_one.inspect}")
             end
           end
         end
 
-        context "and an expectation is set on a method that exists" do
+        context "with an expectation is set on a method that exists" do
           it "returns the expected value" do
             klass.any_instance.should_receive(:existing_method).and_return(1)
             klass.new.existing_method(1).should eq(1)
@@ -217,39 +215,37 @@ module RSpec
             end.to raise_error(RSpec::Mocks::MockExpectationError, existing_method_expectation_error_message)
           end
 
-          context "when dealing with different numbers of instances" do
-            it "fails if no instance is created" do
-              expect do
-                klass.any_instance.should_receive(:existing_method)
-                klass.rspec_verify
-              end.to raise_error(RSpec::Mocks::MockExpectationError, existing_method_expectation_error_message)
+          it "fails if no instance is created" do
+            expect do
+              klass.any_instance.should_receive(:existing_method)
+              klass.rspec_verify
+            end.to raise_error(RSpec::Mocks::MockExpectationError, existing_method_expectation_error_message)
+          end
+
+          it "fails if no instance is created and there are multiple expectations" do
+            expect do
+              klass.any_instance.should_receive(:existing_method)
+              klass.any_instance.should_receive(:another_existing_method)
+              klass.rspec_verify
+            end.to raise_error(RSpec::Mocks::MockExpectationError, 'Exactly one instance should have received the following message(s) but didn\'t: another_existing_method, existing_method')
+          end
+
+          context "after any one instance has received a message" do
+            it "passes if subsequent invocations do not receive that message" do
+              klass.any_instance.should_receive(:existing_method)
+              klass.new.existing_method
+              klass.new
             end
 
-            it "fails if no instance is created and there are multiple expectations" do
+            it "fails if the method is invoked on a second instance" do
+              instance_one = klass.new
+              instance_two = klass.new
               expect do
                 klass.any_instance.should_receive(:existing_method)
-                klass.any_instance.should_receive(:another_existing_method)
-                klass.rspec_verify
-              end.to raise_error(RSpec::Mocks::MockExpectationError, 'Exactly one instance should have received the following message(s) but didn\'t: another_existing_method, existing_method')
-            end
 
-            context "after any one instance has received a message" do
-              it "passes if subsequent invocations do not receive that message" do
-                klass.any_instance.should_receive(:existing_method)
-                klass.new.existing_method
-                klass.new
-              end
-
-              it "fails if the method is invoked on a second instance" do
-                instance_one = klass.new
-                instance_two = klass.new
-                expect do
-                  klass.any_instance.should_receive(:existing_method)
-
-                  instance_one.existing_method
-                  instance_two.existing_method
-                end.to raise_error(RSpec::Mocks::MockExpectationError, "The message 'existing_method' was received by #{instance_two.inspect} but has already been received by #{instance_one.inspect}")
-              end
+                instance_one.existing_method
+                instance_two.existing_method
+              end.to raise_error(RSpec::Mocks::MockExpectationError, "The message 'existing_method' was received by #{instance_two.inspect} but has already been received by #{instance_one.inspect}")
             end
           end
         end
@@ -396,7 +392,7 @@ module RSpec
                 klass.new.foo
               end.to raise_error(RSpec::Mocks::MockExpectationError)
             end
-            
+
             context "when combined with other expectations" do
               it "passes when the other expecations are met" do
                 klass.any_instance.should_receive(:foo).never
@@ -426,13 +422,13 @@ module RSpec
               instance.foo
               instance.rspec_verify
             end
-            
+
             it "does not interfere with other expectations" do
               klass.any_instance.should_receive(:foo).any_number_of_times
               klass.any_instance.should_receive(:existing_method).and_return(5)
               klass.new.existing_method.should eq(5)
             end
-            
+
             context "when combined with other expectations" do
               it "passes when the other expecations are met" do
                 klass.any_instance.should_receive(:foo).any_number_of_times
@@ -455,25 +451,25 @@ module RSpec
       context "when resetting after an example" do
         context "existing method" do
           let(:space) { RSpec::Mocks::Space.new }
-          
+
           before(:each) do
             space.add(klass)
             klass.any_instance.stub(:existing_method).and_return(1)
             klass.method_defined?(:__existing_method_without_any_instance__).should be_true
           end
-          
+
           it "restores the class to its original state after each example when no instance is created" do
             space.reset_all
-          
+
             klass.method_defined?(:__existing_method_without_any_instance__).should be_false
             klass.new.existing_method.should eq(2)
           end
 
           it "restores the class to its original state after each example when one instance is created" do
             klass.new.existing_method
-          
+
             space.reset_all
-          
+
             klass.method_defined?(:__existing_method_without_any_instance__).should be_false
             klass.new.existing_method.should eq(2)
           end
@@ -481,14 +477,14 @@ module RSpec
           it "restores the class to its original state after each example when more than one instance is created" do
             klass.new.existing_method
             klass.new.existing_method
-            
+
             space.reset_all
-          
+
             klass.method_defined?(:__existing_method_without_any_instance__).should be_false
             klass.new.existing_method.should eq(2)
           end
         end
-        
+
         it "adds an class to the current space when #any_instance is invoked" do
           klass.any_instance
           RSpec::Mocks::space.send(:mocks).should include(klass)

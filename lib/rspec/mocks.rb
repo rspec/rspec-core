@@ -177,8 +177,8 @@ module RSpec
       attr_accessor :space
 
       def setup(includer)
-        Object.class_eval { include RSpec::Mocks::Methods } unless Object < RSpec::Mocks::Methods
-        Class.class_eval { include RSpec::Mocks::AnyInstance }
+        Object.class_eval { include RSpec::Mocks::Methods }
+        Class.class_eval  { include RSpec::Mocks::AnyInstance }
         (class << includer; self; end).class_eval do
           include RSpec::Mocks::ExampleMethods
         end

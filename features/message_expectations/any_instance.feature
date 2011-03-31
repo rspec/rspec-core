@@ -16,4 +16,4 @@ Feature: expect a message on any instance of a class
       end
       """
     When I run `rspec example_spec.rb`
-    Then the output should contain "0 failures"
+    Then the examples should all pass

@@ -2,6 +2,10 @@
 
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.5.0...master)
 
+* Enhancements
+  * Add support for any_instance.stub and any_instance.should_receive (Sidu
+    Ponnappa and Andy Lindeman)
+
 * Bug fixes
   * fix bug in which multiple chains with shared messages ending in hashes
     failed to return the correct value
