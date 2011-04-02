@@ -57,10 +57,7 @@ module RSpec
         context "with #and_return" do
           it "stubs a method that doesn't exist" do
             klass.any_instance.stub(:foo).and_return(1)
-            begin
-              klass.new.foo.should eq(1)
-            rescue Exception => e
-            end
+            klass.new.foo.should eq(1)
           end
 
           it "stubs a method that exists" do
