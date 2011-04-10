@@ -57,13 +57,13 @@ module RSpec
       end
 
       def parse_options
-        @options ||= [file_options, command_line_options, env_options].flatten.inject {|merged, o| merged.merge o}
+        @options ||= [file_options, command_line_options, env_options].inject {|merged, o| merged.merge o}
       end
 
     private
 
       def file_options
-        custom_options_file ? [custom_options] : [global_options, local_options]
+        custom_options_file ? custom_options : global_options.merge(local_options)
       end
 
       def env_options
