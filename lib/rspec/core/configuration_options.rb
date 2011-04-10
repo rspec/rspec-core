@@ -70,11 +70,7 @@ module RSpec
       end
 
       def command_line_options
-        @command_line_options ||= begin
-                                    options = Parser.parse!(@args)
-                                    options[:files_or_directories_to_run] = @args
-                                    options
-                                  end
+        @command_line_options ||= Parser.parse!(@args).merge :files_or_directories_to_run => @args
       end
 
       def custom_options
