@@ -57,10 +57,9 @@ module RSpec
       end
 
       def parse_options
-        @options = {}.tap do |options|
-          options_to_merge = custom_options_file ? [custom_options] : [global_options, local_options]
-          (options_to_merge << command_line_options << env_options).each {|o| options.merge! o}
-        end
+        options_to_merge = (custom_options_file ? [custom_options] : [global_options, local_options]) <<
+          command_line_options << env_options
+        @options = options_to_merge.inject {|merged, options| merged.merge options}
       end
 
     private
