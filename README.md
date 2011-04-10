@@ -3,6 +3,8 @@
 rspec-mocks provides a test-double framework for rspec including support
 for method stubs, fakes, and message expectations.
 
+[![build status](http://travis-ci.org/rspec/rspec-mocks.png)](http://travis-ci.org/rspec/rspec-mocks)
+
 ## Documentation
 
 The [Cucumber features](http://relishapp.com/rspec/rspec-mocks) are the
