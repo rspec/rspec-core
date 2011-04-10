@@ -47,7 +47,7 @@ module RSpec
         end
       end
 
-      subject { SerializableStruct.new(7, "something") }
+      subject { RSpec::Mocks::SerializableStruct.new(7, "something") }
 
       def set_stub
         subject.stub(:bazz => 5)
@@ -94,7 +94,7 @@ module RSpec
       end
 
       describe "an object that has its own mock_proxy instance variable" do
-        subject { SerializableMockProxy.new(:my_mock_proxy) }
+        subject { RSpec::Mocks::SerializableMockProxy.new(:my_mock_proxy) }
 
         it 'does not interfere with its marshalling' do
           marshalled_copy = Marshal.load(Marshal.dump(subject))
