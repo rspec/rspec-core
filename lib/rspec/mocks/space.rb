@@ -10,7 +10,7 @@ module RSpec
           mock.rspec_verify
         end
       end
-      
+
       def reset_all
         mocks.each do |mock|
           mock.rspec_reset
