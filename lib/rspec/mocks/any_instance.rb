@@ -234,13 +234,8 @@ module RSpec
         __recorder.verify
         super
       ensure
-        rspec_reset
-      end
-
-      def rspec_reset
         __recorder.stop_observing!
         @__recorder = nil
-        super
       end
 
       def __recorder

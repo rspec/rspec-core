@@ -482,7 +482,7 @@ module RSpec
         end
       end
 
-      context "when resetting after an example" do
+      context "when resetting post-verification" do
         let(:space) { RSpec::Mocks::Space.new }
         
         context "existing method" do
@@ -497,7 +497,7 @@ module RSpec
             end
             
             it "restores the class to its original state after each example when no instance is created" do
-              space.reset_all
+              space.verify_all
 
               klass.method_defined?(:__existing_method_without_any_instance__).should be_false
               klass.new.existing_method.should eq(existing_method_return_value)
@@ -506,7 +506,7 @@ module RSpec
             it "restores the class to its original state after each example when one instance is created" do
               klass.new.existing_method
 
-              space.reset_all
+              space.verify_all
 
               klass.method_defined?(:__existing_method_without_any_instance__).should be_false
               klass.new.existing_method.should eq(existing_method_return_value)
@@ -516,7 +516,7 @@ module RSpec
               klass.new.existing_method
               klass.new.existing_method
 
-              space.reset_all
+              space.verify_all
 
               klass.method_defined?(:__existing_method_without_any_instance__).should be_false
               klass.new.existing_method.should eq(existing_method_return_value)
@@ -556,7 +556,6 @@ module RSpec
               klass.any_instance.should_receive(:existing_method).and_return(Object.new)
               klass.new.existing_method
               space.verify_all
-              space.reset_all
 
               klass.new.existing_method.should eq(existing_method_return_value)
             end
