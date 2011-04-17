@@ -5,14 +5,13 @@ module RSpec
     describe "#any_instance" do
       class CustomErrorForAnyInstanceSpec < StandardError;end
 
-      EXISTING_METHOD_RETURN_VALUE = Object.new
       let(:klass) do
         Class.new do
-          def existing_method; EXISTING_METHOD_RETURN_VALUE; end
+          def existing_method; :existing_method_return_value; end
           def another_existing_method; 4; end
         end
       end
-      let(:existing_method_return_value){ EXISTING_METHOD_RETURN_VALUE }
+      let(:existing_method_return_value){ :existing_method_return_value }
 
       context "invocation order" do
         context "#stub" do
