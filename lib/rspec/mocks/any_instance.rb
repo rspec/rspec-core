@@ -134,17 +134,8 @@ module RSpec
         end
 
         def stop_observing_currently_observed_methods!
-          observed_method_names.each do |method_name|
-            restore_method!(method_name)
-          end
-        end
-
-        def playback_to_uninvoked_observed_methods_with_stubs_or_expectations!(instance)
           @observed_methods.each do |method_name|
-            case chain = @message_chains[method_name]
-            when ExpectationChain
-              chain.playback!(instance) unless @played_methods[method_name]
-            end
+            restore_method!(method_name)
           end
         end
 
@@ -193,13 +184,8 @@ module RSpec
           else
             remove_dummy_method!(method_name)
           end
-          @observed_methods.delete(method_name)
         end
         
-        def observed_method_names
-          @observed_methods
-        end
-
         def build_alias_method_name(method_name)
           "__#{method_name}_without_any_instance__".to_sym
         end
@@ -253,16 +239,8 @@ module RSpec
         end
       end
 
-      module ExpectationEnsurer
-        def rspec_verify
-          self.class.__recorder.playback_to_uninvoked_observed_methods_with_stubs_or_expectations!(self)
-          super
-        end
-      end
-
       def any_instance
         RSpec::Mocks::space.add(self) if RSpec::Mocks::space
-        self.class_eval{ include ExpectationEnsurer }
         __recorder
       end
 
