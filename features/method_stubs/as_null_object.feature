@@ -1,7 +1,10 @@
-Feature: as_null_object method stub
+Feature: as_null_object
 
-  Use the `as_null_object` method to ignore any messages that
-  aren't explicitly set as stubs or message expectations.
+  Use the `as_null_object` method to ignore any messages that aren't explicitly
+  set as stubs or message expectations.
+
+  EXCEPTION: `to_ary` will raise a NoMethodError unless explicitly stubbed in
+  order to support `flatten` on an Array containing a double.
 
   Scenario: double acting as_null_object 
     Given a file named "as_null_object_spec.rb" with:
@@ -21,6 +24,11 @@ Feature: as_null_object method stub
         it "allows explicit expectations" do
           null_object.should_receive(:something)
           null_object.something
+        end
+
+        it "supports Array#flatten" do
+          null_object = double('foo')
+          [null_object].flatten.should eq([null_object])
         end
       end
       """

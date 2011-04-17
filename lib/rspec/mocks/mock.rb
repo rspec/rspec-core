@@ -41,10 +41,10 @@ module RSpec
     private
 
       def method_missing(sym, *args, &block)
+          raise NoMethodError if sym == :to_ary
         __mock_proxy.record_message_received(sym, *args, &block)
         begin
-          return self if __mock_proxy.null_object?
-          super
+          __mock_proxy.null_object? ? self : super
         rescue NameError
           __mock_proxy.raise_unexpected_message_error(sym, *args)
         end
