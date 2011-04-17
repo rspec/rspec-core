@@ -6,6 +6,7 @@
   - stub_chain.feature
   - any_instance.feature
   - as_null_object.feature
+  - to_ary.feature
 - message_expectations:
   - expect_message.feature
   - any_instance.feature
