@@ -1,6 +1,6 @@
-### dev
+### 2.6.0.rc1 / 2011-04-17
 
-[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.5.0...master)
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.5.0...v2.6.1.rc1)
 
 * Enhancements
   * Add support for any_instance.stub and any_instance.should_receive (Sidu
