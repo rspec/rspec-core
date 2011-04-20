@@ -5,7 +5,7 @@ module RSpec
       
       def initialize(*args, &block)
         @args = args
-        @matchers_block = args.empty? ? block : nil
+        @block = args.empty? ? block : nil
         @match_any_args = false
         @matchers = nil
         
@@ -26,19 +26,20 @@ module RSpec
       end
       
       def is_matcher?(obj)
-        !is_stub_as_null_object?(obj) & obj.respond_to?(:matches?) & obj.respond_to?(:description)
+        !null_object?(obj) & obj.respond_to?(:matches?) & obj.respond_to?(:description)
       end
 
-      def is_stub_as_null_object?(obj)
+      def args_match?(*args)
+        match_any_args? || block_passes?(*args) || matchers_match?(*args)
+      end
+      
+      private
+      def null_object?(obj)
         obj.respond_to?(:__rspec_double_acting_as_null_object?) && obj.__rspec_double_acting_as_null_object?
       end
       
-      def args_match?(*args)
-        match_any_args? || matchers_block_matches?(*args) || matchers_match?(*args)
-      end
-      
-      def matchers_block_matches?(*args)
-        @matchers_block ? @matchers_block.call(*args) : nil
+      def block_passes?(*args)
+        @block.call(*args) if @block
       end
       
       def matchers_match?(*args)

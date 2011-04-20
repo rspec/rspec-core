@@ -1,7 +1,5 @@
 module Marshal
-
   class << self
-
     def dump_with_mocks(*args)
       object = args.shift
       return dump_without_mocks(*args.unshift(object)) unless object.instance_variable_defined?(:@mock_proxy)
@@ -21,7 +19,5 @@ module Marshal
     alias_method :dump_without_mocks, :dump
     undef_method :dump
     alias_method :dump, :dump_with_mocks
-
   end
-
 end
