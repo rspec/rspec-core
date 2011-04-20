@@ -1,6 +1,14 @@
-# rspec-mocks-2.2
+## rspec-mocks-2.6
 
-## What's new
+### `any_instance`
+
+Set method stubs and message expectations on any instance of a class:
+
+    class Foo; end
+    Foo.any_instance.stub(:bar) { 'bar' }
+    Foo.new.bar # => 'bar'
+
+## rspec-mocks-2.2
 
 ### `require "rspec/mocks/standalone"`
 
