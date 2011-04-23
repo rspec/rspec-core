@@ -23,12 +23,12 @@ module RSpec
 
         def constrained_to_any_of?(*constraints)
           constraints.any? do |constraint|
-            messages.any? do |message| 
+            messages.any? do |message|
               message.first.first == constraint
             end
           end
         end
-        
+
         private
         def messages
           @messages ||= []
@@ -90,11 +90,11 @@ module RSpec
         def expectation_fulfilled!
           @expectation_fulfilled = true
         end
-        
+
         def expectation_filfilled?
           @expectation_fulfilled || constrained_to_any_of?(:never, :any_number_of_times)
         end
-        
+
         private
         def verify_invocation_order(rspec_method_name, *args, &block)
         end
@@ -120,7 +120,7 @@ module RSpec
           @message_chains[method_name] = ExpectationChain.new(method_name, *args, &block)
         end
 
-        def stop_observing!
+        def stop_all_observation!
           @observed_methods.each do |method_name|
             restore_method!(method_name)
           end
@@ -136,36 +136,36 @@ module RSpec
         def instance_that_received(method_name)
           @played_methods[method_name]
         end
-        
+
         def verify
           if @expectation_set && !each_expectation_filfilled?
             raise RSpec::Mocks::MockExpectationError, "Exactly one instance should have received the following message(s) but didn't: #{unfulfilled_expectations.sort.join(', ')}"
           end
         end
-        
+
         private
         def each_expectation_filfilled?
           @message_chains.all? do |method_name, chain|
             chain.expectation_filfilled?
           end
         end
-        
+
         def has_expectation?(method_name)
           @message_chains[method_name].is_a?(ExpectationChain)
         end
-        
+
         def unfulfilled_expectations
           @message_chains.map do |method_name, chain|
             method_name.to_s if chain.is_a?(ExpectationChain) unless chain.expectation_filfilled?
           end.compact
         end
-        
+
         def received_expected_message!(method_name)
           @message_chains[method_name].expectation_fulfilled!
           restore_method!(method_name)
           mark_invoked!(method_name)
         end
-        
+
         def restore_method!(method_name)
           if @klass.method_defined?(build_alias_method_name(method_name))
             restore_original_method!(method_name)
@@ -173,7 +173,7 @@ module RSpec
             remove_dummy_method!(method_name)
           end
         end
-        
+
         def build_alias_method_name(method_name)
           "__#{method_name}_without_any_instance__"
         end
@@ -200,8 +200,18 @@ module RSpec
             end
           end
         end
-        
+
+        def stop_observing!(method_name)
+          restore_method!(method_name)
+          @observed_methods.delete(method_name)
+        end
+
+        def already_observing?(method_name)
+          @observed_methods.include?(method_name)
+        end
+
         def observe!(method_name)
+          stop_observing!(method_name) if already_observing?(method_name)
           @observed_methods << method_name
           backup_method!(method_name)
           @klass.class_eval(<<-EOM, __FILE__, __LINE__)
@@ -234,7 +244,7 @@ module RSpec
         __recorder.verify
         super
       ensure
-        __recorder.stop_observing!
+        __recorder.stop_all_observation!
         @__recorder = nil
       end
 
