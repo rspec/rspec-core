@@ -49,6 +49,7 @@ module RSpec
               rescue Pending::PendingDeclaredInExample => e
                 @pending_declared_in_example = e.message
               rescue Exception => e
+                @example_group_instance.instance_eval { pry } if defined?(Pry)
                 set_exception(e)
               ensure
                 run_after_each

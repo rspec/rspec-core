@@ -21,6 +21,7 @@ gem "guard-rspec", "0.1.9"
 gem "growl", "1.0.3"
 gem "ZenTest", "~> 4.4.2"
 gem "nokogiri", "1.4.4"
+gem "pry", "0.8.2"
 
 platforms :mri_18 do
   gem 'ruby-debug'
