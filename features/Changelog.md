@@ -1,6 +1,6 @@
-### 2.6.0.rc3 / 2011-04-30
+### 2.6.0.rc4 / 2011-05-01
 
-[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.6.0.rc2...v2.6.0.rc3)
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.6.0.rc2...v2.6.0.rc4)
 
 * Bug fixes
   * Support multiple calls to any_instance in the same example (Sidu Ponnappa)
