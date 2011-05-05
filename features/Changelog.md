@@ -1,3 +1,10 @@
+### 2.5.2 / 2011-05-02
+
+[full changelog](http://github.com/rspec/rspec-core/compare/v2.5.1...v2.5.2)
+
+* Enhancements
+  * Remove deprecated default_executable from gemspec
+
 ### 2.5.1 / 2011-02-05
 
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.5.0...v2.5.1)

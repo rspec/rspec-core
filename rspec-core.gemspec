@@ -12,9 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = "rspec-core-#{RSpec::Core::Version::STRING}"
   s.description = "RSpec runner and example groups"
 
-  s.rubygems_version   = "1.3.7"
   s.rubyforge_project  = "rspec"
-  s.default_executable = "rspec"
 
   s.files            = `git ls-files`.split("\n")
   s.test_files       = `git ls-files -- {spec,features}/*`.split("\n")
