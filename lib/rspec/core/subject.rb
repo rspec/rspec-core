@@ -147,9 +147,26 @@ module RSpec
         #     it { should_not be_overdrawn }
         #   end
         #
+        #   or
+        #
+        #   describe CheckingAccount, "with $50" do
+        #     let(:checking_account) { CheckingAccount.new(:amount => 50, :currency => :USD) }
+        #     subject :checking_account
+        #
+        #     it { should have_a_balance_of(50, :USD) }
+        #     it { should_not be_overdrawn }
+        #   end
+        #
         # See +ExampleMethods#should+ for more information about this approach.
-        def subject(&block)
-          block ? @explicit_subject_block = block : explicit_subject || implicit_subject
+        def subject(accessor = nil, &block)
+          if accessor
+            warn('both accessor and block specified.') if block_given?
+            subject { send(accessor) }
+          elsif block_given?
+            @explicit_subject_block = block
+          else
+            explicit_subject || implicit_subject
+          end
         end
 
         attr_reader :explicit_subject_block # :nodoc:

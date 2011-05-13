@@ -60,6 +60,21 @@ module RSpec::Core
         end
       end
 
+      describe "defined by accessor" do
+        let(:group) do
+          ExampleGroup.describe do
+            let(:one) { 1 }
+            subject :one
+            it { should eq(1) }
+            it { subject.succ.should == 2 }
+          end
+        end
+
+        it "should set accessor's return value as a subject" do
+          group.run.should be_true
+        end
+      end
+
       describe "defined in a top level group" do
         let(:group) do
           ExampleGroup.describe do
