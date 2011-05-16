@@ -38,6 +38,7 @@ module RSpec
       add_setting :tty
       add_setting :treat_symbols_as_metadata_keys_with_true_values, :default => false
       add_setting :expecting_with_rspec
+      add_setting :before_all_instance_variables_excluded, :default => [ '@__memoized' ]
 
       CONDITIONAL_FILTERS = {
         :if     => lambda { |value, metadata| metadata.has_key?(:if) && !value },

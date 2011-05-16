@@ -758,6 +758,34 @@ module RSpec::Core
       end
     end
 
+    describe "let method called in before :all" do
+      let(:counter) do
+        Class.new do
+          def initialize
+            @count = 0
+          end
+          def count
+            @count += 1
+          end
+        end.new
+      end
+      
+      before :all do
+        counter.count.should == 1
+      end
+
+      it "should not propagate memoized values to examples" do
+        counter.count.should == 1
+      end
+
+      describe "in a nested group" do
+        let(:counter) { 'redefined' }
+
+        it "can be redefined" do
+           counter.should == 'redefined'
+        end
+      end
+    end
 
     describe "#top_level_description" do
       it "returns the description from the outermost example group" do
