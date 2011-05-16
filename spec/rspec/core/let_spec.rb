@@ -20,6 +20,14 @@ describe "#let" do
     counter.count.should == 1
     counter.count.should == 2
   end
+
+  describe "in nested a group" do
+    let(:counter) { 'redefined' }
+
+    it "can be redefined" do
+      counter.should == 'redefined'
+    end
+  end
 end
 
 describe "#let!" do
