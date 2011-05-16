@@ -98,6 +98,33 @@ understand how to use a feature, please submit issues to
 
 See [http://github.com/rspec/rspec-dev](http://github.com/rspec/rspec-dev)
 
+# Troubleshooting the environment
+
+## unterminated string meets end of file (SyntaxError)
+
+If you want to run tests without using rake, you have to know that running:
+
+    rspec .
+
+You will see syntax error, because rspec try to execute some files in lib folder.  
+When you want to run tests you have to run:
+
+    rspec spec/.
+
+Rspec will execute just the files in spec folder. Using rake you haven't this 
+problem.
+
+## different problem?
+
+If you run into a problem not documented here, please check the rspec-dev
+issues tracker to see if someone else has already reported it. If not, please
+add one.
+
+## solution to a problem not documented here?
+
+If you solve a problem that is not documented here, please share the love
+by submitting a patch to this README.
+
 ## Also see
 
 * [http://github.com/rspec/rspec](http://github.com/rspec/rspec)
