@@ -308,6 +308,12 @@ An error occurred in an after(:all) hook.
         ivars.each {|name, value| instance.instance_variable_set(name, value)}
       end
 
+      def self.method_added(m)
+        if m.to_s =~ /test_(.*)/
+          example($1) { method(m).call }
+        end
+      end
+
       def described_class
         self.class.described_class
       end

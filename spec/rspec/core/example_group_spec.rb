@@ -906,5 +906,19 @@ module RSpec::Core
       end
     end
 
+    describe "a method starting with test_" do
+      it "is generates an an example" do
+        group = ExampleGroup.describe do
+          def test_something_that_fails
+            1.should eq(2)
+          end
+        end
+
+        group.examples.length.should eq(1)
+        group.examples.first.description.should eq('something_that_fails')
+        group.run.should be_false, "expected a failure"
+      end
+    end
+
   end
 end
