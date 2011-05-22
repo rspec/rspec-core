@@ -128,7 +128,7 @@ module RSpec
 
       def self.inherited(child)
         child.register if child.top_level?
-        child.set_it_up(*$initialization_args)
+        child.set_it_up(*$initialization_args || [subject_for(child.name)])
         children << child
       end
 
@@ -312,6 +312,10 @@ An error occurred in an after(:all) hook.
         if m.to_s =~ /test_(.*)/
           example($1) { method(m).call }
         end
+      end
+
+      def self.subject_for(name)
+        name.gsub(/(^Describe|Spec|Test)/,'')
       end
 
       def described_class

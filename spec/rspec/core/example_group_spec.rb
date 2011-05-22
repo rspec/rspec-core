@@ -920,5 +920,14 @@ module RSpec::Core
       end
     end
 
+    describe "#subject_for" do
+      it "removes Test or Spec, or Describe from the name" do
+        group = ExampleGroup.describe
+        group.subject_for('FooTest').should eq('Foo')
+        group.subject_for('FooSpec').should eq('Foo')
+        group.subject_for('DescribeFoo').should eq('Foo')
+      end
+    end
+
   end
 end
