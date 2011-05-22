@@ -3,15 +3,17 @@ require 'spec_helper'
 module RSpec
   module Mocks
     describe "#any_instance" do
-      class CustomErrorForAnyInstanceSpec < StandardError;end
+      
+      CustomErrorForAnyInstanceSpec = Class.new(StandardError)
 
       let(:klass) do
         Class.new do
-          def existing_method; :existing_method_return_value; end
+          def existing_method; :existing_method_return_value end
           def another_existing_method; end
         end
       end
-      let(:existing_method_return_value){ :existing_method_return_value }
+      
+      let(:existing_method_return_value) { :existing_method_return_value }
 
       context "invocation order" do
         context "#stub" do
@@ -86,6 +88,13 @@ module RSpec
             klass.new.foo.should be(return_value)
             klass.new.foo.should be(return_value)
           end
+          
+          it "returns the object depending on what arguments are passed" do
+            klass.any_instance.stub(:foo).with(1).and_return(:one)
+            klass.any_instance.stub(:foo).with(2).and_return(:two)
+            klass.new.foo(1).should eq(:one)
+            klass.new.foo(2).should eq(:two)
+          end
         end
 
         context "with #and_yield" do
@@ -121,11 +130,6 @@ module RSpec
         end
 
         context "core ruby objects" do
-          it "works uniformly across *everything*" do
-            Object.any_instance.stub(:foo).and_return(1)
-            Object.new.foo.should eq(1)
-          end
-
           it "works with the non-standard constructor []" do
             Array.any_instance.stub(:foo).and_return(1)
             [].foo.should eq(1)
@@ -165,6 +169,15 @@ module RSpec
         let(:existing_method_expectation_error_message) { 'Exactly one instance should have received the following message(s) but didn\'t: existing_method' }
 
         context "with an expectation is set on a method which does not exist" do
+          it 'raises an error if invoked twice' do
+            klass.any_instance.should_receive(:bar)
+            instance = klass.new
+            instance.bar
+            expect { instance.bar }.to raise_error(
+              MockExpectationError, "The message :bar has already been received by #{instance}"
+            )
+          end
+          
           it "returns the expected value" do
             klass.any_instance.should_receive(:foo).and_return(1)
             klass.new.foo(1).should eq(1)
@@ -212,12 +225,14 @@ module RSpec
             it "fails if the method is invoked on a second instance" do
               instance_one = klass.new
               instance_two = klass.new
-              expect do
-                klass.any_instance.should_receive(:foo)
+              
+              klass.any_instance.should_receive(:foo)
 
-                instance_one.foo
-                instance_two.foo
-              end.to raise_error(RSpec::Mocks::MockExpectationError, "The message 'foo' was received by #{instance_two.inspect} but has already been received by #{instance_one.inspect}")
+              instance_one.foo
+
+              expect { instance_two.foo }.to raise_error(
+                NoMethodError, "undefined method `foo' for #{instance_two}"
+              )
             end
           end
 
@@ -232,7 +247,6 @@ module RSpec
                 error.message.should_not eq(existing_method_expectation_error_message)
               end)
             end
-
 
             it "pass when expectations are met" do
               klass.any_instance.should_receive(:foo)
@@ -269,7 +283,20 @@ module RSpec
               klass.any_instance.should_receive(:existing_method)
               klass.any_instance.should_receive(:another_existing_method)
               klass.rspec_verify
-            end.to raise_error(RSpec::Mocks::MockExpectationError, 'Exactly one instance should have received the following message(s) but didn\'t: another_existing_method, existing_method')
+            end.to raise_error(RSpec::Mocks::MockExpectationError,
+              'Exactly one instance should have received the following message(s) but didn\'t: another_existing_method, existing_method')
+          end
+          
+          it "allows multiple expectations on the same method if the arguments are different" do
+            klass.any_instance.should_receive(:existing_method).with(1).and_return(:one)
+            klass.any_instance.should_receive(:existing_method).with(2).and_return(:two)
+            
+            klass.new.existing_method.should eq(:existing_method_return_value)
+            
+            klass.new.existing_method(1).should eq(:one)
+            klass.new.existing_method(2).should eq(:two)
+            
+            klass.new.existing_method.should eq(:existing_method_return_value)
           end
 
           context "after any one instance has received a message" do
@@ -279,15 +306,10 @@ module RSpec
               klass.new
             end
 
-            it "fails if the method is invoked on a second instance" do
-              instance_one = klass.new
-              instance_two = klass.new
-              expect do
-                klass.any_instance.should_receive(:existing_method)
-
-                instance_one.existing_method
-                instance_two.existing_method
-              end.to raise_error(RSpec::Mocks::MockExpectationError, "The message 'existing_method' was received by #{instance_two.inspect} but has already been received by #{instance_one.inspect}")
+            it "passes if the method is invoked on a second instance" do
+              klass.any_instance.should_receive(:existing_method)
+              klass.new.existing_method
+              klass.new.existing_method
             end
           end
         end
@@ -567,6 +589,7 @@ module RSpec
             klass.any_instance.stub(:existing_method).and_return(true)
 
             klass.rspec_verify
+
             klass.new.should respond_to(:existing_method)
             klass.new.existing_method.should eq(existing_method_return_value)
           end
@@ -582,6 +605,20 @@ module RSpec
           instance = klass.new
           instance.foo
           RSpec::Mocks::space.send(:mocks).should include(instance)
+        end
+      end
+      
+      context 'with #stub and #should_receive used in the same example' do
+        it 'does not conflict with each other' do
+          klass.any_instance.stub(:foo).and_return(:foo)
+          klass.any_instance.stub(:foo).with(:arg).and_return(:foo_with_arg)
+          klass.any_instance.should_receive(:bar).and_return(:bar)
+          klass.any_instance.should_receive(:bar).with(:arg).and_return(:bar_with_arg)
+          
+          klass.new.foo.should eq(:foo)
+          klass.new.foo(:arg).should eq(:foo_with_arg)
+          klass.new.bar.should eq(:bar)
+          klass.new.bar(:arg).should eq(:bar_with_arg)
         end
       end
 

@@ -1,3 +1,8 @@
+### Dev
+
+* Bug fixes
+  * any_instance is instance agnostic. (Justin Ko)
+
 ### 2.6.0 / 2011-05-12
 
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.5.0...v2.6.0)
