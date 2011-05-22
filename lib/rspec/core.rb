@@ -31,6 +31,8 @@ require 'rspec/autorun' if $0.split(File::SEPARATOR).last == 'rcov'
 module RSpec
   autoload :Matchers, 'rspec/matchers'
 
+  ExampleGroup  = Core::ExampleGroup
+  TestCase      = Core::ExampleGroup
   SharedContext = Core::SharedContext
 
   module Core

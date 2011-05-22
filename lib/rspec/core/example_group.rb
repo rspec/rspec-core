@@ -118,29 +118,22 @@ module RSpec
       end
 
       def self.describe(*args, &example_group_block)
-        @_subclass_count ||= 0
-        @_subclass_count += 1
-        args << {} unless args.last.is_a?(Hash)
-        args.last.update(:example_group_block => example_group_block)
-
-        # TODO 2010-05-05: Because we don't know if const_set is thread-safe
-        child = const_set(
-          "Nested_#{@_subclass_count}",
-          subclass(self, args, &example_group_block)
-        )
-        children << child
+        $initialization_args = args
+        child = Class.new(self)
+        child.module_eval(&example_group_block) if example_group_block
         child
+      ensure
+        $initialization_args = nil
+      end
+
+      def self.inherited(child)
+        child.register if child.top_level?
+        child.set_it_up(*$initialization_args)
+        children << child
       end
 
       class << self
         alias_method :context, :describe
-      end
-
-      def self.subclass(parent, args, &example_group_block)
-        subclass = Class.new(parent)
-        subclass.set_it_up(*args)
-        subclass.module_eval(&example_group_block) if example_group_block
-        subclass
       end
 
       def self.children
