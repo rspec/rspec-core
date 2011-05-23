@@ -12,13 +12,6 @@ module RSpec
         attr_reader :example_count, :pending_count, :failure_count
         attr_reader :failed_examples, :pending_examples
 
-        def self.relative_path(line)
-          line = line.sub(File.expand_path("."), ".")
-          line = line.sub(/\A([^:]+:\d+)$/, '\\1')
-          return nil if line == '-e:1'
-          line
-        end
-
         def initialize(output)
           @output = output || StringIO.new
           @example_count = @pending_count = @failure_count = 0
@@ -120,7 +113,10 @@ module RSpec
 
         def backtrace_line(line)
           return nil if configuration.cleaned_from_backtrace?(line)
-          self.class.relative_path(line)
+          line = line.sub(File.expand_path("."), ".")
+          line = line.sub(/\A([^:]+:\d+)$/, '\\1')
+          return nil if line == '-e:1'
+          line
         end
 
         def read_failed_line(exception, example)
