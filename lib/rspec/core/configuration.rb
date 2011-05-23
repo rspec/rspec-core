@@ -37,7 +37,8 @@ module RSpec
       add_setting :backtrace_clean_patterns
       add_setting :tty
       add_setting :treat_symbols_as_metadata_keys_with_true_values, :default => false
-      add_setting :expecting_with_rspec
+      add_setting :expectation_frameworks
+
 
       CONDITIONAL_FILTERS = {
         :if     => lambda { |value, metadata| metadata.has_key?(:if) && !value },
@@ -52,12 +53,15 @@ module RSpec
         /lib\/rspec\/(core|expectations|matchers|mocks)/
       ]
 
+      DEFAULT_EXPECTATION_FRAMEWORKS = [:rspec]
+
       def initialize
         @color_enabled = false
         self.include_or_extend_modules = []
         self.files_to_run = []
         self.backtrace_clean_patterns = DEFAULT_BACKTRACE_PATTERNS.dup
         self.exclusion_filter = CONDITIONAL_FILTERS.dup
+        self.expectation_frameworks = DEFAULT_EXPECTATION_FRAMEWORKS.dup
       end
 
       def reset
@@ -179,41 +183,22 @@ module RSpec
         end
       end
 
-      # Returns the configured expectation framework adapter module(s)
-      def expectation_frameworks
-        expect_with :rspec unless settings[:expectation_frameworks]
-        settings[:expectation_frameworks]
-      end
-
-      # Delegates to expect_with([framework])
-      def expectation_framework=(framework)
-        expect_with([framework])
-      end
-
       # Sets the expectation framework module(s).
       #
-      # +frameworks+ can be :rspec, :stdlib, or both 
+      # +frameworks+ can be :rspec, :stdlib, or both
       #
       # Given :rspec, configures rspec/expectations.
       # Given :stdlib, configures test/unit/assertions
       # Given both, configures both
       def expect_with(*frameworks)
-        settings[:expectation_frameworks] = []
+        expectation_frameworks.clear
         frameworks.each do |framework|
-          case framework
-          when Symbol
-            case framework
-            when :rspec
-              require 'rspec/core/expecting/with_rspec'
-              self.expecting_with_rspec = true
-            when :stdlib
-              require 'rspec/core/expecting/with_stdlib'
-            else
-              raise ArgumentError, "#{framework.inspect} is not supported"
-            end
-            settings[:expectation_frameworks] << RSpec::Core::ExpectationFrameworkAdapter
-          end
+          settings[:expectation_frameworks] << framework
         end
+      end
+
+      def expecting_with_rspec?
+        expectation_frameworks.include?(:rspec)
       end
 
       def full_backtrace=(true_or_false)
@@ -360,6 +345,7 @@ EOM
       def inclusion_filter
         settings[:inclusion_filter] || {}
       end
+
       def filter_run_including(*args)
         force_overwrite = if args.last.is_a?(Hash) || args.last.is_a?(Symbol)
           false
@@ -411,7 +397,17 @@ EOM
 
       def configure_expectation_framework
         expectation_frameworks.each do |framework|
-          RSpec::Core::ExampleGroup.send(:include, framework)
+          case framework
+          when :rspec
+            require 'rspec/core/expecting/with_rspec'
+          when :stdlib
+            require 'rspec/core/expecting/with_stdlib'
+          else
+            raise ArgumentError, "#{framework.inspect} is not supported"
+          end
+        end
+        unless expectation_frameworks.empty?
+          RSpec::Core::ExampleGroup.send(:include, RSpec::Core::ExpectationFrameworkAdapter)
         end
       end
 

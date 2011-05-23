@@ -82,15 +82,9 @@ module RSpec::Core
 
     describe "#expectation_framework" do
       it "defaults to :rspec" do
+        config.expectation_frameworks = [:rspec]
         config.should_receive(:require).with('rspec/core/expecting/with_rspec')
-        config.expectation_frameworks
-      end
-    end
-
-    describe "#expectation_framework=" do
-      it "delegates to expect_with=" do
-        config.should_receive(:expect_with).with([:rspec])
-        config.expectation_framework = :rspec
+        config.configure_expectation_framework
       end
     end
 
@@ -98,8 +92,9 @@ module RSpec::Core
       [:rspec, :stdlib].each do |framework|
         context "with #{framework}" do
           it "requires the adapter for #{framework.inspect}" do
-            config.should_receive(:require).with("rspec/core/expecting/with_#{framework}")
             config.expect_with framework
+            config.should_receive(:require).with("rspec/core/expecting/with_#{framework}")
+            config.configure_expectation_framework
           end
         end
       end
@@ -107,6 +102,7 @@ module RSpec::Core
       it "raises ArgumentError if framework is not supported" do
         expect do
           config.expect_with :not_supported
+          config.configure_expectation_framework
         end.to raise_error(ArgumentError)
       end
     end
@@ -118,8 +114,8 @@ module RSpec::Core
         config.stub(:require)
       end
 
-      it "returns false by default" do
-        config.should_not be_expecting_with_rspec
+      it "returns true by default" do
+        config.should be_expecting_with_rspec
       end
 
       it "returns true when `expect_with :rspec` has been configured" do
