@@ -4,53 +4,35 @@ module RSpec
 
       class Player
         
-        MoreThanOneExpectationMethods = [
-          :once, 
-          :twice,
-          :any_number_of_times,
-          :exactly,
-          :times,
-          :never,
-          :at_least,
-          :at_most
-        ]
-        
-        attr_accessor :chains, :chain_id, :instance, :args, :block
+        attr_accessor :chain, :instance, :args, :block
         
         def play
-          case chain
-          when Stub then stub_playback
-          when Expectation then expectation_playback
-          end
+          chain.expectation? ? playback_expectation : playback_stub
         end
           
       private
-      
-        def chain
-          @chain ||= chains.find_by_id(chain_id)
+        
+        def playback_stub
+          chain.with_siblings.each(&playback_chain)
+          invoke(chain.method_name)
         end
         
-        def stub_playback
-          chains.find_with_siblings(chain).each(&playback_chain)
-          send_to_instance(chain.method_name)
+        def playback_expectation
+          playable_chains.empty? ? invoke_backup : play_playable_chains
         end
         
-        def expectation_playback
-          if playable_chains.empty?
-            send_to_backup_method
-          else
-            playable_chains.each(&playback_chain)
-            result = send_to_instance(chain.method_name)
-            override_with_expectation_error if override_with_expectation_error?
-            result
-          end
+        def play_playable_chains
+          playable_chains.each(&playback_chain)
+          result = invoke(chain.method_name)
+          expect_once if expected_once?
+          result
         end
         
-        def override_with_expectation_error?
-          not chain.messages.any? {|message| MoreThanOneExpectationMethods.include? message.name }
+        def expected_once?
+          not chain.any_single_instance_messages?
         end
         
-        def override_with_expectation_error
+        def expect_once
           instance.instance_eval(<<-EOM, __FILE__, __LINE__)
             def #{chain.method_name}(*args, &blk)
               raise MockExpectationError,
@@ -60,28 +42,25 @@ module RSpec
         end
         
         def playable_chains
-          chains.find_with_siblings(chain).unplayed.has_playable_messages(args)
+          @playable_chains ||= chain.with_siblings.unplayed.playable(args)
         end
         
         def playback_chain
           lambda do |chain|
             chain.instance = instance
             chain.playback
-            if chain.expectation?
-              chain.played! 
-              chain.fulfilled!
-            end
+            chain.played = chain.fulfilled = true if chain.expectation?
           end
         end
         
-        def send_to_backup_method
-          send_to_instance(chain.alias_method_name)
-        rescue NoMethodError => exception
-          raise NoMethodError, "undefined method `#{chain.method_name}' for #{instance}", exception.backtrace
+        def invoke_backup
+          invoke(chain.alias_method_name)
+        rescue NoMethodError => ex
+          raise ex.class, "undefined method `#{chain.method_name}' for #{instance}", ex.backtrace
         end
         
-        def send_to_instance(method_name)
-          instance.send(method_name, *args, &block)
+        def invoke(name)
+          instance.send(name, *args, &block)
         end
         
       end

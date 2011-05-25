@@ -25,7 +25,7 @@ module RSpec
           chainable { select {|c| c.method_name == chain.method_name } }
         end
         
-        def has_playable_messages(args)
+        def playable(args)
           chainable { reject {|chain| chain.any_unplayable_messages?(args) } }
         end
         

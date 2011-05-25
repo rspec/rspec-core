@@ -19,16 +19,8 @@ module RSpec
           }
         end
         
-        def played!
-          self.played = true
-        end
-        
         def played?
           !!played
-        end
-
-        def fulfilled!
-          self.fulfilled = true
         end
 
         def fulfilled?
@@ -38,10 +30,16 @@ module RSpec
         def any_unplayable_messages?(args)
           messages.any? {|message| message.unplayable?(args) }
         end
+        
+        def any_single_instance_messages?
+          messages.any? {|message| message.single_instance? }
+        end
 
-        private
+      private
+        
         def verify_invocation_order(rspec_method_name, *args, &block)
         end
+        
       end
       
     end

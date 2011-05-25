@@ -112,6 +112,10 @@ module RSpec
           recorded_class.class_eval(code, __FILE__, __LINE__)
         end
         
+        def with_siblings
+          recorded_class.__recorder.chains.find_with_siblings(self)
+        end
+        
       end
     
     end

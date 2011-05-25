@@ -4,6 +4,8 @@ module RSpec
       
       class Recorder
         
+        attr_reader :chains
+        
         def initialize(class_to_record)
           @class, @chains = class_to_record, Chains.new
         end
@@ -18,8 +20,7 @@ module RSpec
       
         def playback(instance, chain_id, *args, &block)
           player          = Player.new
-          player.chains   = @chains
-          player.chain_id = chain_id
+          player.chain    = chains.find_by_id(chain_id)
           player.instance = instance
           player.args     = args
           player.block    = block
@@ -29,12 +30,13 @@ module RSpec
         def verify
           if unfulfilled_expectations.any?
             raise MockExpectationError,
-                  "Exactly one instance should have received the following message(s) but didn't: #{unfulfilled_expectation_names}"
+                  "Exactly one instance should have received the following message(s)" +
+                  " but didn't: #{unfulfilled_expectation_names}"
           end
         end
         
         def remove_chains
-          @chains.each {|chain| chain.restore }
+          chains.each {|chain| chain.restore }
         end
         
       private
@@ -44,11 +46,11 @@ module RSpec
         end
         
         def unfulfilled_expectations
-          @chains.expectations.reject {|expectation| expectation.fulfilled? }
+          chains.expectations.reject {|expectation| expectation.fulfilled? }
         end
 
         def add_chain(chain)      
-          @chains.add chain.attach(@class)
+          chains.add chain.attach(@class)
         end
 
       end
