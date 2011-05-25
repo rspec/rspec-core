@@ -174,7 +174,7 @@ module RSpec
             instance = klass.new
             instance.bar
             expect { instance.bar }.to raise_error(
-              MockExpectationError, "The message :bar has already been received by #{instance}"
+              RSpec::Mocks::MockExpectationError, "The message :bar has already been received by #{instance}"
             )
           end
           
