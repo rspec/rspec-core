@@ -34,7 +34,7 @@ module RSpec
         end
         
         def remove_chains
-          @chains.each {|chain| restore_method(chain) }
+          @chains.each {|chain| chain.restore }
         end
         
       private
@@ -46,53 +46,9 @@ module RSpec
         def unfulfilled_expectations
           @chains.expectations.reject {|expectation| expectation.fulfilled? }
         end
-      
-        def restore_method(chain)
-          if @class.method_defined?(chain.alias_method_name)
-            restore_original_method(chain)
-          else
-            remove_dummy_method(chain) if chain.dummy?
-          end
-        end
-      
-        def restore_original_method(chain)
-          @class.class_eval do
-            alias_method chain.method_name, chain.alias_method_name
-            remove_method chain.alias_method_name
-          end
-        end
-      
-        def remove_dummy_method(chain)
-          @class.class_eval { remove_method(chain.method_name) }
-        end
 
-        def add_chain(chain)
-          backup_method(chain) unless method_backed_up?(chain)
-          add_playback_method(chain)
-          @chains.add(chain)
-        end
-        
-        def add_playback_method(chain)
-          @class.class_eval(<<-EOM, __FILE__, __LINE__)
-            def #{chain.method_name}(*args, &blk)
-              Mocks.space.add(self)
-              self.class.__recorder.playback(self, #{chain.object_id}, *args, &blk)
-            end
-          EOM
-        end
-        
-        def backup_method(chain)
-          @class.class_eval do
-            if method_defined?(chain.method_name)
-              alias_method chain.alias_method_name, chain.method_name
-            else
-              chain.dummy!
-            end
-          end
-        end
-        
-        def method_backed_up?(chain)
-          @chains.method_names.include?(chain.method_name)
+        def add_chain(chain)        
+          @chains.add(chain.attach(@class))
         end
 
       end

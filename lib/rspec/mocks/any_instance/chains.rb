@@ -9,10 +9,6 @@ module RSpec
           chain
         end
         
-        def method_names
-          map {|chain| chain.method_name }
-        end
-        
         def find_by_id(id)
           find {|chain| chain.object_id == id }
         end
