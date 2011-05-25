@@ -25,6 +25,10 @@ module RSpec
           end
         end
         
+        def expectation?
+          is_a?(Expectation)
+        end
+        
         def dummy!
           self.dummy = true
         end

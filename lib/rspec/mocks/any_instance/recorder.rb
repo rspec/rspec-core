@@ -16,12 +16,14 @@ module RSpec
           add_chain Expectation.new(method_name, *args, &block)
         end
       
-        def playback(instance, chain_id, *args, &block)          
-          Player.new(:chains => @chains,
-                     :instance => instance,
-                     :chain => @chains.find_by_id(chain_id),
-                     :args => args,
-                     :block => block).play
+        def playback(instance, chain_id, *args, &block)
+          player          = Player.new
+          player.chains   = @chains
+          player.chain_id = chain_id
+          player.instance = instance
+          player.args     = args
+          player.block    = block
+          player.play
         end
 
         def verify
