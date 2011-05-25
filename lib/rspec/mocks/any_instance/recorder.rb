@@ -47,8 +47,8 @@ module RSpec
           @chains.expectations.reject {|expectation| expectation.fulfilled? }
         end
 
-        def add_chain(chain)        
-          @chains.add(chain.attach(@class))
+        def add_chain(chain)      
+          @chains.add chain.attach(@class)
         end
 
       end

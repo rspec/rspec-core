@@ -19,6 +19,10 @@ module RSpec
             EOM
         end
         
+        def playback
+          messages.inject(instance) {|i, message| message.invoke(i) }
+        end
+        
         def attach(cls)
           self.recorded_class = cls
           backup unless backed_up?
@@ -62,12 +66,6 @@ module RSpec
         
         def remove
           recorded_class_eval "remove_method(:#{method_name})"
-        end
-
-        def playback
-          messages.inject(instance) do |instance, message|
-            instance.send(message.name, *message.args, &message.block)
-          end
         end
         
         def expectation?

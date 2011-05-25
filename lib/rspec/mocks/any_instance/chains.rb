@@ -14,24 +14,24 @@ module RSpec
         end
         
         def unplayed
-          chain { reject {|chain| chain.played? } }
+          chainable { reject {|chain| chain.played? } }
         end
         
         def expectations
-          chain { select {|chain| chain.is_a?(Expectation) } }
+          chainable { select {|chain| chain.is_a?(Expectation) } }
         end
         
         def find_with_siblings(chain)
-          chain { select {|c| c.method_name == chain.method_name } }
+          chainable { select {|c| c.method_name == chain.method_name } }
         end
         
         def has_playable_messages(args)
-          chain { reject {|chain| chain.any_unplayable_messages?(args) } }
+          chainable { reject {|chain| chain.any_unplayable_messages?(args) } }
         end
         
       private
         
-        def chain
+        def chainable
           self.class.new yield
         end
 
