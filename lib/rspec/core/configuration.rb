@@ -460,6 +460,9 @@ MESSAGE
         when 'p', 'progress'
           require 'rspec/core/formatters/progress_formatter'
           RSpec::Core::Formatters::ProgressFormatter
+        when 'j', 'junit'
+          require 'rspec/core/formatters/j_unit_formatter'
+          RSpec::Core::Formatters::JUnitFormatter
         end
       end
 
