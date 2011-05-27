@@ -2,6 +2,7 @@
 
 * Bug fixes
   * any_instance is instance agnostic. (Justin Ko)
+  * pass a hash to `any_instance.stub`. (Justin Ko)
 
 ### 2.6.0 / 2011-05-12
 
