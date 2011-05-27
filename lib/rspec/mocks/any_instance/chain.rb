@@ -6,17 +6,16 @@ module RSpec
         
         attr_accessor :recorded_class, :instance, :dummy
         
-        [
-          :with, :and_return, :and_raise, :and_yield,
+        [ :with, :and_return, :and_raise, :and_yield,
           :once, :twice, :any_number_of_times,
           :exactly, :times, :never,
           :at_least, :at_most
-          ].each do |method_name|
-            class_eval(<<-EOM, __FILE__, __LINE__)
-              def #{method_name}(*args, &block)
-                record(:#{method_name}, *args, &block)
-              end
-            EOM
+        ].each do |method_name|
+          class_eval(<<-EOM, __FILE__, __LINE__)
+            def #{method_name}(*args, &block)
+              record(:#{method_name}, *args, &block)
+            end
+          EOM
         end
         
         def playback
@@ -27,7 +26,6 @@ module RSpec
           self.recorded_class = cls
           backup unless backed_up?
           hijack
-          self
         end
         
         def backup
@@ -94,17 +92,13 @@ module RSpec
           end
         end
 
-        def messages
-          @messages ||= []
-        end
-
         def last_message
           messages.last.name unless messages.empty?
         end
 
         def record(method_name, *args, &block)
           verify_invocation_order(method_name, *args, &block)
-          messages << Message.new(method_name, args, block)
+          add_message(method_name, *args, &block)
           self
         end
         
@@ -114,6 +108,14 @@ module RSpec
         
         def with_siblings
           recorded_class.__recorder.chains.find_with_siblings(self)
+        end
+        
+        def add_message(method_name, *args, &block)
+          messages.push Message.new(method_name, args, block)
+        end
+        
+        def messages
+          @messages ||= []
         end
         
       end

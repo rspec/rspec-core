@@ -9,15 +9,23 @@ module RSpec
         def initialize(class_to_record)
           @class, @chains = class_to_record, Chains.new
         end
-
-        def stub(method_name, *args, &block)
-          add_chain Stub.new(method_name, *args, &block)
+        
+        def should_receive(sym, *args, &block)
+          add_chain Expectation.new(sym, *args, &block)
         end
 
-        def should_receive(method_name, *args, &block)
-          add_chain Expectation.new(method_name, *args, &block)
+        def stub(sym_or_hash, *args, &block)
+          if Hash === sym_or_hash
+            sym_or_hash.each do |method, value|
+              chain = Stub.new(method, *args, &block)
+              chain.add_message(:and_return, value)
+              add_chain(chain)
+            end
+          else
+            add_chain Stub.new(sym_or_hash, *args, &block)
+          end
         end
-      
+
         def playback(instance, chain_id, *args, &block)
           player          = Player.new
           player.chain    = chains.find_by_id(chain_id)
@@ -49,8 +57,9 @@ module RSpec
           chains.expectations.reject {|expectation| expectation.fulfilled? }
         end
 
-        def add_chain(chain)      
-          chains.add chain.attach(@class)
+        def add_chain(chain)
+          chain.attach(@class)
+          chains.add(chain)
         end
 
       end
