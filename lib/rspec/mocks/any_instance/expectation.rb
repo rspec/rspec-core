@@ -9,15 +9,6 @@ module RSpec
         def initialize(*args, &block)
           record(:should_receive, *args, &block)
         end
-
-        def invocation_order
-          @invocation_order ||= {
-            :should_receive => [nil],
-            :with => [:should_receive],
-            :and_return => [:with, :should_receive],
-            :and_raise => [:with, :should_receive]
-          }
-        end
         
         def played?
           !!played
@@ -33,11 +24,6 @@ module RSpec
         
         def any_single_instance_messages?
           messages.any? {|message| message.single_instance? }
-        end
-
-      private
-        
-        def verify_invocation_order(rspec_method_name, *args, &block)
         end
         
       end

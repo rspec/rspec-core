@@ -4,6 +4,15 @@ module RSpec
       
       class Chain
         
+        InvocationOrder = {
+          :stub => [nil],
+          :should_receive => [nil],
+          :with => [:stub, :should_receive],
+          :and_return => [:with, :stub, :should_receive],
+          :and_raise => [:with, :stub, :should_receive],
+          :and_yield => [:with, :stub]
+        }
+        
         attr_accessor :recorded_class, :instance, :dummy
         
         [ :with, :and_return, :and_raise, :and_yield,
@@ -92,14 +101,18 @@ module RSpec
           end
         end
 
-        def last_message
-          messages.last.name unless messages.empty?
-        end
-
         def record(method_name, *args, &block)
           verify_invocation_order(method_name, *args, &block)
           add_message(method_name, *args, &block)
           self
+        end
+        
+        def verify_invocation_order(rspec_method_name, *args, &block)
+          if invocation_order = InvocationOrder[rspec_method_name]
+            unless invocation_order.include?(last_message)
+              raise NoMethodError, "Undefined method #{rspec_method_name}"
+            end
+          end
         end
         
         def recorded_class_eval(code)
@@ -112,6 +125,10 @@ module RSpec
         
         def add_message(method_name, *args, &block)
           messages.push Message.new(method_name, args, block)
+        end
+        
+        def last_message
+          messages.last.name unless messages.empty?
         end
         
         def messages
