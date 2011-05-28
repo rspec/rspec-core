@@ -63,7 +63,7 @@ end
 namespace :clobber do
   desc "remove generated rbc files"
   task :rbc do
-    `find . -name "*.rbc" | xargs rm`
+    Dir['**/*.rbc'].each {|f| File.delete(f)}
   end
 end
 
