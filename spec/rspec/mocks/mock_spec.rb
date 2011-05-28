@@ -89,7 +89,7 @@ module RSpec
       end
 
       it "returns the previously stubbed value if no return value is set" do
-        @mock.stub!(:something).with("a","b","c").and_return(:stubbed_value)
+        @mock.stub(:something).with("a","b","c").and_return(:stubbed_value)
         @mock.should_receive(:something).with("a","b","c")
         @mock.something("a","b","c").should == :stubbed_value
         @mock.rspec_verify

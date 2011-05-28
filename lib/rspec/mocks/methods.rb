@@ -11,7 +11,7 @@ module RSpec
       
       def stub(sym_or_hash, opts={}, &block)
         if Hash === sym_or_hash
-          sym_or_hash.each {|method, value| stub!(method).and_return value }
+          sym_or_hash.each {|method, value| stub(method).and_return value }
         else
           __mock_proxy.add_stub(caller(1)[0], sym_or_hash.to_sym, opts, &block)
         end
