@@ -60,6 +60,13 @@ task :clobber do
   rm_rf 'coverage'
 end
 
+namespace :clobber do
+  desc "remove generated rbc files"
+  task :rbc do
+    `find . -name "*.rbc" | xargs rm`
+  end
+end
+
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
