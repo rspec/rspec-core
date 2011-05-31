@@ -29,7 +29,6 @@ module RSpec
           end
         end
 
-        private
         def messages
           @messages ||= []
         end
@@ -110,14 +109,20 @@ module RSpec
         end
 
         def stub(method_name, *args, &block)
-          observe!(method_name)
-          @message_chains[method_name] = StubChain.new(method_name, *args, &block)
+          if Hash === method_name
+            method_name.each do |method_name, value|
+              chain = add_chain(:stub, method_name, args, &block)
+              chain.messages << [[:and_return, value], block]
+              chain
+            end
+          else
+            add_chain(:stub, method_name, *args, &block)
+          end
         end
 
         def should_receive(method_name, *args, &block)
-          observe!(method_name)
           @expectation_set = true
-          @message_chains[method_name] = ExpectationChain.new(method_name, *args, &block)
+          add_chain(:expectation, method_name, *args, &block)
         end
 
         def stop_all_observation!
@@ -208,6 +213,13 @@ module RSpec
 
         def already_observing?(method_name)
           @observed_methods.include?(method_name)
+        end
+        
+        def add_chain(chain_type, method_name, *args, &block)
+          observe!(method_name)
+          chain_class = StubChain if chain_type == :stub
+          chain_class = ExpectationChain if chain_type == :expectation
+          @message_chains[method_name] = chain_class.new(method_name, *args, &block)
         end
 
         def observe!(method_name)

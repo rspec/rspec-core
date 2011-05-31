@@ -89,7 +89,7 @@ module RSpec
       end
 
       it "returns the previously stubbed value if no return value is set" do
-        @mock.stub!(:something).with("a","b","c").and_return(:stubbed_value)
+        @mock.stub(:something).with("a","b","c").and_return(:stubbed_value)
         @mock.should_receive(:something).with("a","b","c")
         @mock.something("a","b","c").should == :stubbed_value
         @mock.rspec_verify
@@ -137,7 +137,19 @@ module RSpec
           @mock.rspec_verify
         }.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: (\"a\", \"d\", \"c\")")
       end
-
+      
+      describe 'with a method that has a default argument' do
+        it "raises an exception if the arguments don't match when the method is called, correctly reporting the offending arguments" do
+          def @mock.method_with_default_argument(arg={}); end
+          @mock.should_receive(:method_with_default_argument).with({})
+          
+          expect {
+            @mock.method_with_default_argument(nil)
+            @mock.rspec_verify
+          }.to raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :method_with_default_argument with unexpected arguments\n  expected: ({})\n       got: (nil)")
+        end
+      end
+      
       it "fails if unexpected method called" do
         lambda {
           @mock.something("a","b","c")

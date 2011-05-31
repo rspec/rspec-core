@@ -1,16 +1,14 @@
-### 2.6.0.rc4 / 2011-05-01
-
-[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.6.0.rc2...v2.6.0.rc4)
+### Dev
 
 * Bug fixes
-  * Support multiple calls to any_instance in the same example (Sidu Ponnappa)
+  * pass a hash to `any_instance.stub`. (Justin Ko)
 
-### 2.6.0.rc2 / 2011-04-18
+### 2.6.0 / 2011-05-12
 
-[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.5.0...v2.6.0.rc2)
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.5.0...v2.6.0)
 
 * Enhancements
-  * Add support for any_instance.stub and any_instance.should_receive (Sidu
+  * Add support for `any_instance.stub` and `any_instance.should_receive` (Sidu
     Ponnappa and Andy Lindeman)
 
 * Bug fixes

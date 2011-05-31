@@ -70,7 +70,7 @@ module RSpec
 
       def assign_stubs(stubs)
         stubs.each_pair do |message, response|
-          stub!(message).and_return(response)
+          stub(message).and_return(response)
         end
       end
     end

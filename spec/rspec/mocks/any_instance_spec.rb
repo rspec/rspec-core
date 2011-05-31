@@ -68,6 +68,21 @@ module RSpec
             instance.foo.should eq(result)
           end
         end
+        
+        context "with a block" do
+          before { klass.any_instance.stub(:foo => 1, :bar => 2) }
+
+          it "stubs a method" do
+            instance = klass.new
+            instance.foo.should eq(1)
+            instance.bar.should eq(2)
+          end
+
+          it "returns the same value for calls on different instances" do
+            klass.new.foo.should eq(klass.new.foo)
+            klass.new.bar.should eq(klass.new.bar)
+          end
+        end
 
         context "with #and_return" do
           it "stubs a method that doesn't exist" do
