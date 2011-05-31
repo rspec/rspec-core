@@ -69,6 +69,25 @@ module RSpec
           end
         end
         
+        context "with argument matching" do
+          before do 
+            klass.any_instance.stub(:foo).with(:param_one, :param_two).and_return(:result_one)
+            klass.any_instance.stub(:foo).with(:param_three, :param_four).and_return(:result_two)
+          end
+          
+          it "returns the stubbed value when arguments match" do
+            instance = klass.new
+            instance.foo(:param_one, :param_two).should eq(:result_one)
+            instance.foo(:param_three, :param_four).should eq(:result_two)
+          end
+
+          it "fails the spec with an expectation error when the arguments do not match" do
+            expect do
+              klass.new.foo(:param_one, :param_three)
+            end.to(raise_error(RSpec::Mocks::MockExpectationError))
+          end
+        end
+        
         context "with multiple stubs" do
           before do 
             klass.any_instance.stub(:foo).and_return(1) 
@@ -307,6 +326,32 @@ module RSpec
                 instance_two.existing_method
               end.to raise_error(RSpec::Mocks::MockExpectationError, "The message 'existing_method' was received by #{instance_two.inspect} but has already been received by #{instance_one.inspect}")
             end
+          end
+        end
+
+        context "with argument matching" do
+          before do 
+            klass.any_instance.should_receive(:foo).with(:param_one, :param_two).and_return(:result_one)
+            klass.any_instance.should_receive(:foo).with(:param_three, :param_four).and_return(:result_two)
+          end
+          
+          it "returns the expected value when arguments match" do
+            instance = klass.new
+            instance.foo(:param_one, :param_two).should eq(:result_one)
+            instance.foo(:param_three, :param_four).should eq(:result_two)
+          end
+
+          it "fails when the arguments match but different instances are used" do
+            expect do
+              klass.new.foo(:param_one, :param_two).should eq(:result_one)
+              klass.new.foo(:param_three, :param_four).should eq(:result_two)
+            end.to(raise_error(RSpec::Mocks::MockExpectationError))
+          end
+          
+          it "fails when arguments do not match" do
+            expect do
+              klass.new.foo(:param_one, :param_three)
+            end.to(raise_error(RSpec::Mocks::MockExpectationError))
           end
         end
 
