@@ -69,8 +69,11 @@ module RSpec
           end
         end
         
-        context "with a block" do
-          before { klass.any_instance.stub(:foo => 1, :bar => 2) }
+        context "with multiple stubs" do
+          before do 
+            klass.any_instance.stub(:foo).and_return(1) 
+            klass.any_instance.stub(:bar).and_return(2) 
+          end
 
           it "stubs a method" do
             instance = klass.new
