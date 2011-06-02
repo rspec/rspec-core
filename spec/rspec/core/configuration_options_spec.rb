@@ -103,8 +103,13 @@ describe RSpec::Core::ConfigurationOptions do
 
   describe '--line_number' do
     it "sets :line_number" do
-      parse_options('-l','3').should include(:line_number => '3')
-      parse_options('--line_number','3').should include(:line_number => '3')
+      parse_options('-l','3').should include(:line_numbers => ['3'])
+      parse_options('--line_number','3').should include(:line_numbers => ['3'])
+    end
+
+    it "can be specified multiple times" do
+      parse_options('-l','3', '-l', '6').should include(:line_numbers => ['3', '6'])
+      parse_options('--line_number','3', '--line_number', '6').should include(:line_numbers => ['3', '6'])
     end
   end
 
@@ -112,6 +117,11 @@ describe RSpec::Core::ConfigurationOptions do
     it "sets :full_description" do
       parse_options('--example','foo').should include(:full_description => /foo/)
       parse_options('-e','bar').should include(:full_description => /bar/)
+    end
+
+    it "can be specified multiple times" do
+      parse_options('--example','foo', '--example', 'bar').should include(:full_description => /(?-mix:foo)|(?-mix:bar)/)
+      parse_options('-e','bar', '-e', 'baz').should include(:full_description => /(?-mix:bar)|(?-mix:baz)/)
     end
   end
 
@@ -286,8 +296,8 @@ describe RSpec::Core::ConfigurationOptions do
 
     context "--drb specified in ARGV" do
       it "renders all the original arguments except --drb" do
-        config_options_object(*%w[ --drb --color --format s --line_number 1 --example pattern --profile --backtrace -I path/a -I path/b --require path/c --require path/d]).
-          drb_argv.should eq(%w[ --color --profile --backtrace --line_number 1 --example pattern --format s -I path/a -I path/b --require path/c --require path/d])
+        config_options_object(*%w[ --drb --color --format s --example pattern --line_number 1 --profile --backtrace -I path/a -I path/b --require path/c --require path/d]).
+          drb_argv.should eq(%w[ --color --profile --backtrace --example pattern --line_number 1 --format s -I path/a -I path/b --require path/c --require path/d])
       end
     end
 
@@ -295,8 +305,8 @@ describe RSpec::Core::ConfigurationOptions do
       it "renders all the original arguments except --drb" do
         File.stub(:exist?) { true }
         IO.stub(:read) { "--drb --color" }
-        config_options_object(*%w[ --tty --format s --line_number 1 --example pattern --profile --backtrace ]).
-          drb_argv.should eq(%w[ --color --profile --backtrace --tty --line_number 1 --example pattern --format s])
+        config_options_object(*%w[ --tty --format s --example pattern --line_number 1 --profile --backtrace ]).
+          drb_argv.should eq(%w[ --color --profile --backtrace --tty --example pattern --line_number 1 --format s])
       end
     end
 
@@ -304,8 +314,8 @@ describe RSpec::Core::ConfigurationOptions do
       it "renders all the original arguments except --drb" do
         File.stub(:exist?) { true }
         IO.stub(:read) { "--drb --color" }
-        config_options_object(*%w[ --drb --format s --line_number 1 --example pattern --profile --backtrace]).
-          drb_argv.should eq(%w[ --color --profile --backtrace --line_number 1 --example pattern --format s])
+        config_options_object(*%w[ --drb --format s --example pattern --line_number 1 --profile --backtrace]).
+          drb_argv.should eq(%w[ --color --profile --backtrace --example pattern --line_number 1 --format s])
       end
     end
 
@@ -313,8 +323,8 @@ describe RSpec::Core::ConfigurationOptions do
       it "renders all the original arguments except --drb and --options" do
         File.stub(:exist?) { true }
         IO.stub(:read) { "--drb --color" }
-        config_options_object(*%w[ --drb --format s --line_number 1 --example pattern --profile --backtrace]).
-          drb_argv.should eq(%w[ --color --profile --backtrace --line_number 1 --example pattern --format s ])
+        config_options_object(*%w[ --drb --format s --example pattern --line_number 1 --profile --backtrace]).
+          drb_argv.should eq(%w[ --color --profile --backtrace --example pattern --line_number 1 --format s ])
       end
     end
   end
@@ -348,7 +358,7 @@ describe RSpec::Core::ConfigurationOptions do
       ENV["SPEC_OPTS"] = "--debug"
       options = parse_options("--drb")
       options[:color_enabled].should be_true
-      options[:line_number].should eq("37")
+      options[:line_numbers].should eq(["37"])
       options[:debug].should be_true
       options[:drb].should be_true
     end
