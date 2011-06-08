@@ -16,8 +16,11 @@ module RSpec
           }
         end
 
-        def expectation_filfilled?
+        def expectation_fulfilled?
           true
+        end
+        
+        def expectation_fulfilled!
         end
 
         private

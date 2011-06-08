@@ -8,6 +8,7 @@ module RSpec
       let(:klass) do
         Class.new do
           def existing_method; :existing_method_return_value; end
+          def existing_method_with_arguments(arg_one, arg_two); :existing_method_with_arguments_return_value; end
           def another_existing_method; end
         end
       end
@@ -345,13 +346,20 @@ module RSpec
             expect do
               klass.new.foo(:param_one, :param_two).should eq(:result_one)
               klass.new.foo(:param_three, :param_four).should eq(:result_two)
-            end.to(raise_error(RSpec::Mocks::MockExpectationError))
+            end.to raise_error(RSpec::Mocks::MockExpectationError)
+          end
+
+          it "is not affected by the invocation of existing methods on other instances" do
+            klass.new.existing_method_with_arguments(:param_one, :param_two).should eq(:existing_method_with_arguments_return_value)
+            instance = klass.new
+            instance.foo(:param_one, :param_two).should eq(:result_one)
+            instance.foo(:param_three, :param_four).should eq(:result_two)
           end
           
           it "fails when arguments do not match" do
             expect do
               klass.new.foo(:param_one, :param_three)
-            end.to(raise_error(RSpec::Mocks::MockExpectationError))
+            end.to raise_error(RSpec::Mocks::MockExpectationError)
           end
         end
 

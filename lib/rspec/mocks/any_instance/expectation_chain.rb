@@ -20,7 +20,7 @@ module RSpec
           @expectation_fulfilled = true
         end
 
-        def expectation_filfilled?
+        def expectation_fulfilled?
           @expectation_fulfilled || constrained_to_any_of?(:never, :any_number_of_times)
         end
 

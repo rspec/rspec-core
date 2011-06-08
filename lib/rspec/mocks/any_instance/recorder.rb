@@ -3,22 +3,28 @@ module RSpec
     module AnyInstance
       class Recorder
         def initialize(klass)
-          @message_chains = {}
+          @message_chains = MessageChains.new
           @observed_methods = []
           @played_methods = {}
           @klass = klass
           @expectation_set = false
         end
 
+        def message_chains
+          @message_chains
+        end
+        
         def stub(method_name, *args, &block)
           observe!(method_name)
-          @message_chains[method_name] = StubChain.new(method_name, *args, &block)
+          message_chains.add(method_name, chain = StubChain.new(method_name, *args, &block))
+          chain
         end
 
         def should_receive(method_name, *args, &block)
           observe!(method_name)
           @expectation_set = true
-          @message_chains[method_name] = ExpectationChain.new(method_name, *args, &block)
+          message_chains.add(method_name, chain = ExpectationChain.new(method_name, *args, &block))
+          chain
         end
 
         def stop_all_observation!
@@ -29,9 +35,9 @@ module RSpec
 
         def playback!(instance, method_name)
           RSpec::Mocks::space.add(instance)
-          @message_chains[method_name].playback!(instance)
+          message_chains.playback!(instance, method_name)
           @played_methods[method_name] = instance
-          received_expected_message!(method_name) if has_expectation?(method_name)
+          received_expected_message!(method_name) if message_chains.has_expectation?(method_name)
         end
 
         def instance_that_received(method_name)
@@ -39,34 +45,18 @@ module RSpec
         end
 
         def verify
-          if @expectation_set && !each_expectation_filfilled?
-            raise RSpec::Mocks::MockExpectationError, "Exactly one instance should have received the following message(s) but didn't: #{unfulfilled_expectations.sort.join(', ')}"
+          if @expectation_set && !message_chains.each_expectation_fulfilled?
+            raise RSpec::Mocks::MockExpectationError, "Exactly one instance should have received the following message(s) but didn't: #{message_chains.unfulfilled_expectations.sort.join(', ')}"
           end
         end
 
         private
-        def each_expectation_filfilled?
-          @message_chains.all? do |method_name, chain|
-            chain.expectation_filfilled?
-          end
-        end
-
-        def has_expectation?(method_name)
-          @message_chains[method_name].is_a?(ExpectationChain)
-        end
-
-        def unfulfilled_expectations
-          @message_chains.map do |method_name, chain|
-            method_name.to_s if chain.is_a?(ExpectationChain) unless chain.expectation_filfilled?
-          end.compact
-        end
-
         def received_expected_message!(method_name)
-          @message_chains[method_name].expectation_fulfilled!
+          message_chains.received_expected_message!(method_name)
           restore_method!(method_name)
           mark_invoked!(method_name)
         end
-
+        
         def restore_method!(method_name)
           if @klass.method_defined?(build_alias_method_name(method_name))
             restore_original_method!(method_name)
