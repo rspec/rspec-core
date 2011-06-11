@@ -51,14 +51,6 @@ namespace :clobber do
   end
 end
 
-require 'rdoc/task'
-RDoc::Task.new do |rdoc|
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "rspec-mocks #{RSpec::Mocks::Version::STRING}"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
-end
-
 desc "Push docs/cukes to relishapp using the relish-client-gem"
 task :relish, :version do |t, args|
   raise "rake relish[VERSION]" unless args[:version]
