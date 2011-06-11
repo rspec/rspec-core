@@ -9,7 +9,7 @@ describe "a double receiving to_ary" do
     end
     
     it "doesn't respond" do
-      obj.should_not be_respond_to(:to_ary)
+      obj.should_not respond_to(:to_ary)
     end
 
     it "can be overridden with a stub" do
@@ -19,7 +19,7 @@ describe "a double receiving to_ary" do
     
     it "responds when overriden" do
       obj.stub(:to_ary) { :non_nil_value }
-      obj.should be_respond_to(:to_ary)
+      obj.should respond_to(:to_ary)
     end
 
     it "supports Array#flatten" do
