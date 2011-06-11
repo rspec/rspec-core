@@ -51,8 +51,8 @@ namespace :clobber do
   end
 end
 
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
+require 'rdoc/task'
+RDoc::Task.new do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title = "rspec-mocks #{RSpec::Mocks::Version::STRING}"
   rdoc.rdoc_files.include('README*')
@@ -65,4 +65,4 @@ task :relish, :version do |t, args|
   sh "relish push rspec/rspec-mocks:#{args[:version]}"
 end
 
-task :default => [:rspec, :cucumber]
+task :default => [:spec, :cucumber]
