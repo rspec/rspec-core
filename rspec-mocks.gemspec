@@ -12,10 +12,9 @@ Gem::Specification.new do |s|
   s.summary     = "rspec-mocks-#{RSpec::Mocks::Version::STRING}"
   s.description = "RSpec's 'test double' framework, with support for stubbing and mocking"
 
-  s.rubygems_version   = "1.3.7"
   s.rubyforge_project  = "rspec"
 
-  s.files            = `git ls-files`.split("\n")
+  s.files            = `git ls-files -- lib/*`.split("\n")
   s.test_files       = `git ls-files -- {spec,features}/*`.split("\n")
   s.extra_rdoc_files = [ "README.md" ]
   s.rdoc_options     = ["--charset=UTF-8"]
