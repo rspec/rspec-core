@@ -2,6 +2,7 @@ module RSpec
   module Mocks
     module AnyInstance
       class Recorder
+        attr_reader :message_chains
         def initialize(klass)
           @message_chains = MessageChains.new
           @observed_methods = []
@@ -9,15 +10,22 @@ module RSpec
           @klass = klass
           @expectation_set = false
         end
-
-        def message_chains
-          @message_chains
-        end
         
-        def stub(method_name, *args, &block)
-          observe!(method_name)
-          message_chains.add(method_name, chain = StubChain.new(method_name, *args, &block))
-          chain
+        def stub(method_name_or_method_map, *args, &block)
+          if method_name_or_method_map.is_a?(Hash)
+            method_map = method_name_or_method_map
+            method_map.each do |method_name, return_value| 
+              observe!(method_name)
+              message_chains.add(method_name, chain = StubChain.new(method_name))
+              chain.and_return(return_value)
+            end
+            method_map
+          else
+            method_name = method_name_or_method_map
+            observe!(method_name)
+            message_chains.add(method_name, chain = StubChain.new(method_name, *args, &block))
+            chain
+          end
         end
 
         def should_receive(method_name, *args, &block)

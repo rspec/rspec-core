@@ -1,3 +1,4 @@
+
 require 'spec_helper'
 
 module RSpec
@@ -55,7 +56,21 @@ module RSpec
           klass.any_instance.stub(:foo)
           lambda{ klass.new.bar }.should raise_error(NoMethodError)
         end
-
+        
+        context 'multiple methods' do
+          it "allows multiple methods to be stubbed in a single invocation" do
+            klass.any_instance.stub(:foo => 'foo', :bar => 'bar')
+            instance = klass.new
+            instance.foo.should eq('foo')
+            instance.bar.should eq('bar')
+          end
+          
+          it "adheres to the contract of multiple method stubbing withou any instance" do
+            Object.new.stub(:foo => 'foo', :bar => 'bar').should eq(:foo => 'foo', :bar => 'bar')
+            klass.any_instance.stub(:foo => 'foo', :bar => 'bar').should eq(:foo => 'foo', :bar => 'bar')
+          end
+        end
+        
         context "behaves as 'every instance'" do
           it "stubs every instance in the spec" do
             klass.any_instance.stub(:foo).and_return(result = Object.new)

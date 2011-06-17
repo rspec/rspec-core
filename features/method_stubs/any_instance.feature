@@ -37,4 +37,23 @@ Feature: stub on any instance of a class
       end
       """
     When I run `rspec example_spec.rb`
+    Then the examples should all pass  
+    
+  Scenario: any_instance stub with specific arguments matchers
+    Given a file named "example_spec.rb" with:
+      """
+      describe "any_instance.stub" do
+        context "with arguments" do
+          it "returns the stubbed value when arguments match" do
+            Object.any_instance.stub(:foo).with(:param_one, :param_two).and_return(:result_one)
+            Object.any_instance.stub(:foo).with(:param_three, :param_four).and_return(:result_two)
+          
+            o = Object.new
+            o.foo(:param_one, :param_two).should eq(:result_one)
+            o.foo(:param_three, :param_four).should eq(:result_two)
+          end
+        end
+      end
+      """
+    When I run `rspec example_spec.rb`
     Then the examples should all pass

@@ -5,7 +5,7 @@ module RSpec
         def add(method_name, chain)
           (self[method_name] ||= []) << chain
         end
-  
+          
         def has_expectation?(method_name)
           !!self[method_name].find{|chain| chain.is_a?(ExpectationChain)}
         end

@@ -11,10 +11,6 @@ module RSpec
         RSpec::Mocks::space.add(self)
         __recorder
       end
-
-      def exactly_one_instance
-        any_instance
-      end
       
       def rspec_verify
         __recorder.verify
