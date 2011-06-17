@@ -343,10 +343,14 @@ module RSpec
           end
 
           it "fails when the arguments match but different instances are used" do
+            instances = Array.new(2) { klass.new }
             expect do
-              klass.new.foo(:param_one, :param_two).should eq(:result_one)
-              klass.new.foo(:param_three, :param_four).should eq(:result_two)
+              instances[0].foo(:param_one, :param_two).should eq(:result_one)
+              instances[1].foo(:param_three, :param_four).should eq(:result_two)
             end.to raise_error(RSpec::Mocks::MockExpectationError)
+
+            # ignore the fact that should_receive expectations were not met
+            instances.each { |instance| instance.rspec_reset }
           end
 
           it "is not affected by the invocation of existing methods on other instances" do
@@ -357,9 +361,13 @@ module RSpec
           end
           
           it "fails when arguments do not match" do
+            instance = klass.new
             expect do
-              klass.new.foo(:param_one, :param_three)
+              instance.foo(:param_one, :param_three)
             end.to raise_error(RSpec::Mocks::MockExpectationError)
+
+            # ignore the fact that should_receive expectations were not met
+            instance.rspec_reset
           end
         end
 
