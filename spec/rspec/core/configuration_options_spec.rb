@@ -118,6 +118,11 @@ describe RSpec::Core::ConfigurationOptions do
       parse_options('--example','foo').should include(:full_description => /foo/)
       parse_options('-e','bar').should include(:full_description => /bar/)
     end
+
+    it "can be specified multiple times" do
+      parse_options('--example','foo', '--example', 'bar').should include(:full_description => /(?-mix:foo)|(?-mix:bar)/)
+      parse_options('-e','bar', '-e', 'baz').should include(:full_description => /(?-mix:bar)|(?-mix:baz)/)
+    end
   end
 
   describe "--backtrace, -b" do

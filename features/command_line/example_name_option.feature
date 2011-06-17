@@ -9,6 +9,9 @@ Feature: --example option
   This allows you to run a single uniquely named example, all examples with
   similar names, all the examples in a uniquely named group, etc, etc.
 
+  This option may be specified multiple times.  Multiple patterns are OR-d
+  together.
+
   Background:
     Given a file named "first_spec.rb" with:
       """
@@ -84,3 +87,11 @@ Feature: --example option
   Scenario: Object#method
     When I run `rspec . --example 'Array#length'`
     Then the examples should all pass
+
+  Scenario: multiple patterns
+    When I run `rspec . --format doc --example 'first example in first group' --example 'second example in second group'`
+    Then the examples should all pass
+    And the output should contain "first example in first group"
+    And the output should contain "second example in second group"
+    But the output should not contain "second example in first group"
+    And the output should not contain "third group"
