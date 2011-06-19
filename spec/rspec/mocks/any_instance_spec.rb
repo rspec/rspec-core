@@ -1,3 +1,4 @@
+
 require 'spec_helper'
 
 module RSpec
@@ -8,6 +9,7 @@ module RSpec
       let(:klass) do
         Class.new do
           def existing_method; :existing_method_return_value; end
+          def existing_method_with_arguments(arg_one, arg_two); :existing_method_with_arguments_return_value; end
           def another_existing_method; end
         end
       end
@@ -54,7 +56,21 @@ module RSpec
           klass.any_instance.stub(:foo)
           lambda{ klass.new.bar }.should raise_error(NoMethodError)
         end
-
+        
+        context 'multiple methods' do
+          it "allows multiple methods to be stubbed in a single invocation" do
+            klass.any_instance.stub(:foo => 'foo', :bar => 'bar')
+            instance = klass.new
+            instance.foo.should eq('foo')
+            instance.bar.should eq('bar')
+          end
+          
+          it "adheres to the contract of multiple method stubbing withou any instance" do
+            Object.new.stub(:foo => 'foo', :bar => 'bar').should eq(:foo => 'foo', :bar => 'bar')
+            klass.any_instance.stub(:foo => 'foo', :bar => 'bar').should eq(:foo => 'foo', :bar => 'bar')
+          end
+        end
+        
         context "behaves as 'every instance'" do
           it "stubs every instance in the spec" do
             klass.any_instance.stub(:foo).and_return(result = Object.new)
@@ -69,8 +85,30 @@ module RSpec
           end
         end
         
-        context "with a block" do
-          before { klass.any_instance.stub(:foo => 1, :bar => 2) }
+        context "with argument matching" do
+          before do 
+            klass.any_instance.stub(:foo).with(:param_one, :param_two).and_return(:result_one)
+            klass.any_instance.stub(:foo).with(:param_three, :param_four).and_return(:result_two)
+          end
+          
+          it "returns the stubbed value when arguments match" do
+            instance = klass.new
+            instance.foo(:param_one, :param_two).should eq(:result_one)
+            instance.foo(:param_three, :param_four).should eq(:result_two)
+          end
+
+          it "fails the spec with an expectation error when the arguments do not match" do
+            expect do
+              klass.new.foo(:param_one, :param_three)
+            end.to(raise_error(RSpec::Mocks::MockExpectationError))
+          end
+        end
+        
+        context "with multiple stubs" do
+          before do 
+            klass.any_instance.stub(:foo).and_return(1) 
+            klass.any_instance.stub(:bar).and_return(2) 
+          end
 
           it "stubs a method" do
             instance = klass.new
@@ -304,6 +342,47 @@ module RSpec
                 instance_two.existing_method
               end.to raise_error(RSpec::Mocks::MockExpectationError, "The message 'existing_method' was received by #{instance_two.inspect} but has already been received by #{instance_one.inspect}")
             end
+          end
+        end
+
+        context "with argument matching" do
+          before do 
+            klass.any_instance.should_receive(:foo).with(:param_one, :param_two).and_return(:result_one)
+            klass.any_instance.should_receive(:foo).with(:param_three, :param_four).and_return(:result_two)
+          end
+          
+          it "returns the expected value when arguments match" do
+            instance = klass.new
+            instance.foo(:param_one, :param_two).should eq(:result_one)
+            instance.foo(:param_three, :param_four).should eq(:result_two)
+          end
+
+          it "fails when the arguments match but different instances are used" do
+            instances = Array.new(2) { klass.new }
+            expect do
+              instances[0].foo(:param_one, :param_two).should eq(:result_one)
+              instances[1].foo(:param_three, :param_four).should eq(:result_two)
+            end.to raise_error(RSpec::Mocks::MockExpectationError)
+
+            # ignore the fact that should_receive expectations were not met
+            instances.each { |instance| instance.rspec_reset }
+          end
+
+          it "is not affected by the invocation of existing methods on other instances" do
+            klass.new.existing_method_with_arguments(:param_one, :param_two).should eq(:existing_method_with_arguments_return_value)
+            instance = klass.new
+            instance.foo(:param_one, :param_two).should eq(:result_one)
+            instance.foo(:param_three, :param_four).should eq(:result_two)
+          end
+          
+          it "fails when arguments do not match" do
+            instance = klass.new
+            expect do
+              instance.foo(:param_one, :param_three)
+            end.to raise_error(RSpec::Mocks::MockExpectationError)
+
+            # ignore the fact that should_receive expectations were not met
+            instance.rspec_reset
           end
         end
 
