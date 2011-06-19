@@ -1,5 +1,9 @@
 ### Dev
 
+* Enhancements
+  * Add support for any_instance argument matching based on `with` (Sidu
+    Ponnappa and Andy Lindeman)
+
 * Bug fixes
   * pass a hash to `any_instance.stub`. (Justin Ko)
   * allow :to_ary to be called without raising NoMethodError (Mikhail Dieterle)
