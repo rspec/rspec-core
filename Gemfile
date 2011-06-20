@@ -22,7 +22,7 @@ gem "ZenTest", "4.4.2"
 gem "nokogiri", "1.4.4"
 
 platforms :mri_18 do
-  gem 'ruby-debug'
+  gem 'ruby-debug' unless RUBY_VERSION == "1.8.6"
 end
 
 platforms :mri_19 do
