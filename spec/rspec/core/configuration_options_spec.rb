@@ -48,6 +48,20 @@ describe RSpec::Core::ConfigurationOptions do
       opts.configure(config)
       config.exclusion_filter.should have_key(:slow)
     end
+
+    it "merges the reqire and lib options form different sources" do
+      orig_env = ENV["SPEC_OPTS"]
+      begin
+        ENV["SPEC_OPTS"] = "-r b/file -I b/lib"
+        opts = config_options_object(*%w[-r a/file -I a/lib])
+        config = double("config").as_null_object
+        config.should_receive(:libs=).with(["a/lib", "b/lib"])
+        config.should_receive(:requires=).with(["a/file", "b/file"])
+        opts.configure(config)
+      ensure
+        ENV["SPEC_OPTS"] = orig_env
+      end
+    end
   end
 
   describe "-c, --color, and --colour" do
