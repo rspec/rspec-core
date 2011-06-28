@@ -26,7 +26,7 @@ module RSpec
       end
       
       def is_matcher?(obj)
-        !null_object?(obj) & obj.respond_to?(:matches?) & obj.respond_to?(:description)
+        !null_object?(obj) & obj.respond_to?(:matches?) & [:failure_message_for_should, :failure_message].any? { |m| obj.respond_to?(m) }
       end
 
       def args_match?(*args)
