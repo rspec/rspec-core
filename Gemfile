@@ -25,6 +25,8 @@ end
 gem "mocha", "~> 0.9.10"
 gem "rr", "~> 1.0.2"
 gem "flexmock", "0.8.8"
+gem "i18n", "0.6.0"
+gem "activesupport", "3.0.9"
 
 ### optional runtime deps
 gem "syntax", "1.0.0"
