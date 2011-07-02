@@ -80,6 +80,7 @@ module RSpec
         def restore_original_method!(method_name)
           alias_method_name = build_alias_method_name(method_name)
           @klass.class_eval do
+            remove_method method_name
             alias_method  method_name, alias_method_name
             remove_method alias_method_name
           end
