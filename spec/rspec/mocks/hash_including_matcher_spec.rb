@@ -6,51 +6,51 @@ module RSpec
       describe HashIncludingMatcher do
         
         it "describes itself properly" do
-          HashIncludingMatcher.new(:a => 1).description.should == "hash_including(:a=>1)"
+          HashIncludingMatcher.new(:a => 1).description.should eq "hash_including(:a=>1)"
         end      
 
         describe "passing" do
           it "matches the same hash" do
-            hash_including(:a => 1).should == {:a => 1}
+            hash_including(:a => 1).should eq({:a => 1})
           end
 
           it "matches a hash with extra stuff" do
-            hash_including(:a => 1).should == {:a => 1, :b => 2}
+            hash_including(:a => 1).should eq({:a => 1, :b => 2})
           end
           
           describe "when matching against other matchers" do
             it "matches an int against anything()" do
-              hash_including(:a => anything, :b => 2).should == {:a => 1, :b => 2}
+              hash_including(:a => anything, :b => 2).should eq({:a => 1, :b => 2})
             end
 
             it "matches a string against anything()" do
-              hash_including(:a => anything, :b => 2).should == {:a => "1", :b => 2}
+              hash_including(:a => anything, :b => 2).should eq({:a => "1", :b => 2})
             end
           end
           
           describe "when passed only keys or keys mixed with key/value pairs" do
             it "matches if the key is present" do
-              hash_including(:a).should == {:a => 1, :b => 2}
+              hash_including(:a).should eq({:a => 1, :b => 2})
             end
             
             it "matches if more keys are present" do
-              hash_including(:a, :b).should == {:a => 1, :b => 2, :c => 3}
+              hash_including(:a, :b).should eq({:a => 1, :b => 2, :c => 3})
             end
 
             it "matches a string against a given key" do
-              hash_including(:a).should == {:a => "1", :b => 2}
+              hash_including(:a).should eq({:a => "1", :b => 2})
             end
 
             it "matches if passed one key and one key/value pair" do
-              hash_including(:a, :b => 2).should == {:a => 1, :b => 2}
+              hash_including(:a, :b => 2).should eq({:a => 1, :b => 2})
             end
             
             it "matches if passed many keys and one key/value pair" do
-              hash_including(:a, :b, :c => 3).should == {:a => 1, :b => 2, :c => 3, :d => 4}
+              hash_including(:a, :b, :c => 3).should eq({:a => 1, :b => 2, :c => 3, :d => 4})
             end
             
             it "matches if passed many keys and many key/value pairs" do
-              hash_including(:a, :b, :c => 3, :e => 5).should == {:a => 1, :b => 2, :c => 3, :d => 4, :e => 5}
+              hash_including(:a, :b, :c => 3, :e => 5).should eq({:a => 1, :b => 2, :c => 3, :d => 4, :e => 5})
             end
           end
         end

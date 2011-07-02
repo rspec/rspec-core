@@ -134,7 +134,7 @@ module RSpec
         @instance.stub(:method_that_yields).and_yield(:yielded_obj)
         current_value = :value_before
         @instance.method_that_yields {|val| current_value = val}
-        current_value.should == :yielded_obj
+        current_value.should eq :yielded_obj
         @instance.rspec_verify
       end
 
@@ -143,7 +143,7 @@ module RSpec
                                                        and_yield(:another_value)
         current_value = []
         @instance.method_that_yields_multiple_times {|val| current_value << val}
-        current_value.should == [:yielded_value, :another_value]
+        current_value.should eq [:yielded_value, :another_value]
         @instance.rspec_verify
       end
       
@@ -151,7 +151,7 @@ module RSpec
         yielded_obj = double("my mock")
         yielded_obj.should_receive(:foo).with(:bar)
         @instance.stub(:method_that_yields_and_returns).and_yield(yielded_obj).and_return(:baz)
-        @instance.method_that_yields_and_returns { |o| o.foo :bar }.should == :baz
+        @instance.method_that_yields_and_returns { |o| o.foo :bar }.should eq :baz
       end
 
       it "throws when told to" do
@@ -163,13 +163,13 @@ module RSpec
       
       it "overrides a pre-existing method" do
         @stub.stub(:existing_instance_method).and_return(:updated_stub_value)
-        @stub.existing_instance_method.should == :updated_stub_value
+        @stub.existing_instance_method.should eq :updated_stub_value
       end
 
       it "overrides a pre-existing stub" do
         @stub.stub(:foo) { 'bar' }
         @stub.stub(:foo) { 'baz' }
-        @stub.foo.should == 'baz'
+        @stub.foo.should eq 'baz'
       end
       
       it "allows a stub and an expectation" do
@@ -181,7 +181,7 @@ module RSpec
 
       it "calculates return value by executing block passed to #and_return" do
         @stub.stub(:something).with("a","b","c").and_return { |a,b,c| c+b+a }
-        @stub.something("a","b","c").should == "cba"
+        @stub.something("a","b","c").should eq "cba"
         @stub.rspec_verify
       end
     end

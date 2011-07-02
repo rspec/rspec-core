@@ -18,7 +18,7 @@ describe "Double" do
     begin
       test_double.foobar
     rescue Exception => e
-      e.message.should == "Double received unexpected message :foobar with (no args)"
+      e.message.should eq "Double received unexpected message :foobar with (no args)"
     end
   end 
 end

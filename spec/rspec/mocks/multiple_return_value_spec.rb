@@ -10,15 +10,15 @@ module RSpec
       end
 
       it "returns values in order to consecutive calls" do
-        @mock.message.should == @return_values[0]
-        @mock.message.should == @return_values[1]
-        @mock.message.should == @return_values[2]
+        @mock.message.should eq @return_values[0]
+        @mock.message.should eq @return_values[1]
+        @mock.message.should eq @return_values[2]
         @mock.rspec_verify
       end
 
       it "complains when there are too few calls" do
-        @mock.message.should == @return_values[0]
-        @mock.message.should == @return_values[1]
+        @mock.message.should eq @return_values[0]
+        @mock.message.should eq @return_values[1]
         expect { @mock.rspec_verify }.to raise_error(
           RSpec::Mocks::MockExpectationError,
           %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 2 times|
@@ -26,10 +26,10 @@ module RSpec
       end
 
       it "complains when there are too many calls" do
-        @mock.message.should == @return_values[0]
-        @mock.message.should == @return_values[1]
-        @mock.message.should == @return_values[2]
-        @mock.message.should == @return_values[2]
+        @mock.message.should eq @return_values[0]
+        @mock.message.should eq @return_values[1]
+        @mock.message.should eq @return_values[2]
+        @mock.message.should eq @return_values[2]
         expect { @mock.rspec_verify }.to raise_error(
           RSpec::Mocks::MockExpectationError,
           %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 4 times|
@@ -38,10 +38,10 @@ module RSpec
 
       it "doesn't complain when there are too many calls but method is stubbed too" do
         @mock.stub(:message).and_return :stub_result
-        @mock.message.should == @return_values[0]
-        @mock.message.should == @return_values[1]
-        @mock.message.should == @return_values[2]
-        @mock.message.should == :stub_result
+        @mock.message.should eq @return_values[0]
+        @mock.message.should eq @return_values[1]
+        @mock.message.should eq @return_values[2]
+        @mock.message.should eq :stub_result
         expect { @mock.rspec_verify }.to_not raise_error(RSpec::Mocks::MockExpectationError)
       end
     end
@@ -54,16 +54,16 @@ module RSpec
       end
 
       it "returns values in order to consecutive calls" do
-        @mock.message.should == @return_values[0]
-        @mock.message.should == @return_values[1]
-        @mock.message.should == @return_values[2]
+        @mock.message.should eq @return_values[0]
+        @mock.message.should eq @return_values[1]
+        @mock.message.should eq @return_values[2]
         @mock.rspec_verify
       end
 
       it "complains when there are too few calls" do
         third = Object.new
-        @mock.message.should == @return_values[0]
-        @mock.message.should == @return_values[1]
+        @mock.message.should eq @return_values[0]
+        @mock.message.should eq @return_values[1]
         expect { @mock.rspec_verify }.to raise_error(
           RSpec::Mocks::MockExpectationError,
           %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 2 times|
@@ -72,10 +72,10 @@ module RSpec
 
       it "complains when there are too many calls" do
         third = Object.new
-        @mock.message.should == @return_values[0]
-        @mock.message.should == @return_values[1]
-        @mock.message.should == @return_values[2]
-        @mock.message.should == @return_values[2]
+        @mock.message.should eq @return_values[0]
+        @mock.message.should eq @return_values[1]
+        @mock.message.should eq @return_values[2]
+        @mock.message.should eq @return_values[2]
         expect { @mock.rspec_verify }.to raise_error(
           RSpec::Mocks::MockExpectationError,
           %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 4 times|
@@ -85,10 +85,10 @@ module RSpec
       it "complains when there are too many calls and method is stubbed too" do
         third = Object.new
         @mock.stub(:message).and_return :stub_result
-        @mock.message.should == @return_values[0]
-        @mock.message.should == @return_values[1]
-        @mock.message.should == @return_values[2]
-        @mock.message.should == :stub_result
+        @mock.message.should eq @return_values[0]
+        @mock.message.should eq @return_values[1]
+        @mock.message.should eq @return_values[2]
+        @mock.message.should eq :stub_result
         expect { @mock.rspec_verify }.to raise_error(
           RSpec::Mocks::MockExpectationError,
           %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 4 times|

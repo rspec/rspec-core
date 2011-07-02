@@ -24,7 +24,7 @@ describe "AnyNumberOfTimes" do
   it "returns the mocked value when called after a similar stub" do
     @mock.stub(:message).and_return :stub_value
     @mock.should_receive(:message).any_number_of_times.and_return(:mock_value)
-    @mock.message.should == :mock_value
-    @mock.message.should == :mock_value
+    @mock.message.should eq :mock_value
+    @mock.message.should eq :mock_value
   end
 end

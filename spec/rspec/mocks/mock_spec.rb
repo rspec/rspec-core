@@ -78,20 +78,20 @@ module RSpec
 
       it "allows block to calculate return values" do
         @mock.should_receive(:something).with("a","b","c").and_return { |a,b,c| c+b+a }
-        @mock.something("a","b","c").should == "cba"
+        @mock.something("a","b","c").should eq "cba"
         @mock.rspec_verify
       end
 
       it "allows parameter as return value" do
         @mock.should_receive(:something).with("a","b","c").and_return("booh")
-        @mock.something("a","b","c").should == "booh"
+        @mock.something("a","b","c").should eq "booh"
         @mock.rspec_verify
       end
 
       it "returns the previously stubbed value if no return value is set" do
         @mock.stub(:something).with("a","b","c").and_return(:stubbed_value)
         @mock.should_receive(:something).with("a","b","c")
-        @mock.something("a","b","c").should == :stubbed_value
+        @mock.something("a","b","c").should eq :stubbed_value
         @mock.rspec_verify
       end
 
@@ -159,11 +159,11 @@ module RSpec
 
       it "uses block for expectation if provided" do
         @mock.should_receive(:something) do | a, b |
-          a.should == "a"
-          b.should == "b"
+          a.should eq "a"
+          b.should eq "b"
           "booh"
         end
-        @mock.something("a", "b").should == "booh"
+        @mock.something("a", "b").should eq "booh"
         @mock.rspec_verify
       end
 
@@ -181,8 +181,8 @@ module RSpec
         eval("@mock.should_receive(:something) { |&block| a = block }")
         b = lambda { }
         @mock.something(&b)
-        a.should == b
-        @moc.rspec_verify
+        a.should eq b
+        @mock.rspec_verify
       end
 
       it "fails right away when method defined as never is received" do
@@ -270,7 +270,7 @@ module RSpec
 
       it "returns value from block by default" do
         @mock.stub(:method_that_yields).and_yield
-        @mock.method_that_yields { :returned_obj }.should == :returned_obj
+        @mock.method_that_yields { :returned_obj }.should eq :returned_obj
         @mock.rspec_verify
       end
 
@@ -278,17 +278,16 @@ module RSpec
         @mock.should_receive(:yield_back).with(no_args()).once.and_yield
         a = nil
         @mock.yield_back {|*x| a = x}
-        a.should == []
+        a.should eq []
         @mock.rspec_verify
       end
 
       it "yields 0 args multiple times to blocks that take a variable number of arguments" do
         @mock.should_receive(:yield_back).once.with(no_args()).once.and_yield.
                                                                     and_yield
-        a = nil
         b = []
         @mock.yield_back {|*a| b << a}
-        b.should == [ [], [] ]
+        b.should eq [ [], [] ]
         @mock.rspec_verify
       end
 
@@ -296,7 +295,7 @@ module RSpec
         @mock.should_receive(:yield_back).with(no_args()).once.and_yield(99)
         a = nil
         @mock.yield_back {|*x| a = x}
-        a.should == [99]
+        a.should eq [99]
         @mock.rspec_verify
       end
 
@@ -304,10 +303,9 @@ module RSpec
         @mock.should_receive(:yield_back).once.with(no_args()).once.and_yield(99).
                                                                     and_yield(43).
                                                                     and_yield("something fruity")
-        a = nil
         b = []
         @mock.yield_back {|*a| b << a}
-        b.should == [[99], [43], ["something fruity"]]
+        b.should eq [[99], [43], ["something fruity"]]
         @mock.rspec_verify
       end
 
@@ -315,7 +313,7 @@ module RSpec
         @mock.should_receive(:yield_back).with(no_args()).once.and_yield(99, 27, "go")
         a = nil
         @mock.yield_back {|*x| a = x}
-        a.should == [99, 27, "go"]
+        a.should eq [99, 27, "go"]
         @mock.rspec_verify
       end
 
@@ -323,10 +321,9 @@ module RSpec
         @mock.should_receive(:yield_back).once.with(no_args()).once.and_yield(99, :green, "go").
                                                                     and_yield("wait", :amber).
                                                                     and_yield("stop", 12, :red)
-        a = nil
         b = []
         @mock.yield_back {|*a| b << a}
-        b.should == [[99, :green, "go"], ["wait", :amber], ["stop", 12, :red]]
+        b.should eq [[99, :green, "go"], ["wait", :amber], ["stop", 12, :red]]
         @mock.rspec_verify
       end
 
@@ -334,7 +331,7 @@ module RSpec
         @mock.should_receive(:yield_back).with(no_args()).once.and_yield(99)
         a = nil
         @mock.yield_back {|x| a = x}
-        a.should == 99
+        a.should eq 99
         @mock.rspec_verify
       end
 
@@ -342,10 +339,9 @@ module RSpec
         @mock.should_receive(:yield_back).once.with(no_args()).once.and_yield(99).
                                                                     and_yield(43).
                                                                     and_yield("something fruity")
-        a = nil
         b = []
         @mock.yield_back {|a| b << a}
-        b.should == [99, 43, "something fruity"]
+        b.should eq [99, 43, "something fruity"]
         @mock.rspec_verify
       end
 
@@ -353,8 +349,8 @@ module RSpec
         @mock.should_receive(:yield_back).with(no_args()).once.and_yield('wha', 'zup')
         a, b = nil
         @mock.yield_back {|x,y| a=x; b=y}
-        a.should == 'wha'
-        b.should == 'zup'
+        a.should eq 'wha'
+        b.should eq 'zup'
         @mock.rspec_verify
       end
 
@@ -362,10 +358,9 @@ module RSpec
         @mock.should_receive(:yield_back).once.with(no_args()).once.and_yield('wha', 'zup').
                                                                     and_yield('not', 'down').
                                                                     and_yield(14, 65)
-        a, b = nil
         c = []
         @mock.yield_back {|a,b| c << [a, b]}
-        c.should == [['wha', 'zup'], ['not', 'down'], [14, 65]]
+        c.should eq [['wha', 'zup'], ['not', 'down'], [14, 65]]
         @mock.rspec_verify
       end
 
@@ -381,7 +376,6 @@ module RSpec
                                                                     and_yield('down').
                                                                     and_yield(14, 65)
         lambda {
-          a, b = nil
           c = []
           @mock.yield_back {|a,b| c << [a, b]}
         }.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" yielded |\"down\"| to block with arity of 2")
@@ -508,8 +502,8 @@ module RSpec
       it "does not mess with the stub's yielded values when also mocked" do
         @mock.stub(:yield_back).and_yield(:stub_value)
         @mock.should_receive(:yield_back).and_yield(:mock_value)
-        @mock.yield_back{|v| v.should == :mock_value }
-        @mock.yield_back{|v| v.should == :stub_value }
+        @mock.yield_back{|v| v.should eq :mock_value }
+        @mock.yield_back{|v| v.should eq :stub_value }
         @mock.rspec_verify
       end
 
@@ -518,14 +512,14 @@ module RSpec
         File.should_receive(:open).and_yield(:first_call).and_yield(:second_call)
         yielded_args = []
         File.open {|v| yielded_args << v }
-        yielded_args.should == [:first_call, :second_call]
-        File.open {|v| v.should == :stub_value }
+        yielded_args.should eq [:first_call, :second_call]
+        File.open {|v| v.should eq :stub_value }
         File.rspec_verify
       end
 
       it "assigns stub return values" do
         mock = RSpec::Mocks::Mock.new('name', :message => :response)
-        mock.message.should == :response
+        mock.message.should eq :response
       end
 
     end
@@ -545,7 +539,7 @@ module RSpec
 
         @mock.foo
 
-        @calls.should == 1
+        @calls.should eq 1
       end
 
       it "calls the block after #should_receive after a similar stub" do
@@ -554,7 +548,7 @@ module RSpec
 
         @mock.foo
 
-        @calls.should == 1
+        @calls.should eq 1
       end
 
       it "calls the block after #once" do
@@ -562,7 +556,7 @@ module RSpec
 
         @mock.foo
 
-        @calls.should == 1
+        @calls.should eq 1
       end
 
       it "calls the block after #twice" do
@@ -571,7 +565,7 @@ module RSpec
         @mock.foo
         @mock.foo
 
-        @calls.should == 2
+        @calls.should eq 2
       end
 
       it "calls the block after #times" do
@@ -579,7 +573,7 @@ module RSpec
 
         (1..10).each { @mock.foo }
 
-        @calls.should == 10
+        @calls.should eq 10
       end
 
       it "calls the block after #any_number_of_times" do
@@ -587,7 +581,7 @@ module RSpec
 
         (1..7).each { @mock.foo }
 
-        @calls.should == 7
+        @calls.should eq 7
       end
 
       it "calls the block after #ordered" do
@@ -597,7 +591,7 @@ module RSpec
         @mock.foo
         @mock.bar
 
-        @calls.should == 2
+        @calls.should eq 2
       end
     end
 
@@ -612,7 +606,7 @@ module RSpec
     describe "string representation generated by #to_str" do
       it "looks the same as #to_s" do
         double = double("Foo")
-        double.to_str.should == double.to_s
+        double.to_str.should eq double.to_s
       end
     end
 
@@ -624,8 +618,8 @@ module RSpec
       
       it "does respond to initially stubbed methods" do
         double = double(:foo => "woo", :bar => "car")
-        double.foo.should == "woo"
-        double.bar.should == "car"
+        double.foo.should eq "woo"
+        double.bar.should eq "car"
       end
     end
 

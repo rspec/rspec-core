@@ -152,7 +152,7 @@ module RSpec
   #
   #   double.should_receive(:msg) do |arg|
   #     arg.should be_an_istance_of(Array)
-  #     arg.length.should == 7
+  #     arg.length.should eq 7
   #   end
   #
   # == Combining Expectation Details

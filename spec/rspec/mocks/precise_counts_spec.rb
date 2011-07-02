@@ -33,7 +33,7 @@ module RSpec
 
       it "returns the value given by a block when the exactly once method is called" do
         @mock.should_receive(:to_s).exactly(:once) { "testing" }
-        @mock.to_s.should == "testing"
+        @mock.to_s.should eq "testing"
         @mock.rspec_verify
       end
 

@@ -6,28 +6,28 @@ module RSpec
       describe HashNotIncludingMatcher do
         
         it "describes itself properly" do
-          HashNotIncludingMatcher.new(:a => 5).description.should == "hash_not_including(:a=>5)"
+          HashNotIncludingMatcher.new(:a => 5).description.should eq "hash_not_including(:a=>5)"
         end      
 
         describe "passing" do
           it "matches a hash without the specified key" do
-            hash_not_including(:c).should == {:a => 1, :b => 2}
+            hash_not_including(:c).should eq({:a => 1, :b => 2})
           end
           
           it "matches a hash with the specified key, but different value" do
-            hash_not_including(:b => 3).should == {:a => 1, :b => 2}
+            hash_not_including(:b => 3).should eq({:a => 1, :b => 2})
           end
                     
           it "matches a hash without the specified key, given as anything()" do
-            hash_not_including(:c => anything).should == {:a => 1, :b => 2}
+            hash_not_including(:c => anything).should eq({:a => 1, :b => 2})
           end
 
           it "matches an empty hash" do
-            hash_not_including(:a).should == {}
+            hash_not_including(:a).should eq({})
           end
           
           it "matches a hash without any of the specified keys" do
-            hash_not_including(:a, :b, :c).should == { :d => 7}
+            hash_not_including(:a, :b, :c).should eq({ :d => 7})
           end
           
         end

@@ -85,9 +85,9 @@ module RSpec
 
       it "fails with block matchers" do
         expect do
-          @double.should_receive(:msg).with {|arg| arg.should == :received }
+          @double.should_receive(:msg).with {|arg| arg.should eq :received }
           @double.msg :no_msg_for_you
-        end.to raise_error(RSpec::Expectations::ExpectationNotMetError, /expected: :received.*\s*.*got: :no_msg_for_you/)
+        end.to raise_error(RSpec::Expectations::ExpectationNotMetError, /expected :received.*\s*.*got :no_msg_for_you/)
       end
             
     end

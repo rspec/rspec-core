@@ -7,7 +7,7 @@ module RSpec
         it "execs the block when called" do
           obj = stub()
           obj.stub(:foo) { :bar }
-          obj.foo.should == :bar
+          obj.foo.should eq :bar
         end
       end
 
@@ -15,7 +15,7 @@ module RSpec
         it "execs the block with that arg when called" do
           obj = stub()
           obj.stub(:foo) {|given| given}
-          obj.foo(:bar).should == :bar
+          obj.foo(:bar).should eq :bar
         end
       end
 
@@ -23,7 +23,7 @@ module RSpec
         it "execs the block when called" do
           obj = stub()
           obj.stub(:foo) {|*given| given.first}
-          obj.foo(:bar).should == :bar
+          obj.foo(:bar).should eq :bar
         end        
       end
     end
@@ -35,7 +35,7 @@ module RSpec
         def obj.foo; :original; end
         obj.stub(:foo)
         obj.unstub(:foo)
-        obj.foo.should == :original
+        obj.foo.should eq :original
       end
     
       it "removes all stubs with the supplied method name" do
@@ -44,7 +44,7 @@ module RSpec
         obj.stub(:foo).with(1)
         obj.stub(:foo).with(2)
         obj.unstub(:foo)
-        obj.foo.should == :original
+        obj.foo.should eq :original
       end
     
       it "does not remove any expectations with the same method name" do
@@ -54,7 +54,7 @@ module RSpec
         obj.stub(:foo).with(1)
         obj.stub(:foo).with(2)
         obj.unstub(:foo)
-        obj.foo(3).should == :three
+        obj.foo(3).should eq :three
       end
     
       it "raises a MockExpectationError if the method has not been stubbed" do

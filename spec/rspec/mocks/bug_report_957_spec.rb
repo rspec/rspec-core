@@ -11,11 +11,11 @@ module RSpec
       end
 
       it "returns the value for the stub on the base class" do
-        @base_class.find.should == "stubbed_value"
+        @base_class.find.should eq "stubbed_value"
       end
 
       it "returns the value for the descendent class" do
-        @concrete_class.find.should == "stubbed_value"
+        @concrete_class.find.should eq "stubbed_value"
       end
     end
   end

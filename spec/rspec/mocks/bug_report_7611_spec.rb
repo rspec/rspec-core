@@ -10,7 +10,7 @@ module Bug7611
     end
 
     it "should" do
-      Bar.new.class.should == Bar
+      Bar.new.class.should eq Bar
     end 
   end
 end

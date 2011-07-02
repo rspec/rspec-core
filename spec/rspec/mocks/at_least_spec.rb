@@ -95,7 +95,7 @@ module RSpec
 
       it "returns the value given by a block when the at least once method is called" do
         @mock.should_receive(:to_s).at_least(:once) { "testing" }
-        @mock.to_s.should == "testing"
+        @mock.to_s.should eq "testing"
         @mock.rspec_verify
       end
     end

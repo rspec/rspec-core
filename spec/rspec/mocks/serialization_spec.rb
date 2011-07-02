@@ -103,7 +103,7 @@ module RSpec
 
         it 'does not interfere with its marshalling' do
           marshalled_copy = Marshal.load(Marshal.dump(subject))
-          marshalled_copy.should == subject
+          marshalled_copy.should eq subject
         end
       end
     end
