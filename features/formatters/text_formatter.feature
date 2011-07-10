@@ -30,11 +30,13 @@ Feature: text formatter
            Failure/Error: (7 + 5).should eq(11)
              
              expected: 11
-             got: 12 (using ==)
+                  got: 12
+             
+             (compared using ==)
       """
     And the backtrace-normalized output should contain:
       """
-      # ./integer_spec.rb:5
+      # ./integer_spec.rb:3
       """
     And the backtrace-normalized output should contain:
       """
@@ -42,7 +44,9 @@ Feature: text formatter
            Failure/Error: "foo".reverse.should eq("ofo")
              
              expected: "ofo"
-             got: "oof" (using ==)
+                  got: "oof"
+             
+             (compared using ==)
       """
     And the backtrace-normalized output should contain:
       """
