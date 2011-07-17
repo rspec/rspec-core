@@ -161,7 +161,6 @@ module RSpec
         end
 
         def dump_failure(example, index)
-          exception = example.execution_result[:exception]
           output.puts "#{short_padding}#{index.next}) #{example.full_description}"
           dump_failure_info(example)
         end
