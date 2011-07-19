@@ -11,6 +11,14 @@ module RSpec
           @expectation_set = false
         end
         
+        def unstub(method_name)
+          unless @observed_methods.include?(method_name.to_sym)
+            raise RSpec::Mocks::MockExpectationError, "The method `#{method_name}` was not stubbed or was already unstubbed"
+          end
+          message_chains.remove_stub_chains_for!(method_name)
+          stop_observing!(method_name) unless message_chains.has_expectation?(method_name)
+        end
+        
         def stub(method_name_or_method_map, *args, &block)
           if method_name_or_method_map.is_a?(Hash)
             method_map = method_name_or_method_map

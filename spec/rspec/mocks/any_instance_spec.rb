@@ -9,7 +9,7 @@ module RSpec
       let(:klass) do
         Class.new do
           def existing_method; :existing_method_return_value; end
-          def existing_method_with_arguments(arg_one, arg_two); :existing_method_with_arguments_return_value; end
+          def existing_method_with_arguments(arg_one, arg_two = nil); :existing_method_with_arguments_return_value; end
           def another_existing_method; end
         end
       end
@@ -212,7 +212,35 @@ module RSpec
           end
         end
       end
+      
+      context "unstub implementation" do
+        it "replaces the stubbed method with the original method" do
+          klass.any_instance.stub(:existing_method)
+          klass.any_instance.unstub(:existing_method)
+          klass.new.existing_method.should eq(:existing_method_return_value)
+        end
 
+        it "removes all stubs with the supplied method name" do
+          klass.any_instance.stub(:existing_method).with(1)
+          klass.any_instance.stub(:existing_method).with(2)
+          klass.any_instance.unstub(:existing_method)
+          klass.new.existing_method.should eq(:existing_method_return_value)
+        end
+
+        it "does not remove any expectations with the same method name" do
+          klass.any_instance.should_receive(:existing_method_with_arguments).with(3).and_return(:three)
+          klass.any_instance.stub(:existing_method_with_arguments).with(1)
+          klass.any_instance.stub(:existing_method_with_arguments).with(2)
+          klass.any_instance.unstub(:existing_method_with_arguments)
+          klass.new.existing_method_with_arguments(3).should eq :three
+        end
+
+        it "raises a MockExpectationError if the method has not been stubbed" do
+          lambda do
+            klass.any_instance.unstub(:existing_method)
+          end.should raise_error(RSpec::Mocks::MockExpectationError, 'The method `existing_method` was not stubbed or was already unstubbed')
+        end
+      end
       context "with #should_receive" do
         let(:foo_expectation_error_message) { 'Exactly one instance should have received the following message(s) but didn\'t: foo' }
         let(:existing_method_expectation_error_message) { 'Exactly one instance should have received the following message(s) but didn\'t: existing_method' }
