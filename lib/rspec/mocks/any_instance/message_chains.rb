@@ -5,7 +5,12 @@ module RSpec
         def add(method_name, chain)
           (self[method_name] ||= []) << chain
         end
-          
+        
+        def remove_stub_chains_for!(method_name)
+          chains = self[method_name]
+          chains.reject! { |chain| chain.is_a?(StubChain) }
+        end
+        
         def has_expectation?(method_name)
           !!self[method_name].find{|chain| chain.is_a?(ExpectationChain)}
         end

@@ -57,3 +57,47 @@ Feature: stub on any instance of a class
       """
     When I run `rspec example_spec.rb`
     Then the examples should all pass
+  
+  Scenario: any_instance unstub
+    Given a file named "example_spec.rb" with:
+      """
+      describe "any_instance.unstub" do
+        it "unstubs a stubbed method" do
+          class Object
+            def foo
+              :foo
+            end
+          end
+          
+          Object.any_instance.stub(:foo)
+          Object.any_instance.unstub(:foo)
+
+          Object.new.foo.should eq(:foo)
+        end
+      end
+      """
+    When I run `rspec example_spec.rb`
+    Then the examples should all pass  
+  
+  Scenario: any_instance unstub
+    Given a file named "example_spec.rb" with:
+      """
+      describe "any_instance.unstub" do
+        context "with both an expectation and a stub already set" do
+          it "only removes the stub" do
+            class Object
+              def foo
+                :foo
+              end
+            end
+            Object.any_instance.should_receive(:foo).and_return(:bar)
+            Object.any_instance.stub(:foo)
+            Object.any_instance.unstub(:foo)
+            
+            Object.new.foo.should eq(:bar)
+          end
+        end
+      end
+      """
+    When I run `rspec example_spec.rb`
+    Then the examples should all pass
