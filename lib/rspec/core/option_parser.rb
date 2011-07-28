@@ -63,6 +63,11 @@ module RSpec::Core
           options[:formatters].last << o
         end
 
+        parser.on('--init', 'Initialize your project with RSpec.') do |cmd|
+          ProjectInitializer.new(cmd).run
+          exit
+        end
+
         parser.on_tail('-h', '--help', "You're looking at it.") do
           puts parser
           exit
