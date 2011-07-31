@@ -6,6 +6,8 @@ module RSpec
     class Configuration
       include RSpec::Core::Hooks
 
+      class MustBeConfiguredBeforeExampleGroupsError < StandardError; end
+
       def self.add_setting(name, opts={})
         if opts[:alias]
           alias_method name, opts[:alias]
@@ -39,6 +41,7 @@ module RSpec
       add_setting :treat_symbols_as_metadata_keys_with_true_values, :default => false
       add_setting :expecting_with_rspec
       add_setting :default_path, :default => 'spec'
+      add_setting :show_failures_in_pending_blocks, :default => false
 
       CONDITIONAL_FILTERS = {
         :if     => lambda { |value, metadata| metadata.has_key?(:if) && !value },
@@ -159,6 +162,7 @@ module RSpec
       #   teardown_mocks_for_rspec
       #     - called after verify_mocks_for_rspec (even if there are errors)
       def mock_framework=(framework)
+        assert_no_example_groups_defined(:mock_framework)
         case framework
         when Module
           settings[:mock_framework] = framework
@@ -199,6 +203,7 @@ module RSpec
       # Given :stdlib, configures test/unit/assertions
       # Given both, configures both
       def expect_with(*frameworks)
+        assert_no_example_groups_defined(:expect_with)
         settings[:expectation_frameworks] = []
         frameworks.each do |framework|
           case framework
@@ -279,7 +284,7 @@ EOM
         # to match against.
         #
         filter_locations = ((self.filter || {})[:locations] ||= {})
-        (filter_locations[File.expand_path(file_path)] ||= []).push *line_numbers
+        (filter_locations[File.expand_path(file_path)] ||= []).push(*line_numbers)
         filter_run({ :locations => filter_locations })
       end
 
@@ -311,8 +316,12 @@ EOM
 
       def files_or_directories_to_run=(*files)
         files = files.flatten
-        files << default_path if files.empty? && default_path
+        files << default_path if command == 'rspec' && default_path && files.empty?
         self.files_to_run = get_files_to_run(files)
+      end
+
+      def command
+        $0.split(File::SEPARATOR).last
       end
 
       def get_files_to_run(files)
@@ -320,7 +329,11 @@ EOM
         files.map do |file|
           if File.directory?(file)
             patterns.map do |pattern|
-              Dir["#{file}/{#{pattern.strip}}"]
+              if pattern =~ /^#{file}/
+                Dir[pattern.strip]
+              else
+                Dir["#{file}/{#{pattern.strip}}"]
+              end
             end
           else
             if file =~ /^(.*?)((?:\:\d+)+)$/
@@ -366,10 +379,12 @@ EOM
         RSpec::Core::ExampleGroup.alias_it_should_behave_like_to(new_name, report_label)
       end
 
+      undef_method :exclusion_filter=
       def exclusion_filter=(filter)
         settings[:exclusion_filter] = filter
       end
 
+      undef_method :exclusion_filter
       def exclusion_filter
         settings[:exclusion_filter] || {}
       end
@@ -443,6 +458,15 @@ EOM
       end
 
     private
+
+      def assert_no_example_groups_defined(config_option)
+        if RSpec.world.example_groups.any?
+          raise MustBeConfiguredBeforeExampleGroupsError.new(
+            "RSpec's #{config_option} configuration option must be configured before " +
+            "any example groups are defined, but you have already defined a group."
+          )
+        end
+      end
 
       def raise_if_rspec_1_is_loaded
         if defined?(Spec) && defined?(Spec::VERSION::MAJOR) && Spec::VERSION::MAJOR == 1

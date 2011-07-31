@@ -8,25 +8,25 @@ module RSpec::Core
     describe "implicit subject" do
       describe "with a class" do
         it "returns an instance of the class" do
-          ExampleGroup.describe(Array).subject.call.should == []
+          ExampleGroup.describe(Array).subject.call.should eq([])
         end
       end
 
       describe "with a Module" do
         it "returns the Module" do
-          ExampleGroup.describe(Enumerable).subject.call.should == Enumerable
+          ExampleGroup.describe(Enumerable).subject.call.should eq(Enumerable)
         end
       end
 
       describe "with a string" do
         it "return the string" do
-          ExampleGroup.describe("Foo").subject.call.should == 'Foo'
+          ExampleGroup.describe("Foo").subject.call.should eq("Foo")
         end
       end
 
       describe "with a number" do
         it "returns the number" do
-          ExampleGroup.describe(15).subject.call.should == 15
+          ExampleGroup.describe(15).subject.call.should eq(15)
         end
       end
 
@@ -56,7 +56,7 @@ module RSpec::Core
         it "replaces the implicit subject in that group" do
           group = ExampleGroup.describe(Array)
           group.subject { [1,2,3] }
-          group.subject.call.should == [1,2,3]
+          group.subject.call.should eq([1,2,3])
         end
       end
 
@@ -69,13 +69,13 @@ module RSpec::Core
 
         it "is available in a nested group (subclass)" do
           nested_group = group.describe("I'm nested!") { }
-          nested_group.subject.call.should == [4,5,6]
+          nested_group.subject.call.should eq([4,5,6])
         end
 
         it "is available in a doubly nested group (subclass)" do
           nested_group = group.describe("Nesting level 1") { }
           doubly_nested_group = nested_group.describe("Nesting level 2") { }
-          doubly_nested_group.subject.call.should == [4,5,6]
+          doubly_nested_group.subject.call.should eq([4,5,6])
         end
       end
     end
@@ -149,9 +149,9 @@ module RSpec::Core
             end
           end.new
         end
-        its([:a]) { should == 'Symbol: a' }
-        its(['a']) { should == 'String: a' }
-        its([:b, 'c', 4]) { should == 'Symbol: b; String: c; Fixnum: 4' }
+        its([:a]) { should eq("Symbol: a") }
+        its(['a']) { should eq("String: a") }
+        its([:b, 'c', 4]) { should eq("Symbol: b; String: c; Fixnum: 4") }
         its(:name) { should = "George" }
         context "when referring to an attribute without the proper array syntax" do
           context "it raises an error" do
@@ -170,7 +170,7 @@ module RSpec::Core
         context "it raises an error" do
           its([:a]) do
             expect do
-              should == 'Symbol: a'
+              should eq("Symbol: a")
             end.to raise_error(NoMethodError)
           end
         end
@@ -181,12 +181,12 @@ module RSpec::Core
           group = ExampleGroup.describe(Array) do
             subject { [1, 'a'] }
 
-            its(:last) { should == 'a' }
+            its(:last) { should eq("a") }
 
             describe '.first' do
               def subject; super().first; end
 
-              its(:next) { should == 2 }
+              its(:next) { should eq(2) }
             end
           end
 

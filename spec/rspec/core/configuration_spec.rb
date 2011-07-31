@@ -71,6 +71,18 @@ module RSpec::Core
         config.should_receive(:require).with('rspec/core/mocking/with_absolutely_nothing')
         config.mock_framework = :crazy_new_mocking_framework_ive_not_yet_heard_of
       end
+
+      context 'when there are already some example groups defined' do
+        before(:each) do
+          RSpec.world.stub(:example_groups).and_return([double.as_null_object])
+        end
+
+        it 'raises an error since this setting must be applied before any groups are defined' do
+          expect {
+            config.mock_framework = :rspec
+          }.to raise_error(/must be configured before any example groups are defined/)
+        end
+      end
     end
 
     describe "#mock_with" do
@@ -109,6 +121,18 @@ module RSpec::Core
           config.expect_with :not_supported
         end.to raise_error(ArgumentError)
       end
+
+      context 'when there are already some example groups defined' do
+        before(:each) do
+          RSpec.world.stub(:example_groups).and_return([double.as_null_object])
+        end
+
+        it 'raises an error since this setting must be applied before any groups are defined' do
+          expect {
+            config.expect_with :rspec
+          }.to raise_error(/must be configured before any example groups are defined/)
+        end
+      end
     end
 
     describe "#expecting_with_rspec?" do
@@ -145,16 +169,27 @@ module RSpec::Core
 
     describe "#files_to_run" do
       it "loads files not following pattern if named explicitly" do
-        file = "./spec/rspec/core/resources/a_bar.rb"
-        config.files_or_directories_to_run = file
-        config.files_to_run.should eq([file])
+        config.files_or_directories_to_run = "spec/rspec/core/resources/a_bar.rb"
+        config.files_to_run.should eq([      "spec/rspec/core/resources/a_bar.rb"])
+      end
+
+      it "prevents repitition of dir when start of the pattern" do
+        config.pattern = "spec/**/a_spec.rb"
+        config.files_or_directories_to_run = "spec"
+        config.files_to_run.should eq(["spec/rspec/core/resources/a_spec.rb"])
+      end
+
+      it "does not prevent repitition of dir when later of the pattern" do
+        config.pattern = "rspec/**/a_spec.rb"
+        config.files_or_directories_to_run = "spec"
+        config.files_to_run.should eq(["spec/rspec/core/resources/a_spec.rb"])
       end
 
       context "with default pattern" do
         it "loads files named _spec.rb" do
-          dir = "./spec/rspec/core/resources"
-          config.files_or_directories_to_run = dir
-          config.files_to_run.should eq(["#{dir}/a_spec.rb"])
+          dir = "spec/rspec/core/resources"
+          config.files_or_directories_to_run = "spec/rspec/core/resources"
+          config.files_to_run.should eq([      "spec/rspec/core/resources/a_spec.rb"])
         end
 
         it "loads files in Windows" do
@@ -165,9 +200,16 @@ module RSpec::Core
       end
       
       context "with default default_path" do
-        it "loads files named _spec.rb" do
+        it "loads files in the default path when run by rspec" do
+          config.stub(:command) { 'rspec' }
           config.files_or_directories_to_run = []
           config.files_to_run.should_not be_empty
+        end
+
+        it "does not load files in the default path when run by ruby" do
+          config.stub(:command) { 'ruby' }
+          config.files_or_directories_to_run = []
+          config.files_to_run.should be_empty
         end
       end
     end
@@ -218,7 +260,7 @@ module RSpec::Core
     describe "path with line number" do
       it "assigns the line number as a location filter" do
         config.files_or_directories_to_run = "path/to/a_spec.rb:37"
-        config.filter.should == {:locations => {File.expand_path("path/to/a_spec.rb") => [37]}}
+        config.filter.should eq({:locations => {File.expand_path("path/to/a_spec.rb") => [37]}})
       end
     end
 
@@ -234,31 +276,31 @@ module RSpec::Core
 
       it "assigns the file and line number as a location filter" do
         config.files_or_directories_to_run = "path/to/a_spec.rb:37"
-        config.filter.should == {:locations => {File.expand_path("path/to/a_spec.rb") => [37]}}
+        config.filter.should eq({:locations => {File.expand_path("path/to/a_spec.rb") => [37]}})
       end
 
       it "assigns multiple files with line numbers as location filters" do
         config.files_or_directories_to_run = "path/to/a_spec.rb:37", "other_spec.rb:44"
-        config.filter.should == {:locations => {File.expand_path("path/to/a_spec.rb") => [37],
-                                                File.expand_path("other_spec.rb") => [44]}}
+        config.filter.should eq({:locations => {File.expand_path("path/to/a_spec.rb") => [37],
+                                                File.expand_path("other_spec.rb") => [44]}})
       end
 
       it "assigns files with multiple line numbers as location filters" do
         config.files_or_directories_to_run = "path/to/a_spec.rb:37", "path/to/a_spec.rb:44"
-        config.filter.should == {:locations => {File.expand_path("path/to/a_spec.rb") => [37, 44]}}
+        config.filter.should eq({:locations => {File.expand_path("path/to/a_spec.rb") => [37, 44]}})
       end
     end
 
     context "with multiple line numbers" do
       it "assigns the file and line numbers as a location filter" do
         config.files_or_directories_to_run = "path/to/a_spec.rb:1:3:5:7"
-        config.filter.should == {:locations => {File.expand_path("path/to/a_spec.rb") => [1,3,5,7]}}
+        config.filter.should eq({:locations => {File.expand_path("path/to/a_spec.rb") => [1,3,5,7]}})
       end
     end
 
     it "assigns the example name as the filter on description" do
       config.full_description = "foo"
-      config.filter.should == {:full_description => /foo/}
+      config.filter.should eq({:full_description => /foo/})
     end
     
     describe "#default_path" do
@@ -290,7 +332,7 @@ module RSpec::Core
 
           group = ExampleGroup.describe('does like, stuff and junk', :magic_key => :include) { }
           group.should_not respond_to(:you_call_this_a_blt?)
-          group.new.you_call_this_a_blt?.should == "egad man, where's the mayo?!?!?"
+          group.new.you_call_this_a_blt?.should eq("egad man, where's the mayo?!?!?")
         end
       end
 
@@ -302,7 +344,7 @@ module RSpec::Core
 
           group = ExampleGroup.describe('does like, stuff and junk', :magic_key => :include) { }
           group.should_not respond_to(:you_call_this_a_blt?)
-          group.new.you_call_this_a_blt?.should == "egad man, where's the mayo?!?!?"
+          group.new.you_call_this_a_blt?.should eq("egad man, where's the mayo?!?!?")
         end
       end
 
@@ -507,22 +549,22 @@ module RSpec::Core
     describe "#filter_run" do
       it_behaves_like "metadata hash builder" do
         def metadata_hash(*args)
-          config.filter_run *args
+          config.filter_run(*args)
           config.filter
         end
       end
 
       it "sets the filter" do
         config.filter_run :focus => true
-        config.filter[:focus].should == true
+        config.filter[:focus].should be(true)
       end
 
       it "merges with existing filters" do
         config.filter_run :filter1 => true
         config.filter_run :filter2 => false
 
-        config.filter[:filter1].should == true
-        config.filter[:filter2].should == false
+        config.filter[:filter1].should be(true)
+        config.filter[:filter2].should be(false)
       end
 
       it "warns if :line_numbers is already a filter" do
@@ -547,22 +589,22 @@ module RSpec::Core
     describe "#filter_run_excluding" do
       it_behaves_like "metadata hash builder" do
         def metadata_hash(*args)
-          config.filter_run_excluding *args
+          config.filter_run_excluding(*args)
           config.exclusion_filter
         end
       end
 
       it "sets the filter" do
         config.filter_run_excluding :slow => true
-        config.exclusion_filter[:slow].should == true
+        config.exclusion_filter[:slow].should be(true)
       end
 
       it "merges with existing filters" do
         config.filter_run_excluding :filter1 => true
         config.filter_run_excluding :filter2 => false
 
-        config.exclusion_filter[:filter1].should == true
-        config.exclusion_filter[:filter2].should == false
+        config.exclusion_filter[:filter1].should be(true)
+        config.exclusion_filter[:filter2].should be(false)
       end
     end
 
@@ -618,19 +660,19 @@ module RSpec::Core
 
       it "sets the line numbers" do
         config.line_numbers = ['37']
-        config.filter.should == {:line_numbers => [37]}
+        config.filter.should eq({:line_numbers => [37]})
       end
 
       it "overrides :focused" do
         config.filter_run :focused => true
         config.line_numbers = ['37']
-        config.filter.should == {:line_numbers => [37]}
+        config.filter.should eq({:line_numbers => [37]})
       end
 
       it "prevents :focused" do
         config.line_numbers = ['37']
         config.filter_run :focused => true
-        config.filter.should == {:line_numbers => [37]}
+        config.filter.should eq({:line_numbers => [37]})
       end
     end
 
@@ -638,14 +680,14 @@ module RSpec::Core
       context "given true" do
         it "clears the backtrace clean patterns" do
           config.full_backtrace = true
-          config.backtrace_clean_patterns.should == []
+          config.backtrace_clean_patterns.should eq([])
         end
       end
 
       context "given false" do
         it "restores backtrace clean patterns" do
           config.full_backtrace = false
-          config.backtrace_clean_patterns.should == RSpec::Core::Configuration::DEFAULT_BACKTRACE_PATTERNS
+          config.backtrace_clean_patterns.should eq(RSpec::Core::Configuration::DEFAULT_BACKTRACE_PATTERNS)
         end
       end
 
@@ -772,12 +814,12 @@ module RSpec::Core
 
         it "delegates the getter to the other option" do
           config.another_custom_option = "this value"
-          config.custom_option.should == "this value"
+          config.custom_option.should eq("this value")
         end
 
         it "delegates the setter to the other option" do
           config.custom_option = "this value"
-          config.another_custom_option.should == "this value"
+          config.another_custom_option.should eq("this value")
         end
 
         it "delegates the predicate to the other option" do

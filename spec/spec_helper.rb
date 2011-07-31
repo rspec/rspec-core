@@ -1,38 +1,42 @@
-require 'rspec/core'
-require 'autotest/rspec2'
+require 'rubygems'
+require 'spork'
 
-Dir['./spec/support/**/*.rb'].map {|f| require f}
+Spork.prefork do
+  require 'rspec/core'
+  require 'autotest/rspec2'
 
-class NullObject
-  private
-  def method_missing(method, *args, &block)
-    # ignore
-  end
-end
+  Dir['./spec/support/**/*.rb'].map {|f| require f}
 
-def sandboxed(&block)
-  begin
-    @orig_config = RSpec.configuration
-    @orig_world  = RSpec.world
-    new_config = RSpec::Core::Configuration.new
-    new_world  = RSpec::Core::World.new(new_config)
-    RSpec.instance_variable_set(:@configuration, new_config)
-    RSpec.instance_variable_set(:@world, new_world)
-    object = Object.new
-    object.extend(RSpec::Core::SharedExampleGroup)
-
-    (class << RSpec::Core::ExampleGroup; self; end).class_eval do
-      alias_method :orig_run, :run
-      def run(reporter=nil)
-        @orig_mock_space = RSpec::Mocks::space
-        RSpec::Mocks::space = RSpec::Mocks::Space.new
-        orig_run(reporter || NullObject.new)
-      ensure
-        RSpec::Mocks::space = @orig_mock_space
-      end
+  class NullObject
+    private
+    def method_missing(method, *args, &block)
+      # ignore
     end
+  end
 
-    object.instance_eval(&block)
+  def sandboxed(&block)
+    begin
+      @orig_config = RSpec.configuration
+      @orig_world  = RSpec.world
+      new_config = RSpec::Core::Configuration.new
+      new_world  = RSpec::Core::World.new(new_config)
+      RSpec.instance_variable_set(:@configuration, new_config)
+      RSpec.instance_variable_set(:@world, new_world)
+      object = Object.new
+      object.extend(RSpec::Core::SharedExampleGroup)
+
+      (class << RSpec::Core::ExampleGroup; self; end).class_eval do
+        alias_method :orig_run, :run
+        def run(reporter=nil)
+          @orig_mock_space = RSpec::Mocks::space
+          RSpec::Mocks::space = RSpec::Mocks::Space.new
+          orig_run(reporter || NullObject.new)
+        ensure
+          RSpec::Mocks::space = @orig_mock_space
+        end
+      end
+
+      object.instance_eval(&block)
   ensure
     (class << RSpec::Core::ExampleGroup; self; end).class_eval do
       remove_method :run
@@ -42,32 +46,11 @@ def sandboxed(&block)
 
     RSpec.instance_variable_set(:@configuration, @orig_config)
     RSpec.instance_variable_set(:@world, @orig_world)
-  end
+end
 end
 
 def in_editor?
   ENV.has_key?('TM_MODE') || ENV.has_key?('EMACS') || ENV.has_key?('VIM')
-end
-
-class << RSpec
-  alias_method :original_warn_about_deprecated_configure, :warn_about_deprecated_configure
-
-  def warn_about_deprecated_configure
-    # no-op: in our specs we don't want to see the warning.
-  end
-
-  alias_method :null_warn_about_deprecated_configure, :warn_about_deprecated_configure
-
-  def allowing_configure_warning
-    (class << self; self; end).class_eval do
-      alias_method :warn_about_deprecated_configure, :original_warn_about_deprecated_configure
-      begin
-        yield
-      ensure
-        alias_method :warn_about_deprecated_configure, :null_warn_about_deprecated_configure
-      end
-    end
-  end
 end
 
 RSpec.configure do |c|
@@ -89,3 +72,8 @@ RSpec.configure do |c|
     sandboxed { example.run }
   end
 end
+end
+
+Spork.each_run do
+end
+
