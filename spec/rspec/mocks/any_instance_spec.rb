@@ -33,7 +33,13 @@ module RSpec
             lambda{ klass.any_instance.stub(:foo).and_yield(1).with("1") }.should raise_error(NoMethodError)
           end
         end
-
+        
+        context "#stub_chain" do
+          it "raises an error if 'stub_chain' follows 'any_instance'" do
+            lambda{ klass.any_instance.and_return("1").stub_chain(:foo, :bar) }.should raise_error(NoMethodError)
+          end
+        end
+        
         context "#should_receive" do
           it "raises an error if 'should_receive' follows 'with'" do
             lambda{ klass.any_instance.with("1").should_receive(:foo) }.should raise_error(NoMethodError)
@@ -50,7 +56,7 @@ module RSpec
           end
         end
       end
-
+      
       context "with #stub" do
         it "does not suppress an exception when a method that doesn't exist is invoked" do
           klass.any_instance.stub(:foo)
@@ -68,6 +74,23 @@ module RSpec
           it "adheres to the contract of multiple method stubbing withou any instance" do
             Object.new.stub(:foo => 'foo', :bar => 'bar').should eq(:foo => 'foo', :bar => 'bar')
             klass.any_instance.stub(:foo => 'foo', :bar => 'bar').should eq(:foo => 'foo', :bar => 'bar')
+          end
+          
+          context "allows a chain of methods to be stubbed using #stub_chain" do
+            it "given symbols representing the methods" do
+              klass.any_instance.stub_chain(:one, :two, :three).and_return(:four)
+              klass.new.one.two.three.should eq(:four)
+            end
+
+            it "given a hash as the last argument uses the value as the expected return value" do
+              klass.any_instance.stub_chain(:one, :two, :three => :four)
+              klass.new.one.two.three.should eq(:four)
+            end
+            
+            it "given a string of '.' separated method names representing the chain" do
+              klass.any_instance.stub_chain('one.two.three').and_return(:four)
+              klass.new.one.two.three.should eq(:four)
+            end
           end
         end
         

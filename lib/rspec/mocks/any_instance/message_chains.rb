@@ -8,7 +8,7 @@ module RSpec
         
         def remove_stub_chains_for!(method_name)
           chains = self[method_name]
-          chains.reject! { |chain| chain.is_a?(StubChain) }
+          chains.reject! { |chain| chain.is_a?(StubChain) || chain.is_a?(StubChainChain) }
         end
         
         def has_expectation?(method_name)
