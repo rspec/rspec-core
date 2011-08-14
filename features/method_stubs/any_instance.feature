@@ -101,3 +101,33 @@ Feature: stub on any instance of a class
       """
     When I run `rspec example_spec.rb`
     Then the examples should all pass
+    
+  Scenario: stub a chain of methods an any instance
+    Given a file named "stub_chain_spec.rb" with:
+      """
+      describe "stubbing a chain of methods" do
+        context "given symbols representing methods" do
+          it "returns the correct value" do
+            Object.any_instance.stub_chain(:one, :two, :three).and_return(:four)
+            Object.new.one.two.three.should eq(:four)
+          end
+        end
+
+        context "given a hash at the end" do
+          it "returns the correct value" do
+            Object.any_instance.stub_chain(:one, :two, :three => :four)
+            Object.new.one.two.three.should eq(:four)
+          end
+        end
+
+        context "given a string of methods separated by dots" do
+          it "returns the correct value" do
+            Object.any_instance.stub_chain("one.two.three").and_return(:four)
+            Object.new.one.two.three.should eq(:four)
+          end
+        end
+      end
+      """
+    When I run `rspec stub_chain_spec.rb`
+    Then the examples should all pass
+    

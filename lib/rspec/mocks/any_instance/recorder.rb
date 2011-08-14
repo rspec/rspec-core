@@ -36,6 +36,17 @@ module RSpec
           end
         end
 
+        def stub_chain(method_name_or_string_chain, *args, &block)
+          if period_separated_method_chain?(method_name_or_string_chain)
+            first_method_name = method_name_or_string_chain.split('.').first.to_sym
+          else
+            first_method_name = method_name_or_string_chain
+          end
+          observe!(first_method_name)
+          message_chains.add(first_method_name, chain = StubChainChain.new(method_name_or_string_chain, *args, &block))
+          chain
+        end
+        
         def should_receive(method_name, *args, &block)
           observe!(method_name)
           @expectation_set = true
@@ -67,6 +78,10 @@ module RSpec
         end
 
         private
+        def period_separated_method_chain?(method_name)
+          method_name.is_a?(String) && method_name.include?('.')
+        end
+        
         def received_expected_message!(method_name)
           message_chains.received_expected_message!(method_name)
           restore_method!(method_name)
