@@ -1,6 +1,7 @@
 ### Dev
 
 * Enhancements
+  * Use `__send__` rather than `send` (alextk) 
   * Add support for any_instance.stub_chain (Sidu Ponnappa)
   * Add support for any_instance argument matching based on `with` (Sidu
     Ponnappa and Andy Lindeman)
