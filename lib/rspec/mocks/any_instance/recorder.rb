@@ -140,7 +140,7 @@ module RSpec
           @klass.class_eval(<<-EOM, __FILE__, __LINE__)
             def #{method_name}(*args, &blk)
               self.class.__recorder.playback!(self, :#{method_name})
-              self.send(:#{method_name}, *args, &blk)
+              self.__send__(:#{method_name}, *args, &blk)
             end
           EOM
         end
