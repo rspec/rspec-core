@@ -17,7 +17,7 @@ module RSpec
 
         def playback!(instance)
           messages.inject(instance) do |_instance, message|
-            _instance.send(*message.first, &message.last)
+            _instance.__send__(*message.first, &message.last)
           end
         end
 

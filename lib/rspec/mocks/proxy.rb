@@ -110,7 +110,7 @@ module RSpec
           stub.advise(*args)
           raise_unexpected_message_args_error(stub, *args)
         elsif @object.is_a?(Class)
-          @object.superclass.send(method_name, *args, &block)
+          @object.superclass.__send__(method_name, *args, &block)
         else
           @object.__send__(:method_missing, method_name, *args, &block)
         end

@@ -7,7 +7,7 @@ if defined?(Psych) && Psych.respond_to?(:dump)
         mp = object.instance_variable_get(:@mock_proxy)
         return dump_without_mocks(object, *args) unless mp.is_a?(::RSpec::Mocks::Proxy)
 
-        object.send(:remove_instance_variable, :@mock_proxy)
+        object.__send__(:remove_instance_variable, :@mock_proxy)
 
         begin
           dump_without_mocks(object, *args)
