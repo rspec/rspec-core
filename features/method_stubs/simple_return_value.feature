@@ -49,6 +49,15 @@ Feature: stub with a simple return value
             receiver.message.should eq(:return_value)
           end
         end
+
+        context "specified with a hash" do
+          it "returns the specified value for each method" do
+            receiver = double("receiver")
+            receiver.stub(:message => :return_value, :another_message => :a_different_return_value)
+            receiver.message.should eq(:return_value)
+            receiver.another_message.should eq(:a_different_return_value)
+          end
+        end
       end
       """
     When I run `rspec example_spec.rb`
