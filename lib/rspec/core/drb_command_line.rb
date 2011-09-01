@@ -11,7 +11,7 @@ module RSpec
 
       def run(err, out)
         begin
-          DRb.start_service("druby://localhost:0")
+          DRb.start_service("druby://127.0.0.1:0")
         rescue SocketError, Errno::EADDRNOTAVAIL
           DRb.start_service("druby://:0")
         end
