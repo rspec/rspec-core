@@ -1,15 +1,12 @@
 ### Stub return values
 
-    obj.stub(:message).and_return('this is the value to return')
-    obj.stub(:message) { 'this is the value to return' }
+    obj.stub(:message) { :value }
+    obj.stub(:message => :value)
+    obj.stub(:message).and_return(:value)
 
-These two forms are somewhat interchangeable. The difference is that the
-argument to `and_return` is evaluated immediately, whereas the block contents
-are evaluated lazily when the `obj` receives the `message` message.
-
-The block format is generally preferred as it is more terse and more consistent
-with other forms described below, but lazy evaluation can be confusing because
-things aren't evaluated in the order in which they are declared.
+These forms are somewhat interchangeable. The difference is that the block
+contents are evaluated lazily when the `obj` receives the `message` message,
+whereas the others are evaluated as they are read.
 
 ### Fake implementation
 
@@ -44,4 +41,3 @@ You can also use the block format, for consistency with other stubs:
 #### Regular expressions
 
     obj.stub(:message).with(/abc/) { ... }
-

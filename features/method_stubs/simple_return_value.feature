@@ -1,55 +1,64 @@
 Feature: stub with a simple return value
 
   Use the `stub` method on a test double or a real object to tell the object to
-  return a value (or values) in response to a given message. If the message is
-  never received, nothing happens.
+  return a value (or values) in response to a given message. Nothing happens if
+  the message is never received.
 
-  Scenario: simple stub with no return value
+  Scenario: stub with no return value
     Given a file named "example_spec.rb" with:
       """
-      describe "a simple stub with no return value specified" do
-        let(:receiver) { double("receiver") }
+      describe "a stub with no return value specified" do
+        let(:collaborator) { double("collaborator") }
 
         it "returns nil" do
-          receiver.stub(:message)
-          receiver.message.should be(nil)
-        end
-
-        it "quietly carries on when not called" do
-          receiver.stub(:message)
+          collaborator.stub(:message)
+          collaborator.message.should be(nil)
         end
       end
       """
     When I run `rspec example_spec.rb`
-    Then the output should contain "0 failures"
+    Then the examples should all pass
 
-  Scenario: single return value
+  Scenario: stubs with return values
     Given a file named "example_spec.rb" with:
       """
-      describe "a simple stub with a return value" do
+      describe "a stub with a return value" do
         context "specified in a block" do
           it "returns the specified value" do
-            receiver = double("receiver")
-            receiver.stub(:message) { :return_value }
-            receiver.message.should eq(:return_value)
+            collaborator = double("collaborator")
+            collaborator.stub(:message) { :value }
+            collaborator.message.should eq(:value)
           end
         end
 
-        context "specified in the double declaration" do
+        context "specified with #and_return" do
           it "returns the specified value" do
-            receiver = double("receiver", :message => :return_value)
-            receiver.message.should eq(:return_value)
+            collaborator = double("collaborator")
+            collaborator.stub(:message).and_return(:value)
+            collaborator.message.should eq(:value)
           end
         end
 
-        context "specified with and_return" do
+        context "specified with a hash passed to #stub" do
           it "returns the specified value" do
-            receiver = double("receiver")
-            receiver.stub(:message).and_return(:return_value)
-            receiver.message.should eq(:return_value)
+            collaborator = double("collaborator")
+            collaborator.stub(:message_1 => :value_1, :message_2 => :value_2)
+            collaborator.message_1.should eq(:value_1)
+            collaborator.message_2.should eq(:value_2)
+          end
+        end
+
+        context "specified with a hash passed to #double" do
+          it "returns the specified value" do
+            collaborator = double("collaborator",
+              :message_1 => :value_1,
+              :message_2 => :value_2
+            )
+            collaborator.message_1.should eq(:value_1)
+            collaborator.message_2.should eq(:value_2)
           end
         end
       end
       """
     When I run `rspec example_spec.rb`
-    Then the output should contain "0 failures"
+    Then the examples should all pass
