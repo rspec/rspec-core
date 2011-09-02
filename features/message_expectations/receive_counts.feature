@@ -1,8 +1,5 @@
 Feature: receive counts
 
-  The implicit expectation is that the message passed to should_receive()
-  will be called x number of times.
-
   Scenario: expect a message once
     Given a file named "spec/account_spec.rb" with:
       """
