@@ -117,8 +117,9 @@ module RSpec
         #     its(:keys) { should include(:max_users) }
         #     its(:count) { should eq(2) }
         #   end
-        def its(attribute, &block)
-          describe(attribute) do
+        def its(attribute, *attributes_args, &block)
+          describe_args = describe_args_for attribute, attributes_args
+          describe(*describe_args) do
             example do
               self.class.class_eval do
                 define_method(:subject) do
@@ -126,7 +127,7 @@ module RSpec
                                   super()[*attribute]
                                 else
                                   attribute.to_s.split('.').inject(super()) do |target, method|
-                                    target.send(method)
+                                    target.send(method, *attributes_args)
                                   end
                                 end
                 end
@@ -167,6 +168,13 @@ module RSpec
         def implicit_subject
           described = describes || description
           Class === described ? proc { described.new } : proc { described }
+        end
+
+        def describe_args_for(attribute, attributes_args)
+          to_return = [attribute]
+          return to_return if attributes_args.empty?
+          attributes_args = attributes_args.map { |arg| arg.inspect }
+          to_return << "(#{attributes_args.join ', '})"
         end
       end
 
