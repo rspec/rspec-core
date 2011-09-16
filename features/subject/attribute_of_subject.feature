@@ -84,6 +84,21 @@ Feature: attribute of subject
     When I run `rspec example_spec.rb`
     Then the examples should all pass
 
+  Scenario: specify a value for a getter that receives parameters
+    Given a file named "example_spec.rb" with:
+      """
+      describe [1, 2, 3] do
+        its(:join, '-') { should == '1-2-3' }
+      end
+      """
+    When I run `rspec example_spec.rb --format documentation`
+    Then the output should contain:
+      """
+      [1, 2, 3]
+        join ("-")
+          should == "1-2-3"
+      """
+
   Scenario: specify value for key in a hash
     Given a file named "example_spec.rb" with:
       """
