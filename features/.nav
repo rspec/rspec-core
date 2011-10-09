@@ -14,6 +14,10 @@
   - any_instance.feature
   - block_local_expectations.feature.pending
   - warn_when_expectation_is_set_on_nil.feature
+- argument_matchers:
+  - explicit.feature
+  - general_matchers.feature
+  - type_matchers.feature
 - outside_rspec:
   - configuration.feature
   - standalone.feature
