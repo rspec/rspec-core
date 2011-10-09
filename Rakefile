@@ -58,7 +58,7 @@ desc "Push docs/cukes to relishapp using the relish-client-gem"
 task :relish, :version do |t, args|
   raise "rake relish[VERSION]" unless args[:version]
   sh "cp Changelog.md features/"
-#  sh "relish push rspec/rspec-mocks:#{args[:version]}"
+  sh "relish push rspec/rspec-mocks:#{args[:version]}"
   sh "rm features/Changelog.md"
 end
 
