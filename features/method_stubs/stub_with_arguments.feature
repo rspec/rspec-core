@@ -1,70 +1,59 @@
 Feature: stub with arguments
 
-  You can set up more specific stubs by explicitly declaring the arguments the
-  method stub can be invoked with.
+  Use `with` to constrain stubs to calls with specific arguments. This works
+  like a message expectation with `any_number_of_times`: it will cause a
+  failure if invoked with a different argument, but it will not cause a failure
+  if it is not invoked.
 
-  Scenario: the stub argument is not defined
-    Given a file named "stub_with_arguments_spec.rb" with:
+  Background:
+    Given a file named "account.rb" with:
     """
     class Account
-      def open(logger)
-        logger.log :open
+      def initialize(logger)
+        @logger = logger
       end
-    end
 
-    describe Account do
-      subject { Account.new }
-
-      it "can open an account" do
-        logger = double('logger')
-        logger.stub(:log)
-        subject.open logger
+      def open
+        @logger.log :open
       end
     end
     """
-    When I run `rspec stub_with_arguments_spec.rb`
-    Then the examples should all pass
 
-  Scenario: the stub argument is defined
-    Given a file named "stub_with_arguments_spec.rb" with:
+  Scenario: method invoked with expected argument
+    Given a file named "example_spec.rb" with:
     """
-    class Account
-      def open(logger)
-        logger.log :open
-      end
-    end
+    require "./account.rb"
 
     describe Account do
-      subject { Account.new }
-
       it "can open an account" do
         logger = double('logger')
+        account = Account.new(logger)
         logger.stub(:log).with(:open)
-        subject.open logger
+        account.open
       end
     end
     """
-    When I run `rspec stub_with_arguments_spec.rb`
+    When I run `rspec example_spec.rb`
     Then the examples should all pass
 
-  Scenario: the stub argument is defined but it's other than the actual value
-    Given a file named "stub_with_arguments_spec.rb" with:
+  Scenario: method invoked with a different argument
+    Given a file named "example_spec.rb" with:
     """
-    class Account
-      def open(logger)
-        logger.log :open
-      end
-    end
+    require "./account.rb"
 
     describe Account do
-      subject { Account.new }
-
       it "can open an account" do
         logger = double('logger')
-        logger.stub(:log).with(:something_different)
-        subject.open logger
+        account = Account.new(logger)
+        logger.stub(:log).with(:open_account)
+        account.open
       end
     end
     """
-    When I run `rspec stub_with_arguments_spec.rb`
-    Then the output should contain "1 example, 1 failure"
+    When I run `rspec example_spec.rb`
+    Then the output should contain "1 failure"
+    And the output should contain:
+    """
+             expected: (:open_account)
+                  got: (:open)
+    """

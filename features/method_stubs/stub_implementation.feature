@@ -1,7 +1,7 @@
 Feature: stub with substitute implementation
 
   You can stub an implementation of a method (a.k.a. fake) by passing a block
-  to the stub() method.
+  to the `stub` method.
   
   Scenario: stub implementation
     Given a file named "stub_implementation_spec.rb" with:

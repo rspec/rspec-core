@@ -5,6 +5,7 @@
   - simple_return_value.feature
   - stub_implementation.feature
   - stub_chain.feature
+  - stub_with_arguments.feature
   - any_instance.feature
   - as_null_object.feature
   - to_ary.feature
