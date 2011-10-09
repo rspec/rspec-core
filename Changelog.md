@@ -1,4 +1,6 @@
-### Dev
+### 2.7.0.rc1 / 2011-10-09
+
+[full changelog](http://github.com/rspec/rspec-rails/compare/v2.6.1...v2.7.0.rc1)
 
 * Enhancements
   * Use `__send__` rather than `send` (alextk) 
