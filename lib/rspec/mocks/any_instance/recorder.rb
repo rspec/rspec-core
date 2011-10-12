@@ -36,6 +36,10 @@ module RSpec
           end
         end
 
+        def stub!(*)
+          raise "stub! is not supported on any_instance. Use stub instead."
+        end
+
         def stub_chain(method_name_or_string_chain, *args, &block)
           if period_separated_method_chain?(method_name_or_string_chain)
             first_method_name = method_name_or_string_chain.split('.').first.to_sym

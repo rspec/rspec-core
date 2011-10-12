@@ -1,4 +1,3 @@
-
 require 'spec_helper'
 
 module RSpec
@@ -233,6 +232,14 @@ module RSpec
             class RSpec::SampleRspecTestClass;end
             RSpec::SampleRspecTestClass.foo.should eq(1)
           end
+        end
+      end
+
+      context "with #stub!" do
+        it "raises with a message instructing the user to use stub instead" do
+          expect do
+            klass.any_instance.stub!(:foo)
+          end.to raise_error(/Use stub instead/)
         end
       end
       
