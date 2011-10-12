@@ -17,7 +17,7 @@ module RSpec
   #
   #   book = double("book")
   #   double.stub(:title) { "The RSpec Book" }
-  #   double.title => "The RSpec Book"
+  #   double.title # => "The RSpec Book"
   #
   # When we declare a stub, we say we are "stubbing" a method.
   #
@@ -37,9 +37,9 @@ module RSpec
   # == Mock Objects and Test Stubs
   #
   # The names Mock Object and Test Stub suggest specialized Test Doubles.  i.e.
-  # Test Stub evokes Test Double that only supports method stubs, and a Mock
-  # Object evokes a Test Double that only supports message expectations, or
-  # sometimes supports message expectations in addition to method stubs.
+  # a Test Stub is a Test Double that only supports method stubs, and a Mock
+  # Object is a Test Double that supports message expectations and method
+  # stubs.
   #
   # There is a lot of overlapping nomenclature here, and there are many
   # variations of these patterns (fakes, spies, etc). Keep in mind that most of
@@ -60,7 +60,7 @@ module RSpec
   #
   # In this case we're instrumenting Person to return the person object we've
   # defined whenever it receives the +find+ message. We can do this with any
-  # object in a system because RSpec adds the +stub+ and +should_receive+
+  # object in a system because rspec-mocks adds the +stub+ and +should_receive+
   # methods to every object. When we use either, RSpec replaces the method
   # we're stubbing or mocking with it's own test-double-like method. At the
   # end of the example, RSpec verifies any message expectations, and then
@@ -73,15 +73,14 @@ module RSpec
   #
   # == Argument Matchers
   #
-  # Arguments that are passed to #with are compared with actual arguments received
-  # using == by default. In cases in which you want to specify things about the arguments
-  # rather than the arguments themselves, you can use any of RSpec's Expression Matchers.
-  # They don't all make syntactic sense (they were primarily designed for use with
-  # RSpec::Expectations), but you are free to create your own custom RSpec::Matchers.
+  # Arguments that are passed to +with+ are compared with actual arguments
+  # received using ==. In cases in which you want to specify things about the
+  # arguments rather than the arguments themselves, you can use any of the
+  # matchers that ship with rspec-expectations. They don't all make syntactic
+  # sense (they were primarily designed for use with RSpec::Expectations), but
+  # you are free to create your own custom RSpec::Matchers.
   #
-  # RSpec::Mocks does provide one additional Matcher method named #ducktype.
-  #
-  # In addition, RSpec::Mocks adds some keyword Symbols that you can use to
+  # rspec-mocks also adds some keyword Symbols that you can use to
   # specify certain kinds of arguments:
   #
   #   double.should_receive(:msg).with(no_args())
