@@ -10,6 +10,8 @@ module RSpec
           def existing_method; :existing_method_return_value; end
           def existing_method_with_arguments(arg_one, arg_two = nil); :existing_method_with_arguments_return_value; end
           def another_existing_method; end
+          private
+          def private_method; :private_method_return_value; end
         end
       end
       let(:existing_method_return_value){ :existing_method_return_value }
@@ -194,7 +196,7 @@ module RSpec
             klass.new.foo.should eq(klass.new.foo)
           end
         end
-
+        
         context "core ruby objects" do
           it "works uniformly across *everything*" do
             Object.any_instance.stub(:foo).and_return(1)
@@ -642,39 +644,80 @@ module RSpec
           end
 
           context "with stubbing" do
-            before(:each) do
-              klass.any_instance.stub(:existing_method).and_return(1)
-              klass.method_defined?(:__existing_method_without_any_instance__).should be_true
+            context "public methods" do
+              before(:each) do
+                klass.any_instance.stub(:existing_method).and_return(1)
+                klass.method_defined?(:__existing_method_without_any_instance__).should be_true
+              end
+
+              it "restores the class to its original state after each example when no instance is created" do
+                space.verify_all
+
+                klass.method_defined?(:__existing_method_without_any_instance__).should be_false
+                klass.new.existing_method.should eq(existing_method_return_value)
+              end
+
+              it "restores the class to its original state after each example when one instance is created" do
+                klass.new.existing_method
+
+                space.verify_all
+
+                klass.method_defined?(:__existing_method_without_any_instance__).should be_false
+                klass.new.existing_method.should eq(existing_method_return_value)
+              end
+
+              it "restores the class to its original state after each example when more than one instance is created" do
+                klass.new.existing_method
+                klass.new.existing_method
+
+                space.verify_all
+
+                klass.method_defined?(:__existing_method_without_any_instance__).should be_false
+                klass.new.existing_method.should eq(existing_method_return_value)
+              end
             end
-
-            it "restores the class to its original state after each example when no instance is created" do
-              space.verify_all
-
-              klass.method_defined?(:__existing_method_without_any_instance__).should be_false
-              klass.new.existing_method.should eq(existing_method_return_value)
-            end
-
-            it "restores the class to its original state after each example when one instance is created" do
-              klass.new.existing_method
-
-              space.verify_all
-
-              klass.method_defined?(:__existing_method_without_any_instance__).should be_false
-              klass.new.existing_method.should eq(existing_method_return_value)
-            end
-
-            it "restores the class to its original state after each example when more than one instance is created" do
-              klass.new.existing_method
-              klass.new.existing_method
-
-              space.verify_all
-
-              klass.method_defined?(:__existing_method_without_any_instance__).should be_false
-              klass.new.existing_method.should eq(existing_method_return_value)
+            
+            context "private methods" do
+              before :each do
+                klass.any_instance.stub(:private_method).and_return(:something)
+                space.verify_all
+              end
+              
+              it "cleans up the backed up method" do
+                klass.method_defined?(:__existing_method_without_any_instance__).should be_false
+              end
+              
+              it "restores a stubbed private method after the spec is run" do
+                klass.private_method_defined?(:private_method).should be_true
+              end
+              
+              it "ensures that the restored method behaves as it originally did" do
+                klass.new.send(:private_method).should eq(:private_method_return_value)
+              end
             end
           end
 
           context "with expectations" do
+            context "private methods" do
+              before :each do
+                klass.any_instance.should_receive(:private_method).and_return(:something)
+                klass.new.private_method
+                space.verify_all
+              end
+
+              it "cleans up the backed up method" do
+                klass.method_defined?(:__existing_method_without_any_instance__).should be_false
+              end
+
+              it "restores a stubbed private method after the spec is run" do
+                klass.private_method_defined?(:private_method).should be_true
+              end
+
+              it "ensures that the restored method behaves as it originally did" do
+                klass.new.send(:private_method).should eq(:private_method_return_value)
+              end
+            end
+            
             context "ensures that the subsequent specs do not see expectations set in previous specs" do
               context "when the instance created after the expectation is set" do
                 it "first spec" do

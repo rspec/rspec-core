@@ -93,7 +93,7 @@ module RSpec
         end
         
         def restore_method!(method_name)
-          if @klass.method_defined?(build_alias_method_name(method_name))
+          if public_protected_or_private_method_defined?(build_alias_method_name(method_name))
             restore_original_method!(method_name)
           else
             remove_dummy_method!(method_name)
@@ -122,12 +122,14 @@ module RSpec
         def backup_method!(method_name)
           alias_method_name = build_alias_method_name(method_name)
           @klass.class_eval do
-            if method_defined?(method_name)
-              alias_method alias_method_name, method_name
-            end
-          end
+            alias_method alias_method_name, method_name
+          end if public_protected_or_private_method_defined?(method_name)
         end
-
+        
+        def public_protected_or_private_method_defined?(method_name)
+          @klass.method_defined?(method_name) || @klass.private_method_defined?(method_name)
+        end
+        
         def stop_observing!(method_name)
           restore_method!(method_name)
           @observed_methods.delete(method_name)
