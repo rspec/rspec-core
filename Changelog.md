@@ -1,3 +1,10 @@
+### 2.7.0.rc2 (not yet released)
+
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.7.0.rc1...master)
+
+* Bug fixes
+  * any_instance properly restores private methods (Sidu Ponnappa)
+
 ### 2.7.0.rc1 / 2011-10-09
 
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.6.0...v2.7.0.rc1)
