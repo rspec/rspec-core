@@ -1,13 +1,6 @@
-### 2.7.0.rc2 (not yet released)
+### 2.7.0 / 2011-10-16
 
-[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.7.0.rc1...master)
-
-* Bug fixes
-  * any_instance properly restores private methods (Sidu Ponnappa)
-
-### 2.7.0.rc1 / 2011-10-09
-
-[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.6.0...v2.7.0.rc1)
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.6.0...v2.7.0)
 
 * Enhancements
   * Use `__send__` rather than `send` (alextk) 
@@ -22,6 +15,7 @@
 * Bug fixes
   * pass a hash to `any_instance.stub`. (Justin Ko)
   * allow :to_ary to be called without raising NoMethodError (Mikhail Dieterle)
+  * any_instance properly restores private methods (Sidu Ponnappa)
 
 ### 2.6.0 / 2011-05-12
 
