@@ -138,48 +138,41 @@ module RSpec
         end
       end
 
-      # :call-seq:
-      #   object.should_receive(:message).with(any_args())
-      #
       # Passes if object receives :message with any args at all. This is
       # really a more explicit variation of object.should_receive(:message)
+      #
+      # == Examples
+      #   object.should_receive(:message).with(any_args())
       def any_args
         AnyArgsMatcher.new
       end
       
-      # :call-seq:
-      #   object.should_receive(:message).with(anything())
-      #
       # Passes as long as there is an argument.
+      #
+      # == Examples
+      #   object.should_receive(:message).with(anything())
       def anything
         AnyArgMatcher.new(nil)
       end
       
-      # :call-seq:
-      #   object.should_receive(:message).with(no_args)
-      #
       # Passes if no arguments are passed along with the message
+      #
+      # == Examples
+      #   object.should_receive(:message).with(no_args)
       def no_args
         NoArgsMatcher.new
       end
       
-      # :call-seq:
-      #   object.should_receive(:message).with(duck_type(:hello))
-      #   object.should_receive(:message).with(duck_type(:hello, :goodbye))
-      #
       # Passes if the argument responds to the specified messages.
       #
       # == Examples
-      #
-      #   array = []
-      #   display = double('display')
-      #   display.should_receive(:present_names).with(duck_type(:length, :each))
-      #   => passes
+      #   object.should_receive(:message).with(duck_type(:hello))
+      #   object.should_receive(:message).with(duck_type(:hello, :goodbye))
       def duck_type(*args)
         DuckTypeMatcher.new(*args)
       end
 
-      # :call-seq:
+      # == Examples
       #   object.should_receive(:message).with(boolean())
       #
       # Passes if the argument is boolean.
@@ -187,22 +180,23 @@ module RSpec
         BooleanMatcher.new(nil)
       end
       
-      # :call-seq:
+      # Passes if the argument is a hash that includes the specified key(s) or key/value
+      # pairs. If the hash includes other keys, it will still pass.
+      #
+      # == Examples
       #   object.should_receive(:message).with(hash_including(:key => val))
       #   object.should_receive(:message).with(hash_including(:key))
       #   object.should_receive(:message).with(hash_including(:key, :key2 => val2))
-      # Passes if the argument is a hash that includes the specified key(s) or key/value
-      # pairs. If the hash includes other keys, it will still pass.
       def hash_including(*args)
         HashIncludingMatcher.new(anythingize_lonely_keys(*args))
       end
       
-      # :call-seq:
+      # Passes if the argument is a hash that doesn't include the specified key(s) or key/value
+      #
+      # == Examples
       #   object.should_receive(:message).with(hash_not_including(:key => val))
       #   object.should_receive(:message).with(hash_not_including(:key))
       #   object.should_receive(:message).with(hash_not_including(:key, :key2 => :val2))
-      #
-      # Passes if the argument is a hash that doesn't include the specified key(s) or key/value
       def hash_not_including(*args)
         HashNotIncludingMatcher.new(anythingize_lonely_keys(*args))
       end

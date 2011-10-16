@@ -3,21 +3,6 @@
 rspec-mocks provides a test-double framework for rspec including support
 for method stubs, fakes, and message expectations.
 
-[![build status](http://travis-ci.org/rspec/rspec-mocks.png)](http://travis-ci.org/rspec/rspec-mocks)
-
-## Documentation
-
-The [Cucumber features](http://relishapp.com/rspec/rspec-mocks) are the
-most comprehensive and up-to-date docs for end-users.
-
-The [RDoc](http://rubydoc.info/gems/rspec-mocks/2.3.0/frames) provides additional
-information for contributors and/or extenders.
-
-All of the documentation is open source and a work in progress. If you find it
-lacking or confusing, you can help improve it by submitting requests and
-patches to the [rspec-mocks issue
-tracker](https://github.com/rspec/rspec-mocks/issues).
-
 ## Install
 
     gem install rspec       # for rspec-core, rspec-expectations, rspec-mocks
@@ -47,10 +32,6 @@ tracker](https://github.com/rspec/rspec-mocks/issues).
         end
       end
     end
-
-## Contribute
-
-See [http://github.com/rspec/rspec-dev](http://github.com/rspec/rspec-dev)
 
 ## Also see
 

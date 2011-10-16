@@ -24,15 +24,13 @@ module RSpec
       alias_method :stub!, :stub
       alias_method :unstub!, :unstub
       
-      # :call-seq:
-      #   double.stub_chain("foo.bar") { :baz }
-      #   double.stub_chain(:foo, :bar) { :baz }
-      #
       # Stubs a chain of methods. Especially useful with fluent and/or
       # composable interfaces.
       #
       # == Examples
       #
+      #   double.stub_chain("foo.bar") { :baz }
+      #   double.stub_chain(:foo, :bar) { :baz }
       #   Article.stub_chain("recent.published") { [Article.new] }
       def stub_chain(*chain, &blk)
         chain, blk = format_chain(*chain, &blk)
@@ -50,15 +48,15 @@ module RSpec
         end
       end
       
-      def received_message?(sym, *args, &block) #:nodoc:
+      def received_message?(sym, *args, &block)
         __mock_proxy.received_message?(sym.to_sym, *args, &block)
       end
       
-      def rspec_verify #:nodoc:
+      def rspec_verify
         __mock_proxy.verify
       end
 
-      def rspec_reset #:nodoc:
+      def rspec_reset
         __mock_proxy.reset
       end
       

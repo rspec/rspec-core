@@ -45,11 +45,11 @@ module RSpec
         @object
       end
 
-      def already_proxied_respond_to # :nodoc:
+      def already_proxied_respond_to
         @already_proxied_respond_to = true
       end
 
-      def already_proxied_respond_to? # :nodoc:
+      def already_proxied_respond_to?
         @already_proxied_respond_to
       end
 
@@ -69,7 +69,7 @@ module RSpec
         method_double[method_name].remove_stub
       end
       
-      def verify #:nodoc:
+      def verify
         method_doubles.each {|d| d.verify}
       ensure
         reset

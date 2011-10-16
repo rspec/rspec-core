@@ -63,10 +63,8 @@ module RSpec
         @return_block = block_given? ? return_block : lambda { value }
       end
       
-      # :call-seq:
-      #   and_raise()
-      #   and_raise(Exception) #any exception class
-      #   and_raise(exception) #any exception object
+      # Tells the mock or stub to raise an exception when the message
+      # is received.
       #
       # == Warning
       #
@@ -74,6 +72,11 @@ module RSpec
       # raise an instance of it, creating it with +new+. If the exception
       # class initializer requires any parameters, you must pass in an
       # instance and not the class.
+      #
+      # == Examples
+      #   and_raise()
+      #   and_raise(Exception) #any exception class
+      #   and_raise(exception) #any exception object
       def and_raise(exception=Exception)
         @exception_to_raise = exception
       end
