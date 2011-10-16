@@ -4,18 +4,19 @@
 
 * Enhancements
   * Use `__send__` rather than `send` (alextk) 
-  * Add support for any_instance.stub_chain (Sidu Ponnappa)
-  * Add support for any_instance argument matching based on `with` (Sidu
+  * Add support for `any_instance.stub_chain` (Sidu Ponnappa)
+  * Add support for `any_instance` argument matching based on `with` (Sidu
     Ponnappa and Andy Lindeman)
 
 * Changes
-  * Check for #failure_message_for_should or #failure_message instead of
-    #description to detect a matcher (Tibor Claassen)
+  * Check for `failure_message_for_should` or `failure_message` instead of
+    `description` to detect a matcher (Tibor Claassen)
 
 * Bug fixes
   * pass a hash to `any_instance.stub`. (Justin Ko)
-  * allow :to_ary to be called without raising NoMethodError (Mikhail Dieterle)
-  * any_instance properly restores private methods (Sidu Ponnappa)
+  * allow `to_ary` to be called without raising `NoMethodError` (Mikhail
+    Dieterle)
+  * `any_instance` properly restores private methods (Sidu Ponnappa)
 
 ### 2.6.0 / 2011-05-12
 
