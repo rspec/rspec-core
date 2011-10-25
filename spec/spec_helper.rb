@@ -36,6 +36,7 @@ end
 RSpec.configure do |config|
   config.mock_with :rspec
   config.color_enabled = true
+  config.order = :random
   config.extend(Macros)
   config.include(RSpec::Mocks::Methods)
 
