@@ -43,7 +43,7 @@ module RSpec
         end
         if options[:filter]
           options[:filter].each_pair do |k, v|
-            argv << "--tag" << k.to_s
+            argv << "--tag" << (v == true ? k.to_s : [k.to_s,v].join(':') )
           end
         end
         if options[:exclusion_filter]
