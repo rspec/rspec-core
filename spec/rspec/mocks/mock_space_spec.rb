@@ -38,7 +38,7 @@ module RSpec
         @space.reset_all
       end
       it "clears internal mocks on reset_all" do
-        @space.add(m = double("mock"))
+        @space.add(double("mock"))
         @space.reset_all
         @space.instance_eval { mocks.empty? }.should be_true
       end

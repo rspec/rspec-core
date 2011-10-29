@@ -67,7 +67,7 @@ module RSpec
         compiled_with_psych = begin
           require 'psych'
           true
-        rescue LoadError => e
+        rescue LoadError
           false
         end
 

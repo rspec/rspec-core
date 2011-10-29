@@ -5,7 +5,7 @@ def remove_last_describe_from_world
 end
 
 def empty_example_group
-  group = RSpec::Core::ExampleGroup.describe(Object, 'Empty Behaviour Group') { }
+  RSpec::Core::ExampleGroup.describe(Object, 'Empty Behaviour Group') { }
   remove_last_describe_from_world
 end
 

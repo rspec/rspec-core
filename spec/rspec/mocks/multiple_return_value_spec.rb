@@ -61,7 +61,6 @@ module RSpec
       end
 
       it "complains when there are too few calls" do
-        third = Object.new
         @mock.message.should eq @return_values[0]
         @mock.message.should eq @return_values[1]
         expect { @mock.rspec_verify }.to raise_error(
@@ -71,7 +70,6 @@ module RSpec
       end
 
       it "complains when there are too many calls" do
-        third = Object.new
         @mock.message.should eq @return_values[0]
         @mock.message.should eq @return_values[1]
         @mock.message.should eq @return_values[2]
@@ -83,7 +81,6 @@ module RSpec
       end
 
       it "complains when there are too many calls and method is stubbed too" do
-        third = Object.new
         @mock.stub(:message).and_return :stub_result
         @mock.message.should eq @return_values[0]
         @mock.message.should eq @return_values[1]
