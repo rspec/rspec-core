@@ -156,7 +156,6 @@ module RSpec
           @klass.class_eval(<<-EOM, __FILE__, __LINE__)
             def #{method_name}(*args, &blk)
               method_name = :#{method_name}
-              current_instance = self
               invoked_instance = self.class.__recorder.instance_that_received(method_name)
               raise RSpec::Mocks::MockExpectationError, "The message '#{method_name}' was received by \#{self.inspect} but has already been received by \#{invoked_instance}"
             end

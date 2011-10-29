@@ -60,7 +60,7 @@ module RSpec
             return false unless actual.has_key?(key) && value == actual[key]
           end
           true
-        rescue NoMethodError => ex
+        rescue NoMethodError
           return false
         end
 
@@ -79,7 +79,7 @@ module RSpec
             return false if actual.has_key?(key) && value == actual[key]
           end
           true
-        rescue NoMethodError => ex
+        rescue NoMethodError
           return false
         end
 
