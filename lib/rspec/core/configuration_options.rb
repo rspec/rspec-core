@@ -24,7 +24,9 @@ module RSpec
       end
 
       def parse_options
-        @options ||= [file_options, command_line_options, env_options].inject {|merged, o| merged.merge o}
+        @options ||= [file_options, command_line_options, env_options].inject do |merged, o|
+          merged.merge(o) {|key, oldval, newval| [:requires, :libs].include?(key) ? oldval + newval : newval}
+        end
       end
 
       def drb_argv
