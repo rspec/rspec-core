@@ -7,6 +7,7 @@
   * Add support for `any_instance.stub_chain` (Sidu Ponnappa)
   * Add support for `any_instance` argument matching based on `with` (Sidu
     Ponnappa and Andy Lindeman)
+  * Eliminate Ruby warnings (Matijs van Zuijlen)
 
 * Changes
   * Check for `failure_message_for_should` or `failure_message` instead of
