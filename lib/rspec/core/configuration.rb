@@ -33,7 +33,6 @@ module RSpec
       add_setting :fail_fast
       add_setting :failure_exit_code, :default => 1
       add_setting :run_all_when_everything_filtered
-      add_setting :exclusion_filter
       add_setting :inclusion_filter
       add_setting :filter, :alias => :inclusion_filter
       add_setting :pattern, :default => '**/*_spec.rb'
@@ -461,6 +460,10 @@ EOM
       # hash.
       def exclusion_filter
         settings[:exclusion_filter] ||= {}
+      end
+
+      def exclusion_filter?
+        exclusion_filter
       end
 
       STANDALONE_FILTERS = [:line_numbers, :full_description]
