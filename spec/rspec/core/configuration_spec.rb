@@ -804,7 +804,16 @@ module RSpec::Core
     describe "#add_setting" do
       describe "with no modifiers" do
         context "with no additional options" do
-          before { config.add_setting :custom_option }
+          before do
+            config.class.class_eval do
+              if method_defined? :custom_option
+                undef :custom_option
+                undef :custom_option=
+                undef :custom_option?
+              end
+            end
+            config.add_setting :custom_option
+          end
 
           it "defaults to nil" do
             config.custom_option.should be_nil
@@ -821,7 +830,16 @@ module RSpec::Core
         end
 
         context "with :default => 'a value'" do
-          before { config.add_setting :custom_option, :default => 'a value' }
+          before do
+            config.class.class_eval do
+              if method_defined? :custom_option
+                undef :custom_option
+                undef :custom_option=
+                undef :custom_option?
+              end
+            end
+            config.add_setting :custom_option, :default => 'a value'
+          end
 
           it "defaults to 'a value'" do
             config.custom_option.should eq("a value")
@@ -850,6 +868,13 @@ module RSpec::Core
 
       context "with :alias => " do
         before do
+          config.class.class_eval do
+            if method_defined? :custom_option
+              undef :custom_option
+              undef :custom_option=
+              undef :custom_option?
+            end
+          end
           config.add_setting :custom_option
           config.add_setting :another_custom_option, :alias => :custom_option
         end
@@ -920,6 +945,11 @@ module RSpec::Core
     describe "#alias_example_to" do
       it_behaves_like "metadata hash builder" do
         def metadata_hash(*args)
+          RSpec::Core::ExampleGroup.module_eval do
+            class << self
+              undef :my_example if method_defined? :my_example
+            end
+          end
           config.alias_example_to :my_example, *args
           group = ExampleGroup.describe("group")
           example = group.my_example("description")
