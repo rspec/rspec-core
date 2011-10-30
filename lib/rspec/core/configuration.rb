@@ -75,7 +75,7 @@ module RSpec
 
       def reset
         @reporter = nil
-        @formatters.clear if @formatters
+        formatters.clear
       end
 
       # @overload add_setting(name)
