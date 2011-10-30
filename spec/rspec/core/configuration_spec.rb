@@ -187,7 +187,6 @@ module RSpec::Core
 
       context "with default pattern" do
         it "loads files named _spec.rb" do
-          dir = "spec/rspec/core/resources"
           config.files_or_directories_to_run = "spec/rspec/core/resources"
           config.files_to_run.should eq([      "spec/rspec/core/resources/a_spec.rb"])
         end
