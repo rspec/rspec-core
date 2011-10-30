@@ -1,3 +1,8 @@
+### 2.8.0 (in development)
+
+* Enhancements
+  * Eliminate Ruby warnings (Matijs van Zuijlen)
+
 ### 2.7.0 / 2011-10-16
 
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.6.0...v2.7.0)
@@ -7,7 +12,6 @@
   * Add support for `any_instance.stub_chain` (Sidu Ponnappa)
   * Add support for `any_instance` argument matching based on `with` (Sidu
     Ponnappa and Andy Lindeman)
-  * Eliminate Ruby warnings (Matijs van Zuijlen)
 
 * Changes
   * Check for `failure_message_for_should` or `failure_message` instead of
