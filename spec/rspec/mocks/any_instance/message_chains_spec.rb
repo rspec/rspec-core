@@ -19,7 +19,7 @@ describe RSpec::Mocks::AnyInstance::MessageChains do
   it "can remove all stub chains" do
     chains.add(:method_name, stub_chain)
     chains.add(:method_name, expectation_chain)
-    chains.add(:method_name, another_stub_chain = RSpec::Mocks::AnyInstance::StubChain.new)
+    chains.add(:method_name, RSpec::Mocks::AnyInstance::StubChain.new)
 
     chains.remove_stub_chains_for!(:method_name)
     chains[:method_name].should eq([expectation_chain])
