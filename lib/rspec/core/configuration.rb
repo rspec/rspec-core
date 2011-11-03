@@ -147,10 +147,8 @@ MESSAGE
 
       # Returns the configured mock framework adapter module
       def mock_framework
-        @mock_framework ||= begin
-                              require 'rspec/core/mocking/with_rspec'
-                              RSpec::Core::MockFrameworkAdapter
-                            end
+        mock_with :rspec unless @mock_framework
+        @mock_framework
       end
 
       # Delegates to mock_framework=(framework)
@@ -181,10 +179,9 @@ MESSAGE
       #   teardown_mocks_for_rspec
       #     - called after verify_mocks_for_rspec (even if there are errors)
       def mock_with(framework)
-        assert_no_example_groups_defined(:mock_framework)
-        case framework
+        framework_module = case framework
         when Module
-          @mock_framework = framework
+          framework
         when String, Symbol
           require case framework.to_s
                   when /rspec/i
@@ -198,8 +195,18 @@ MESSAGE
                   else
                     'rspec/core/mocking/with_absolutely_nothing'
                   end
-          @mock_framework = RSpec::Core::MockFrameworkAdapter
+          RSpec::Core::MockFrameworkAdapter
         end
+
+        new_name, old_name = [framework_module, @mock_framework].map do |mod|
+          mod.respond_to?(:framework_name) ?  mod.framework_name : :unnamed
+        end
+
+        unless new_name == old_name
+          assert_no_example_groups_defined(:mock_framework)
+        end
+
+        @mock_framework = framework_module
       end
 
       # Returns the configured expectation framework adapter module(s)
@@ -221,20 +228,26 @@ MESSAGE
       # Given :stdlib, configures test/unit/assertions
       # Given both, configures both
       def expect_with(*frameworks)
-        assert_no_example_groups_defined(:expect_with)
-        @expectation_frameworks.clear
-        frameworks.each do |framework|
+        modules = frameworks.map do |framework|
           case framework
           when :rspec
-            require 'rspec/core/expecting/with_rspec'
+            require 'rspec/expectations'
             self.expecting_with_rspec = true
+            ::RSpec::Matchers
           when :stdlib
-            require 'rspec/core/expecting/with_stdlib'
+            require 'test/unit/assertions'
+            ::Test::Unit::Assertions
           else
             raise ArgumentError, "#{framework.inspect} is not supported"
           end
-          @expectation_frameworks << RSpec::Core::ExpectationFrameworkAdapter
         end
+
+        if (modules - @expectation_frameworks).any?
+          assert_no_example_groups_defined(:expect_with)
+        end
+
+        @expectation_frameworks.clear
+        @expectation_frameworks.push(*modules)
       end
 
       def full_backtrace=(true_or_false)

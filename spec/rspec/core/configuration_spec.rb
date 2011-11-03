@@ -1,6 +1,9 @@
 require 'spec_helper'
 require 'tmpdir'
 
+# so the stdlib module is available...
+module Test; module Unit; module Assertions; end; end; end
+
 module RSpec::Core
 
   describe Configuration do
@@ -51,7 +54,7 @@ module RSpec::Core
     describe "#mock_framework="do
       it "delegates to mock_with" do
         config.should_receive(:mock_with).with(:rspec)
-        config.mock_with :rspec
+        config.mock_framework = :rspec
       end
     end
 
@@ -80,18 +83,34 @@ module RSpec::Core
       end
 
       context 'when there are already some example groups defined' do
+        before(:each) { config.stub(:require) }
+
         it 'raises an error since this setting must be applied before any groups are defined' do
           RSpec.world.stub(:example_groups).and_return([double.as_null_object])
           expect {
-            config.mock_with :rspec
+            config.mock_with :mocha
           }.to raise_error(/must be configured before any example groups are defined/)
+        end
+
+        it 'does not raise an error if the default `mock_with :rspec` is re-configured' do
+          config.mock_framework # called by RSpec when configuring the first example group
+          RSpec.world.stub(:example_groups).and_return([double.as_null_object])
+          config.mock_with :rspec
+        end
+
+        it 'does not raise an error if re-setting the same config' do
+          groups = []
+          RSpec.world.stub(:example_groups => groups)
+          config.mock_with :mocha
+          groups << double.as_null_object
+          config.mock_with :mocha
         end
       end
     end
 
     describe "#expectation_framework" do
       it "defaults to :rspec" do
-        config.should_receive(:require).with('rspec/core/expecting/with_rspec')
+        config.should_receive(:require).with('rspec/expectations')
         config.expectation_frameworks
       end
     end
@@ -104,10 +123,19 @@ module RSpec::Core
     end
 
     describe "#expect_with" do
-      [:rspec, :stdlib].each do |framework|
+      before(:each) do
+        # we need to prevent stdlib from being required because it defines a
+        # `pass` method that conflicts with our `pass` matcher.
+        config.stub(:require)
+      end
+
+      [
+        [:rspec,  'rspec/expectations'],
+        [:stdlib, 'test/unit/assertions']
+      ].each do |(framework, required_file)|
         context "with #{framework}" do
-          it "requires the adapter for #{framework.inspect}" do
-            config.should_receive(:require).with("rspec/core/expecting/with_#{framework}")
+          it "requires #{required_file}" do
+            config.should_receive(:require).with(required_file)
             config.expect_with framework
           end
         end
@@ -125,6 +153,20 @@ module RSpec::Core
           expect {
             config.expect_with :rspec
           }.to raise_error(/must be configured before any example groups are defined/)
+        end
+
+        it 'does not raise an error if the default `expect_with :rspec` is re-configured' do
+          config.expectation_frameworks # called by RSpec when configuring the first example group
+          RSpec.world.stub(:example_groups).and_return([double.as_null_object])
+          config.expect_with :rspec
+        end
+
+        it 'does not raise an error if re-setting the same config' do
+          groups = []
+          RSpec.world.stub(:example_groups => groups)
+          config.expect_with :stdlib
+          groups << double.as_null_object
+          config.expect_with :stdlib
         end
       end
     end
