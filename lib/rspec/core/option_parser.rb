@@ -80,7 +80,7 @@ module RSpec::Core
         parser.on('-O', '--options PATH', 'Specify the path to an options file') do |path|
           options[:custom_options_file] = path
         end
-        
+
         parser.on('--order TYPE', 'Run examples by the specified order type',
                   '  [rand] randomized',
                   '  [random] alias for rand',
@@ -131,23 +131,26 @@ module RSpec::Core
           options[:failure_exit_code] = o.to_i
         end
 
-        parser.on('-t', '--tag TAG[:VALUE]', 'Run examples with the specified tag',
+        parser.on('-t', '--tag TAG[:VALUES]', Array,
+                'Run examples with the specified tags (separated by commas)',
                 'To exclude examples, add ~ before the tag (e.g. ~slow)',
-                '(TAG is always converted to a symbol)') do |tag|
-          filter_type = tag =~ /^~/ ? :exclusion_filter : :inclusion_filter
+                '(TAG is always converted to a symbol)') do |tags|
+          tags.each do |tag|
+            filter_type = tag =~ /^~/ ? :exclusion_filter : :inclusion_filter
 
-          name,value = tag.gsub(/^(~@|~|@)/, '').split(':')
-          name = name.to_sym
+            name,value = tag.gsub(/^(~@|~|@)/, '').split(':')
+            name = name.to_sym
 
-          options[filter_type] ||= {}
-          options[filter_type][name] = case value
-                                       when /^(true|false|nil)$/
-                                         eval(value)
-                                       when nil
-                                         true
-                                       else
-                                         value
-                                       end
+            options[filter_type] ||= {}
+            options[filter_type][name] = case value
+                                         when /^(true|false|nil)$/
+                                           eval(value)
+                                         when nil
+                                           true
+                                         else
+                                           value
+                                         end
+          end
         end
 
         parser.on('--tty', 'Used internally by rspec when sending commands to other processes') do |o|

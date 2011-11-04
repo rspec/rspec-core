@@ -271,7 +271,6 @@ describe RSpec::Core::ConfigurationOptions do
     end
   end
 
-
   describe "files_or_directories_to_run" do
     it "parses files from '-c file.rb dir/file.rb'" do
       parse_options("-c", "file.rb", "dir/file.rb").should include(:files_or_directories_to_run => ["file.rb", "dir/file.rb"])
