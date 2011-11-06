@@ -1,7 +1,9 @@
-### 2.8.0 (in development)
+### 2.8.0.rc1 / 2011-11-06
+
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.7.0...v2.8.0.rc1)
 
 * Enhancements
-  * Eliminate Ruby warnings (Matijs van Zuijlen)
+    * Eliminate Ruby warnings (Matijs van Zuijlen)
 
 ### 2.7.0 / 2011-10-16
 
