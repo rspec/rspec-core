@@ -18,25 +18,46 @@ expectations.
 
 ## Method Stubs
 
-A method stub is an implementation that returns a pre-determined value.
+A method stub is an implementation that returns a pre-determined value.  Method
+stubs can be declared on test doubles or real objects using the same syntax.
+rspec-mocks supports 3 forms for declaring method stubs:
 
-    book = double("book")
     book.stub(:title) { "The RSpec Book" }
-    book.title # => "The RSpec Book"
+    book.stub(:title => "The RSpec Book")
+    book.stub(:title).and_return("The RSpec Book")
 
-These syntaxes also work:
+You can also use this shortcut, which creates a test double and declares a
+method stub in one statement:
 
     book = double("book", :title => "The RSpec Book")
-    book.stub(:page_count).and_return(499)
-    book.stub(:page_count => 499)
 
-The first creates a test double and then stubs `:title`. The other two stub
-`:page_count` on a book double that's already been declared.
-
-You can also leave the name out if you don't care about seeing it
-in failure messages.
+The first argment is a name, which is used for documentation and appears in
+failure messages. If you don't care about the name, you can leave it out,
+making the combined instantiation/stub declaration very terse:
 
     double(:foo => 'bar')
+
+This is particularly nice when providing a list of test doubles to a method
+that iterates through them:
+
+    order.calculate_total_price(stub(:price => 1.99),stub(:price => 2.99))
+
+## Consecutive return values
+
+When a stub might be invoked more than once, you can provide additional
+arguments to `and_return`.  The invocations cycle through the list. The last
+value is returned for any subsequent invocations:
+
+    die.stub(:roll).and_return(1,2,3)
+    die.roll # => 1
+    die.roll # => 2
+    die.roll # => 3
+    die.roll # => 3
+    die.roll # => 3
+
+To return an array in a single invocation, declare an array:
+
+    team.stub(:players).and_return([stub(:name => "David")])
 
 ## Message Expectations
 
