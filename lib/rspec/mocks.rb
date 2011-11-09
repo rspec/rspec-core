@@ -175,10 +175,9 @@ module RSpec
     class << self
       attr_accessor :space
 
-      def setup(includer)
-        Object.class_eval { include RSpec::Mocks::Methods }
-        Class.class_eval  { include RSpec::Mocks::AnyInstance }
-        (class << includer; self; end).class_eval do
+      def setup(host)
+        add_extensions unless extensions_added?
+        (class << host; self; end).class_eval do
           include RSpec::Mocks::ExampleMethods
         end
         self.space ||= RSpec::Mocks::Space.new
@@ -190,6 +189,18 @@ module RSpec
 
       def teardown
         space.reset_all
+      end
+
+    private
+
+      def add_extensions
+        Object.class_eval { include RSpec::Mocks::Methods }
+        Class.class_eval  { include RSpec::Mocks::AnyInstance }
+        $_rspec_mocks_extensions_added = true
+      end
+
+      def extensions_added?
+        $_rspec_mocks_extensions_added
       end
     end
   end
