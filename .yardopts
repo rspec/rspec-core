@@ -1,0 +1,7 @@
+--no-private
+--exclude features
+--markup markdown
+-
+README.md
+Changelog.md
+License.txt

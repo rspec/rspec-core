@@ -46,6 +46,8 @@ task :clobber do
   rm_rf 'pkg'
   rm_rf 'tmp'
   rm_rf 'coverage'
+  rm_rf '.yardoc'
+  rm_rf 'doc'
 end
 
 namespace :clobber do
