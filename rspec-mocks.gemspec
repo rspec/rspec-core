@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = RSpec::Mocks::Version::STRING
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["David Chelimsky", "Steven Baker"]
-  s.email       = "dchelimsky@gmail.com;chad.humphries@gmail.com"
+  s.email       = "rspec-users@rubyforge.org"
   s.homepage    = "http://github.com/rspec/rspec-mocks"
   s.summary     = "rspec-mocks-#{RSpec::Mocks::Version::STRING}"
   s.description = "RSpec's 'test double' framework, with support for stubbing and mocking"
