@@ -1,33 +1,51 @@
 module RSpec
   module Mocks
+    # Methods that are added to every object.
     module Methods
-      def should_receive(sym, opts={}, &block)
-        __mock_proxy.add_message_expectation(opts[:expected_from] || caller(1)[0], sym.to_sym, opts, &block)
+      # Sets and expectation that this object should receive a message before
+      # the end of the example.
+      def should_receive(message, opts={}, &block)
+        __mock_proxy.add_message_expectation(opts[:expected_from] || caller(1)[0], message.to_sym, opts, &block)
       end
 
-      def should_not_receive(sym, &block)
-        __mock_proxy.add_negative_message_expectation(caller(1)[0], sym.to_sym, &block)
+      # Sets and expectation that this object should _not_ receive a message
+      # during this example.
+      def should_not_receive(message, &block)
+        __mock_proxy.add_negative_message_expectation(caller(1)[0], message.to_sym, &block)
       end
-      
-      def stub(sym_or_hash, opts={}, &block)
-        if Hash === sym_or_hash
-          sym_or_hash.each {|method, value| stub(method).and_return value }
+
+      # Tells the object to respond to the message with a canned value
+      #
+      # ## Examples
+      #     counter.stub(:count).and_return(37)
+      #     counter.stub(:count => 37)
+      #     counter.stub(:count) { 37 }
+      def stub(message_or_hash, opts={}, &block)
+        if Hash === message_or_hash
+          message_or_hash.each {|message, value| stub(message).and_return value }
         else
-          __mock_proxy.add_stub(caller(1)[0], sym_or_hash.to_sym, opts, &block)
+          __mock_proxy.add_stub(caller(1)[0], message_or_hash.to_sym, opts, &block)
         end
       end
-      
-      def unstub(sym)
-        __mock_proxy.remove_stub(sym)
+
+      # Removes a stub. On a double, the object will no longer respond to
+      # +message+. On a real object, the original method (if it exists) is
+      # restored.
+      #
+      # This is rarely used, but can be useful when a stub is set up during a
+      # shared `before` hook for the common case, but you want to replace it
+      # for a special case.
+      def unstub(message)
+        __mock_proxy.remove_stub(message)
       end
-      
+
       alias_method :stub!, :stub
       alias_method :unstub!, :unstub
-      
+
       # Stubs a chain of methods. Especially useful with fluent and/or
       # composable interfaces.
       #
-      # == Examples
+      # ## Examples
       #
       #   double.stub_chain("foo.bar") { :baz }
       #   double.stub_chain(:foo, :bar) { :baz }
@@ -47,25 +65,32 @@ module RSpec
           stub(chain.shift, &blk)
         end
       end
-      
+
+      # Tells the object to respond to all messages. If specific stub values
+      # are declared, they'll work as expected. If not, the receiver is
+      # returned.
+      def as_null_object
+        __mock_proxy.as_null_object
+      end
+
+      # Returns true if this object has received `as_null_object`
+      def null_object?
+        __mock_proxy.null_object?
+      end
+
+      # @api private
       def received_message?(sym, *args, &block)
         __mock_proxy.received_message?(sym.to_sym, *args, &block)
       end
-      
+
+      # @api private
       def rspec_verify
         __mock_proxy.verify
       end
 
+      # @api private
       def rspec_reset
         __mock_proxy.reset
-      end
-      
-      def as_null_object
-        __mock_proxy.as_null_object
-      end
-      
-      def null_object?
-        __mock_proxy.null_object?
       end
 
     private

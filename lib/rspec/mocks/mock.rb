@@ -3,8 +3,8 @@ module RSpec
     class Mock
       include Methods
 
-      # Creates a new test double with a +name+ (that will be used in error messages
-      # only)
+      # Creates a new test double with a `name` (that will be used in error
+      # messages only)
       def initialize(name=nil, stubs_and_options={})
         if name.is_a?(Hash) && stubs_and_options.empty?
           stubs_and_options = name
@@ -35,7 +35,7 @@ module RSpec
       alias_method :to_str, :to_s
 
       def respond_to?(sym, incl_private=false)
-        __mock_proxy.null_object? && sym != :to_ary ? true : super 
+        __mock_proxy.null_object? && sym != :to_ary ? true : super
       end
 
     private
@@ -59,7 +59,7 @@ module RSpec
         extract_option(stubs_and_options, options, :__declared_as, 'Mock')
         options
       end
-      
+
       def extract_option(source, target, key, default=nil)
         if source[key]
           target[key] = source.delete(key)
