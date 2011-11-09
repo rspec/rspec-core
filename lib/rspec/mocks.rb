@@ -1,6 +1,6 @@
 require 'rspec/mocks/framework'
 require 'rspec/mocks/version'
-require 'rspec/mocks/spec_methods'
+require 'rspec/mocks/example_methods'
 
 module RSpec
   module Mocks
