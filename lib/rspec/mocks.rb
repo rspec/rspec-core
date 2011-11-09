@@ -32,7 +32,7 @@ module RSpec
       end
 
       def extensions_added?
-        $_rspec_mocks_extensions_added
+        defined?($_rspec_mocks_extensions_added)
       end
     end
   end
