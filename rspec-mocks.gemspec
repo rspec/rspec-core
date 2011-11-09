@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name        = "rspec-mocks"
   s.version     = RSpec::Mocks::Version::STRING
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["David Chelimsky", "Chad Humphries"]
+  s.authors     = ["David Chelimsky", "Steven Baker"]
   s.email       = "dchelimsky@gmail.com;chad.humphries@gmail.com"
   s.homepage    = "http://github.com/rspec/rspec-mocks"
   s.summary     = "rspec-mocks-#{RSpec::Mocks::Version::STRING}"
