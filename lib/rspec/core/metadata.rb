@@ -182,7 +182,12 @@ module RSpec
             value.call(metadata[key]) rescue false
           end
         when String
-          metadata[key].to_s == value.to_s
+          case metadata[key]
+          when Array
+            metadata[key].collect{|v| v.to_s}.include? value.to_s
+          else
+            metadata[key].to_s == value.to_s
+          end
         when Enumerable
           if key == :line_numbers
             preceding_declaration_lines = value.map{|v| world.preceding_declaration_line(v)}
