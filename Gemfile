@@ -11,7 +11,6 @@ source "http://rubygems.org"
 end
 
 ### dev dependencies
-gem "rake", "0.9.2"
 gem "cucumber", "1.0.0"
 gem "aruba", "0.4.2"
 gem "nokogiri", "1.4.4"
