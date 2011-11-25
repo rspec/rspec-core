@@ -1,7 +1,8 @@
 # RSpec Mocks
 
-rspec-mocks provides a test-double framework for rspec including support
-for method stubs, fakes, and message expectations.
+rspec-mocks is a test-double framework for rspec with support for method stubs,
+fakes, and message expectations on generated test-doubles and real objects
+alike.
 
 ## Install
 
@@ -97,8 +98,8 @@ For example, in Rails:
     Person.stub(:find) { person }
 
 In this case we're instrumenting Person to return the person object we've
-defined whenever it receives the +find+ message. We can do this with any
-object in a system because rspec-mocks adds the +stub+ and +should_receive+
+defined whenever it receives the `find` message. We can do this with any
+object in a system because rspec-mocks adds the `stub` and `should_receive`
 methods to every object. When we use either, RSpec replaces the method
 we're stubbing or mocking with it's own test-double-like method. At the
 end of the example, RSpec verifies any message expectations, and then
@@ -111,7 +112,7 @@ restores the original methods.
 
 ## Argument Matchers
 
-Arguments that are passed to +with+ are compared with actual arguments
+Arguments that are passed to `with` are compared with actual arguments
 received using ==. In cases in which you want to specify things about the
 arguments rather than the arguments themselves, you can use any of the
 matchers that ship with rspec-expectations. They don't all make syntactic
@@ -153,11 +154,11 @@ specify certain kinds of arguments:
 
 Whether you are setting a message expectation or a method stub, you can
 tell the object precisely how to respond. The most generic way is to pass
-a block to +stub+ or +should_receive+:
+a block to `stub` or `should_receive`:
 
     double.should_receive(:msg) { value }
 
-When the double receives the +msg+ message, it evaluates the block and returns
+When the double receives the `msg` message, it evaluates the block and returns
 the result.
 
     double.should_receive(:msg).and_return(value)
@@ -188,8 +189,7 @@ to come with an Array argument that has a specific length, but you don't care
 what is in it. You could do this:
 
     double.should_receive(:msg) do |arg|
-      arg.should be_an_istance_of(Array)
-      arg.length.should eq 7
+      arg.size.should eq(7)
     end
 
 ## Combining Expectation Details
@@ -199,10 +199,14 @@ you can get quite a bit of detail in your expectations:
 
     double.should_receive(:<<).with("illegal value").once.and_raise(ArgumentError)
 
+While this is a good thing when you really need it, you probably don't really
+need it! Take care to specify only the things that matter to the behavior of
+your code.
+
 ## Further Reading
 
-There are many different viewpoints about the meaning of mocks and stubs. If you are interested
-in learning more, here is some recommended reading:
+There are many different viewpoints about the meaning of mocks and stubs. If
+you are interested in learning more, here is some recommended reading:
 
 * Mock Objects: http://www.mockobjects.com/
 * Endo-Testing: http://www.mockobjects.com/files/endotesting.pdf

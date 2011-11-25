@@ -152,7 +152,6 @@ module RSpec
       def find_almost_matching_stub(method_name, *args)
         method_double[method_name].stubs.find {|stub| stub.matches_name_but_not_args(method_name, *args)}
       end
-
     end
   end
 end

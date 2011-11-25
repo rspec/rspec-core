@@ -66,14 +66,15 @@ module RSpec
       # Tells the mock or stub to raise an exception when the message
       # is received.
       #
-      # == Warning
+      # @note
       #
       # When you pass an exception class, the MessageExpectation will
       # raise an instance of it, creating it with +new+. If the exception
       # class initializer requires any parameters, you must pass in an
       # instance and not the class.
       #
-      # == Examples
+      # @example
+      #
       #   and_raise()
       #   and_raise(Exception) #any exception class
       #   and_raise(exception) #any exception object

@@ -5,12 +5,12 @@ module RSpec
 
       # Creates an instance of RSpec::Mocks::Mock.
       #
-      # +name+ is used for failure reporting, so you should use the role that
+      # `name` is used for failure reporting, so you should use the role that
       # the mock is playing in the example.
       #
-      # Use +stubs+ to declare one or more method stubs in one statement.
+      # Use `stubs` to declare one or more method stubs in one statement.
       #
-      # == Examples
+      # @example
       #
       #   book = double("book", :title => "The RSpec Book")
       #   book.title => "The RSpec Book"
@@ -22,20 +22,21 @@ module RSpec
         declare_double('Double', *args)
       end
 
-      # Just like double, but use double
+      # Just like double
       def mock(*args)
         declare_double('Mock', *args)
       end
 
-      # Just like double, but use double
+      # Just like double
       def stub(*args)
         declare_double('Stub', *args)
       end
 
       # Disables warning messages about expectations being set on nil.
       #
-      # By default warning messages are issued when expectations are set on nil.  This is to
-      # prevent false-positives and to catch potential bugs early on.
+      # By default warning messages are issued when expectations are set on
+      # nil.  This is to prevent false-positives and to catch potential bugs
+      # early on.
       def allow_message_expectations_on_nil
         Proxy.allow_message_expectations_on_nil
       end

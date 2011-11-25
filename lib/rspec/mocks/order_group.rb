@@ -23,7 +23,6 @@ module RSpec
         return consume if ready_for?(expectation)
         @error_generator.raise_out_of_order_error expectation.sym
       end
-      
     end
   end
 end

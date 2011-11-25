@@ -16,7 +16,8 @@ module RSpec
 
       # Tells the object to respond to the message with a canned value
       #
-      # ## Examples
+      # @example
+      #
       #     counter.stub(:count).and_return(37)
       #     counter.stub(:count => 37)
       #     counter.stub(:count) { 37 }
@@ -29,7 +30,7 @@ module RSpec
       end
 
       # Removes a stub. On a double, the object will no longer respond to
-      # +message+. On a real object, the original method (if it exists) is
+      # `message`. On a real object, the original method (if it exists) is
       # restored.
       #
       # This is rarely used, but can be useful when a stub is set up during a
@@ -45,11 +46,11 @@ module RSpec
       # Stubs a chain of methods. Especially useful with fluent and/or
       # composable interfaces.
       #
-      # ## Examples
+      # @example
       #
-      #   double.stub_chain("foo.bar") { :baz }
-      #   double.stub_chain(:foo, :bar) { :baz }
-      #   Article.stub_chain("recent.published") { [Article.new] }
+      #     double.stub_chain("foo.bar") { :baz }
+      #     double.stub_chain(:foo, :bar) { :baz }
+      #     Article.stub_chain("recent.published") { [Article.new] }
       def stub_chain(*chain, &blk)
         chain, blk = format_chain(*chain, &blk)
         if chain.length > 1
@@ -78,17 +79,17 @@ module RSpec
         __mock_proxy.null_object?
       end
 
-      # @api private
+      # @private
       def received_message?(sym, *args, &block)
         __mock_proxy.received_message?(sym.to_sym, *args, &block)
       end
 
-      # @api private
+      # @private
       def rspec_verify
         __mock_proxy.verify
       end
 
-      # @api private
+      # @private
       def rspec_reset
         __mock_proxy.reset
       end

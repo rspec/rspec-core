@@ -3,10 +3,10 @@ require 'spec_helper'
 module RSpec
   module Mocks
     module ArgumentMatchers
-      describe HashNotIncludingMatcher do
+      describe HashExcludingMatcher do
         
         it "describes itself properly" do
-          HashNotIncludingMatcher.new(:a => 5).description.should eq "hash_not_including(:a=>5)"
+          HashExcludingMatcher.new(:a => 5).description.should eq "hash_not_including(:a=>5)"
         end      
 
         describe "passing" do
