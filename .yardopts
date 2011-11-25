@@ -1,7 +1,6 @@
 --no-private
---exclude features
 --markup markdown
+lib/**/*.rb
 -
-README.md
 Changelog.md
 License.txt
