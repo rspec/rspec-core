@@ -12,3 +12,4 @@ Gemfile.lock
 *.rbc
 .yardoc
 bin
+Gemfile-custom
