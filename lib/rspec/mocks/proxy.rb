@@ -1,5 +1,6 @@
 module RSpec
   module Mocks
+    # @api private
     class Proxy
       class << self
         def warn_about_expectations_on_nil

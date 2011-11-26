@@ -24,16 +24,19 @@ module RSpec
         other == __mock_proxy
       end
 
+      # @private
       def inspect
         "#<#{self.class}:#{sprintf '0x%x', self.object_id} @name=#{@name.inspect}>"
       end
 
+      # @private
       def to_s
         inspect.gsub('<','[').gsub('>',']')
       end
 
       alias_method :to_str, :to_s
 
+      # @private
       def respond_to?(sym, incl_private=false)
         __mock_proxy.null_object? && sym != :to_ary ? true : super
       end

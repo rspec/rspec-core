@@ -1,5 +1,6 @@
 module RSpec
   module Mocks
+    # @api private
     class ArgumentExpectation
       attr_reader :args
       

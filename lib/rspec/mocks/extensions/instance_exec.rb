@@ -1,7 +1,10 @@
 module RSpec
   module Mocks
+    # @private
     module InstanceExec
       unless respond_to?(:instance_exec)
+        # @private
+        #
         # based on Bounded Spec InstanceExec (Mauricio Fernandez)
         # http://eigenclass.org/hiki/bounded+space+instance_exec
         # - uses singleton_class of matcher instead of global

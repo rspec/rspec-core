@@ -1,5 +1,6 @@
 module RSpec
   module Mocks
+    # @api private
     class OrderGroup
       def initialize error_generator
         @error_generator = error_generator

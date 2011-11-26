@@ -2,12 +2,14 @@ module RSpec
   module Mocks
 
     class BaseExpectation
+      # @private
       attr_reader :sym
       attr_writer :expected_received_count, :method_block, :expected_from
       protected :expected_received_count=, :method_block=, :expected_from=
       attr_accessor :error_generator
       protected :error_generator, :error_generator=
       
+      # @private
       def initialize(error_generator, expectation_ordering, expected_from, sym, method_block, expected_received_count=1, opts={}, &implementation)
         @error_generator = error_generator
         @error_generator.opts = opts
@@ -32,6 +34,7 @@ module RSpec
         @eval_context = nil
       end
       
+      # @private
       def build_child(expected_from, method_block, expected_received_count, opts={})
         child = clone
         child.expected_from = expected_from
@@ -45,6 +48,7 @@ module RSpec
         child
       end
       
+      # @private
       def expected_args
         @args_expectation.args
       end
@@ -102,10 +106,12 @@ module RSpec
         self
       end
       
+      # @private
       def matches?(sym, *args)
         @sym == sym and @args_expectation.args_match?(*args)
       end
       
+      # @private
       def invoke(*args, &block)
         if @expected_received_count == 0
           @failed_fast = true
@@ -139,6 +145,7 @@ module RSpec
         end
       end
 
+      # @private
       def called_max_times?
         @expected_received_count != :any && @expected_received_count > 0 &&
           @actual_received_count >= @expected_received_count
@@ -202,10 +209,12 @@ module RSpec
     
     class MessageExpectation < BaseExpectation
       
+      # @private
       def matches_name_but_not_args(sym, *args)
         @sym == sym and not @args_expectation.args_match?(*args)
       end
        
+      # @private
       def verify_messages_received
         return if expected_messages_received? || failed_fast?
     
@@ -215,35 +224,43 @@ module RSpec
         Kernel::raise error
       end
       
+      # @private
       def expected_messages_received?
         ignoring_args? || matches_exact_count? ||
            matches_at_least_count? || matches_at_most_count?
       end
       
+      # @private
       def ignoring_args?
         @expected_received_count == :any
       end
       
+      # @private
       def matches_at_least_count?
         @at_least && @actual_received_count >= @expected_received_count
       end
       
+      # @private
       def matches_at_most_count?
         @at_most && @actual_received_count <= @expected_received_count
       end
       
+      # @private
       def matches_exact_count?
         @expected_received_count == @actual_received_count
       end
       
+      # @private
       def similar_messages
         @similar_messages ||= []
       end
 
+      # @private
       def advise(*args)
         similar_messages << args
       end
       
+      # @private
       def generate_error
         if similar_messages.empty?
           @error_generator.raise_expectation_error(@sym, @expected_received_count, @actual_received_count, *@args_expectation.args)
@@ -311,14 +328,17 @@ module RSpec
         self
       end
       
+      # @private
       def negative_expectation_for?(sym)
         return false
       end
       
+      # @private
       def actual_received_count_matters?
         @at_least || @at_most || @exactly
       end
 
+      # @private
       def increase_actual_received_count!
         @actual_received_count += 1
       end
@@ -344,6 +364,7 @@ module RSpec
 
     end
     
+    # @private
     class NegativeMessageExpectation < MessageExpectation
       def initialize(message, expectation_ordering, expected_from, sym, method_block)
         super(message, expectation_ordering, expected_from, sym, method_block, 0)
