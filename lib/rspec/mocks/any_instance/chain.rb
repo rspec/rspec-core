@@ -15,12 +15,14 @@ module RSpec
             EOM
         end
 
+        # @api private
         def playback!(instance)
           messages.inject(instance) do |_instance, message|
             _instance.__send__(*message.first, &message.last)
           end
         end
 
+        # @api private
         def constrained_to_any_of?(*constraints)
           constraints.any? do |constraint|
             messages.any? do |message|
@@ -29,7 +31,12 @@ module RSpec
           end
         end
 
+        def expectation_fulfilled!
+          @expectation_fulfilled = true
+        end
+
         private
+
         def messages
           @messages ||= []
         end
@@ -42,6 +49,74 @@ module RSpec
           verify_invocation_order(rspec_method_name, *args, &block)
           messages << [args.unshift(rspec_method_name), block]
           self
+        end
+      end
+
+      class ExpectationChain < Chain
+        def initialize(*args, &block)
+          record(:should_receive, *args, &block)
+          @expectation_fulfilled = false
+        end
+
+        def invocation_order
+          @invocation_order ||= {
+            :should_receive => [nil],
+            :with => [:should_receive],
+            :and_return => [:with, :should_receive],
+            :and_raise => [:with, :should_receive]
+          }
+        end
+
+        def expectation_fulfilled?
+          @expectation_fulfilled || constrained_to_any_of?(:never, :any_number_of_times)
+        end
+
+        private
+
+        def verify_invocation_order(rspec_method_name, *args, &block)
+        end
+      end
+
+      class StubChain < Chain
+        def initialize(*args, &block)
+          record(:stub, *args, &block)
+        end
+
+        def invocation_order
+          @invocation_order ||= {
+            :stub => [nil],
+            :with => [:stub],
+            :and_return => [:with, :stub],
+            :and_raise => [:with, :stub],
+            :and_yield => [:with, :stub]
+          }
+        end
+
+        def expectation_fulfilled?
+          true
+        end
+
+        private
+
+        def verify_invocation_order(rspec_method_name, *args, &block)
+          unless invocation_order[rspec_method_name].include?(last_message)
+            raise(NoMethodError, "Undefined method #{rspec_method_name}")
+          end
+        end
+      end
+
+      class StubChainChain < StubChain
+        def initialize(*args, &block)
+          record(:stub_chain, *args, &block)
+        end
+
+        def invocation_order
+          @invocation_order ||= {
+            :stub_chain => [nil],
+            :and_return => [:stub_chain],
+            :and_raise => [:stub_chain],
+            :and_yield => [:stub_chain]
+          }
         end
       end
     end
