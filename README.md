@@ -16,7 +16,7 @@ RSpec creates test doubles that support method stubs and message
 expectations.
 
 ```ruby
-    book = double("book")
+book = double("book")
 ```
 
 ## Method Stubs
@@ -26,16 +26,16 @@ stubs can be declared on test doubles or real objects using the same syntax.
 rspec-mocks supports 3 forms for declaring method stubs:
 
 ```ruby
-    book.stub(:title) { "The RSpec Book" }
-    book.stub(:title => "The RSpec Book")
-    book.stub(:title).and_return("The RSpec Book")
+book.stub(:title) { "The RSpec Book" }
+book.stub(:title => "The RSpec Book")
+book.stub(:title).and_return("The RSpec Book")
 ```
 
 You can also use this shortcut, which creates a test double and declares a
 method stub in one statement:
 
 ```ruby
-    book = double("book", :title => "The RSpec Book")
+book = double("book", :title => "The RSpec Book")
 ```
 
 The first argment is a name, which is used for documentation and appears in
@@ -43,14 +43,14 @@ failure messages. If you don't care about the name, you can leave it out,
 making the combined instantiation/stub declaration very terse:
 
 ```ruby
-    double(:foo => 'bar')
+double(:foo => 'bar')
 ```
 
 This is particularly nice when providing a list of test doubles to a method
 that iterates through them:
 
 ```ruby
-    order.calculate_total_price(stub(:price => 1.99),stub(:price => 2.99))
+order.calculate_total_price(stub(:price => 1.99),stub(:price => 2.99))
 ```
 
 ## Consecutive return values
@@ -60,18 +60,18 @@ arguments to `and_return`.  The invocations cycle through the list. The last
 value is returned for any subsequent invocations:
 
 ```ruby
-    die.stub(:roll).and_return(1,2,3)
-    die.roll # => 1
-    die.roll # => 2
-    die.roll # => 3
-    die.roll # => 3
-    die.roll # => 3
+die.stub(:roll).and_return(1,2,3)
+die.roll # => 1
+die.roll # => 2
+die.roll # => 3
+die.roll # => 3
+die.roll # => 3
 ```
 
 To return an array in a single invocation, declare an array:
 
 ```ruby
-    team.stub(:players).and_return([stub(:name => "David")])
+team.stub(:players).and_return([stub(:name => "David")])
 ```
 
 ## Message Expectations
@@ -81,10 +81,10 @@ message some time before the example ends. If the message is received, the
 expectation is satisfied. If not, the example fails.
 
 ```ruby
-    validator = double("validator")
-    validator.should_receive(:validate).with("02134")
-    zipcode = Zipcode.new("02134", validator)
-    zipcode.valid?
+validator = double("validator")
+validator.should_receive(:validate).with("02134")
+zipcode = Zipcode.new("02134", validator)
+zipcode.valid?
 ```
 
 ## Nomenclature
@@ -111,8 +111,8 @@ because we often see class objects acting as global namespaces for methods.
 For example, in Rails:
 
 ```ruby
-    person = double("person")
-    Person.stub(:find) { person }
+person = double("person")
+Person.stub(:find) { person }
 ```
 
 In this case we're instrumenting Person to return the person object we've
@@ -126,8 +126,8 @@ restores the original methods.
 ## Expecting Arguments
 
 ```ruby
-    double.should_receive(:msg).with(*args)
-    double.should_not_receive(:msg).with(*args)
+double.should_receive(:msg).with(*args)
+double.should_not_receive(:msg).with(*args)
 ```
 
 ## Argument Matchers
@@ -143,37 +143,37 @@ rspec-mocks also adds some keyword Symbols that you can use to
 specify certain kinds of arguments:
 
 ```ruby
-    double.should_receive(:msg).with(no_args())
-    double.should_receive(:msg).with(any_args())
-    double.should_receive(:msg).with(1, kind_of(Numeric), "b") #2nd argument can any kind of Numeric
-    double.should_receive(:msg).with(1, boolean(), "b") #2nd argument can true or false
-    double.should_receive(:msg).with(1, /abc/, "b") #2nd argument can be any String matching the submitted Regexp
-    double.should_receive(:msg).with(1, anything(), "b") #2nd argument can be anything at all
-    double.should_receive(:msg).with(1, ducktype(:abs, :div), "b")
-                           #2nd argument can be object that responds to #abs and #div
+double.should_receive(:msg).with(no_args())
+double.should_receive(:msg).with(any_args())
+double.should_receive(:msg).with(1, kind_of(Numeric), "b") #2nd argument can any kind of Numeric
+double.should_receive(:msg).with(1, boolean(), "b") #2nd argument can true or false
+double.should_receive(:msg).with(1, /abc/, "b") #2nd argument can be any String matching the submitted Regexp
+double.should_receive(:msg).with(1, anything(), "b") #2nd argument can be anything at all
+double.should_receive(:msg).with(1, ducktype(:abs, :div), "b")
+                    #2nd argument can be object that responds to #abs and #div
 ```
 
 ## Receive Counts
 
 ```ruby
-    double.should_receive(:msg).once
-    double.should_receive(:msg).twice
-    double.should_receive(:msg).exactly(n).times
-    double.should_receive(:msg).at_least(:once)
-    double.should_receive(:msg).at_least(:twice)
-    double.should_receive(:msg).at_least(n).times
-    double.should_receive(:msg).at_most(:once)
-    double.should_receive(:msg).at_most(:twice)
-    double.should_receive(:msg).at_most(n).times
-    double.should_receive(:msg).any_number_of_times
+double.should_receive(:msg).once
+double.should_receive(:msg).twice
+double.should_receive(:msg).exactly(n).times
+double.should_receive(:msg).at_least(:once)
+double.should_receive(:msg).at_least(:twice)
+double.should_receive(:msg).at_least(n).times
+double.should_receive(:msg).at_most(:once)
+double.should_receive(:msg).at_most(:twice)
+double.should_receive(:msg).at_most(n).times
+double.should_receive(:msg).any_number_of_times
 ```
 
 ## Ordering
 
 ```ruby
-    double.should_receive(:msg).ordered
-    double.should_receive(:other_msg).ordered
-      #This will fail if the messages are received out of order
+double.should_receive(:msg).ordered
+double.should_receive(:other_msg).ordered
+  #This will fail if the messages are received out of order
 ```
 
 ## Setting Reponses
@@ -183,34 +183,34 @@ tell the object precisely how to respond. The most generic way is to pass
 a block to `stub` or `should_receive`:
 
 ```ruby
-    double.should_receive(:msg) { value }
+double.should_receive(:msg) { value }
 ```
 
 When the double receives the `msg` message, it evaluates the block and returns
 the result.
 
 ```ruby
-    double.should_receive(:msg).and_return(value)
-    double.should_receive(:msg).exactly(3).times.and_return(value1, value2, value3)
-      # returns value1 the first time, value2 the second, etc
-    double.should_receive(:msg).and_raise(error)
-      #error can be an instantiated object or a class
-      #if it is a class, it must be instantiable with no args
-    double.should_receive(:msg).and_throw(:msg)
-    double.should_receive(:msg).and_yield(values,to,yield)
-    double.should_receive(:msg).and_yield(values,to,yield).and_yield(some,other,values,this,time)
-      # for methods that yield to a block multiple times
+double.should_receive(:msg).and_return(value)
+double.should_receive(:msg).exactly(3).times.and_return(value1, value2, value3)
+  # returns value1 the first time, value2 the second, etc
+double.should_receive(:msg).and_raise(error)
+  #error can be an instantiated object or a class
+  #if it is a class, it must be instantiable with no args
+double.should_receive(:msg).and_throw(:msg)
+double.should_receive(:msg).and_yield(values,to,yield)
+double.should_receive(:msg).and_yield(values,to,yield).and_yield(some,other,values,this,time)
+  # for methods that yield to a block multiple times
 ```
 
 Any of these responses can be applied to a stub as well
 
 ```ruby
-    double.stub(:msg).and_return(value)
-    double.stub(:msg).and_return(value1, value2, value3)
-    double.stub(:msg).and_raise(error)
-    double.stub(:msg).and_throw(:msg)
-    double.stub(:msg).and_yield(values,to,yield)
-    double.stub(:msg).and_yield(values,to,yield).and_yield(some,other,values,this,time)
+double.stub(:msg).and_return(value)
+double.stub(:msg).and_return(value1, value2, value3)
+double.stub(:msg).and_raise(error)
+double.stub(:msg).and_throw(:msg)
+double.stub(:msg).and_yield(values,to,yield)
+double.stub(:msg).and_yield(values,to,yield).and_yield(some,other,values,this,time)
 ```
 
 ## Arbitrary Handling
@@ -221,9 +221,9 @@ to come with an Array argument that has a specific length, but you don't care
 what is in it. You could do this:
 
 ```ruby
-    double.should_receive(:msg) do |arg|
-      arg.size.should eq(7)
-    end
+double.should_receive(:msg) do |arg|
+  arg.size.should eq(7)
+end
 ```
 
 ## Combining Expectation Details
@@ -232,7 +232,7 @@ Combining the message name with specific arguments, receive counts and responses
 you can get quite a bit of detail in your expectations:
 
 ```ruby
-    double.should_receive(:<<).with("illegal value").once.and_raise(ArgumentError)
+double.should_receive(:<<).with("illegal value").once.and_raise(ArgumentError)
 ```
 
 While this is a good thing when you really need it, you probably don't really
