@@ -16,6 +16,11 @@ gem "cucumber", "1.0.1"
 gem "aruba", "0.4.2"
 gem "nokogiri", "1.5.0"
 
+### deps for rdoc.info
+gem "yard"
+gem "redcarpet"
+gem "github-markup"
+
 platforms :jruby do
   gem "jruby-openssl"
 end

@@ -18,9 +18,11 @@ module RSpec
       #
       # @example
       #
-      #     counter.stub(:count).and_return(37)
-      #     counter.stub(:count => 37)
-      #     counter.stub(:count) { 37 }
+      # ```ruby
+      # counter.stub(:count).and_return(37)
+      # counter.stub(:count => 37)
+      # counter.stub(:count) { 37 }
+      # ```
       def stub(message_or_hash, opts={}, &block)
         if Hash === message_or_hash
           message_or_hash.each {|message, value| stub(message).and_return value }
