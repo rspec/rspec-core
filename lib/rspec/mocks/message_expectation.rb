@@ -67,25 +67,34 @@ module RSpec
         @return_block = block_given? ? return_block : lambda { value }
       end
 
+      # @overload and_raise
+      # @overload and_raise(ExceptionClass)
+      # @overload and_raise(exception_instance)
+      #
       # Tells the mock or stub to raise an exception when the message
       # is received.
       #
       # @note
       #
-      # When you pass an exception class, the MessageExpectation will
-      # raise an instance of it, creating it with +new+. If the exception
-      # class initializer requires any parameters, you must pass in an
-      # instance and not the class.
+      #   When you pass an exception class, the MessageExpectation will raise
+      #   an instance of it, creating it with `new`. If the exception class
+      #   initializer requires any parameters, you must pass in an instance and
+      #   not the class.
       #
       # @example
       #
-      #   and_raise()
-      #   and_raise(Exception) #any exception class
-      #   and_raise(exception) #any exception object
+      # ```ruby
+      # car.stub(:go).and_raise
+      # car.stub(:go).and_raise(Exception) # any exception class
+      # car.stub(:go).and_raise(exception) # any exception object
+      # ```
       def and_raise(exception=Exception)
         @exception_to_raise = exception
       end
 
+      # Tells the mock or stub to throw a symbol when the message is received.
+      #
+      # @example
       def and_throw(symbol)
         @symbol_to_throw = symbol
       end
