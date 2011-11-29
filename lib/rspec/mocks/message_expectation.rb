@@ -83,11 +83,9 @@ module RSpec
       #
       # @example
       #
-      # ```ruby
-      # car.stub(:go).and_raise
-      # car.stub(:go).and_raise(Exception) # any exception class
-      # car.stub(:go).and_raise(exception) # any exception object
-      # ```
+      #   car.stub(:go).and_raise
+      #   car.stub(:go).and_raise(Exception) # any exception class
+      #   car.stub(:go).and_raise(exception) # any exception object
       def and_raise(exception=Exception)
         @exception_to_raise = exception
       end
