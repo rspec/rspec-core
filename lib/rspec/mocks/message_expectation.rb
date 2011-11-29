@@ -53,16 +53,52 @@ module RSpec
         @args_expectation.args
       end
 
+      # @overload and_return(value)
+      # @overload and_return(first_value, second_value)
+      # @overload and_return(&block)
+      #
+      # Tells the object to return a value when it receives the message.  Given
+      # more than one value, the first value is returned the first time the
+      # message is received, the second value is returned the next time, etc,
+      # etc.
+      #
+      # If the message is received more times than there are values, the last
+      # value is received for every subsequent call.
+      #
+      # The block format is still supported, but is unofficially deprecated in
+      # favor of just passing a block to the stub method.
+      #
+      # @example
+      #
+      #   counter.stub(:count).and_return(1)
+      #   counter.count # => 1
+      #   counter.count # => 1
+      #
+      #   counter.stub(:count).and_return(1,2,3)
+      #   counter.count # => 1
+      #   counter.count # => 2
+      #   counter.count # => 3
+      #   counter.count # => 3
+      #   counter.count # => 3
+      #   # etc
+      #
+      #   # Supported, but ...
+      #   counter.stub(:count).and_return { 1 }
+      #   counter.count # => 1
+      #
+      #   # ... this is prefered
+      #   counter.stub(:count) { 1 }
+      #   counter.count # => 1
       def and_return(*values, &return_block)
         Kernel::raise AmbiguousReturnError unless @method_block.nil?
         case values.size
-          when 0 then value = nil
-          when 1 then value = values[0]
+        when 0 then value = nil
+        when 1 then value = values[0]
         else
           value = values
           @consecutive = true
           @expected_received_count = values.size if !ignoring_args? &&
-                                                    @expected_received_count < values.size
+            @expected_received_count < values.size
         end
         @return_block = block_given? ? return_block : lambda { value }
       end
@@ -71,8 +107,7 @@ module RSpec
       # @overload and_raise(ExceptionClass)
       # @overload and_raise(exception_instance)
       #
-      # Tells the mock or stub to raise an exception when the message
-      # is received.
+      # Tells the object to raise an exception when the message is received.
       #
       # @note
       #
@@ -84,19 +119,27 @@ module RSpec
       # @example
       #
       #   car.stub(:go).and_raise
-      #   car.stub(:go).and_raise(Exception) # any exception class
-      #   car.stub(:go).and_raise(exception) # any exception object
+      #   car.stub(:go).and_raise(OutOfGas)
+      #   car.stub(:go).and_raise(OutOfGas.new(2, :oz))
       def and_raise(exception=Exception)
         @exception_to_raise = exception
       end
 
-      # Tells the mock or stub to throw a symbol when the message is received.
+      # Tells the object to throw a symbol when the message is received.
       #
       # @example
+      #
+      #   car.stub(:go).and_throw(:out_of_gas)
       def and_throw(symbol)
         @symbol_to_throw = symbol
       end
 
+      # Tells the object to yield one or more args to a block when the message
+      # is received.
+      #
+      # @example
+      #
+      #   stream.stub(:open).and_yield(StringIO.new)
       def and_yield(*args, &block)
         if @args_to_yield_were_cloned
           @args_to_yield.clear
