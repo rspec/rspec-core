@@ -201,7 +201,6 @@ module RSpec
           @actual_received_count >= @expected_received_count
       end
 
-
       # @private
       def matches_name_but_not_args(sym, *args)
         @sym == sym and not @args_expectation.args_match?(*args)
@@ -259,58 +258,131 @@ module RSpec
         end
       end
 
+      # Constrains a stub or message expectation to invocations with specific
+      # arguments.
+      #
+      # With a stub, if the message might be received with other args as well,
+      # you should stub a default value first, and then stub or mock the same
+      # message using `with` to constrain to specific arguments.
+      #
+      # A message expectation will fail if the message is received with different
+      # arguments.
+      #
+      # @example
+      #
+      #   cart.stub(:add) { :failure }
+      #   cart.stub(:add).with(Book.new(:isbn => 1934356379)) { :success }
+      #   cart.add(Book.new(:isbn => 1234567890)
+      #   # => :failure
+      #   cart.add(Book.new(:isbn => 1934356379)
+      #   # => :success
+      #
+      #   cart.should_receive(:add).with(Book.new(:isbn => 1934356379)) { :success }
+      #   cart.add(Book.new(:isbn => 1234567890)
+      #   # => failed expectation
+      #   cart.add(Book.new(:isbn => 1934356379)
+      #   # => passes
       def with(*args, &block)
         @return_block = block if block_given? unless args.empty?
         @args_expectation = ArgumentExpectation.new(*args, &block)
         self
       end
 
+      # Constrain a message expectation to be received a specific number of
+      # times.
+      #
+      # @example
+      #
+      #   dealer.should_recieve(:deal_card).exactly(10).times
       def exactly(n, &block)
         @method_block = block if block
         set_expected_received_count :exactly, n
         self
       end
 
+      # Constrain a message expectation to be received at least a specific
+      # number of times.
+      #
+      # @example
+      #
+      #   dealer.should_recieve(:deal_card).at_least(9).times
       def at_least(n, &block)
         @method_block = block if block
         set_expected_received_count :at_least, n
         self
       end
 
+      # Constrain a message expectation to be received at most a specific
+      # number of times.
+      #
+      # @example
+      #
+      #   dealer.should_recieve(:deal_card).at_most(10).times
       def at_most(n, &block)
         @method_block = block if block
         set_expected_received_count :at_most, n
         self
       end
 
+      # Syntactic sugar for `exactly`, `at_least` and `at_most`
+      #
+      # @example
+      #
+      #   dealer.should_recieve(:deal_card).exactly(10).times
+      #   dealer.should_recieve(:deal_card).at_least(10).times
+      #   dealer.should_recieve(:deal_card).at_most(10).times
       def times(&block)
         @method_block = block if block
         self
       end
 
+
+      # Allows an expected message to be received any number of times.
       def any_number_of_times(&block)
         @method_block = block if block
         @expected_received_count = :any
         self
       end
 
+      # Expect a message not to be received at all.
+      #
+      # @example
+      #
+      #   car.should_receive(:stop).never
       def never
         @expected_received_count = 0
         self
       end
 
+      # Expect a message to be received exactly one time.
+      #
+      # @example
+      #
+      #   car.should_receive(:go).once
       def once(&block)
         @method_block = block if block
         set_expected_received_count :exactly, 1
         self
       end
 
+      # Expect a message to be received exactly two times.
+      #
+      # @example
+      #
+      #   car.should_receive(:go).twice
       def twice(&block)
         @method_block = block if block
         set_expected_received_count :exactly, 2
         self
       end
 
+      # Expect messages to be received in a specific order.
+      #
+      # @example
+      #
+      #   api.should_receive(:prepare).ordered
+      #   api.should_receive(:run).ordered
+      #   api.should_receive(:finish).ordered
       def ordered(&block)
         @method_block = block if block
         @order_group.register(self)
