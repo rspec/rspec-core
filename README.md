@@ -15,7 +15,9 @@ A Test Double is an object that stands in for a real object in a test.
 RSpec creates test doubles that support method stubs and message
 expectations.
 
-    book = double("book")
+```ruby
+book = double("book")
+```
 
 ## Method Stubs
 
