@@ -2,27 +2,46 @@ module RSpec
   module Mocks
     module AnyInstance
       class Chain
-        [
-          :with, :and_return, :and_raise, :and_yield,
-          :once, :twice, :any_number_of_times,
-          :exactly, :times, :never,
-          :at_least, :at_most
-          ].each do |method_name|
+        class << self
+          private
+
+          # @macro [attach] record
+          #   @method $1(*args, &block)
+          #   Records the `$1` message for playback against an instance that
+          #   invokes a method stubbed or mocked using `any_instance`.
+          #
+          #   @see RSpec::Mocks::MessageExpectation#$1
+          #
+          def record(method_name)
             class_eval(<<-EOM, __FILE__, __LINE__)
               def #{method_name}(*args, &block)
                 record(:#{method_name}, *args, &block)
               end
             EOM
+          end
         end
 
-        # @api private
+        record :with
+        record :and_return
+        record :and_raise
+        record :and_yield
+        record :once
+        record :twice
+        record :any_number_of_times
+        record :exactly
+        record :times
+        record :never
+        record :at_least
+        record :at_most
+
+        # @private
         def playback!(instance)
           messages.inject(instance) do |_instance, message|
             _instance.__send__(*message.first, &message.last)
           end
         end
 
-        # @api private
+        # @private
         def constrained_to_any_of?(*constraints)
           constraints.any? do |constraint|
             messages.any? do |message|
@@ -31,6 +50,7 @@ module RSpec
           end
         end
 
+        # @private
         def expectation_fulfilled!
           @expectation_fulfilled = true
         end
