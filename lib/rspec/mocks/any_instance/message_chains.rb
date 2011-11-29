@@ -1,38 +1,46 @@
 module RSpec
   module Mocks
     module AnyInstance
+      # @api private
       class MessageChains < Hash
         def initialize
           super {|h,k| h[k] = []}
         end
 
+        # @api private
         def add(method_name, chain)
           self[method_name] << chain
           chain
         end
 
+        # @api private
         def remove_stub_chains_for!(method_name)
           self[method_name].reject! {|chain| chain.is_a?(StubChain)}
         end
 
+        # @api private
         def has_expectation?(method_name)
           self[method_name].find {|chain| chain.is_a?(ExpectationChain)}
         end
 
+        # @api private
         def all_expectations_fulfilled?
           all? {|method_name, chains| chains.all? {|chain| chain.expectation_fulfilled?}}
         end
 
+        # @api private
         def unfulfilled_expectations
           map do |method_name, chains|
             method_name.to_s if chains.last.is_a?(ExpectationChain) unless chains.last.expectation_fulfilled?
           end.compact
         end
 
+        # @api private
         def received_expected_message!(method_name)
           self[method_name].each {|chain| chain.expectation_fulfilled!}
         end
 
+        # @api private
         def playback!(instance, method_name)
           raise_if_second_instance_to_receive_message(instance)
           self[method_name].each {|chain| chain.playback!(instance)}

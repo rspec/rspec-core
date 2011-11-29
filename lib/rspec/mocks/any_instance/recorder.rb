@@ -2,7 +2,9 @@ module RSpec
   module Mocks
     module AnyInstance
       class Recorder
+        # @private
         attr_reader :message_chains
+
         def initialize(klass)
           @message_chains = MessageChains.new
           @observed_methods = []
@@ -11,6 +13,10 @@ module RSpec
           @expectation_set = false
         end
 
+        # Initializes the recording a stub to be played back against any
+        # instance of this object that invokes the submitted method.
+        #
+        # @see Methods#stub
         def stub(method_name_or_method_map, &block)
           if method_name_or_method_map.is_a?(Hash)
             method_name_or_method_map.each do |method_name, return_value|
@@ -22,6 +28,10 @@ module RSpec
           end
         end
 
+        # Initializes the recording a stub chain to be played back against any
+        # instance of this object that invokes the submitted method.
+        #
+        # @see Methods#stub_chain
         def stub_chain(*args, &block)
           normalize_chain(*args) do |method_name, args|
             observe!(method_name)
@@ -29,12 +39,21 @@ module RSpec
           end
         end
 
+        # Initializes the recording a message expectation to be played back
+        # against any instance of this object that invokes the submitted
+        # method.
+        #
+        # @see Methods#should_receive
         def should_receive(method_name, &block)
           @expectation_set = true
           observe!(method_name)
           message_chains.add(method_name, ExpectationChain.new(method_name, &block))
         end
 
+        # Removes any previously recorded stubs, stub_chains or message
+        # expectations that use `method_name`.
+        #
+        # @see Methods#unstub
         def unstub(method_name)
           unless @observed_methods.include?(method_name.to_sym)
             raise RSpec::Mocks::MockExpectationError, "The method `#{method_name}` was not stubbed or was already unstubbed"
@@ -43,22 +62,27 @@ module RSpec
           stop_observing!(method_name) unless message_chains.has_expectation?(method_name)
         end
 
+        # @api private
+        #
+        # Used internally to verify that message expectations have been
+        # fulfilled.
         def verify
           if @expectation_set && !message_chains.all_expectations_fulfilled?
             raise RSpec::Mocks::MockExpectationError, "Exactly one instance should have received the following message(s) but didn't: #{message_chains.unfulfilled_expectations.sort.join(', ')}"
           end
         end
 
+        # @private
         def stub!(*)
           raise "stub! is not supported on any_instance. Use stub instead."
         end
 
-        # @api private
+        # @private
         def stop_all_observation!
           @observed_methods.each {|method_name| restore_method!(method_name)}
         end
 
-        # @api private
+        # @private
         def playback!(instance, method_name)
           RSpec::Mocks::space.add(instance)
           message_chains.playback!(instance, method_name)
@@ -66,7 +90,7 @@ module RSpec
           received_expected_message!(method_name) if message_chains.has_expectation?(method_name)
         end
 
-        # @api private
+        # @private
         def instance_that_received(method_name)
           @played_methods[method_name]
         end
