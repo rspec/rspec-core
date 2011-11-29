@@ -21,10 +21,11 @@ module RSpec
           end
         end
 
-        record :with
         record :and_return
         record :and_raise
+        record :and_throw
         record :and_yield
+        record :with
         record :once
         record :twice
         record :any_number_of_times
