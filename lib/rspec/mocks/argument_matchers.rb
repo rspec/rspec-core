@@ -1,12 +1,12 @@
 module RSpec
   module Mocks
 
-    # ArgumentMatchers are messages that you can include in message
+    # ArgumentMatchers are placeholders that you can include in message
     # expectations to match arguments against a broader check than simple
     # equality.
     #
-    # With the exception of any_args() and no_args(), the matchers
-    # are all positional - they match against the arg in the given position.
+    # With the exception of `any_args` and `no_args`, they all match against
+    # the arg in same position in the argument list.
     module ArgumentMatchers
 
       class AnyArgsMatcher
@@ -36,8 +36,7 @@ module RSpec
         end
 
         def ==(value)
-          return value =~ @regexp unless value.is_a?(Regexp)
-          value == @regexp
+          Regexp === value ? value == @regexp : value =~ @regexp
         end
       end
 
@@ -46,7 +45,7 @@ module RSpec
         end
 
         def ==(value)
-          TrueClass === value || FalseClass === value
+          [true,false].include?(value)
         end
       end
 
@@ -56,12 +55,9 @@ module RSpec
         end
 
         def ==(actual)
-          @expected.each do | key, value |
-            return false unless actual.has_key?(key) && value == actual[key]
-          end
-          true
+          @expected.all? {|k,v| actual.has_key?(k) && v == actual[k]}
         rescue NoMethodError
-          return false
+          false
         end
 
         def description
@@ -75,12 +71,9 @@ module RSpec
         end
 
         def ==(actual)
-          @expected.each do | key, value |
-            return false if actual.has_key?(key) && value == actual[key]
-          end
-          true
+          @expected.none? {|k,v| actual.has_key?(k) && v == actual[k]}
         rescue NoMethodError
-          return false
+          false
         end
 
         def description
@@ -94,7 +87,7 @@ module RSpec
         end
 
         def ==(value)
-          @methods_to_respond_to.all? { |sym| value.respond_to?(sym) }
+          @methods_to_respond_to.all? {|sym| value.respond_to?(sym)}
         end
       end
 
@@ -185,8 +178,8 @@ module RSpec
         BooleanMatcher.new(nil)
       end
       
-      # Passes if the argument is a hash that includes the specified key(s) or key/value
-      # pairs. If the hash includes other keys, it will still pass.
+      # Passes if the argument is a hash that includes the specified key(s) or
+      # key/value pairs. If the hash includes other keys, it will still pass.
       #
       # @example
       #
@@ -197,27 +190,28 @@ module RSpec
         HashIncludingMatcher.new(anythingize_lonely_keys(*args))
       end
       
-      # Passes if the argument is a hash that doesn't include the specified key(s) or key/value
+      # Passes if the argument is a hash that doesn't include the specified
+      # key(s) or key/value
       #
       # @example
       #
-      #   object.should_receive(:message).with(hash_not_including(:key => val))
-      #   object.should_receive(:message).with(hash_not_including(:key))
-      #   object.should_receive(:message).with(hash_not_including(:key, :key2 => :val2))
+      #   object.should_receive(:message).with(hash_excluding(:key => val))
+      #   object.should_receive(:message).with(hash_excluding(:key))
+      #   object.should_receive(:message).with(hash_excluding(:key, :key2 => :val2))
       def hash_excluding(*args)
         HashExcludingMatcher.new(anythingize_lonely_keys(*args))
       end
 
       alias_method :hash_not_including, :hash_excluding
       
-      # Passes if arg.instance_of?(klass)
+      # Passes if `arg.instance_of?(klass)`
       def instance_of(klass)
         InstanceOf.new(klass)
       end
       
       alias_method :an_instance_of, :instance_of
       
-      # Passes if arg.kind_of?(klass)
+      # Passes if `arg.kind_of?(klass)`
       def kind_of(klass)
         KindOf.new(klass)
       end
