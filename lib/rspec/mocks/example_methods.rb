@@ -13,11 +13,11 @@ module RSpec
       # @example
       #
       #   book = double("book", :title => "The RSpec Book")
-      #   book.title => "The RSpec Book"
+      #   book.title #=> "The RSpec Book"
       #
-      #   card = double("card", :suit => "Spades", :rank => "A"
-      #   card.suit => "Spades"
-      #   card.rank => "A"
+      #   card = double("card", :suit => "Spades", :rank => "A")
+      #   card.suit  #=> "Spades"
+      #   card.rank  #=> "A"
       def double(*args)
         declare_double('Double', *args)
       end
