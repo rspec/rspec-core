@@ -1,6 +1,14 @@
 module RSpec
   module Mocks
     module AnyInstance
+      # Given a class `TheClass`, `TheClass.any_instance` returns a `Recorder`,
+      # which records stubs and message expectations for later playback on
+      # instances of `TheClass`.
+      #
+      # Further constraints are stored in instances of [Chain](Chain).
+      #
+      # @see AnyInstance
+      # @see Chain
       class Recorder
         # @private
         attr_reader :message_chains
@@ -29,7 +37,8 @@ module RSpec
         end
 
         # Initializes the recording a stub chain to be played back against any
-        # instance of this object that invokes the submitted method.
+        # instance of this object that invokes the method matching the first
+        # argument.
         #
         # @see Methods#stub_chain
         def stub_chain(*args, &block)

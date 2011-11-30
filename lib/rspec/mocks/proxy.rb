@@ -1,44 +1,51 @@
 module RSpec
   module Mocks
-    # @api private
+    # @private
     class Proxy
       class << self
+        # @private
         def warn_about_expectations_on_nil
           defined?(@warn_about_expectations_on_nil) ? @warn_about_expectations_on_nil : true
         end
-      
+
+        # @private
         def warn_about_expectations_on_nil=(new_value)
           @warn_about_expectations_on_nil = new_value
         end
-      
+
+        # @private
         def allow_message_expectations_on_nil
           @warn_about_expectations_on_nil = false
-          
+
           # ensure nil.rspec_verify is called even if an expectation is not set in the example
           # otherwise the allowance would effect subsequent examples
           RSpec::Mocks::space.add(nil) unless RSpec::Mocks::space.nil?
         end
 
+        # @private
         def allow_message_expectations_on_nil?
           !warn_about_expectations_on_nil
         end
       end
 
+      # @private
       def initialize(object, name=nil, options={})
         @object = object
         @name = name
         @error_generator = ErrorGenerator.new object, name, options
         @expectation_ordering = OrderGroup.new @error_generator
-        @messages_received = []
+          @messages_received = []
         @options = options
         @already_proxied_respond_to = false
         @null_object = false
       end
 
+      # @private
       def null_object?
         @null_object
       end
 
+      # @private
       # Tells the object to ignore any messages that aren't explicitly set as
       # stubs or message expectations.
       def as_null_object
@@ -46,52 +53,64 @@ module RSpec
         @object
       end
 
+      # @private
       def already_proxied_respond_to
         @already_proxied_respond_to = true
       end
 
+      # @private
       def already_proxied_respond_to?
         @already_proxied_respond_to
       end
 
+      # @private
       def add_message_expectation(location, method_name, opts={}, &block)        
         method_double[method_name].add_expectation @error_generator, @expectation_ordering, location, opts, &block
       end
 
+      # @private
       def add_negative_message_expectation(location, method_name, &implementation)
         method_double[method_name].add_negative_expectation @error_generator, @expectation_ordering, location, &implementation
       end
 
+      # @private
       def add_stub(location, method_name, opts={}, &implementation)
         method_double[method_name].add_stub @error_generator, @expectation_ordering, location, opts, &implementation
       end
-      
+
+      # @private
       def remove_stub(method_name)
         method_double[method_name].remove_stub
       end
-      
+
+      # @private
       def verify
         method_doubles.each {|d| d.verify}
       ensure
         reset
       end
 
+      # @private
       def reset
         method_doubles.each {|d| d.reset}
       end
 
+      # @private
       def received_message?(method_name, *args, &block)
         @messages_received.any? {|array| array == [method_name, args, block]}
       end
 
+      # @private
       def has_negative_expectation?(method_name)
         method_double[method_name].expectations.detect {|expectation| expectation.negative_expectation_for?(method_name)}
       end
-      
+
+      # @private
       def record_message_received(method_name, *args, &block)
         @messages_received << [method_name, args, block]
       end
 
+      # @private
       def message_received(method_name, *args, &block)
         expectation = find_matching_expectation(method_name, *args)
         stub = find_matching_method_stub(method_name, *args)
@@ -117,15 +136,17 @@ module RSpec
         end
       end
 
+      # @private
       def raise_unexpected_message_args_error(expectation, *args)
         @error_generator.raise_unexpected_message_args_error(expectation, *args)
       end
 
+      # @private
       def raise_unexpected_message_error(method_name, *args)
         @error_generator.raise_unexpected_message_error method_name, *args
       end
-      
-    private
+
+      private
 
       def method_double
         @method_double ||= Hash.new {|h,k|
@@ -136,10 +157,10 @@ module RSpec
       def method_doubles
         method_double.values
       end
-      
+
       def find_matching_expectation(method_name, *args)
         method_double[method_name].expectations.find {|expectation| expectation.matches?(method_name, *args) && !expectation.called_max_times?} || 
-        method_double[method_name].expectations.find {|expectation| expectation.matches?(method_name, *args)}
+          method_double[method_name].expectations.find {|expectation| expectation.matches?(method_name, *args)}
       end
 
       def find_almost_matching_expectation(method_name, *args)

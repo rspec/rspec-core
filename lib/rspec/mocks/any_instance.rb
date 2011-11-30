@@ -5,13 +5,23 @@ require 'rspec/mocks/any_instance/recorder'
 module RSpec
   module Mocks
     module AnyInstance
-      # Use this to set stubs and expectations on any instance
-      # of a given class.
+      # Used to set stubs and message expectations on any instance of a given
+      # class. Returns a [Recorder](Recorder), which records messages like
+      # `stub` and `should_receive` for later playback on instances of the
+      # class.
       #
       # @example
       #
-      #     Thing.any_instance.should_receive(:go)
-      #     Thing.new.go
+      #     Car.any_instance.should_receive(:go)
+      #     race = Race.new
+      #     race.cars << Car.new
+      #     race.go # assuming this delegates to all of its cars
+      #             # this example would pass
+      #
+      #     Account.any_instance.stub(:balance) { Money.new(:USD, 25) }
+      #     Account.new.balance # => Money.new(:USD, 25))
+      #
+      # @return [Recorder]
       def any_instance
         RSpec::Mocks::space.add(self)
         __recorder

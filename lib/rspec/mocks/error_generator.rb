@@ -1,55 +1,65 @@
 module RSpec
   module Mocks
+    # @private
     class ErrorGenerator
       attr_writer :opts
-      
+
       def initialize(target, name, options={})
         @declared_as = options[:__declared_as] || 'Mock'
         @target = target
         @name = name
       end
-      
+
+      # @private
       def opts
         @opts ||= {}
       end
 
+      # @private
       def raise_unexpected_message_error(sym, *args)
         __raise "#{intro} received unexpected message :#{sym}#{arg_message(*args)}"
       end
-      
+
+      # @private
       def raise_unexpected_message_args_error(expectation, *args)
         expected_args = format_args(*expectation.expected_args)
         actual_args = format_args(*args)
         __raise "#{intro} received #{expectation.sym.inspect} with unexpected arguments\n  expected: #{expected_args}\n       got: #{actual_args}"
       end
-      
+
+      # @private
       def raise_similar_message_args_error(expectation, *args)
         expected_args = format_args(*expectation.expected_args)
         actual_args = args.collect {|a| format_args(*a)}.join(", ")
         __raise "#{intro} received #{expectation.sym.inspect} with unexpected arguments\n  expected: #{expected_args}\n       got: #{actual_args}"
       end
-      
+
+      # @private
       def raise_expectation_error(sym, expected_received_count, actual_received_count, *args)
         __raise "(#{intro}).#{sym}#{format_args(*args)}\n    expected: #{count_message(expected_received_count)}\n    received: #{count_message(actual_received_count)}"
       end
-      
+
+      # @private
       def raise_out_of_order_error(sym)
         __raise "#{intro} received :#{sym} out of order"
       end
-      
+
+      # @private
       def raise_block_failed_error(sym, detail)
         __raise "#{intro} received :#{sym} but passed block failed with: #{detail}"
       end
-      
+
+      # @private
       def raise_missing_block_error(args_to_yield)
         __raise "#{intro} asked to yield |#{arg_list(*args_to_yield)}| but no block was passed"
       end
-      
+
+      # @private
       def raise_wrong_arity_error(args_to_yield, arity)
         __raise "#{intro} yielded |#{arg_list(*args_to_yield)}| to block with arity of #{arity}"
       end
-      
-    private
+
+      private
 
       def intro
         if @name
@@ -64,16 +74,16 @@ module RSpec
           "nil"
         end
       end
-      
+
       def __raise(message)
         message = opts[:message] unless opts[:message].nil?
         Kernel::raise(RSpec::Mocks::MockExpectationError, message)
       end
-      
+
       def arg_message(*args)
         " with " + format_args(*args)
       end
-      
+
       def format_args(*args)
         args.empty? ? "(no args)" : "(" + arg_list(*args) + ")"
       end
@@ -81,7 +91,7 @@ module RSpec
       def arg_list(*args)
         args.collect {|arg| arg.respond_to?(:description) ? arg.description : arg.inspect}.join(", ")
       end
-      
+
       def count_message(count)
         return "at least #{pretty_print(count.abs)}" if count < 0
         return pretty_print(count)

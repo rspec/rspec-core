@@ -1,5 +1,6 @@
 module RSpec
   module Mocks
+    # @api private
     class Space
       def add(obj)
         mocks << obj unless mocks.detect {|m| m.equal? obj}

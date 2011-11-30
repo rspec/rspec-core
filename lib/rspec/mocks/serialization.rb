@@ -3,12 +3,16 @@ require 'rspec/mocks/extensions/psych' if defined?(::Psych)
 
 module RSpec
   module Mocks
+    # @private
     module Serialization
+      # @private
       def self.fix_for(object)
         object.extend(YAML) if defined?(::YAML)
       end
 
+      # @private
       module YAML
+        # @private
         def to_yaml(options = {})
           return nil if defined?(::Psych) && options.respond_to?(:[]) && options[:nodump]
           return super(options) unless instance_variable_defined?(:@mock_proxy)

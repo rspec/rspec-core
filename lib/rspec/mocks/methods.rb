@@ -4,6 +4,13 @@ module RSpec
     module Methods
       # Sets and expectation that this object should receive a message before
       # the end of the example.
+      #
+      # @example
+      #
+      #     logger = double('logger')
+      #     thing_that_logs = ThingThatLogs.new(logger)
+      #     logger.should_receive(:log)
+      #     thing_that_logs.do_something_that_logs_a_message
       def should_receive(message, opts={}, &block)
         __mock_proxy.add_message_expectation(opts[:expected_from] || caller(1)[0], message.to_sym, opts, &block)
       end
@@ -14,7 +21,7 @@ module RSpec
         __mock_proxy.add_negative_message_expectation(caller(1)[0], message.to_sym, &block)
       end
 
-      # Tells the object to respond to the message with a canned value
+      # Tells the object to respond to the message with the specified value.
       #
       # @example
       #
@@ -43,13 +50,32 @@ module RSpec
       alias_method :stub!, :stub
       alias_method :unstub!, :unstub
 
-      # Stubs a chain of methods. Especially useful with fluent and/or
-      # composable interfaces.
+      # @overload stub_chain(method1, method2)
+      # @overload stub_chain("method1.method2")
+      # @overload stub_chain(method1, method_to_value_hash)
+      #
+      # Stubs a chain of methods.
+      #
+      # ## Warning:
+      #
+      # Chains can be arbitrarily long, which makes it quite painless to
+      # violate the Law of Demeter in violent ways, so you should consider any
+      # use of `stub_chain` a code smell. Even though not all code smells
+      # indicate real problems (think fluent interfaces), `stub_chain` still
+      # results in brittle examples.  For example, if you write
+      # `foo.stub_chain(:bar, :baz => 37)` in a spec and then the
+      # implementation calls `foo.baz.bar`, the stub will not work.
       #
       # @example
       #
       #     double.stub_chain("foo.bar") { :baz }
+      #     double.stub_chain(:foo, :bar => :baz)
       #     double.stub_chain(:foo, :bar) { :baz }
+      #
+      #     # Given any of ^^ these three forms ^^:
+      #     double.foo.bar # => :baz
+      #
+      #     # Common use in Rails/ActiveRecord:
       #     Article.stub_chain("recent.published") { [Article.new] }
       def stub_chain(*chain, &blk)
         chain, blk = format_chain(*chain, &blk)

@@ -479,11 +479,14 @@ module RSpec
       end
     end
 
+    # @private
     class NegativeMessageExpectation < MessageExpectation
+      # @private
       def initialize(message, expectation_ordering, expected_from, sym, method_block)
         super(message, expectation_ordering, expected_from, sym, method_block, 0)
       end
 
+      # @private
       def negative_expectation_for?(sym)
         return @sym == sym
       end
