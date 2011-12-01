@@ -33,8 +33,13 @@ Feature: text formatter
                   got: 12
              
              (compared using ==)
-           # ./integer_spec.rb:3
-      
+      """
+    And the backtrace-normalized output should contain:
+      """
+      # ./integer_spec.rb:3
+      """
+    And the backtrace-normalized output should contain:
+      """
         2) String has a failing example
            Failure/Error: "foo".reverse.should eq("ofo")
              
@@ -42,5 +47,8 @@ Feature: text formatter
                   got: "oof"
              
              (compared using ==)
-           # ./string_spec.rb:3
+      """
+    And the backtrace-normalized output should contain:
+      """
+      # ./string_spec.rb:3
       """

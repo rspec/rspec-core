@@ -6,6 +6,10 @@ Feature: mock with rr
     Given a file named "example_spec.rb" with:
       """
       RSpec.configure do |config|
+        if RUBY_PLATFORM =~ /java/
+          require 'jruby'
+          JRuby.objectspace=true
+        end
         config.mock_framework = :rr
       end
 
@@ -24,6 +28,10 @@ Feature: mock with rr
     Given a file named "example_spec.rb" with:
       """
       RSpec.configure do |config|
+        if RUBY_PLATFORM =~ /java/
+          require 'jruby'
+          JRuby.objectspace=true
+        end
         config.mock_framework = :rr
       end
 
@@ -41,6 +49,10 @@ Feature: mock with rr
     Given a file named "example_spec.rb" with:
       """
       RSpec.configure do |config|
+        if RUBY_PLATFORM =~ /java/
+          require 'jruby'
+          JRuby.objectspace=true
+        end
         config.mock_framework = :rr
       end
 
@@ -61,6 +73,10 @@ Feature: mock with rr
     Given a file named "example_spec.rb" with:
       """
       RSpec.configure do |config|
+        if RUBY_PLATFORM =~ /java/
+          require 'jruby'
+          JRuby.objectspace=true
+        end
         config.mock_framework = :rr
       end
 
@@ -83,6 +99,10 @@ Feature: mock with rr
     Given a file named "example_spec.rb" with:
       """
       RSpec.configure do |config|
+        if RUBY_PLATFORM =~ /java/
+          require 'jruby'
+          JRuby.objectspace=true
+        end
         config.mock_framework = :rr
       end
 
