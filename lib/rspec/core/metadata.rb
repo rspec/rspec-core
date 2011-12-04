@@ -141,7 +141,10 @@ module RSpec
 
       # @api private
       def for_example(description, user_metadata)
-        dup.extend(ExampleMetadataHash).configure_for_example(description, user_metadata)
+        example_metadata = dup.extend(ExampleMetadataHash)
+        example_metadata[:description_args] = [description]
+        example_metadata[:caller] = user_metadata.delete(:caller) || caller
+        example_metadata.update(user_metadata)
       end
 
       # @api private
@@ -195,14 +198,6 @@ module RSpec
         else
           metadata[key].to_s == value.to_s
         end
-      end
-
-    protected
-
-      def configure_for_example(description, user_metadata)
-        store(:description_args, [description])
-        store(:caller, user_metadata.delete(:caller) || caller)
-        update(user_metadata)
       end
 
     private
