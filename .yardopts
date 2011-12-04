@@ -1,6 +1,5 @@
 --exclude features
 --no-private
---markup-provider redcarpet
 --markup markdown
 lib/**/*.rb
 -
