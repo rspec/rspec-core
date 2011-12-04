@@ -83,56 +83,50 @@ module RSpec::Core
     end
 
     describe "#prune" do
-      it "includes objects with tags matching inclusions" do
-        included = RSpec::Core::Metadata.new({:foo => :bar})
-        excluded = RSpec::Core::Metadata.new
-        filter_manager = FilterManager.new
-        filter_manager.include :foo => :bar
-        filter_manager.prune([included, excluded]).should eq([included])
+      let(:filter_manager) { FilterManager.new }
+
+      context "with inclusions" do
+        let(:included) { Metadata.new({:foo => :bar}) }
+        let(:excluded) { Metadata.new }
+
+        it "includes objects with tags matching inclusions" do
+          filter_manager.include :foo => :bar
+          filter_manager.prune([included, excluded]).should eq([included])
+        end
+
+        it "prefers inclusion when matches previously set exclusion" do
+          filter_manager.exclude :foo => :bar
+          filter_manager.include :foo => :bar
+          filter_manager.prune([included, excluded]).should eq([included])
+        end
+
+        it "prefers previously set inclusion when exclusion matches but has lower priority" do
+          filter_manager.include :foo => :bar
+          filter_manager.exclude_with_low_priority :foo => :bar
+          filter_manager.prune([included, excluded]).should eq([included])
+        end
       end
 
-      it "excludes objects with tags matching exclusions" do
-        included = RSpec::Core::Metadata.new
-        excluded = RSpec::Core::Metadata.new({:foo => :bar})
-        filter_manager = FilterManager.new
-        filter_manager.exclude :foo => :bar
-        filter_manager.prune([included, excluded]).should eq([included])
-      end
+      context "with exclusions" do
+        let(:included) { Metadata.new }
+        let(:excluded) { Metadata.new({:foo => :bar}) }
 
-      it "prefers exclusion when matches previously set inclusion" do
-        included = RSpec::Core::Metadata.new
-        excluded = RSpec::Core::Metadata.new({:foo => :bar})
-        filter_manager = FilterManager.new
-        filter_manager.include :foo => :bar
-        filter_manager.exclude :foo => :bar
-        filter_manager.prune([included, excluded]).should eq([included])
-      end
+        it "prefers previously set exclusion when inclusion matches but has lower priority" do
+          filter_manager.exclude :foo => :bar
+          filter_manager.include_with_low_priority :foo => :bar
+          filter_manager.prune([included, excluded]).should eq([included])
+        end
 
-      it "prefers inclusion when matches previously set exclusion" do
-        included = RSpec::Core::Metadata.new({:foo => :bar})
-        excluded = RSpec::Core::Metadata.new
-        filter_manager = FilterManager.new
-        filter_manager.exclude :foo => :bar
-        filter_manager.include :foo => :bar
-        filter_manager.prune([included, excluded]).should eq([included])
-      end
+        it "excludes objects with tags matching exclusions" do
+          filter_manager.exclude :foo => :bar
+          filter_manager.prune([included, excluded]).should eq([included])
+        end
 
-      it "prefers previously set inclusion when exclusion matches but has lower priority" do
-        included = RSpec::Core::Metadata.new({:foo => :bar})
-        excluded = RSpec::Core::Metadata.new
-        filter_manager = FilterManager.new
-        filter_manager.include :foo => :bar
-        filter_manager.exclude_with_low_priority :foo => :bar
-        filter_manager.prune([included, excluded]).should eq([included])
-      end
-
-      it "prefers previously set exclusion when inclusion matches but has lower priority" do
-        included = RSpec::Core::Metadata.new
-        excluded = RSpec::Core::Metadata.new({:foo => :bar})
-        filter_manager = FilterManager.new
-        filter_manager.exclude :foo => :bar
-        filter_manager.include_with_low_priority :foo => :bar
-        filter_manager.prune([included, excluded]).should eq([included])
+        it "prefers exclusion when matches previously set inclusion" do
+          filter_manager.include :foo => :bar
+          filter_manager.exclude :foo => :bar
+          filter_manager.prune([included, excluded]).should eq([included])
+        end
       end
     end
 
