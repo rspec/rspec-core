@@ -25,11 +25,8 @@ module RSpec
             super
           when :execution_result
             store(:execution_result, {})
-          when :describes, :described_class
-            klass = described_class
-            store(:described_class, klass)
-            # TODO (2011-11-07 DC) deprecate :describes as a key
-            store(:describes, klass)
+          when :described_class
+            store(:described_class, described_class)
           when :full_description
             store(:full_description, full_description)
           when :description
@@ -84,8 +81,6 @@ module RSpec
 
         def described_class
           ancestors.each do |g|
-            # TODO remove describes
-            return g[:describes] if g.has_key?(:describes)
             return g[:described_class] if g.has_key?(:described_class)
           end
 

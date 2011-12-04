@@ -179,71 +179,69 @@ module RSpec
         end
       end
 
-      [:described_class, :describes].each do |key|
-        describe key do
-          context "with a String" do
-            it "returns nil" do
-              m = Metadata.new
-              m.process('group')
+      describe ":described_class" do
+        context "with a String" do
+          it "returns nil" do
+            m = Metadata.new
+            m.process('group')
 
-              m[:example_group][key].should be_nil
-            end
+            m[:example_group][:described_class].should be_nil
+          end
+        end
+
+        context "with a Symbol" do
+          it "returns nil" do
+            m = Metadata.new
+            m.process(:group)
+
+            m[:example_group][:described_class].should be_nil
+          end
+        end
+
+        context "with a class" do
+          it "returns the class" do
+            m = Metadata.new
+            m.process(String)
+
+            m[:example_group][:described_class].should be(String)
+          end
+        end
+
+        context "in a nested group" do
+          it "returns the parent group's described class" do
+            sm = Metadata.new
+            sm.process(String)
+
+            m = Metadata.new(sm)
+            m.process(Array)
+
+            m[:example_group][:described_class].should be(String)
           end
 
-          context "with a Symbol" do
-            it "returns nil" do
-              m = Metadata.new
-              m.process(:group)
+          it "returns own described class if parent doesn't have one" do
+            sm = Metadata.new
+            sm.process("foo")
 
-              m[:example_group][key].should be_nil
-            end
+            m = Metadata.new(sm)
+            m.process(Array)
+
+            m[:example_group][:described_class].should be(Array)
           end
 
-          context "with a class" do
-            it "returns the class" do
-              m = Metadata.new
-              m.process(String)
+          it "can override a parent group's described class" do
+            parent = Metadata.new
+            parent.process(String)
 
-              m[:example_group][key].should be(String)
-            end
-          end
+            child = Metadata.new(parent)
+            child.process(Fixnum)
+            child[:example_group][:described_class] = Hash
 
-          context "in a nested group" do
-            it "returns the parent group's described class" do
-              sm = Metadata.new
-              sm.process(String)
+            grandchild = Metadata.new(child)
+            grandchild.process(Array)
 
-              m = Metadata.new(sm)
-              m.process(Array)
-
-              m[:example_group][key].should be(String)
-            end
-
-            it "returns own described class if parent doesn't have one" do
-              sm = Metadata.new
-              sm.process("foo")
-
-              m = Metadata.new(sm)
-              m.process(Array)
-
-              m[:example_group][key].should be(Array)
-            end
-
-            it "can override a parent group's described class" do
-              parent = Metadata.new
-              parent.process(String)
-
-              child = Metadata.new(parent)
-              child.process(Fixnum)
-              child[:example_group][key] = Hash
-
-              grandchild = Metadata.new(child)
-              grandchild.process(Array)
-
-              grandchild[:example_group][key].should be(Hash)
-              child[:example_group][key].should be(Hash)
-              parent[:example_group][key].should be(String)
-            end
+            grandchild[:example_group][:described_class].should be(Hash)
+            child[:example_group][:described_class].should be(Hash)
+            parent[:example_group][:described_class].should be(String)
           end
         end
       end
