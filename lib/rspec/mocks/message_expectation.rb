@@ -272,15 +272,15 @@ module RSpec
       #
       #   cart.stub(:add) { :failure }
       #   cart.stub(:add).with(Book.new(:isbn => 1934356379)) { :success }
-      #   cart.add(Book.new(:isbn => 1234567890)
+      #   cart.add(Book.new(:isbn => 1234567890))
       #   # => :failure
-      #   cart.add(Book.new(:isbn => 1934356379)
+      #   cart.add(Book.new(:isbn => 1934356379))
       #   # => :success
       #
       #   cart.should_receive(:add).with(Book.new(:isbn => 1934356379)) { :success }
-      #   cart.add(Book.new(:isbn => 1234567890)
+      #   cart.add(Book.new(:isbn => 1234567890))
       #   # => failed expectation
-      #   cart.add(Book.new(:isbn => 1934356379)
+      #   cart.add(Book.new(:isbn => 1934356379))
       #   # => passes
       def with(*args, &block)
         @return_block = block if block_given? unless args.empty?
