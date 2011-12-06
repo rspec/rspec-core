@@ -28,7 +28,7 @@ module RSpec
         @instance = @class.new
         @stub = Object.new
       end
-      
+
       [:stub!, :stub].each do |method|
         describe "using #{method}" do
           it "returns declared value when message is received" do
@@ -146,7 +146,7 @@ module RSpec
         current_value.should eq [:yielded_value, :another_value]
         @instance.rspec_verify
       end
-      
+
       it "yields a specified object and return another specified object" do
         yielded_obj = double("my mock")
         yielded_obj.should_receive(:foo).with(:bar)
@@ -160,7 +160,13 @@ module RSpec
           @stub.something
         end.should throw_symbol(:up)
       end
-      
+
+      it "throws with given arguments when told to" do
+        @stub.stub(:something).and_throw(:up, :over => :there)
+        result = catch(:up) { @stub.something }
+        result.should == {:over => :there}
+      end
+
       it "overrides a pre-existing method" do
         @stub.stub(:existing_instance_method).and_return(:updated_stub_value)
         @stub.existing_instance_method.should eq :updated_stub_value
@@ -171,7 +177,7 @@ module RSpec
         @stub.stub(:foo) { 'baz' }
         @stub.foo.should eq 'baz'
       end
-      
+
       it "allows a stub and an expectation" do
         @stub.stub(:foo).with("bar")
         @stub.should_receive(:foo).with("baz")
@@ -185,7 +191,7 @@ module RSpec
         @stub.rspec_verify
       end
     end
-    
+
     describe "A method stub with args" do
       before(:each) do
         @stub = Object.new
@@ -225,7 +231,7 @@ module RSpec
           @stub.foo("other")
         end.should raise_error
       end
-      
+
       it "supports options" do
         @stub.stub(:foo, :expected_from => "bar")
       end

@@ -130,7 +130,7 @@ module RSpec
       # @example
       #
       #   car.stub(:go).and_throw(:out_of_gas)
-      def and_throw(symbol)
+      def and_throw(*symbol)
         @symbol_to_throw = symbol
       end
 
@@ -173,7 +173,7 @@ module RSpec
 
         begin
           Kernel::raise @exception_to_raise unless @exception_to_raise.nil?
-          Kernel::throw @symbol_to_throw unless @symbol_to_throw.nil?
+          Kernel::throw *@symbol_to_throw unless @symbol_to_throw.nil?
 
           default_return_val = if !@method_block.nil?
                                  invoke_method_block(*args, &block)
