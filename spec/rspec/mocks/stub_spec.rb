@@ -156,15 +156,12 @@ module RSpec
 
       it "throws when told to" do
         @stub.stub(:something).and_throw(:up)
-        lambda do
-          @stub.something
-        end.should throw_symbol(:up)
+        expect { @stub.something }.to throw_symbol(:up)
       end
 
-      it "throws with given arguments when told to" do
-        @stub.stub(:something).and_throw(:up, :over => :there)
-        result = catch(:up) { @stub.something }
-        result.should == {:over => :there}
+      it "throws with argument when told to" do
+        @stub.stub(:something).and_throw(:up, 'high')
+        expect { @stub.something }.to throw_symbol(:up, 'high')
       end
 
       it "overrides a pre-existing method" do

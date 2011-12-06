@@ -22,7 +22,7 @@ module RSpec
         @args_expectation = ArgumentExpectation.new(ArgumentMatchers::AnyArgsMatcher.new)
         @consecutive = false
         @exception_to_raise = nil
-        @symbol_to_throw = nil
+        @args_to_throw = []
         @order_group = expectation_ordering
         @at_least = nil
         @at_most = nil
@@ -125,13 +125,19 @@ module RSpec
         @exception_to_raise = exception
       end
 
-      # Tells the object to throw a symbol when the message is received.
+      # @overload and_throw(symbol)
+      # @overload and_throw(symbol, object)
+      #
+      # Tells the object to throw a symbol (with the object if that form is
+      # used) when the message is received.
       #
       # @example
       #
       #   car.stub(:go).and_throw(:out_of_gas)
+      #   car.stub(:go).and_throw(:out_of_gas, :level => 0.1)
       def and_throw(symbol, object = nil)
-        @symbol_to_throw = [symbol, object]
+        @args_to_throw << symbol
+        @args_to_throw << object if object
       end
 
       # Tells the object to yield one or more args to a block when the message
@@ -173,7 +179,7 @@ module RSpec
 
         begin
           Kernel::raise @exception_to_raise unless @exception_to_raise.nil?
-          Kernel::throw *@symbol_to_throw unless @symbol_to_throw.nil?
+          Kernel::throw *@args_to_throw unless @args_to_throw.empty?
 
           default_return_val = if !@method_block.nil?
                                  invoke_method_block(*args, &block)
