@@ -41,8 +41,8 @@ module RSpec
         # argument.
         #
         # @see Methods#stub_chain
-        def stub_chain(*args, &block)
-          normalize_chain(*args) do |method_name, args|
+        def stub_chain(*method_names_and_optional_return_values, &block)
+          normalize_chain(*method_names_and_optional_return_values) do |method_name, args|
             observe!(method_name)
             message_chains.add(method_name, StubChainChain.new(*args, &block))
           end

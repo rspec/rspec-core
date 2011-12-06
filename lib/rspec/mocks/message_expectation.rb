@@ -178,8 +178,8 @@ module RSpec
         @order_group.handle_order_constraint self
 
         begin
-          Kernel::raise @exception_to_raise unless @exception_to_raise.nil?
-          Kernel::throw *@args_to_throw unless @args_to_throw.empty?
+          Kernel::raise(@exception_to_raise) unless @exception_to_raise.nil?
+          Kernel::throw(*@args_to_throw) unless @args_to_throw.empty?
 
           default_return_val = if !@method_block.nil?
                                  invoke_method_block(*args, &block)
