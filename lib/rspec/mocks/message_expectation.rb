@@ -130,8 +130,8 @@ module RSpec
       # @example
       #
       #   car.stub(:go).and_throw(:out_of_gas)
-      def and_throw(*symbol)
-        @symbol_to_throw = symbol
+      def and_throw(symbol, object = nil)
+        @symbol_to_throw = [symbol, object]
       end
 
       # Tells the object to yield one or more args to a block when the message
