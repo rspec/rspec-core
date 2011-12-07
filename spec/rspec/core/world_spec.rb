@@ -8,7 +8,7 @@ module RSpec::Core
 
     describe "#example_groups" do
       it "contains all registered example groups" do
-        group = RSpec::Core::ExampleGroup.describe("group")
+        group = ExampleGroup.describe("group")
         world.register(group)
         world.example_groups.should include(group)
       end
@@ -16,7 +16,7 @@ module RSpec::Core
 
     describe "#preceding_declaration_line (again)" do
       let(:group) do
-        RSpec::Core::ExampleGroup.describe("group") do
+        ExampleGroup.describe("group") do
 
           example("example")
 
@@ -24,7 +24,7 @@ module RSpec::Core
       end
 
       let(:second_group) do
-        RSpec::Core::ExampleGroup.describe("second_group") do
+        ExampleGroup.describe("second_group") do
 
           example("second_example")
 
