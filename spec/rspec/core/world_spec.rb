@@ -1,17 +1,14 @@
 require 'spec_helper'
 
-class Bar; end
-class Foo; end
-
 module RSpec::Core
 
-  describe RSpec::Core::World do
-    let(:configuration) { RSpec::Core::Configuration.new }
-    let(:world) { RSpec::Core::World.new(configuration) }
+  describe World do
+    let(:configuration) { Configuration.new }
+    let(:world) { World.new(configuration) }
 
     describe "#example_groups" do
       it "contains all registered example groups" do
-        group = RSpec::Core::ExampleGroup.describe("group"){}
+        group = RSpec::Core::ExampleGroup.describe("group")
         world.register(group)
         world.example_groups.should include(group)
       end
@@ -21,7 +18,7 @@ module RSpec::Core
       let(:group) do
         RSpec::Core::ExampleGroup.describe("group") do
 
-          example("example") {}
+          example("example")
 
         end
       end
@@ -29,7 +26,7 @@ module RSpec::Core
       let(:second_group) do
         RSpec::Core::ExampleGroup.describe("second_group") do
 
-          example("second_example") {}
+          example("second_example")
 
         end
       end
@@ -61,7 +58,7 @@ module RSpec::Core
         end
       end
 
-      context "with two exaples and the second example is registre first" do
+      context "with two exaples when second one is registered first" do
         let(:second_group_declaration_line) { second_group.metadata[:example_group][:line_number] }
 
         before do 
@@ -69,7 +66,7 @@ module RSpec::Core
           world.register(group)
         end
 
-        it 'return line number of group if a group start on that line' do
+        it 'returns line number of a group if it start on that line' do
           world.preceding_declaration_line(second_group_declaration_line).should eq(second_group_declaration_line)
         end
       end
