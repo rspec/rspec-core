@@ -307,18 +307,9 @@ MESSAGE
         when Module
           framework
         when String, Symbol
-          require case framework.to_s
-                  when /rspec/i
-                    'rspec/core/mocking/with_rspec'
-                  when /mocha/i
-                    'rspec/core/mocking/with_mocha'
-                  when /rr/i
-                    'rspec/core/mocking/with_rr'
-                  when /flexmock/i
-                    'rspec/core/mocking/with_flexmock'
-                  else
-                    'rspec/core/mocking/with_absolutely_nothing'
-                  end
+          fname = 'absolutely_nothing'
+          %w[rspec mocha rr flexmock].each { |n| fname = n if framework.to_s =~ /#{n}/i }
+          require "rspec/core/mocking/with_#{fname}"
           RSpec::Core::MockFrameworkAdapter
         end
 
