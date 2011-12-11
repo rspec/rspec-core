@@ -11,7 +11,8 @@ module RSpec
         let(:suffix) { jruby? ? '-jruby' : '' }
 
         let(:expected_file) do
-          "#{File.dirname(__FILE__)}/text_mate_formatted-#{::RUBY_VERSION}#{suffix}.html"
+          ruby_version = (%w[1.9.1 1.9.2 1.9.3].include? ::RUBY_VERSION) ? "1.9" : ::RUBY_VERSION
+          "#{File.dirname(__FILE__)}/text_mate_formatted-#{ruby_version}#{suffix}.html"
         end
 
         let(:generated_html) do

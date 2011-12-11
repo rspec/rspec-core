@@ -621,7 +621,7 @@ module RSpec::Core
 
     matcher :add_a_pending_example_with do |method_name|
       match do |group|
-        group = ExampleGroup.describe
+        group = RSpec::Core::ExampleGroup.describe
         group.send(method_name, "is pending") { }
         group.run
         group.examples.first.should be_pending
