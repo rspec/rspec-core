@@ -135,7 +135,6 @@ module RSpec
         context "with tag is Array" do
           let(:metadata_with_array) { group_metadata.for_example('example_with_array', :tag => [:one, 2, 'three']) }
           it "should match tag:one" do
-            debugger
             metadata_with_array.filter_applies?(:tag, 'one').should be_true
           end
           it "should not match tag:4" do
