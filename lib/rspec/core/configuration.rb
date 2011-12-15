@@ -763,6 +763,8 @@ MESSAGE
           formatter_ref
         elsif string_const?(formatter_ref)
           begin
+            RSpec::Core::Formatters::const_get(formatter_ref)
+          rescue NameError
             eval(formatter_ref)
           rescue NameError
             require path_for(formatter_ref)
