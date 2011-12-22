@@ -95,19 +95,19 @@ module RSpec::Core
     end
 
     describe "#its" do
-      subject do
-        Class.new do
-          def initialize
-            @call_count = 0
-          end
-
-          def call_count
-            @call_count += 1
-          end
-        end.new
-      end
-
       context "with a call counter" do
+        subject do
+          Class.new do
+            def initialize
+              @call_count = 0
+            end
+
+            def call_count
+              @call_count += 1
+            end
+          end.new
+        end
+
         its(:call_count) { should eq(1) }
       end
 
