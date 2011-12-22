@@ -95,19 +95,19 @@ module RSpec::Core
     end
 
     describe "#its" do
-      subject do
-        Class.new do
-          def initialize
-            @call_count = 0
-          end
-
-          def call_count
-            @call_count += 1
-          end
-        end.new
-      end
-
       context "with a call counter" do
+        subject do
+          Class.new do
+            def initialize
+              @call_count = 0
+            end
+
+            def call_count
+              @call_count += 1
+            end
+          end.new
+        end
+
         its(:call_count) { should eq(1) }
       end
 
@@ -120,6 +120,23 @@ module RSpec::Core
           end.new
         end
         its(:nil_value) { should be_nil }
+      end
+
+      context "with a private method name", :ruby => 1.9 do
+        subject do
+          Class.new do
+            private
+            def implementation_detail
+              "hidden"
+            end
+          end.new
+        end
+
+        its(:implementation_detail) do
+          lambda {
+            subject
+          }.should raise_error(NoMethodError, /private method `implementation_detail' called for/)
+        end
       end
 
       context "with nested attributes" do

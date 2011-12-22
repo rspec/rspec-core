@@ -126,7 +126,7 @@ module RSpec
                                   super()[*attribute]
                                 else
                                   attribute.to_s.split('.').inject(super()) do |target, method|
-                                    target.send(method)
+                                    target.respond_to?(:public_send) ? target.public_send(method) : target.send(method)
                                   end
                                 end
                 end
