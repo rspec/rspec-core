@@ -122,6 +122,23 @@ module RSpec::Core
         its(:nil_value) { should be_nil }
       end
 
+      context "with a private method name", :ruby => 1.9 do
+        subject do
+          Class.new do
+            private
+            def implementation_detail
+              "hidden"
+            end
+          end.new
+        end
+
+        its(:implementation_detail) do
+          lambda {
+            subject
+          }.should raise_error(NoMethodError, /private method `implementation_detail' called for/)
+        end
+      end
+
       context "with nested attributes" do
         subject do
           Class.new do
