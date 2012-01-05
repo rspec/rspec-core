@@ -1,3 +1,9 @@
+### 2.8.0 / 2012-01-04
+
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.8.0.rc2...v2.8.0)
+
+No changes for this release. Just releasing with the other rspec gems.
+
 ### 2.8.0.rc2 / 2011-12-19
 
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.8.0.rc1...v2.8.0.rc2)
