@@ -1,4 +1,4 @@
-# rspec-core
+# rspec-core [![Build Status](https://secure.travis-ci.org/rspec/rspec-core.png)](http://travis-ci.org/rspec/rspec-core) [![Dependency Status](https://gemnasium.com/rspec/rspec-core.png)](https://gemnasium.com/rspec/rspec-core)
 
 ```
 gem install rspec      # for rspec-core, rspec-expectations, rspec-mocks
