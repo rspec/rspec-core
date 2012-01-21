@@ -136,6 +136,37 @@ module RSpec
           end
         end
 
+        # Treats the subject as a proc, to allow expressing expectations
+        # on consequences of calling the subject, not only its properties.
+        #
+        # The following examples are equivalent:
+        #
+        # describe BankTransfer, "::perform" do
+        #   let(:bank_account) { BankAccount.new(100) }
+        #   subject { BankTransfer.perform(bank_account, 30) }
+        #
+        #   it "should change bank account deposit" do
+        #     expect { subject }.to change { bank_account.deposit }.by(30)
+        #     # or: proc { subject }.should change { bank_account.deposit }.by(30)
+        #   end
+        # end
+        #
+        # describe BankTransfer, "::perform" do
+        #   let(:bank_account) { BankAccount.new(100) }
+        #   subject { BankTransfer.perform(bank_account, 30) }
+        #   calling_it { should change { bank_account.deposit }.by(30) }
+        # end
+        def calling_it(&block)
+          example do
+            self.class.class_eval do
+              define_method(:subject) do
+                @_subject ||= self.class.subject
+              end
+            end
+            instance_eval(&block)
+          end
+        end
+
         # Defines an explicit subject for an example group which can then be the
         # implicit receiver (through delegation) of calls to +should+.
         #
