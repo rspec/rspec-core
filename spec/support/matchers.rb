@@ -29,6 +29,7 @@ RSpec::Matchers.define :fail_with do |exception_klass|
     "expected example to fail with a #{exception_klass} exception, but #{failure_reason(example, exception_klass)}"
   end
 
+  undef failure_reason if(defined?(failure_reason))
   def failure_reason(example, exception_klass)
     result = example.metadata[:execution_result]
     case
@@ -49,6 +50,7 @@ RSpec::Matchers.define :pass do
     "expected example to pass, but #{failure_reason(example)}"
   end
 
+  undef failure_reason if(defined?(failure_reason))
   def failure_reason(example)
     result = example.metadata[:execution_result]
     case
