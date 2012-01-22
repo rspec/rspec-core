@@ -13,6 +13,7 @@ RSpec::Matchers.define :map_specs do |specs|
     "expected #{@autotest.class} to map #{@specs.inspect} to #{@file.inspect}\ngot #{@actual.inspect}"
   end
 
+  undef prepare if(defined?(prepare))
   def prepare(autotest)
     find_order = @specs.dup << @file
     autotest.instance_eval { @find_order = find_order }
