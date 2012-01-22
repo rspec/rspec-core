@@ -36,10 +36,19 @@ Feature: gc_every_n_examples
         c.gc_every_n_examples = 10000
         # Setting this here because GC can happen up until the GC.disable call
         # in RSpec::Core::Configuration#gc_every_n_examples=.
-        gc_count_before = GC.count
-        c.after(:suite) do
-          gc_count_after = GC.count
-          puts "Had #{gc_count_after - gc_count_before} actual GC cycles."
+        #
+        # Also note that Ruby 1.8.x doesn't have the GC.count method, so we
+        # just fake it and move on.
+        if(GC.respond_to?(:count))
+          gc_count_before = GC.count
+          c.after(:suite) do
+            gc_count_after = GC.count
+            puts "Had #{gc_count_after - gc_count_before} actual GC cycles."
+          end
+        else
+          c.after(:suite) do
+            puts "Had 0 actual GC cycles."
+          end
         end
       end
 
