@@ -157,6 +157,11 @@ MESSAGE
       #     end
       add_setting :treat_symbols_as_metadata_keys_with_true_values
 
+      # If set to a valu above 0, turns automatic GC off and runs it only every
+      # N tests, which can result in higher peak memory usage but lower total
+      # execution time.
+      define_reader :gc_every_n_examples
+
       # @private
       add_setting :tty
       # @private
@@ -191,6 +196,25 @@ MESSAGE
         @filter_manager = FilterManager.new
         @preferred_options = {}
         @seed = srand % 0xFFFF
+        @test_counter = -1
+        @gc_every_n_examples = 0
+      end
+
+      def gc_if_needed
+        gc_time = 0
+        if(@gc_every_n_examples > 0)
+          @test_counter += 1
+          if(@test_counter >= (@gc_every_n_examples - 1))
+            t_before = Time.now
+            GC.enable
+            GC.start
+            GC.disable
+            gc_time = Time.now - t_before
+
+            @test_counter = 0
+          end
+        end
+        return gc_time
       end
 
       # @private
@@ -715,6 +739,15 @@ EOM
 
       def randomize?
         order.to_s.match(/rand/)
+      end
+
+      def gc_every_n_examples=(n)
+        @gc_every_n_examples = n
+        if(@gc_every_n_examples > 0)
+          GC.disable
+        else
+          GC.enable
+        end
       end
 
     private
