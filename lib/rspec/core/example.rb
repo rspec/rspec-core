@@ -209,7 +209,7 @@ module RSpec
 
       def record_finished(status, results={})
         finished_at = Time.now
-        record results.merge(:status => status, :finished_at => finished_at, :run_time => (finished_at - execution_result[:started_at]))
+        record results.merge(:status => status, :finished_at => finished_at, :run_time => (finished_at - (execution_result[:started_at] + (execution_result[:gc_time] || 0))))
       end
 
       def run_before_each
@@ -221,6 +221,7 @@ module RSpec
         @example_group_class.run_after_each_hooks(self)
         @example_group_instance.verify_mocks_for_rspec if @example_group_instance.respond_to?(:verify_mocks_for_rspec)
       ensure
+        execution_result[:gc_time] = RSpec.configuration.gc_if_needed
         @example_group_instance.teardown_mocks_for_rspec if @example_group_instance.respond_to?(:teardown_mocks_for_rspec)
       end
 
