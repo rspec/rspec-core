@@ -1,3 +1,9 @@
+### dev
+
+Bug fixes
+
+* Allow a `as_null_object` to be passed to `with`
+
 ### 2.8.0 / 2012-01-04
 
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.8.0.rc2...v2.8.0)
@@ -24,7 +30,7 @@ Enhancements
 
 Enhancements
 
-* Use `__send__` rather than `send` (alextk) 
+* Use `__send__` rather than `send` (alextk)
 * Add support for `any_instance.stub_chain` (Sidu Ponnappa)
 * Add support for `any_instance` argument matching based on `with` (Sidu
   Ponnappa and Andy Lindeman)
@@ -77,7 +83,7 @@ rspec-core-2.4.0 release.
 
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.2.0...v2.3.0)
 
-Bug fixes 
+Bug fixes
 
 * Fix our Marshal extension so that it does not interfere with objects that
   have their own `@mock_proxy` instance variable. (Myron Marston)

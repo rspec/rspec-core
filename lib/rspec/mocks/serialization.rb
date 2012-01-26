@@ -8,6 +8,8 @@ module RSpec
       # @private
       def self.fix_for(object)
         object.extend(YAML) if defined?(::YAML)
+      rescue TypeError
+        # Can't extend Fixnums, Symbols, true, false, or nil
       end
 
       # @private
