@@ -217,15 +217,15 @@ module RSpec
       end
 
       it "fails with nice message if passed Exception requires constructor arguments" do
-        class FancyError < RuntimeError
+        class ErrorThatHasAConstructorTakingArguments < RuntimeError
           def initialize(i_take_an_argument)
           end
         end
 
-        @mock.should_receive(:something).and_raise(FancyError)
+        @mock.should_receive(:something).and_raise(ErrorThatHasAConstructorTakingArguments)
         lambda {
           @mock.something
-        }.should raise_error(ArgumentError, "Errors raised by expectations cannot have constructors that take arguments. RSpec::Mocks::FancyError has a constructor requiring 1.")
+        }.should raise_error(ArgumentError, "Errors raised by expectations cannot have constructors that take arguments. RSpec::Mocks::ErrorThatHasAConstructorTakingArguments has a constructor requiring 1.")
       end
 
       it "raises RuntimeError with passed message" do
