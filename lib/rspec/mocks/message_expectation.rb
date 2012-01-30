@@ -179,9 +179,12 @@ module RSpec
 
         begin
           begin
-            Kernel::raise(@exception_to_raise) unless @exception_to_raise.nil?
-          rescue ArgumentError => ex
-            Kernel::raise ex.exception("Errors raised by expectations cannot have constructors that take arguments. #{@exception_to_raise.to_s} has a constructor requiring #{@exception_to_raise.instance_method(:initialize).arity}.")
+            raise(@exception_to_raise) unless @exception_to_raise.nil?
+          rescue ArgumentError => e
+            raise e.exception(<<-MESSAGE)
+'and_raise' can only accept an Exception class if an instance can be constructed with no arguments.
+#{@exception_to_raise.to_s}'s initialize method requires #{@exception_to_raise.instance_method(:initialize).arity} arguments, so you have to supply an instance instead.
+MESSAGE
           end
           Kernel::throw(*@args_to_throw) unless @args_to_throw.empty?
 
