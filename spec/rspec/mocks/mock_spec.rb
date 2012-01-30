@@ -8,7 +8,7 @@ module RSpec
       end
 
       treats_method_missing_as_private :subject => RSpec::Mocks::Mock.new, :noop => false
-      
+
       after(:each) do
         @mock.rspec_reset
       end
@@ -54,7 +54,7 @@ module RSpec
           @mock.not_expected
           violated
         }.to raise_error(
-          RSpec::Mocks::MockExpectationError, 
+          RSpec::Mocks::MockExpectationError,
           %Q|(Double "test double").not_expected(no args)\n    expected: 0 times\n    received: 1 time|
         )
       end
@@ -65,7 +65,7 @@ module RSpec
           @mock.not_expected("unexpected text")
           violated
         }.to raise_error(
-          RSpec::Mocks::MockExpectationError, 
+          RSpec::Mocks::MockExpectationError,
           %Q|(Double "test double").not_expected("unexpected text")\n    expected: 0 times\n    received: 1 time|
         )
       end
@@ -137,19 +137,19 @@ module RSpec
           @mock.rspec_verify
         }.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :something with unexpected arguments\n  expected: (\"a\", \"b\", \"c\")\n       got: (\"a\", \"d\", \"c\")")
       end
-      
+
       describe 'with a method that has a default argument' do
         it "raises an exception if the arguments don't match when the method is called, correctly reporting the offending arguments" do
           def @mock.method_with_default_argument(arg={}); end
           @mock.should_receive(:method_with_default_argument).with({})
-          
+
           expect {
             @mock.method_with_default_argument(nil)
             @mock.rspec_verify
           }.to raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :method_with_default_argument with unexpected arguments\n  expected: ({})\n       got: (nil)")
         end
       end
-      
+
       it "fails if unexpected method called" do
         lambda {
           @mock.something("a","b","c")
@@ -188,7 +188,7 @@ module RSpec
       it "fails right away when method defined as never is received" do
         @mock.should_receive(:not_expected).never
         expect { @mock.not_expected }.to raise_error(
-          RSpec::Mocks::MockExpectationError, 
+          RSpec::Mocks::MockExpectationError,
           %Q|(Double "test double").not_expected(no args)\n    expected: 0 times\n    received: 1 time|
         )
       end
@@ -196,7 +196,7 @@ module RSpec
       it "eventually fails when method defined as never is received" do
         @mock.should_receive(:not_expected).never
         expect { @mock.not_expected }.to raise_error(
-          RSpec::Mocks::MockExpectationError, 
+          RSpec::Mocks::MockExpectationError,
           %Q|(Double "test double").not_expected(no args)\n    expected: 0 times\n    received: 1 time|
         )
       end
@@ -214,6 +214,18 @@ module RSpec
         lambda {
           @mock.something
         }.should raise_error(RuntimeError, "error message")
+      end
+
+      it "fails with nice message if passed Exception requires constructor arguments" do
+        class ErrorThatHasAConstructorTakingArguments < RuntimeError
+          def initialize(i_take_an_argument)
+          end
+        end
+
+        @mock.should_receive(:something).and_raise(ErrorThatHasAConstructorTakingArguments)
+        lambda {
+          @mock.something
+        }.should raise_error(ArgumentError, "Errors raised by expectations cannot have constructors that take arguments. RSpec::Mocks::ErrorThatHasAConstructorTakingArguments has a constructor requiring 1.")
       end
 
       it "raises RuntimeError with passed message" do
@@ -615,7 +627,7 @@ module RSpec
         mock = double()
         expect {mock.foo}.to raise_error(/Double received/)
       end
-      
+
       it "does respond to initially stubbed methods" do
         double = double(:foo => "woo", :bar => "car")
         double.foo.should eq "woo"
