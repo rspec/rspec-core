@@ -187,28 +187,18 @@ module RSpec
 
       it "fails right away when method defined as never is received" do
         @mock.should_receive(:not_expected).never
-        expect { @mock.not_expected }.to raise_error(
-          RSpec::Mocks::MockExpectationError,
-          %Q|(Double "test double").not_expected(no args)\n    expected: 0 times\n    received: 1 time|
-        )
-      end
-
-      it "eventually fails when method defined as never is received" do
-        @mock.should_receive(:not_expected).never
-        expect { @mock.not_expected }.to raise_error(
-          RSpec::Mocks::MockExpectationError,
-          %Q|(Double "test double").not_expected(no args)\n    expected: 0 times\n    received: 1 time|
+        expect { @mock.not_expected }.
+          to raise_error(RSpec::Mocks::MockExpectationError,
+                         %Q|(Double "test double").not_expected(no args)\n    expected: 0 times\n    received: 1 time|
         )
       end
 
       it "raises when told to" do
         @mock.should_receive(:something).and_raise(RuntimeError)
-        lambda do
-          @mock.something
-        end.should raise_error(RuntimeError)
+        expect { @mock.something }.to raise_error(RuntimeError)
       end
 
-      it "raises passed an Exception instance" do
+      it "raises instance of submitted Exception" do
         error = RuntimeError.new("error message")
         @mock.should_receive(:something).and_raise(error)
         lambda {
@@ -228,7 +218,7 @@ module RSpec
         }.should raise_error(ArgumentError, /^'and_raise' can only accept an Exception class if an instance/)
       end
 
-      it "raises RuntimeError with passed message" do
+      it "raises RuntimeError with submitted message" do
         @mock.should_receive(:something).and_raise("error message")
         lambda {
           @mock.something
