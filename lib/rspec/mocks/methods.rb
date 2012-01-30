@@ -97,12 +97,13 @@ module RSpec
       # are declared, they'll work as expected. If not, the receiver is
       # returned.
       def as_null_object
+        @_null_object = true
         __mock_proxy.as_null_object
       end
 
       # Returns true if this object has received `as_null_object`
       def null_object?
-        __mock_proxy.null_object?
+        @_null_object
       end
 
       # @private
