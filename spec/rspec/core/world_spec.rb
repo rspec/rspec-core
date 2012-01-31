@@ -139,6 +139,28 @@ module RSpec::Core
           end
         end
       end
+      
+      context "with an exclustion filter and run_all_when_everything_filtered" do
+        let(:group) do
+          group = RSpec::Core::ExampleGroup.describe("group", :foo => 'bar') do
+            example("example") {}
+          end
+          group.stub!(:world){world}
+          group
+        end
+
+        before do
+          world.register(group)
+          configuration.filter_run_excluding :foo => 'bar'
+          configuration.run_all_when_everything_filtered = true
+        end
+        
+        it "announces" do
+          world.announce_filters
+          world.example_count.should eq(1)
+        end
+      end
+      
     end
   end
 end

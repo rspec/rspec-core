@@ -78,9 +78,10 @@ module RSpec
         end
 
         if @configuration.run_all_when_everything_filtered? && example_count.zero?
-          reporter.message("#{everything_filtered_message}; ignoring #{inclusion_filter.description}")
+          reporter.message("#{everything_filtered_message}; Running all.")
           filtered_examples.clear
           inclusion_filter.clear
+          exclusion_filter.clear
         end
 
         if example_count.zero?
@@ -90,7 +91,7 @@ module RSpec
           elsif exclusion_filter.empty_without_conditional_filters?
             message = everything_filtered_message
             if @configuration.run_all_when_everything_filtered?
-              message << "; ignoring #{inclusion_filter.description}"
+              message << "; Running all."
             end
             reporter.message(message)
           elsif inclusion_filter.empty?
