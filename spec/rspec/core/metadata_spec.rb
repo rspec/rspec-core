@@ -126,12 +126,6 @@ module RSpec
           example_metadata.filter_applies?(:if, lambda { |v| !v }).should be_false
         end
 
-        it "passes the metadata hash as the second argument if a given proc expects 2 args" do
-          passed_metadata = nil
-          example_metadata.filter_applies?(:if, lambda { |v, m| passed_metadata = m })
-          passed_metadata.should eq(example_metadata)
-        end
-
         context "with an Array" do
           let(:metadata_with_array) {
             group_metadata.for_example('example_with_array', :tag => [:one, 2, 'three', /four/])
