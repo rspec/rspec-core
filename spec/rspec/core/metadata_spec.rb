@@ -126,6 +126,11 @@ module RSpec
           example_metadata.filter_applies?(:if, lambda { |v| !v }).should be_false
         end
 
+        it "matches a proc with an arity of 2" do
+          example_metadata[:foo] = nil
+          example_metadata.filter_applies?(:foo, lambda { |v, m| m == example_metadata }).should be_true
+        end
+
         context "with an Array" do
           let(:metadata_with_array) {
             group_metadata.for_example('example_with_array', :tag => [:one, 2, 'three', /four/])

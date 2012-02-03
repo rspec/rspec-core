@@ -180,7 +180,10 @@ module RSpec
         when Regexp
           metadata[key] =~ value
         when Proc
-          value.call(metadata[key])
+          case value.arity
+          when 1 then value.call(metadata[key])
+          when 2 then value.call(metadata[key], metadata)
+          end
         else
           metadata[key].to_s == value.to_s
         end
