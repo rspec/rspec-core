@@ -27,7 +27,6 @@ Feature: as_null_object
         end
 
         it "supports Array#flatten" do
-          null_object = double('foo')
           [null_object].flatten.should eq([null_object])
         end
       end
