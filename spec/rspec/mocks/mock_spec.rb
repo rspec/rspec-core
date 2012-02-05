@@ -185,6 +185,24 @@ module RSpec
         @mock.rspec_verify
       end
 
+      it "passes block to stub block with an argument", :ruby => '> 1.8.6' do
+        a = nil
+        eval("@mock.stub(:something){|something_else, &block| a = block}")
+        b = lambda { }
+        @mock.something(nil, &b)
+        a.should eq b
+        @mock.rspec_verify
+      end
+
+      it "passes block to stub block without an argurment", :ruby => '>1.8.6' do
+        a = nil
+        eval("@mock.stub(:something){|&block| a = block}")
+        b = lambda { }
+        @mock.something(&b)
+        a.should eq b
+        @mock.rspec_verify
+      end
+
       it "fails right away when method defined as never is received" do
         @mock.should_receive(:not_expected).never
         expect { @mock.not_expected }.
