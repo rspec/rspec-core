@@ -3,6 +3,7 @@
 Bug fixes
 
 * Allow a `as_null_object` to be passed to `with`
+* Pass proc to block passed to stub (Aubrey Rhodes)
 
 ### 2.8.0 / 2012-01-04
 
