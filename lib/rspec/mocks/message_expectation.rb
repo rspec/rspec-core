@@ -457,9 +457,6 @@ MESSAGE
       end
 
       def invoke_return_block(*args, &block)
-        # Ruby 1.9 - when we set @return_block to return values
-        # regardless of arguments, any arguments will result in
-        # a "wrong number of arguments" error
         @return_block.arity == 0 ? @return_block.call(&block) : @return_block.call(*args, &block)
       end
 

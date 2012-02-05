@@ -174,33 +174,26 @@ module RSpec
         }.to raise_error(RSpec::Mocks::MockExpectationError, /Double \"test double\" received :something but passed block failed with: expected false to be true/)
       end
 
-      it "passes block to expectation block", :ruby => '> 1.8.6' do
-        a = nil
+      it "passes proc to expectation block without an argument", :ruby => '> 1.8.6' do
         # We eval this because Ruby 1.8.6's syntax parser barfs on { |&block| ... }
         # and prevents the entire spec suite from running.
-        eval("@mock.should_receive(:something) { |&block| a = block }")
-        b = lambda { }
-        @mock.something(&b)
-        a.should eq b
-        @mock.rspec_verify
+        eval("@mock.should_receive(:foo) {|&block| block.call.should eq(:bar)}")
+        @mock.foo { :bar }
       end
 
-      it "passes block to stub block with an argument", :ruby => '> 1.8.6' do
-        a = nil
-        eval("@mock.stub(:something){|something_else, &block| a = block}")
-        b = lambda { }
-        @mock.something(nil, &b)
-        a.should eq b
-        @mock.rspec_verify
+      it "passes proc to expectation block with an argument", :ruby => '> 1.8.6' do
+        eval("@mock.should_receive(:foo) {|arg, &block| block.call.should eq(:bar)}")
+        @mock.foo(:arg) { :bar }
       end
 
-      it "passes block to stub block without an argurment", :ruby => '>1.8.6' do
-        a = nil
-        eval("@mock.stub(:something){|&block| a = block}")
-        b = lambda { }
-        @mock.something(&b)
-        a.should eq b
-        @mock.rspec_verify
+      it "passes proc to stub block without an argurment", :ruby => '>1.8.6' do
+        eval("@mock.stub(:foo) {|&block| block.call.should eq(:bar)}")
+        @mock.foo { :bar }
+      end
+
+      it "passes proc to stub block with an argument", :ruby => '> 1.8.6' do
+        eval("@mock.stub(:foo) {|arg, &block| block.call.should eq(:bar)}")
+        @mock.foo(:arg) { :bar }
       end
 
       it "fails right away when method defined as never is received" do
