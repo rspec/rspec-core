@@ -1,5 +1,9 @@
 ### dev
 
+Enhancements
+
+* Support order constraints across objects (preethiramdev)
+
 Bug fixes
 
 * Allow a `as_null_object` to be passed to `with`
