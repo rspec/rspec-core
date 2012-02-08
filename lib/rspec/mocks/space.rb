@@ -17,7 +17,7 @@ module RSpec
           mock.rspec_reset
         end
         mocks.clear
-        @expectation_ordering = nil
+        expectation_ordering.clear
       end
 
       def expectation_ordering
