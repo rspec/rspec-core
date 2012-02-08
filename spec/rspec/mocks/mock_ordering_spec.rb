@@ -4,45 +4,30 @@ module RSpec
   module Mocks
 
     describe "ordering" do
+      before { @double = double("test double") }
+      after  { @double.rspec_reset }
 
-      before do
-        @double = double("test double")
-      end
-
-      after do
-        @double.rspec_reset
-      end
-
-      it "passes two calls in order" do
-        @double.should_receive(:one).ordered
-        @double.should_receive(:two).ordered
-        @double.one
-        @double.two
-        @double.rspec_verify
-      end
-
-      it "passes calls across objects in order" do
-        another_double = double("another test double")
-        @double.should_receive(:one).ordered
-        another_double.should_receive(:two).ordered
-        @double.should_receive(:two).ordered
-        @double.one
-        another_double.two
-        @double.two
-        @double.rspec_verify
-      end
-
-      it "passes three calls in order" do
+      it "passes when messages are received in order" do
         @double.should_receive(:one).ordered
         @double.should_receive(:two).ordered
         @double.should_receive(:three).ordered
         @double.one
         @double.two
         @double.three
-        @double.rspec_verify
       end
 
-      it "fails if second call comes first" do
+      it "passes when messages are received in order across objects" do
+        a = double("a")
+        b = double("b")
+        a.should_receive(:one).ordered
+        b.should_receive(:two).ordered
+        a.should_receive(:three).ordered
+        a.one
+        b.two
+        a.three
+      end
+
+      it "fails when messages are received out of order (2nd message 1st)" do
         @double.should_receive(:one).ordered
         @double.should_receive(:two).ordered
         lambda do
@@ -50,7 +35,7 @@ module RSpec
         end.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :two out of order")
       end
 
-      it "fails if third call comes first" do
+      it "fails when messages are received out of order (3rd message 1st)" do
         @double.should_receive(:one).ordered
         @double.should_receive(:two).ordered
         @double.should_receive(:three).ordered
@@ -60,19 +45,7 @@ module RSpec
         end.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :three out of order")
       end
 
-      it "fails if calls across objects are out of order" do
-        another_double = double("another test double")
-        @double.should_receive(:one).ordered
-        another_double.should_receive(:two).ordered
-        @double.should_receive(:three).ordered
-        @double.one
-        lambda do
-          @double.three
-        end.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :three out of order")
-        another_double.two
-      end
-
-      it "fails if third call comes second" do
+      it "fails when messages are received out of order (3rd message 2nd)" do
         @double.should_receive(:one).ordered
         @double.should_receive(:two).ordered
         @double.should_receive(:three).ordered
@@ -82,7 +55,21 @@ module RSpec
         end.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :three out of order")
       end
 
-      it "ignores order of non ordered calls" do
+      it "fails when messages are out of order across objects" do
+        a = double("test double")
+        b = double("another test double")
+        a.should_receive(:one).ordered
+        b.should_receive(:two).ordered
+        a.should_receive(:three).ordered
+        a.one
+        lambda do
+          a.three
+        end.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :three out of order")
+        a.rspec_reset
+        b.rspec_reset
+      end
+
+      it "ignores order of non ordered messages" do
         @double.should_receive(:ignored_0)
         @double.should_receive(:ordered_1).ordered
         @double.should_receive(:ignored_1)
@@ -102,7 +89,7 @@ module RSpec
         @double.rspec_verify
       end
 
-      it "passes when duplicates exist" do
+      it "supports duplicate messages" do
         @double.should_receive(:a).ordered
         @double.should_receive(:b).ordered
         @double.should_receive(:a).ordered
@@ -111,7 +98,6 @@ module RSpec
         @double.b
         @double.a
       end
-
     end
   end
 end
