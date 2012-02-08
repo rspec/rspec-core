@@ -40,7 +40,7 @@ module RSpec
       it "clears internal mocks on reset_all" do
         @space.add(double("mock"))
         @space.reset_all
-        @space.instance_eval { mocks.empty? }.should be_true
+        @space.instance_eval { receivers.empty? }.should be_true
       end
       it "resets the ordering" do
         @space.reset_all

@@ -769,14 +769,14 @@ module RSpec
 
         it "adds an class to the current space when #any_instance is invoked" do
           klass.any_instance
-          RSpec::Mocks::space.send(:mocks).should include(klass)
+          RSpec::Mocks::space.send(:receivers).should include(klass)
         end
 
         it "adds an instance to the current space when stubbed method is invoked" do
           klass.any_instance.stub(:foo)
           instance = klass.new
           instance.foo
-          RSpec::Mocks::space.send(:mocks).should include(instance)
+          RSpec::Mocks::space.send(:receivers).should include(instance)
         end
       end
 

@@ -3,20 +3,20 @@ module RSpec
     # @api private
     class Space
       def add(obj)
-        mocks << obj unless mocks.detect {|m| m.equal? obj}
+        receivers << obj unless receivers.detect {|m| m.equal? obj}
       end
 
       def verify_all
-        mocks.each do |mock|
+        receivers.each do |mock|
           mock.rspec_verify
         end
       end
 
       def reset_all
-        mocks.each do |mock|
+        receivers.each do |mock|
           mock.rspec_reset
         end
-        mocks.clear
+        receivers.clear
         expectation_ordering.clear
       end
 
@@ -26,10 +26,9 @@ module RSpec
 
     private
     
-      def mocks
-        @mocks ||= []
+      def receivers
+        @receivers ||= []
       end
-
     end
   end
 end
