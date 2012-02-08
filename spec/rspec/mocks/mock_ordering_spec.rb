@@ -8,7 +8,7 @@ module RSpec
       before do
         @double = double("test double")
       end
-      
+
       after do
         @double.rspec_reset
       end
@@ -17,6 +17,17 @@ module RSpec
         @double.should_receive(:one).ordered
         @double.should_receive(:two).ordered
         @double.one
+        @double.two
+        @double.rspec_verify
+      end
+
+      it "passes calls across objects in order" do
+        another_double = double("another test double")
+        @double.should_receive(:one).ordered
+        another_double.should_receive(:two).ordered
+        @double.should_receive(:two).ordered
+        @double.one
+        another_double.two
         @double.two
         @double.rspec_verify
       end
@@ -48,7 +59,19 @@ module RSpec
           @double.three
         end.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :three out of order")
       end
-      
+
+      it "fails if calls across objects are out of order" do
+        another_double = double("another test double")
+        @double.should_receive(:one).ordered
+        another_double.should_receive(:two).ordered
+        @double.should_receive(:three).ordered
+        @double.one
+        lambda do
+          @double.three
+        end.should raise_error(RSpec::Mocks::MockExpectationError, "Double \"test double\" received :three out of order")
+        another_double.two
+      end
+
       it "fails if third call comes second" do
         @double.should_receive(:one).ordered
         @double.should_receive(:two).ordered
@@ -78,17 +101,17 @@ module RSpec
         @double.ignored_1
         @double.rspec_verify
       end
-      
+
       it "passes when duplicates exist" do
         @double.should_receive(:a).ordered
         @double.should_receive(:b).ordered
         @double.should_receive(:a).ordered
-        
+
         @double.a
         @double.b
         @double.a
       end
-            
+
     end
   end
 end

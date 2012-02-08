@@ -2,8 +2,7 @@ module RSpec
   module Mocks
     # @private
     class OrderGroup
-      def initialize error_generator
-        @error_generator = error_generator
+      def initialize
         @ordering = Array.new
       end
 
@@ -14,7 +13,7 @@ module RSpec
 
       # @private
       def ready_for?(expectation)
-        return @ordering.first == expectation
+        @ordering.first == expectation
       end
 
       # @private
@@ -26,7 +25,7 @@ module RSpec
       def handle_order_constraint expectation
         return unless @ordering.include? expectation
         return consume if ready_for?(expectation)
-        @error_generator.raise_out_of_order_error expectation.sym
+        expectation.raise_out_of_order_error
       end
     end
   end
