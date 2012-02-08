@@ -271,6 +271,10 @@ MESSAGE
         end
       end
 
+      def raise_out_of_order_error
+        @error_generator.raise_out_of_order_error @sym
+      end
+
       # Constrains a stub or message expectation to invocations with specific
       # arguments.
       #

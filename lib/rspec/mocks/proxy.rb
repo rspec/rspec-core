@@ -33,7 +33,7 @@ module RSpec
         @object = object
         @name = name
         @error_generator = ErrorGenerator.new object, name, options
-        @expectation_ordering = OrderGroup.new @error_generator
+        @expectation_ordering = RSpec::Mocks::space.expectation_ordering
           @messages_received = []
         @options = options
         @already_proxied_respond_to = false

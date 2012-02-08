@@ -42,6 +42,11 @@ module RSpec
         @space.reset_all
         @space.instance_eval { mocks.empty? }.should be_true
       end
+      it "resets the ordering" do
+        OrderGroup.should_receive(:new)
+        @space.reset_all
+        @space.expectation_ordering
+      end
       it "only adds an instance once" do
         @space.add(m1 = double("mock1"))
         @space.add(m1)

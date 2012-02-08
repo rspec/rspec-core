@@ -17,13 +17,19 @@ module RSpec
           mock.rspec_reset
         end
         mocks.clear
+        @expectation_ordering = nil
       end
-      
+
+      def expectation_ordering
+        @expectation_ordering ||= OrderGroup.new
+      end
+
     private
     
       def mocks
         @mocks ||= []
       end
+
     end
   end
 end
