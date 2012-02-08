@@ -87,7 +87,7 @@ module RSpec
         end
 
         def ==(value)
-          @methods_to_respond_to.all? {|sym| value.respond_to?(sym)}
+          @methods_to_respond_to.all? {|message| value.respond_to?(message)}
         end
       end
 

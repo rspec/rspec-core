@@ -107,8 +107,8 @@ module RSpec
       end
 
       # @private
-      def received_message?(sym, *args, &block)
-        __mock_proxy.received_message?(sym.to_sym, *args, &block)
+      def received_message?(message, *args, &block)
+        __mock_proxy.received_message?(message, *args, &block)
       end
 
       # @private

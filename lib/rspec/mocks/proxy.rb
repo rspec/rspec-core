@@ -34,7 +34,7 @@ module RSpec
         @name = name
         @error_generator = ErrorGenerator.new object, name, options
         @expectation_ordering = RSpec::Mocks::space.expectation_ordering
-          @messages_received = []
+        @messages_received = []
         @options = options
         @already_proxied_respond_to = false
         @null_object = false
@@ -101,38 +101,38 @@ module RSpec
       end
 
       # @private
-      def has_negative_expectation?(method_name)
-        method_double[method_name].expectations.detect {|expectation| expectation.negative_expectation_for?(method_name)}
+      def has_negative_expectation?(message)
+        method_double[message].expectations.detect {|expectation| expectation.negative_expectation_for?(message)}
       end
 
       # @private
-      def record_message_received(method_name, *args, &block)
-        @messages_received << [method_name, args, block]
+      def record_message_received(message, *args, &block)
+        @messages_received << [message, args, block]
       end
 
       # @private
-      def message_received(method_name, *args, &block)
-        expectation = find_matching_expectation(method_name, *args)
-        stub = find_matching_method_stub(method_name, *args)
+      def message_received(message, *args, &block)
+        expectation = find_matching_expectation(message, *args)
+        stub = find_matching_method_stub(message, *args)
 
         if (stub && expectation && expectation.called_max_times?) || (stub && !expectation)
           expectation.increase_actual_received_count! if expectation && expectation.actual_received_count_matters?
-          if expectation = find_almost_matching_expectation(method_name, *args)
+          if expectation = find_almost_matching_expectation(message, *args)
             expectation.advise(*args) unless expectation.expected_messages_received?
           end
           stub.invoke(*args, &block)
         elsif expectation
           expectation.invoke(*args, &block)
-        elsif expectation = find_almost_matching_expectation(method_name, *args)
+        elsif expectation = find_almost_matching_expectation(message, *args)
           expectation.advise(*args) if null_object? unless expectation.expected_messages_received?
-          raise_unexpected_message_args_error(expectation, *args) unless (has_negative_expectation?(method_name) or null_object?)
-        elsif stub = find_almost_matching_stub(method_name, *args)
+          raise_unexpected_message_args_error(expectation, *args) unless (has_negative_expectation?(message) or null_object?)
+        elsif stub = find_almost_matching_stub(message, *args)
           stub.advise(*args)
           raise_unexpected_message_args_error(stub, *args)
         elsif @object.is_a?(Class)
-          @object.superclass.__send__(method_name, *args, &block)
+          @object.superclass.__send__(message, *args, &block)
         else
-          @object.__send__(:method_missing, method_name, *args, &block)
+          @object.__send__(:method_missing, message, *args, &block)
         end
       end
 

@@ -3,18 +3,18 @@ module RSpec
 
     class MessageExpectation
       # @private
-      attr_reader :sym
+      attr_reader :message
       attr_writer :expected_received_count, :method_block, :expected_from
       protected :expected_received_count=, :method_block=, :expected_from=
       attr_accessor :error_generator
       protected :error_generator, :error_generator=
 
       # @private
-      def initialize(error_generator, expectation_ordering, expected_from, sym, method_block, expected_received_count=1, opts={}, &implementation)
+      def initialize(error_generator, expectation_ordering, expected_from, message, method_block, expected_received_count=1, opts={}, &implementation)
         @error_generator = error_generator
         @error_generator.opts = opts
         @expected_from = expected_from
-        @sym = sym
+        @message = message
         @method_block = method_block
         @return_block = nil
         @actual_received_count = 0
@@ -163,8 +163,8 @@ module RSpec
       end
 
       # @private
-      def matches?(sym, *args)
-        @sym == sym and @args_expectation.args_match?(*args)
+      def matches?(message, *args)
+        @message == message and @args_expectation.args_match?(*args)
       end
 
       # @private
@@ -172,7 +172,7 @@ module RSpec
         if @expected_received_count == 0
           @failed_fast = true
           @actual_received_count += 1
-          @error_generator.raise_expectation_error(@sym, @expected_received_count, @actual_received_count, *args)
+          @error_generator.raise_expectation_error(@message, @expected_received_count, @actual_received_count, *args)
         end
 
         @order_group.handle_order_constraint self
@@ -215,8 +215,8 @@ MESSAGE
       end
 
       # @private
-      def matches_name_but_not_args(sym, *args)
-        @sym == sym and not @args_expectation.args_match?(*args)
+      def matches_name_but_not_args(message, *args)
+        @message == message and not @args_expectation.args_match?(*args)
       end
 
       # @private
@@ -265,14 +265,14 @@ MESSAGE
       # @private
       def generate_error
         if similar_messages.empty?
-          @error_generator.raise_expectation_error(@sym, @expected_received_count, @actual_received_count, *@args_expectation.args)
+          @error_generator.raise_expectation_error(@message, @expected_received_count, @actual_received_count, *@args_expectation.args)
         else
           @error_generator.raise_similar_message_args_error(self, *@similar_messages)
         end
       end
 
       def raise_out_of_order_error
-        @error_generator.raise_out_of_order_error @sym
+        @error_generator.raise_out_of_order_error @message
       end
 
       # Constrains a stub or message expectation to invocations with specific
@@ -408,7 +408,7 @@ MESSAGE
       end
 
       # @private
-      def negative_expectation_for?(sym)
+      def negative_expectation_for?(message)
         return false
       end
 
@@ -428,7 +428,7 @@ MESSAGE
         begin
           @method_block.call(*args, &block)
         rescue => detail
-          @error_generator.raise_block_failed_error(@sym, detail.message)
+          @error_generator.raise_block_failed_error(@message, detail.message)
         end
       end
 
@@ -475,15 +475,12 @@ MESSAGE
 
       def set_expected_received_count(relativity, n)
         @at_least = (relativity == :at_least)
-        @at_most = (relativity == :at_most)
-        @exactly = (relativity == :exactly)
+        @at_most  = (relativity == :at_most)
+        @exactly  = (relativity == :exactly)
         @expected_received_count = case n
-                                   when Numeric
-                                     n
-                                   when :once
-                                     1
-                                   when :twice
-                                     2
+                                   when Numeric then n
+                                   when :once   then 1
+                                   when :twice  then 2
                                    end
       end
 
@@ -495,13 +492,13 @@ MESSAGE
     # @private
     class NegativeMessageExpectation < MessageExpectation
       # @private
-      def initialize(message, expectation_ordering, expected_from, sym, method_block)
-        super(message, expectation_ordering, expected_from, sym, method_block, 0)
+      def initialize(error_generator, expectation_ordering, expected_from, message, method_block)
+        super(error_generator, expectation_ordering, expected_from, message, method_block, 0)
       end
 
       # @private
-      def negative_expectation_for?(sym)
-        return @sym == sym
+      def negative_expectation_for?(message)
+        return @message == message
       end
     end
   end

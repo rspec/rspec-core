@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 class LiarLiarPantsOnFire
-  def respond_to?(sym, incl_private=false)
+  def respond_to?(message, incl_private=false)
     true
   end
   
-  def self.respond_to?(sym, incl_private=false)
+  def self.respond_to?(message, incl_private=false)
     true
   end
 end

@@ -16,37 +16,37 @@ module RSpec
       end
 
       # @private
-      def raise_unexpected_message_error(sym, *args)
-        __raise "#{intro} received unexpected message :#{sym}#{arg_message(*args)}"
+      def raise_unexpected_message_error(message, *args)
+        __raise "#{intro} received unexpected message :#{message}#{arg_message(*args)}"
       end
 
       # @private
       def raise_unexpected_message_args_error(expectation, *args)
         expected_args = format_args(*expectation.expected_args)
         actual_args = format_args(*args)
-        __raise "#{intro} received #{expectation.sym.inspect} with unexpected arguments\n  expected: #{expected_args}\n       got: #{actual_args}"
+        __raise "#{intro} received #{expectation.message.inspect} with unexpected arguments\n  expected: #{expected_args}\n       got: #{actual_args}"
       end
 
       # @private
       def raise_similar_message_args_error(expectation, *args)
         expected_args = format_args(*expectation.expected_args)
         actual_args = args.collect {|a| format_args(*a)}.join(", ")
-        __raise "#{intro} received #{expectation.sym.inspect} with unexpected arguments\n  expected: #{expected_args}\n       got: #{actual_args}"
+        __raise "#{intro} received #{expectation.message.inspect} with unexpected arguments\n  expected: #{expected_args}\n       got: #{actual_args}"
       end
 
       # @private
-      def raise_expectation_error(sym, expected_received_count, actual_received_count, *args)
-        __raise "(#{intro}).#{sym}#{format_args(*args)}\n    expected: #{count_message(expected_received_count)}\n    received: #{count_message(actual_received_count)}"
+      def raise_expectation_error(message, expected_received_count, actual_received_count, *args)
+        __raise "(#{intro}).#{message}#{format_args(*args)}\n    expected: #{count_message(expected_received_count)}\n    received: #{count_message(actual_received_count)}"
       end
 
       # @private
-      def raise_out_of_order_error(sym)
-        __raise "#{intro} received :#{sym} out of order"
+      def raise_out_of_order_error(message)
+        __raise "#{intro} received :#{message} out of order"
       end
 
       # @private
-      def raise_block_failed_error(sym, detail)
-        __raise "#{intro} received :#{sym} but passed block failed with: #{detail}"
+      def raise_block_failed_error(message, detail)
+        __raise "#{intro} received :#{message} but passed block failed with: #{detail}"
       end
 
       # @private

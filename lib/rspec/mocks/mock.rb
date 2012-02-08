@@ -37,19 +37,19 @@ module RSpec
       alias_method :to_str, :to_s
 
       # @private
-      def respond_to?(sym, incl_private=false)
-        __mock_proxy.null_object? && sym != :to_ary ? true : super
+      def respond_to?(message, incl_private=false)
+        __mock_proxy.null_object? && message != :to_ary ? true : super
       end
 
     private
 
-      def method_missing(sym, *args, &block)
-          raise NoMethodError if sym == :to_ary
-        __mock_proxy.record_message_received(sym, *args, &block)
+      def method_missing(message, *args, &block)
+          raise NoMethodError if message == :to_ary
+        __mock_proxy.record_message_received(message, *args, &block)
         begin
           __mock_proxy.null_object? ? self : super
         rescue NameError
-          __mock_proxy.raise_unexpected_message_error(sym, *args)
+          __mock_proxy.raise_unexpected_message_error(message, *args)
         end
       end
 
