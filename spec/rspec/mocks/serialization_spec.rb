@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'yaml'
 
 module RSpec
   module Mocks

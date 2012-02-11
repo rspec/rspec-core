@@ -12,7 +12,7 @@ if defined?(Psych) && Psych.respond_to?(:dump)
         begin
           dump_without_mocks(object, *args)
         ensure
-          object.instance_variable_set(:@mock_proxy,mp)
+          object.instance_variable_set(:@mock_proxy, mp)
         end
       end
 
