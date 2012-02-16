@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "#let" do
-  let(:counter) do
+  let(:counter, :another_counter) do
     Class.new do
       def initialize
         @count = 0
@@ -33,10 +33,14 @@ describe "#let" do
 
     @nil_value_count.should eq(1)
   end
+
+  it "caches multiple arguments separately" do
+    counter.should_not eq(another_counter)
+  end
 end
 
 describe "#let!" do
-  let!(:creator) do
+  let!(:creator, :another_creator) do
     Class.new do
       @count = 0
       def self.count
@@ -52,4 +56,9 @@ describe "#let!" do
   it "does not interfere between tests" do
     creator.count.should eq(1)
   end
+
+  it "caches multiple arguments separately" do
+    creator.should_not eq(another_creator)
+  end
+
 end
