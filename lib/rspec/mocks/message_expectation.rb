@@ -4,7 +4,7 @@ module RSpec
     class MessageExpectation
       # @private
       attr_reader :message
-      attr_writer :expected_received_count, :method_block, :expected_from, :args_expectation
+      attr_writer :expected_received_count, :method_block, :expected_from, :argument_expectation
       protected :expected_received_count=, :method_block=, :expected_from=
       attr_accessor :error_generator
       protected :error_generator, :error_generator=
@@ -19,7 +19,7 @@ module RSpec
         @return_block = nil
         @actual_received_count = 0
         @expected_received_count = expected_received_count
-        @args_expectation = ArgumentExpectation.new(ArgumentMatchers::AnyArgsMatcher.new)
+        @argument_expectation = ArgumentExpectation.new(ArgumentMatchers::AnyArgsMatcher.new)
         @consecutive = false
         @exception_to_raise = nil
         @args_to_throw = []
@@ -45,13 +45,13 @@ module RSpec
         new_gen.opts = opts
         child.error_generator = new_gen
         child.clone_args_to_yield(*@args_to_yield)
-        child.args_expectation = ArgumentExpectation.new(ArgumentMatchers::AnyArgsMatcher.new)
+        child.argument_expectation = ArgumentExpectation.new(ArgumentMatchers::AnyArgsMatcher.new)
         child
       end
 
       # @private
       def expected_args
-        @args_expectation.args
+        @argument_expectation.args
       end
 
       # @overload and_return(value)
@@ -165,7 +165,7 @@ module RSpec
 
       # @private
       def matches?(message, *args)
-        @message == message and @args_expectation.args_match?(*args)
+        @message == message and @argument_expectation.args_match?(*args)
       end
 
       # @private
@@ -217,7 +217,7 @@ MESSAGE
 
       # @private
       def matches_name_but_not_args(message, *args)
-        @message == message and not @args_expectation.args_match?(*args)
+        @message == message and not @argument_expectation.args_match?(*args)
       end
 
       # @private
@@ -266,7 +266,7 @@ MESSAGE
       # @private
       def generate_error
         if similar_messages.empty?
-          @error_generator.raise_expectation_error(@message, @expected_received_count, @actual_received_count, *@args_expectation.args)
+          @error_generator.raise_expectation_error(@message, @expected_received_count, @actual_received_count, *@argument_expectation.args)
         else
           @error_generator.raise_similar_message_args_error(self, *@similar_messages)
         end
@@ -302,7 +302,7 @@ MESSAGE
       #   # => passes
       def with(*args, &block)
         @return_block = block if block_given? unless args.empty?
-        @args_expectation = ArgumentExpectation.new(*args, &block)
+        @argument_expectation = ArgumentExpectation.new(*args, &block)
         self
       end
 
