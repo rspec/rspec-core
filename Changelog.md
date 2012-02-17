@@ -8,6 +8,8 @@ Bug fixes
 
 * Allow a `as_null_object` to be passed to `with`
 * Pass proc to block passed to stub (Aubrey Rhodes)
+* Initialize child message expectation args to match any args (#109 -
+  preethiramdev)
 
 ### 2.8.0 / 2012-01-04
 
