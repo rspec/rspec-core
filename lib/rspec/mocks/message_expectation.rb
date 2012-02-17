@@ -4,7 +4,7 @@ module RSpec
     class MessageExpectation
       # @private
       attr_reader :message
-      attr_writer :expected_received_count, :method_block, :expected_from
+      attr_writer :expected_received_count, :method_block, :expected_from, :args_expectation
       protected :expected_received_count=, :method_block=, :expected_from=
       attr_accessor :error_generator
       protected :error_generator, :error_generator=
@@ -45,6 +45,7 @@ module RSpec
         new_gen.opts = opts
         child.error_generator = new_gen
         child.clone_args_to_yield(*@args_to_yield)
+        child.args_expectation = ArgumentExpectation.new(ArgumentMatchers::AnyArgsMatcher.new)
         child
       end
 

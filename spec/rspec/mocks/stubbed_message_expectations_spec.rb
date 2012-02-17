@@ -21,6 +21,16 @@ module RSpec
         double.rspec_reset
       end
     end
-    
+
+    describe "Example with stubbed with args and expectation with no args" do
+      it "matches any args even if previously stubbed with arguments" do
+        double = double("mock")
+        double.stub(:foo).with(3).and_return("stub")
+        double.should_receive(:foo).at_least(:once).and_return("expectation")
+        double.foo
+        double.rspec_verify
+      end
+    end
+
   end
 end
