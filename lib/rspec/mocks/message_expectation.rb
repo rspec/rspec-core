@@ -54,6 +54,10 @@ module RSpec
         @argument_expectation.args
       end
 
+      def at_least_once?
+        @at_least && @expected_received_count == 1
+      end
+
       # @overload and_return(value)
       # @overload and_return(first_value, second_value)
       # @overload and_return(&block)

@@ -114,6 +114,9 @@ module RSpec
       def message_received(message, *args, &block)
         expectation = find_matching_expectation(message, *args)
         stub = find_matching_method_stub(message, *args)
+        if stub && expectation && expectation.at_least_once?
+          method_double[message].stubs.delete(stub)
+        end
 
         if (stub && expectation && expectation.called_max_times?) || (stub && !expectation)
           expectation.increase_actual_received_count! if expectation && expectation.actual_received_count_matters?
