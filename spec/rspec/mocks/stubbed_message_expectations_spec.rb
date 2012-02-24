@@ -45,11 +45,12 @@ describe "expection set on previously stubbed method" do
     end
 
     it "passes when at least once method is called more than once " do
-        @mock.stub(:random_call).with(1).and_return("stub")
-        @mock.should_receive(:random_call).with(1).at_least(:once).and_return("expectation")
-        @mock.random_call(1).should eq("expectation")
-        @mock.random_call(1).should eq("expectation")
-        @mock.rspec_verify
-      end
+        double = double("mock")
+        double.stub(:random_call).with(1).and_return("stub")
+        double.should_receive(:random_call).with(1).at_least(:once).and_return("expectation")
+        double.random_call(1).should eq("expectation")
+        double.random_call(1).should eq("expectation")
+        double.rspec_verify
+    end
   end
 end
