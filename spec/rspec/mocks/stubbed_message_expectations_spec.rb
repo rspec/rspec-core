@@ -43,14 +43,5 @@ describe "expection set on previously stubbed method" do
       double.foo(3)
       expect { double.rspec_verify }.to raise_error(/expected: \(4\)\s+got: \(3\)/)
     end
-
-    it "passes when at least once method is called more than once " do
-        double = double("mock")
-        double.stub(:random_call).with(1).and_return("stub")
-        double.should_receive(:random_call).with(1).at_least(:once).and_return("expectation")
-        double.random_call(1).should eq("expectation")
-        double.random_call(1).should eq("expectation")
-        double.rspec_verify
-    end
   end
 end
