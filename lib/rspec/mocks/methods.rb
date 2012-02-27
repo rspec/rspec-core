@@ -103,7 +103,7 @@ module RSpec
 
       # Returns true if this object has received `as_null_object`
       def null_object?
-        @_null_object
+        defined?(@_null_object)
       end
 
       # @private
