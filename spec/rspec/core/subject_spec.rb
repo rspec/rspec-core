@@ -194,6 +194,18 @@ module RSpec::Core
         end
       end
 
+      context "accessing instance variable directly" do
+        subject do
+          Class.new do
+            def initialize
+              @foo = "bar"
+            end
+          end.new
+
+        end
+
+        its("@foo") { should eq("bar") }
+      end
     end
   end
 end

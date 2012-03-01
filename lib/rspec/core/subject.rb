@@ -101,6 +101,19 @@ module RSpec
         #     its("phone_numbers.first") { should eq("555-1212") }
         #   end
         #
+        # Given a +String+ starting with "@", it refers to an instance
+        # variable.
+        #
+        #   describe "@foo" do
+        #     subject do
+        #       Object.new.tap do |o|
+        #         o.instance_variable_set("@foo", "bar")
+        #       end
+        #     end
+        #
+        #     its("@foo") { should eq("bar") }
+        #   end
+        #
         # When the subject is a +Hash+, you can refer to the Hash keys by
         # specifying a +Symbol+ or +String+ in an array.
         #
@@ -124,6 +137,8 @@ module RSpec
                 define_method(:subject) do
                   @_subject ||= if attribute.is_a?(Array)
                                   super()[*attribute]
+                                elsif attribute.to_s.start_with?('@')
+                                  super().instance_variable_get(attribute)
                                 else
                                   attribute.to_s.split('.').inject(super()) do |target, method|
                                     target.send(method)
