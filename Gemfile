@@ -12,6 +12,13 @@ gemspec
 end
 
 gem 'rake', '~> 0.9.2'
+gem "nokogiri", "1.5.2"
+
+### deps for rdoc.info
+gem "yard"
+gem "redcarpet"
+gem "github-markup"
+
 
 platforms :jruby do
   gem "jruby-openssl"
