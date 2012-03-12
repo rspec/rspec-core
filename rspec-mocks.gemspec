@@ -21,5 +21,8 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = [ "README.md", "License.txt"]
   s.rdoc_options     = ["--charset=UTF-8"]
   s.require_path     = "lib"
+
+  s.add_development_dependency 'cucumber', '~> 1.1.9'
+  s.add_development_dependency 'aruba',    '~> 0.4.11'
 end
 

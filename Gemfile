@@ -1,6 +1,7 @@
 source "http://rubygems.org"
 
-### rspec libs
+gemspec
+
 %w[rspec rspec-core rspec-expectations rspec-mocks].each do |lib|
   library_path = File.expand_path("../../#{lib}", __FILE__)
   if File.exist?(library_path)
@@ -10,16 +11,7 @@ source "http://rubygems.org"
   end
 end
 
-### dev dependencies
-gem "rake"
-gem "cucumber", "1.0.1"
-gem "aruba", "0.4.2"
-gem "nokogiri", "1.5.0"
-
-### deps for rdoc.info
-gem "yard"
-gem "redcarpet"
-gem "github-markup"
+gem 'rake', '~> 0.9.2'
 
 platforms :jruby do
   gem "jruby-openssl"
