@@ -1,5 +1,5 @@
-### dev
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.8.0...master)
+### 2.9.0.rc2 / 2012-02-12
+[full changelog](http://github.com/rspec/rspec-core/compare/v2.8.0...v2.9.0.rc2)
 
 Enhancements
 
