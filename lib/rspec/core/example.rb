@@ -119,7 +119,7 @@ module RSpec
       # Wraps the example block in a Proc so it can invoked using `run` or
       # `call` in [around](../Hooks#around-instance_method) hooks.
       def self.procsy(metadata, &proc)
-        Proc.new(&proc).extend(Procsy).with(metadata)
+        proc.extend(Procsy).with(metadata)
       end
 
       # @private
