@@ -42,9 +42,6 @@ module RSpec
       end
 
       class AroundHook < Hook
-        def call(wrapped_example)
-          @block.call(wrapped_example)
-        end
       end
 
       class HookCollection < Array
