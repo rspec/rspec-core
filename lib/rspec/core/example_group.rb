@@ -278,7 +278,7 @@ module RSpec
 
       # @private
       def self.run_around_each_hooks(example, initial_procsy)
-        example.around_hooks.inject(initial_procsy) do |procsy, around_hook|
+        around_hooks_for(example).inject(initial_procsy) do |procsy, around_hook|
           Example.procsy(procsy.metadata) do
             example.example_group_instance.instance_eval_with_args(procsy, &around_hook)
           end
