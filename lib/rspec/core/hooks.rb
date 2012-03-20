@@ -358,7 +358,7 @@ module RSpec
       #
       def around(*args, &block)
         scope, options = scope_and_options_from(*args)
-        hooks[:around][scope] << AroundHook.new(options, &block)
+        hooks[:around][scope].unshift(AroundHook.new(options, &block))
       end
 
       # @private

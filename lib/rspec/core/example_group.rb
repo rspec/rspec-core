@@ -278,7 +278,7 @@ module RSpec
 
       # @private
       def self.run_around_each_hooks(example, initial_procsy)
-        example.around_hooks.reverse.inject(initial_procsy) do |procsy, around_hook|
+        example.around_hooks.inject(initial_procsy) do |procsy, around_hook|
           Example.procsy(procsy.metadata) do
             example.example_group_instance.instance_eval_with_args(procsy, &around_hook)
           end
@@ -320,7 +320,7 @@ An error occurred in an after(:all) hook.
 
       # @private
       def self.around_hooks_for(example)
-        world.find_hook(:around, :each, self, example) + ancestors.reverse.inject([]){|l,a| l + a.find_hook(:around, :each, self, example)}
+        ancestors.inject([]){|l,a| l + a.find_hook(:around, :each, self, example)} + world.find_hook(:around, :each, self, example)
       end
 
       # Runs all the examples in this group
