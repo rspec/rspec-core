@@ -125,7 +125,7 @@ module RSpec
 
       def __mock_proxy
         @mock_proxy ||= begin
-          mp = if Mock === self
+          mp = if TestDouble === self
             Proxy.new(self, @name, @options)
           else
             Proxy.new(self)

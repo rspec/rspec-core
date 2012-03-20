@@ -27,7 +27,7 @@ module RSpec
 
       # @private
       def visibility
-        if Mock === @object
+        if TestDouble === @object
           'public'
         elsif object_singleton_class.private_method_defined?(@method_name)
           'private'

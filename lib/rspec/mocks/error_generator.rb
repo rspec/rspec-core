@@ -64,7 +64,7 @@ module RSpec
       def intro
         if @name
           "#{@declared_as} #{@name.inspect}"
-        elsif Mock === @target
+        elsif TestDouble === @target
           @declared_as
         elsif Class === @target
           "<#{@target.inspect} (class)>"
