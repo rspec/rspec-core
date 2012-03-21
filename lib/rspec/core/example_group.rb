@@ -287,14 +287,12 @@ module RSpec
 
       # @private
       def self.run_before_each_hooks(example)
-        world.run_hook_filtered(:before, :each, self, example.example_group_instance, example)
-        ancestors.reverse.each { |ancestor| ancestor.run_hook(:before, :each, example.example_group_instance) }
+        before_each_hooks_for(example).run_all(example.example_group_instance)
       end
 
       # @private
       def self.run_after_each_hooks(example)
-        ancestors.each { |ancestor| ancestor.run_hook(:after, :each, example.example_group_instance) }
-        world.run_hook_filtered(:after, :each, self, example.example_group_instance, example)
+        after_each_hooks_for(example).run_all(example.example_group_instance)
       end
 
       # @private
@@ -321,6 +319,18 @@ An error occurred in an after(:all) hook.
       # @private
       def self.around_hooks_for(example)
         ancestors.inject([]){|l,a| l + a.find_hook(:around, :each, self, example)} + world.find_hook(:around, :each, self, example)
+      end
+
+      def self.before_each_hooks_for(example)
+        ancestors.reverse.inject(world.find_hook(:before, :each, self, example)) do |c, a|
+          c.concat(a.find_hook(:before, :each, self, example))
+        end
+      end
+
+      def self.after_each_hooks_for(example)
+        ancestors.inject(Hooks::HookCollection.new) do |c, a|
+          c.concat(a.find_hook(:after, :each, self, example))
+        end.concat(world.find_hook(:after, :each, self, example))
       end
 
       # Runs all the examples in this group
