@@ -181,7 +181,7 @@ module RSpec
         if around_hooks.empty?
           yield
         else
-          @example_group_class.run_around_each_hooks(self, Example.procsy(metadata, &block)).call
+          @example_group_class.run_around_each_hooks(self, Example.procsy(metadata, &block))
         end
       end
 
