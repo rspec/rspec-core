@@ -3,45 +3,48 @@ module RSpec
     module Hooks
       include MetadataHashBuilder::WithConfigWarning
 
-      class Hook
+      module HookExtension
         attr_reader :options
 
-        def initialize(options, &block)
+        def with(options)
           @options = options
-          raise "no block given for #{display_name}" unless block
-          @block = block
+          self
         end
 
         def options_apply?(example_or_group)
           example_or_group.all_apply?(options)
         end
-
-        def to_proc
-          @block
-        end
-
-        def call
-          @block.call
-        end
-
-        def display_name
-          self.class.name.split('::').last.gsub('Hook','').downcase << " hook"
-        end
       end
 
-      class BeforeHook < Hook
+      module BeforeHookExtension
+        include HookExtension
+
         def run_in(example_group_instance)
           example_group_instance.instance_eval(&self)
         end
-      end
 
-      class AfterHook < Hook
-        def run_in(example_group_instance)
-          example_group_instance.instance_eval_with_rescue(&self)
+        def display_name
+          "before hook"
         end
       end
 
-      class AroundHook < Hook
+      module AfterHookExtension
+        include HookExtension
+
+        def run_in(example_group_instance)
+          example_group_instance.instance_eval_with_rescue(&self)
+        end
+
+        def display_name
+          "before hook"
+        end
+      end
+
+      module AroundHookExtension
+        include HookExtension
+        def display_name
+          "around hook"
+        end
       end
 
       class HookCollection < Array
@@ -241,7 +244,7 @@ module RSpec
       #     end
       def append_before(*args, &block)
         scope, options = scope_and_options_from(*args)
-        hooks[:before][scope] << BeforeHook.new(options, &block)
+        hooks[:before][scope] << block.extend(BeforeHookExtension).with(options)
       end
 
       alias_method :before, :append_before
@@ -252,7 +255,7 @@ module RSpec
       # See #before for scoping semantics.
       def prepend_before(*args, &block)
         scope, options = scope_and_options_from(*args)
-        hooks[:before][scope].unshift(BeforeHook.new(options, &block))
+        hooks[:before][scope].unshift block.extend(BeforeHookExtension).with(options)
       end
 
       # @api public
@@ -305,7 +308,7 @@ module RSpec
       # they are run in reverse order of that in which they are declared.
       def prepend_after(*args, &block)
         scope, options = scope_and_options_from(*args)
-        hooks[:after][scope].unshift(AfterHook.new(options, &block))
+        hooks[:after][scope].unshift block.extend(AfterHookExtension).with(options)
       end
 
       alias_method :after, :prepend_after
@@ -316,7 +319,7 @@ module RSpec
       # See #after for scoping semantics.
       def append_after(*args, &block)
         scope, options = scope_and_options_from(*args)
-        hooks[:after][scope] << AfterHook.new(options, &block)
+        hooks[:after][scope] << block.extend(AfterHookExtension).with(options)
       end
 
       # @api public
@@ -365,7 +368,7 @@ module RSpec
       #
       def around(*args, &block)
         scope, options = scope_and_options_from(*args)
-        hooks[:around][scope].unshift(AroundHook.new(options, &block))
+        hooks[:around][scope].unshift block.extend(AroundHookExtension).with(options)
       end
 
       # @private

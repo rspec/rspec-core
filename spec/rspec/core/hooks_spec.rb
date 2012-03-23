@@ -131,14 +131,6 @@ module RSpec::Core
           examples.should have(1).example
         end
       end
-
-      describe Hooks::Hook do
-        it "requires a block" do
-          lambda {
-            Hooks::BeforeHook.new :foo => :bar
-          }.should raise_error("no block given for before hook")
-        end
-      end
     end
 
     [:all, :each].each do |scope|
