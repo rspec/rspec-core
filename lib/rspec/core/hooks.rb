@@ -382,12 +382,7 @@ module RSpec
       # Just like run_hook, except it removes the blocks as it evalutes them,
       # ensuring that they will only be run once.
       def run_hook!(hook, scope, example_group_instance)
-        hooks[hook][scope].run_all!(example_group_instance)
-      end
-
-      # @private
-      def run_hook_filtered(hook, scope, group, example_group_instance, example = nil)
-        find_hook(hook, scope, group, example).run_all(example_group_instance)
+        HookCollection.new(hooks[hook][scope].uniq).run_all!(example_group_instance)
       end
 
       # @private

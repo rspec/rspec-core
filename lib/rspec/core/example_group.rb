@@ -198,6 +198,14 @@ module RSpec
       def self.subclass(parent, args, &example_group_block)
         subclass = Class.new(parent)
         subclass.set_it_up(*args)
+        [:before, :after].each do |_when|
+          subclass.hooks[_when][:each].concat RSpec.configuration.hooks[_when][:each]
+          RSpec.configuration.hooks[_when][:all].each do |hook|
+            unless ancestors.any? {|a| a.hooks[_when][:all].include? hook }
+              subclass.hooks[_when][:all] << hook if hook.options_apply?(subclass)
+            end
+          end
+        end
         subclass.module_eval(&example_group_block) if example_group_block
         subclass
       end
@@ -271,7 +279,6 @@ module RSpec
       def self.run_before_all_hooks(example_group_instance)
         return if descendant_filtered_examples.empty?
         assign_before_all_ivars(superclass.before_all_ivars, example_group_instance)
-        world.run_hook_filtered(:before, :all, self, example_group_instance)
         run_hook!(:before, :all, example_group_instance)
         store_before_all_ivars(example_group_instance)
       end
@@ -308,19 +315,17 @@ An error occurred in an after(:all) hook.
 
         EOS
         end
-
-        world.run_hook_filtered(:after, :all, self, example_group_instance)
       end
 
       # @private
       def self.around_hooks_for(example)
         Hooks::AroundHookCollection.new(
-        ancestors.inject([]){|l,a| l + a.find_hook(:around, :each, self, example)} + world.find_hook(:around, :each, self, example)
+          ancestors.inject([]){|l,a| l + a.find_hook(:around, :each, self, example)} + world.find_hook(:around, :each, self, example)
         )
       end
 
       def self.before_each_hooks_for(example)
-        ancestors.reverse.inject(world.find_hook(:before, :each, self, example)) do |c, a|
+        ancestors.reverse.inject(Hooks::HookCollection.new) do |c, a|
           c.concat(a.find_hook(:before, :each, self, example))
         end
       end
@@ -328,7 +333,7 @@ An error occurred in an after(:all) hook.
       def self.after_each_hooks_for(example)
         ancestors.inject(Hooks::HookCollection.new) do |c, a|
           c.concat(a.find_hook(:after, :each, self, example))
-        end.concat(world.find_hook(:after, :each, self, example))
+        end
       end
 
       # Runs all the examples in this group
