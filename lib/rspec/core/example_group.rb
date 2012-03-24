@@ -198,14 +198,6 @@ module RSpec
       def self.subclass(parent, args, &example_group_block)
         subclass = Class.new(parent)
         subclass.set_it_up(*args)
-        [:before, :after].each do |_when|
-          subclass.hooks[_when][:each].concat RSpec.configuration.hooks[_when][:each]
-          RSpec.configuration.hooks[_when][:all].each do |hook|
-            unless ancestors.any? {|a| a.hooks[_when][:all].include? hook }
-              subclass.hooks[_when][:all] << hook if hook.options_apply?(subclass)
-            end
-          end
-        end
         subclass.module_eval(&example_group_block) if example_group_block
         subclass
       end
@@ -255,6 +247,14 @@ module RSpec
         args.unshift(symbol_description) if symbol_description
         @metadata = RSpec::Core::Metadata.new(superclass_metadata).process(*args)
         world.configure_group(self)
+        [:before, :after].each do |_when|
+          hooks[_when][:each].concat RSpec.configuration.hooks[_when][:each]
+          RSpec.configuration.hooks[_when][:all].each do |hook|
+            unless ancestors.any? {|a| a.hooks[_when][:all].include? hook }
+              hooks[_when][:all] << hook if hook.options_apply?(self)
+            end
+          end
+        end
       end
 
       # @private
