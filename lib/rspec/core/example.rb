@@ -83,7 +83,7 @@ module RSpec
 
         begin
           unless pending
-            with_around_hooks do
+            with_around_each_hooks do
               begin
                 run_before_each
                 @example_group_instance.instance_eval(&@example_block)
@@ -153,8 +153,8 @@ module RSpec
       end
 
       # @private
-      def around_hooks
-        @around_hooks ||= example_group.around_hooks_for(self)
+      def around_each_hooks
+        @around_each_hooks ||= example_group.around_each_hooks_for(self)
       end
 
       # @private
@@ -177,8 +177,8 @@ module RSpec
 
     private
 
-      def with_around_hooks(&block)
-        if around_hooks.empty?
+      def with_around_each_hooks(&block)
+        if around_each_hooks.empty?
           yield
         else
           @example_group_class.run_around_each_hooks(self, Example.procsy(metadata, &block))
