@@ -248,7 +248,7 @@ module RSpec
         @metadata = RSpec::Core::Metadata.new(superclass_metadata).process(*args)
         world.configure_group(self)
         [:before, :after].each do |_when|
-          hooks[_when][:each].concat RSpec.configuration.hooks[_when][:each]
+          hooks[_when][:each].concat(RSpec.configuration.hooks[_when][:each])
           RSpec.configuration.hooks[_when][:all].each do |hook|
             unless ancestors.any? {|a| a.hooks[_when][:all].include? hook }
               hooks[_when][:all] << hook if hook.options_apply?(self)
@@ -319,17 +319,19 @@ An error occurred in an after(:all) hook.
 
       # @private
       def self.around_each_hooks_for(example)
-        Hooks::AroundHookCollection.new(
-          ancestors.inject([]){|l,a| l + a.find_hook(:around, :each, self, example)} + world.find_hook(:around, :each, self, example)
-        )
+        ancestors.inject(Hooks::AroundHookCollection.new) do |c, a|
+          c.concat(a.find_hook(:around, :each, self, example))
+        end.concat(world.find_hook(:around, :each, self, example))
       end
 
+      # @private
       def self.before_each_hooks_for(example)
         ancestors.reverse.inject(Hooks::HookCollection.new) do |c, a|
           c.concat(a.find_hook(:before, :each, self, example))
         end
       end
 
+      # @private
       def self.after_each_hooks_for(example)
         ancestors.inject(Hooks::HookCollection.new) do |c, a|
           c.concat(a.find_hook(:after, :each, self, example))
