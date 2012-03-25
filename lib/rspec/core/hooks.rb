@@ -42,6 +42,7 @@ module RSpec
 
       module AroundHookExtension
         include HookExtension
+
         def display_name
           "around hook"
         end
