@@ -375,15 +375,19 @@ module RSpec
       # @private
       # Runs all of the blocks stored with the hook in the context of the
       # example. If no example is provided, just calls the hook directly.
-      def run_hook(hook, scope, example_group_instance=ExampleGroup.new)
-        hooks[hook][scope].run_all(example_group_instance)
-      end
-
-      # @private
-      # Just like run_hook, except it removes the blocks as it evalutes them,
-      # ensuring that they will only be run once.
-      def run_hook!(hook, scope, example_group_instance)
-        HookCollection.new(hooks[hook][scope].uniq).run_all!(example_group_instance)
+      def run_hook(hook, scope, example_group_instance=ExampleGroup.new, example=nil, initial_procsy=nil)
+        case [hook, scope]
+        when [:before, :each]
+          before_each_hooks_for(example).run_all(example_group_instance)
+        when [:after, :each]
+          after_each_hooks_for(example).run_all(example_group_instance)
+        when [:around, :each]
+          around_each_hooks_for(example).run_all(example, initial_procsy)
+        when [:before, :all], [:after, :all]
+          HookCollection.new(hooks[hook][scope].uniq).run_all!(example_group_instance)
+        else
+          hooks[hook][scope].run_all(example_group_instance)
+        end
       end
 
       # @private
@@ -401,6 +405,28 @@ module RSpec
 
         found_hooks
       end
+
+      # @private
+      def around_each_hooks_for(example)
+        ancestors.inject(Hooks::AroundHookCollection.new) do |c, a|
+          c.concat(a.find_hook(:around, :each, self, example))
+        end.concat(world.find_hook(:around, :each, self, example))
+      end
+
+      # @private
+      def before_each_hooks_for(example)
+        ancestors.reverse.inject(Hooks::HookCollection.new) do |c, a|
+          c.concat(a.find_hook(:before, :each, self, example))
+        end
+      end
+
+      # @private
+      def after_each_hooks_for(example)
+        ancestors.inject(Hooks::HookCollection.new) do |c, a|
+          c.concat(a.find_hook(:after, :each, self, example))
+        end
+      end
+
 
     private
 

@@ -279,23 +279,23 @@ module RSpec
       def self.run_before_all_hooks(example_group_instance)
         return if descendant_filtered_examples.empty?
         assign_before_all_ivars(superclass.before_all_ivars, example_group_instance)
-        run_hook!(:before, :all, example_group_instance)
+        run_hook(:before, :all, example_group_instance)
         store_before_all_ivars(example_group_instance)
       end
 
       # @private
       def self.run_around_each_hooks(example, initial_procsy)
-        around_each_hooks_for(example).run_all(example, initial_procsy)
+        run_hook(:around, :each, nil, example, initial_procsy)
       end
 
       # @private
       def self.run_before_each_hooks(example)
-        before_each_hooks_for(example).run_all(example.example_group_instance)
+        run_hook(:before, :each, example.example_group_instance, example)
       end
 
       # @private
       def self.run_after_each_hooks(example)
-        after_each_hooks_for(example).run_all(example.example_group_instance)
+        run_hook(:after, :each, example.example_group_instance, example)
       end
 
       # @private
@@ -304,7 +304,7 @@ module RSpec
         assign_before_all_ivars(before_all_ivars, example_group_instance)
 
         begin
-          run_hook!(:after, :all, example_group_instance)
+          run_hook(:after, :all, example_group_instance)
         rescue => e
           # TODO: come up with a better solution for this.
           RSpec.configuration.reporter.message <<-EOS
@@ -314,27 +314,6 @@ An error occurred in an after(:all) hook.
   occurred at #{e.backtrace.first}
 
         EOS
-        end
-      end
-
-      # @private
-      def self.around_each_hooks_for(example)
-        ancestors.inject(Hooks::AroundHookCollection.new) do |c, a|
-          c.concat(a.find_hook(:around, :each, self, example))
-        end.concat(world.find_hook(:around, :each, self, example))
-      end
-
-      # @private
-      def self.before_each_hooks_for(example)
-        ancestors.reverse.inject(Hooks::HookCollection.new) do |c, a|
-          c.concat(a.find_hook(:before, :each, self, example))
-        end
-      end
-
-      # @private
-      def self.after_each_hooks_for(example)
-        ancestors.inject(Hooks::HookCollection.new) do |c, a|
-          c.concat(a.find_hook(:after, :each, self, example))
         end
       end
 
