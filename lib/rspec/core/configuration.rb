@@ -843,6 +843,9 @@ MESSAGE
         when 'p', 'progress'
           require 'rspec/core/formatters/progress_formatter'
           RSpec::Core::Formatters::ProgressFormatter
+        when 'f', 'failures'
+          require 'rspec/core/formatters/failures_formatter'
+          RSpec::Core::Formatters::FailuresFormatter
         end
       end
 
