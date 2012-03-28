@@ -179,14 +179,7 @@ module RSpec
         @order_group.handle_order_constraint self
 
         begin
-          begin
-            raise(@exception_to_raise) unless @exception_to_raise.nil?
-          rescue ArgumentError => e
-            raise e.exception(<<-MESSAGE)
-'and_raise' can only accept an Exception class if an instance can be constructed with no arguments.
-#{@exception_to_raise.to_s}'s initialize method requires #{@exception_to_raise.instance_method(:initialize).arity} arguments, so you have to supply an instance instead.
-MESSAGE
-          end
+          raise_exception unless @exception_to_raise.nil?
           Kernel::throw(*@args_to_throw) unless @args_to_throw.empty?
 
           default_return_val = if !@method_block.nil?
@@ -206,6 +199,19 @@ MESSAGE
           end
         ensure
           @actual_received_count += 1
+        end
+      end
+
+      # @private
+      def raise_exception
+        if !@exception_to_raise.respond_to?(:instance_method) ||
+            @exception_to_raise.instance_method(:initialize).arity <= 0
+          raise(@exception_to_raise)
+        else
+          raise ArgumentError.new(<<-MESSAGE)
+'and_raise' can only accept an Exception class if an instance can be constructed with no arguments.
+#{@exception_to_raise.to_s}'s initialize method requires #{@exception_to_raise.instance_method(:initialize).arity} arguments, so you have to supply an instance instead.
+MESSAGE
         end
       end
 
