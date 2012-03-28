@@ -217,6 +217,14 @@ module RSpec
         }.should raise_error(RuntimeError, "error message")
       end
 
+      it "raises instance of submitted ArgumentError" do
+        error = ArgumentError.new("error message")
+        @mock.should_receive(:something).and_raise(error)
+        lambda {
+          @mock.something
+        }.should raise_error(ArgumentError, "error message")
+      end
+
       it "fails with helpful message if submitted Exception requires constructor arguments" do
         class ErrorWithNonZeroArgConstructor < RuntimeError
           def initialize(i_take_an_argument)
