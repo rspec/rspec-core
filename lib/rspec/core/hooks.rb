@@ -53,10 +53,6 @@ module RSpec
           self.class.new(select {|hook| hook.options_apply?(example_or_group)})
         end
 
-        def without_hooks_for(example_or_group)
-          self.class.new(reject {|hook| hook.options_apply?(example_or_group)})
-        end
-
         def run_all(example_group_instance)
           each {|h| h.run_in(example_group_instance) } unless empty?
         end
@@ -396,18 +392,7 @@ module RSpec
 
       # @private
       def find_hook(hook, scope, example_group_class, example = nil)
-        found_hooks = hooks[hook][scope].find_hooks_for(example || example_group_class)
-
-        # ensure we don't re-run :all hooks that were applied to any of the parent groups
-        if scope == :all
-          super_klass = example_group_class.superclass
-          while super_klass != RSpec::Core::ExampleGroup
-            found_hooks = found_hooks.without_hooks_for(super_klass)
-            super_klass = super_klass.superclass
-          end
-        end
-
-        found_hooks
+        hooks[hook][scope].find_hooks_for(example || example_group_class)
       end
 
       # @private
