@@ -80,8 +80,8 @@ module RSpec
       def hooks
         @hooks ||= {
           :around => { :each => AroundHookCollection.new },
-          :before => { :each => HookCollection.new, :all => HookCollection.new, :suite => HookCollection.new },
-          :after =>  { :each => HookCollection.new, :all => HookCollection.new, :suite => HookCollection.new }
+          :before => { :each => [], :all => [], :suite => HookCollection.new },
+          :after =>  { :each => [], :all => [], :suite => HookCollection.new }
         }
       end
 
