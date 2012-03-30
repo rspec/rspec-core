@@ -387,8 +387,6 @@ module RSpec
           before_all_hooks_for(example).run_all(example_group_instance)
         when [:after, :all]
           after_all_hooks_for(example).run_all(example_group_instance)
-        else
-          hooks[hook][scope].run_all(example_group_instance)
         end
       end
 
