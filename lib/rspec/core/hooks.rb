@@ -60,8 +60,10 @@ module RSpec
         def run_all(example_group_instance)
           each {|h| h.run_in(example_group_instance) } unless empty?
         end
+      end
 
-        def run_all!(example_group_instance)
+      class GroupHookCollection < HookCollection
+        def run_all(example_group_instance)
           shift.run_in(example_group_instance) until empty?
         end
       end
@@ -383,8 +385,10 @@ module RSpec
           after_each_hooks_for(example).run_all(example_group_instance)
         when [:around, :each]
           around_each_hooks_for(example).run_all(example, initial_procsy)
-        when [:before, :all], [:after, :all]
-          HookCollection.new(hooks[hook][scope].uniq).run_all!(example_group_instance)
+        when [:before, :all]
+          before_all_hooks_for(example).run_all(example_group_instance)
+        when [:after, :all]
+          after_all_hooks_for(example).run_all(example_group_instance)
         else
           hooks[hook][scope].run_all(example_group_instance)
         end
@@ -407,22 +411,32 @@ module RSpec
       end
 
       # @private
+      def before_all_hooks_for(example)
+        GroupHookCollection.new(hooks[:before][:all])
+      end
+
+      # @private
+      def after_all_hooks_for(example)
+        GroupHookCollection.new(hooks[:after][:all])
+      end
+
+      # @private
       def around_each_hooks_for(example)
-        ancestors.inject(Hooks::AroundHookCollection.new) do |c, a|
+        ancestors.inject(AroundHookCollection.new) do |c, a|
           c.concat(a.find_hook(:around, :each, self, example))
         end.concat(world.find_hook(:around, :each, self, example))
       end
 
       # @private
       def before_each_hooks_for(example)
-        ancestors.reverse.inject(Hooks::HookCollection.new) do |c, a|
+        ancestors.reverse.inject(HookCollection.new) do |c, a|
           c.concat(a.find_hook(:before, :each, self, example))
         end
       end
 
       # @private
       def after_each_hooks_for(example)
-        ancestors.inject(Hooks::HookCollection.new) do |c, a|
+        ancestors.inject(HookCollection.new) do |c, a|
           c.concat(a.find_hook(:after, :each, self, example))
         end
       end
