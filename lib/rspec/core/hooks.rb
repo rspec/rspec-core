@@ -396,20 +396,18 @@ module RSpec
       end
 
       # @private
-      def before_all_hooks_for(example)
+      def before_all_hooks_for(group)
         GroupHookCollection.new(hooks[:before][:all])
       end
 
       # @private
-      def after_all_hooks_for(example)
+      def after_all_hooks_for(group)
         GroupHookCollection.new(hooks[:after][:all])
       end
 
       # @private
       def around_each_hooks_for(example)
-        AroundHookCollection.new(ancestors.map {|a| a.hooks[:around][:each]}.flatten).
-          prune(example).
-          concat(world.find_hook(:around, :each, self, example))
+        AroundHookCollection.new(ancestors.reverse.map {|a| a.hooks[:around][:each]}.flatten).prune(example)
       end
 
       # @private
