@@ -391,11 +391,6 @@ module RSpec
       end
 
       # @private
-      def find_hook(hook, scope, example_group_class, example = nil)
-        hooks[hook][scope].find_hooks_for(example || example_group_class)
-      end
-
-      # @private
       def before_all_hooks
         GroupHookCollection.new(hooks[:before][:all])
       end
