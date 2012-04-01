@@ -377,16 +377,16 @@ module RSpec
       # example. If no example is provided, just calls the hook directly.
       def run_hook(hook, scope, example_group_instance=ExampleGroup.new, example=nil, initial_procsy=nil)
         case [hook, scope]
+        when [:before, :all]
+          before_all_hooks.run_all(example_group_instance)
+        when [:after, :all]
+          after_all_hooks.run_all(example_group_instance)
+        when [:around, :each]
+          around_each_hooks_for(example).run_all(example, initial_procsy)
         when [:before, :each]
           before_each_hooks_for(example).run_all(example_group_instance)
         when [:after, :each]
           after_each_hooks_for(example).run_all(example_group_instance)
-        when [:around, :each]
-          around_each_hooks_for(example).run_all(example, initial_procsy)
-        when [:before, :all]
-          before_all_hooks_for(example).run_all(example_group_instance)
-        when [:after, :all]
-          after_all_hooks_for(example).run_all(example_group_instance)
         end
       end
 
@@ -396,12 +396,12 @@ module RSpec
       end
 
       # @private
-      def before_all_hooks_for(group)
+      def before_all_hooks
         GroupHookCollection.new(hooks[:before][:all])
       end
 
       # @private
-      def after_all_hooks_for(group)
+      def after_all_hooks
         GroupHookCollection.new(hooks[:after][:all])
       end
 
