@@ -290,17 +290,17 @@ module RSpec
 
       # @private
       def self.run_around_each_hooks(example, initial_procsy)
-        run_hook(:around, :each, nil, example, initial_procsy)
+        run_hook(:around, :each, example, initial_procsy)
       end
 
       # @private
       def self.run_before_each_hooks(example)
-        run_hook(:before, :each, example.example_group_instance, example)
+        run_hook(:before, :each, example)
       end
 
       # @private
       def self.run_after_each_hooks(example)
-        run_hook(:after, :each, example.example_group_instance, example)
+        run_hook(:after, :each, example)
       end
 
       # @private

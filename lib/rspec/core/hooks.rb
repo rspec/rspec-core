@@ -375,18 +375,18 @@ module RSpec
       # @private
       # Runs all of the blocks stored with the hook in the context of the
       # example. If no example is provided, just calls the hook directly.
-      def run_hook(hook, scope, example_group_instance=ExampleGroup.new, example=nil, initial_procsy=nil)
+      def run_hook(hook, scope, example_or_group=nil, initial_procsy=nil)
         case [hook, scope]
         when [:before, :all]
-          before_all_hooks.run_all(example_group_instance)
+          before_all_hooks.run_all(example_or_group)
         when [:after, :all]
-          after_all_hooks.run_all(example_group_instance)
+          after_all_hooks.run_all(example_or_group)
         when [:around, :each]
-          around_each_hooks_for(example).run_all(example, initial_procsy)
+          around_each_hooks_for(example_or_group).run_all(example_or_group, initial_procsy)
         when [:before, :each]
-          before_each_hooks_for(example).run_all(example_group_instance)
+          before_each_hooks_for(example_or_group).run_all(example_or_group.example_group_instance)
         when [:after, :each]
-          after_each_hooks_for(example).run_all(example_group_instance)
+          after_each_hooks_for(example_or_group).run_all(example_or_group.example_group_instance)
         end
       end
 
