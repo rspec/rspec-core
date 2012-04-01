@@ -19,7 +19,7 @@ module RSpec
       module BeforeHookExtension
         include HookExtension
 
-        def run_in(example_group_instance)
+        def run(example_group_instance)
           example_group_instance.instance_eval(&self)
         end
 
@@ -31,7 +31,7 @@ module RSpec
       module AfterHookExtension
         include HookExtension
 
-        def run_in(example_group_instance)
+        def run(example_group_instance)
           example_group_instance.instance_eval_with_rescue(&self)
         end
 
@@ -49,25 +49,25 @@ module RSpec
       end
 
       class HookCollection < Array
-        def find_hooks_for(example_or_group)
+        def for(example_or_group)
           self.class.new(select {|hook| hook.options_apply?(example_or_group)})
         end
 
-        def run_all(example_group_instance)
-          each {|h| h.run_in(example_group_instance) } unless empty?
+        def run(example_group_instance)
+          each {|h| h.run(example_group_instance) } unless empty?
         end
 
-        alias_method :prune, :find_hooks_for
+        alias_method :prune, :for
       end
 
       class GroupHookCollection < HookCollection
-        def run_all(example_group_instance)
-          shift.run_in(example_group_instance) until empty?
+        def run(example_group_instance)
+          shift.run(example_group_instance) until empty?
         end
       end
 
       class AroundHookCollection < HookCollection
-        def run_all(example, initial_procsy)
+        def run(example, initial_procsy)
           inject(initial_procsy) do |procsy, around_hook|
             Example.procsy(procsy.metadata) do
               example.example_group_instance.instance_eval_with_args(procsy, &around_hook)
@@ -378,15 +378,15 @@ module RSpec
       def run_hook(hook, scope, example_or_group=nil, initial_procsy=nil)
         case [hook, scope]
         when [:before, :all]
-          before_all_hooks.run_all(example_or_group)
+          before_all_hooks.run(example_or_group)
         when [:after, :all]
-          after_all_hooks.run_all(example_or_group)
+          after_all_hooks.run(example_or_group)
         when [:around, :each]
-          around_each_hooks_for(example_or_group).run_all(example_or_group, initial_procsy)
+          around_each_hooks_for(example_or_group).run(example_or_group, initial_procsy)
         when [:before, :each]
-          before_each_hooks_for(example_or_group).run_all(example_or_group.example_group_instance)
+          before_each_hooks_for(example_or_group).run(example_or_group.example_group_instance)
         when [:after, :each]
-          after_each_hooks_for(example_or_group).run_all(example_or_group.example_group_instance)
+          after_each_hooks_for(example_or_group).run(example_or_group.example_group_instance)
         end
       end
 
