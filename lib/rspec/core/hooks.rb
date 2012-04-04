@@ -402,7 +402,7 @@ module RSpec
 
       # @private
       def around_each_hooks_for(example)
-        AroundHookCollection.new(ancestors.reverse.map {|a| a.hooks[:around][:each]}.flatten).prune(example)
+        AroundHookCollection.new(ancestors.map {|a| a.hooks[:around][:each]}.flatten).prune(example)
       end
 
       # @private
