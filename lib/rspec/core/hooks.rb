@@ -387,6 +387,8 @@ module RSpec
           before_each_hooks_for(example_or_group).run(example_or_group.example_group_instance)
         when [:after, :each]
           after_each_hooks_for(example_or_group).run(example_or_group.example_group_instance)
+        when [:before, :suite], [:after, :suite]
+          hooks[hook][:suite].run(ExampleGroup.new)
         end
       end
 
