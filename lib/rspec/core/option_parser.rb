@@ -136,7 +136,8 @@ FILTERING
         end
 
         parser.on('-e', '--example STRING', "Run examples whose full nested names include STRING") do |o|
-          options[:full_description] = Regexp.compile(Regexp.escape(o))
+          options[:full_description] ||= []
+          options[:full_description] << Regexp.compile(Regexp.escape(o))
         end
 
         parser.on('-l', '--line_number LINE', 'Specify line number of an example or group (may be',

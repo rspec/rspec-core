@@ -68,7 +68,7 @@ module RSpec::Core
       describe option do
         it "escapes the arg" do
           options = Parser.parse!([option, "this (and that)"])
-          "this (and that)".should match(options[:full_description])
+          "this (and that)".should match(options[:full_description].first)
         end
       end
     end

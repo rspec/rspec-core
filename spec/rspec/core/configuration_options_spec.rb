@@ -170,8 +170,8 @@ describe RSpec::Core::ConfigurationOptions do
 
   describe "--example" do
     it "sets :full_description" do
-      parse_options('--example','foo').should include(:full_description => /foo/)
-      parse_options('-e','bar').should include(:full_description => /bar/)
+      parse_options('--example','foo').should include(:full_description => [/foo/])
+      parse_options('-e','bar').should include(:full_description => [/bar/])
     end
   end
 

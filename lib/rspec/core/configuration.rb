@@ -429,7 +429,11 @@ EOM
       end
 
       def full_description=(description)
-        filter_run :full_description => /#{description}/
+        if description.is_a?(Array)
+          filter_run :full_description => Regexp.union(description.map { |d| /#{d}/ })
+        else
+          filter_run :full_description => /#{description}/
+        end
       end
 
       # @overload add_formatter(formatter)
