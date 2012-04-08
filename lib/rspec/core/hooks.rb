@@ -384,9 +384,9 @@ module RSpec
         when [:around, :each]
           around_each_hooks_for(example_or_group).run(example_or_group, initial_procsy)
         when [:before, :each]
-          before_each_hooks_for(example_or_group).run(example_or_group.example_group_instance)
+          before_each_hooks_for(example_or_group).run(example_or_group)
         when [:after, :each]
-          after_each_hooks_for(example_or_group).run(example_or_group.example_group_instance)
+          after_each_hooks_for(example_or_group).run(example_or_group)
         when [:before, :suite], [:after, :suite]
           hooks[hook][:suite].run(ExampleGroup.new)
         end
