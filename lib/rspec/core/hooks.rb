@@ -19,8 +19,8 @@ module RSpec
       module BeforeHookExtension
         include HookExtension
 
-        def run(example_group_instance)
-          example_group_instance.instance_eval(&self)
+        def run(example)
+          example.instance_eval(&self)
         end
 
         def display_name
@@ -31,12 +31,12 @@ module RSpec
       module AfterHookExtension
         include HookExtension
 
-        def run(example_group_instance)
-          example_group_instance.instance_eval_with_rescue(&self)
+        def run(example)
+          example.instance_eval_with_rescue(&self)
         end
 
         def display_name
-          "before hook"
+          "after hook"
         end
       end
 
@@ -50,30 +50,47 @@ module RSpec
 
       class HookCollection < Array
         def for(example_or_group)
-          self.class.new(select {|hook| hook.options_apply?(example_or_group)})
+          self.class.new(select {|hook| hook.options_apply?(example_or_group)}).
+            with(example_or_group)
         end
 
-        def run(example_group_instance)
-          each {|h| h.run(example_group_instance) } unless empty?
+        def with(example)
+          @example = example
+          self
+        end
+
+        def run
+          each {|h| h.run(@example) } unless empty?
         end
       end
 
-      class GroupHookCollection < HookCollection
+      class GroupHookCollection < Array
         def for(group)
           @group = group
           self
         end
 
-        def run(_=nil)
+        def run
           shift.run(@group) until empty?
         end
       end
 
-      class AroundHookCollection < HookCollection
-        def run(example, initial_procsy)
-          inject(initial_procsy) do |procsy, around_hook|
+      class AroundHookCollection < Array
+        def for(example, initial_procsy=nil)
+          self.class.new(select {|hook| hook.options_apply?(example)}).
+            with(example, initial_procsy)
+        end
+
+        def with(example, initial_procsy)
+          @example = example
+          @initial_procsy = initial_procsy
+          self
+        end
+
+        def run
+          inject(@initial_procsy) do |procsy, around_hook|
             Example.procsy(procsy.metadata) do
-              example.instance_eval_with_args(procsy, &around_hook)
+              @example.instance_eval_with_args(procsy, &around_hook)
             end
           end.call
         end
@@ -376,23 +393,24 @@ module RSpec
       end
 
       # @private
+      #
       # Runs all of the blocks stored with the hook in the context of the
       # example. If no example is provided, just calls the hook directly.
       def run_hook(hook, scope, example_or_group=ExampleGroup.new, initial_procsy=nil)
         case [hook, scope]
         when [:before, :all]
-          before_all_hooks_for(example_or_group).run(example_or_group)
+          before_all_hooks_for(example_or_group)
         when [:after, :all]
-          after_all_hooks_for(example_or_group).run(example_or_group)
+          after_all_hooks_for(example_or_group)
         when [:around, :each]
-          around_each_hooks_for(example_or_group).run(example_or_group, initial_procsy)
+          around_each_hooks_for(example_or_group, initial_procsy)
         when [:before, :each]
-          before_each_hooks_for(example_or_group).run(example_or_group)
+          before_each_hooks_for(example_or_group)
         when [:after, :each]
-          after_each_hooks_for(example_or_group).run(example_or_group)
+          after_each_hooks_for(example_or_group)
         when [:before, :suite], [:after, :suite]
-          hooks[hook][:suite].run(example_or_group)
-        end
+          hooks[hook][:suite].with(example_or_group)
+        end.run
       end
 
       # @private
@@ -406,8 +424,8 @@ module RSpec
       end
 
       # @private
-      def around_each_hooks_for(example)
-        AroundHookCollection.new(ancestors.map {|a| a.hooks[:around][:each]}.flatten).for(example)
+      def around_each_hooks_for(example, initial_procsy=nil)
+        AroundHookCollection.new(ancestors.map {|a| a.hooks[:around][:each]}.flatten).for(example, initial_procsy)
       end
 
       # @private
