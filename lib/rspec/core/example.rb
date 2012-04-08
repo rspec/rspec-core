@@ -175,12 +175,19 @@ module RSpec
         finish(reporter)
       end
 
+      # @private
       def instance_eval(&block)
         @example_group_instance.instance_eval(&block)
       end
 
+      # @private
       def instance_eval_with_rescue(&block)
         @example_group_instance.instance_eval_with_rescue(&block)
+      end
+
+      # @private
+      def instance_eval_with_args(*args, &block)
+        @example_group_instance.instance_eval_with_args(*args, &block)
       end
 
     private
