@@ -61,8 +61,13 @@ module RSpec
       end
 
       class GroupHookCollection < HookCollection
-        def run(example_group_instance)
-          shift.run(example_group_instance) until empty?
+        def for(group)
+          @group = group
+          self
+        end
+
+        def run(_=nil)
+          shift.run(@group) until empty?
         end
       end
 
@@ -378,9 +383,9 @@ module RSpec
       def run_hook(hook, scope, example_or_group=ExampleGroup.new, initial_procsy=nil)
         case [hook, scope]
         when [:before, :all]
-          before_all_hooks.run(example_or_group)
+          before_all_hooks_for(example_or_group).run(example_or_group)
         when [:after, :all]
-          after_all_hooks.run(example_or_group)
+          after_all_hooks_for(example_or_group).run(example_or_group)
         when [:around, :each]
           around_each_hooks_for(example_or_group).run(example_or_group, initial_procsy)
         when [:before, :each]
@@ -393,13 +398,13 @@ module RSpec
       end
 
       # @private
-      def before_all_hooks
-        GroupHookCollection.new(hooks[:before][:all])
+      def before_all_hooks_for(group)
+        GroupHookCollection.new(hooks[:before][:all]).for(group)
       end
 
       # @private
-      def after_all_hooks
-        GroupHookCollection.new(hooks[:after][:all])
+      def after_all_hooks_for(group)
+        GroupHookCollection.new(hooks[:after][:all]).for(group)
       end
 
       # @private
