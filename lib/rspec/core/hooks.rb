@@ -56,8 +56,6 @@ module RSpec
         def run(example_group_instance)
           each {|h| h.run(example_group_instance) } unless empty?
         end
-
-        alias_method :prune, :for
       end
 
       class GroupHookCollection < HookCollection
@@ -409,17 +407,17 @@ module RSpec
 
       # @private
       def around_each_hooks_for(example)
-        AroundHookCollection.new(ancestors.map {|a| a.hooks[:around][:each]}.flatten).prune(example)
+        AroundHookCollection.new(ancestors.map {|a| a.hooks[:around][:each]}.flatten).for(example)
       end
 
       # @private
       def before_each_hooks_for(example)
-        HookCollection.new(ancestors.reverse.map {|a| a.hooks[:before][:each]}.flatten).prune(example)
+        HookCollection.new(ancestors.reverse.map {|a| a.hooks[:before][:each]}.flatten).for(example)
       end
 
       # @private
       def after_each_hooks_for(example)
-        HookCollection.new(ancestors.map {|a| a.hooks[:after][:each]}.flatten).prune(example)
+        HookCollection.new(ancestors.map {|a| a.hooks[:after][:each]}.flatten).for(example)
       end
 
     private
