@@ -91,17 +91,16 @@ module RSpec
       #   counter.stub(:count) { 1 }
       #   counter.count # => 1
       def and_return(*values, &return_block)
-        Kernel::raise AmbiguousReturnError unless @method_block.nil?
-        case values.size
-        when 0 then value = nil
-        when 1 then value = values[0]
-        else
-          value = values
-          @consecutive = true
-          @expected_received_count = values.size if !ignoring_args? &&
-            @expected_received_count < values.size
-        end
-        @return_block = block_given? ? return_block : lambda { value }
+        Kernel::raise AmbiguousReturnError if @method_block
+
+        @expected_received_count = [@expected_received_count, values.size].max unless ignoring_args?
+        @consecutive = true if values.size > 1
+        @return_block = if return_block
+                          return_block
+                        else
+                          value = values.size == 1 ? values.first : values
+                          lambda { value }
+                        end
       end
 
       # @overload and_raise
@@ -182,7 +181,7 @@ module RSpec
           raise_exception unless @exception_to_raise.nil?
           Kernel::throw(*@args_to_throw) unless @args_to_throw.empty?
 
-          default_return_val = if !@method_block.nil?
+          default_return_val = if @method_block
                                  invoke_method_block(*args, &block)
                                elsif !@args_to_yield.empty? || @eval_context
                                  invoke_with_yield(&block)
@@ -440,9 +439,7 @@ MESSAGE
       end
 
       def invoke_with_yield(&block)
-        if block.nil?
-          @error_generator.raise_missing_block_error @args_to_yield
-        end
+        @error_generator.raise_missing_block_error @args_to_yield unless block
         value = nil
         @args_to_yield.each do |args_to_yield_this_time|
           if block.arity > -1 && args_to_yield_this_time.length != block.arity
@@ -462,9 +459,8 @@ MESSAGE
       end
 
       def invoke_consecutive_return_block(*args, &block)
-        value = invoke_return_block(*args, &block)
-        index = [@actual_received_count, value.size-1].min
-        value[index]
+        @value ||= invoke_return_block(*args, &block)
+        @value[[@actual_received_count, @value.size-1].min]
       end
 
       def invoke_return_block(*args, &block)
