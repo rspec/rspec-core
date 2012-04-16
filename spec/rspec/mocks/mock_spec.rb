@@ -171,7 +171,7 @@ module RSpec
         @mock.should_receive(:something) {| bool | bool.should be_true}
         expect {
           @mock.something false
-        }.to raise_error(RSpec::Mocks::MockExpectationError, /Double \"test double\" received :something but passed block failed with: expected false to be true/)
+        }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
 
       it "passes proc to expectation block without an argument", :ruby => '> 1.8.6' do
@@ -256,14 +256,6 @@ module RSpec
         lambda {
           @mock.something
         }.should throw_symbol(:blech)
-      end
-
-      it "raises when explicit return and block constrained" do
-        lambda {
-          @mock.should_receive(:fruit) do |colour|
-            :strawberry
-          end.and_return :apple
-        }.should raise_error(RSpec::Mocks::AmbiguousReturnError)
       end
 
       it "ignores args on any args" do

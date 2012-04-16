@@ -4,19 +4,17 @@ module RSpec
     class MessageExpectation
       # @private
       attr_reader :message
-      attr_writer :expected_received_count, :method_block, :expected_from, :argument_expectation
-      protected :expected_received_count=, :method_block=, :expected_from=
+      attr_writer :expected_received_count, :expected_from, :argument_expectation, :implementation
+      protected :expected_received_count=, :expected_from=, :implementation=
       attr_accessor :error_generator
       protected :error_generator, :error_generator=
 
       # @private
-      def initialize(error_generator, expectation_ordering, expected_from, message, method_block, expected_received_count=1, opts={}, &implementation)
+      def initialize(error_generator, expectation_ordering, expected_from, message, expected_received_count=1, opts={}, &implementation)
         @error_generator = error_generator
         @error_generator.opts = opts
         @expected_from = expected_from
         @message = message
-        @method_block = method_block
-        @return_block = nil
         @actual_received_count = 0
         @expected_received_count = expected_received_count
         @argument_expectation = ArgumentExpectation.new(ArgumentMatchers::AnyArgsMatcher.new)
@@ -24,21 +22,19 @@ module RSpec
         @exception_to_raise = nil
         @args_to_throw = []
         @order_group = expectation_ordering
-        @at_least = nil
-        @at_most = nil
-        @exactly = nil
+        @at_least = @at_most = @exactly = nil
         @args_to_yield = []
         @failed_fast = nil
         @args_to_yield_were_cloned = false
-        @return_block = implementation
         @eval_context = nil
+        @implementation = implementation
       end
 
       # @private
-      def build_child(expected_from, method_block, expected_received_count, opts={})
+      def build_child(expected_from, expected_received_count, opts={}, &implementation)
         child = clone
         child.expected_from = expected_from
-        child.method_block = method_block
+        child.implementation = implementation if implementation
         child.expected_received_count = expected_received_count
         child.clear_actual_received_count!
         new_gen = error_generator.clone
@@ -90,17 +86,10 @@ module RSpec
       #   # ... this is prefered
       #   counter.stub(:count) { 1 }
       #   counter.count # => 1
-      def and_return(*values, &return_block)
-        Kernel::raise AmbiguousReturnError if @method_block
-
+      def and_return(*values, &implementation)
         @expected_received_count = [@expected_received_count, values.size].max unless ignoring_args?
         @consecutive = true if values.size > 1
-        @return_block = if return_block
-                          return_block
-                        else
-                          value = values.size == 1 ? values.first : values
-                          lambda { value }
-                        end
+        @implementation = implementation || build_implementation(values)
       end
 
       # @overload and_raise
@@ -151,9 +140,7 @@ module RSpec
           @args_to_yield_were_cloned = false
         end
 
-        if block
-          yield @eval_context = Object.new.extend(RSpec::Mocks::InstanceExec)
-        end
+        yield @eval_context = Object.new.extend(RSpec::Mocks::InstanceExec) if block
 
         @args_to_yield << args
         self
@@ -178,18 +165,12 @@ module RSpec
           raise_exception unless @exception_to_raise.nil?
           Kernel::throw(*@args_to_throw) unless @args_to_throw.empty?
 
-          default_return_val = if @method_block
-                                 invoke_method_block(*args, &block)
-                               elsif !@args_to_yield.empty? || @eval_context
-                                 invoke_with_yield(&block)
-                               else
-                                 nil
-                               end
+          default_return_val = call_with_yield(&block) if !@args_to_yield.empty? || @eval_context
 
           if @consecutive
-            invoke_consecutive_return_block(*args, &block)
-          elsif @return_block
-            invoke_return_block(*args, &block)
+            call_implementation_consecutive(*args, &block)
+          elsif @implementation
+            call_implementation(*args, &block)
           else
             default_return_val
           end
@@ -302,7 +283,7 @@ MESSAGE
       #   cart.add(Book.new(:isbn => 1934356379))
       #   # => passes
       def with(*args, &block)
-        @return_block = block if block_given? unless args.empty?
+        @implementation = block if block_given? unless args.empty?
         @argument_expectation = ArgumentExpectation.new(*args, &block)
         self
       end
@@ -314,7 +295,7 @@ MESSAGE
       #
       #   dealer.should_recieve(:deal_card).exactly(10).times
       def exactly(n, &block)
-        @method_block = block if block
+        @implementation = block if block
         set_expected_received_count :exactly, n
         self
       end
@@ -326,7 +307,7 @@ MESSAGE
       #
       #   dealer.should_recieve(:deal_card).at_least(9).times
       def at_least(n, &block)
-        @method_block = block if block
+        @implementation = block if block
         set_expected_received_count :at_least, n
         self
       end
@@ -338,7 +319,7 @@ MESSAGE
       #
       #   dealer.should_recieve(:deal_card).at_most(10).times
       def at_most(n, &block)
-        @method_block = block if block
+        @implementation = block if block
         set_expected_received_count :at_most, n
         self
       end
@@ -351,14 +332,14 @@ MESSAGE
       #   dealer.should_recieve(:deal_card).at_least(10).times
       #   dealer.should_recieve(:deal_card).at_most(10).times
       def times(&block)
-        @method_block = block if block
+        @implementation = block if block
         self
       end
 
 
       # Allows an expected message to be received any number of times.
       def any_number_of_times(&block)
-        @method_block = block if block
+        @implementation = block if block
         @expected_received_count = :any
         self
       end
@@ -379,7 +360,7 @@ MESSAGE
       #
       #   car.should_receive(:go).once
       def once(&block)
-        @method_block = block if block
+        @implementation = block if block
         set_expected_received_count :exactly, 1
         self
       end
@@ -390,7 +371,7 @@ MESSAGE
       #
       #   car.should_receive(:go).twice
       def twice(&block)
-        @method_block = block if block
+        @implementation = block if block
         set_expected_received_count :exactly, 2
         self
       end
@@ -403,7 +384,7 @@ MESSAGE
       #   api.should_receive(:run).ordered
       #   api.should_receive(:finish).ordered
       def ordered(&block)
-        @method_block = block if block
+        @implementation = block if block
         @order_group.register(self)
         @ordered = true
         self
@@ -426,41 +407,25 @@ MESSAGE
 
       protected
 
-      def invoke_method_block(*args, &block)
-        begin
-          @method_block.call(*args, &block)
-        rescue => detail
-          @error_generator.raise_block_failed_error(@message, detail.message)
-        end
-      end
-
-      def invoke_with_yield(&block)
+      def call_with_yield(&block)
         @error_generator.raise_missing_block_error @args_to_yield unless block
         value = nil
-        @args_to_yield.each do |args_to_yield_this_time|
-          if block.arity > -1 && args_to_yield_this_time.length != block.arity
-            @error_generator.raise_wrong_arity_error args_to_yield_this_time, block.arity
+        @args_to_yield.each do |args|
+          if block.arity > -1 && args.length != block.arity
+            @error_generator.raise_wrong_arity_error args, block.arity
           end
-          value = eval_block(*args_to_yield_this_time, &block)
+          value = @eval_context ? @eval_context.instance_exec(*args, &block) : block.call(*args)
         end
         value
       end
 
-      def eval_block(*args, &block)
-        if @eval_context
-          @eval_context.instance_exec(*args, &block)
-        else
-          block.call(*args)
-        end
-      end
-
-      def invoke_consecutive_return_block(*args, &block)
-        @value ||= invoke_return_block(*args, &block)
+      def call_implementation_consecutive(*args, &block)
+        @value ||= call_implementation(*args, &block)
         @value[[@actual_received_count, @value.size-1].min]
       end
 
-      def invoke_return_block(*args, &block)
-        @return_block.arity == 0 ? @return_block.call(&block) : @return_block.call(*args, &block)
+      def call_implementation(*args, &block)
+        @implementation.arity == 0 ? @implementation.call(&block) : @implementation.call(*args, &block)
       end
 
       def clone_args_to_yield(*args)
@@ -486,13 +451,20 @@ MESSAGE
       def clear_actual_received_count!
         @actual_received_count = 0
       end
+
+      private
+
+      def build_implementation(values)
+        value = values.size == 1 ? values.first : values
+        lambda { value }
+      end
     end
 
     # @private
     class NegativeMessageExpectation < MessageExpectation
       # @private
-      def initialize(error_generator, expectation_ordering, expected_from, message, method_block)
-        super(error_generator, expectation_ordering, expected_from, message, method_block, 0)
+      def initialize(error_generator, expectation_ordering, expected_from, message, &implementation)
+        super(error_generator, expectation_ordering, expected_from, message, 0, {}, &implementation)
       end
 
       # @private

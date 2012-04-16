@@ -131,12 +131,12 @@ module RSpec
       end
 
       # @private
-      def add_expectation(error_generator, expectation_ordering, expected_from, opts, &block)
+      def add_expectation(error_generator, expectation_ordering, expected_from, opts, &implementation)
         configure_method
         expectation = if existing_stub = stubs.first
-                        existing_stub.build_child(expected_from, block, 1, opts)
+                        existing_stub.build_child(expected_from, 1, opts, &implementation)
                       else
-                        MessageExpectation.new(error_generator, expectation_ordering, expected_from, @method_name, block, 1, opts)
+                        MessageExpectation.new(error_generator, expectation_ordering, expected_from, @method_name, 1, opts, &implementation)
                       end
         expectations << expectation
         expectation
@@ -145,7 +145,7 @@ module RSpec
       # @private
       def add_negative_expectation(error_generator, expectation_ordering, expected_from, &implementation)
         configure_method
-        expectation = NegativeMessageExpectation.new(error_generator, expectation_ordering, expected_from, @method_name, implementation)
+        expectation = NegativeMessageExpectation.new(error_generator, expectation_ordering, expected_from, @method_name, &implementation)
         expectations.unshift expectation
         expectation
       end
@@ -153,7 +153,7 @@ module RSpec
       # @private
       def add_stub(error_generator, expectation_ordering, expected_from, opts={}, &implementation)
         configure_method
-        stub = MessageExpectation.new(error_generator, expectation_ordering, expected_from, @method_name, nil, :any, opts, &implementation)
+        stub = MessageExpectation.new(error_generator, expectation_ordering, expected_from, @method_name, :any, opts, &implementation)
         stubs.unshift stub
         stub
       end
