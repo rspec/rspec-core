@@ -1,3 +1,10 @@
+### dev
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.9.0...master)
+
+Bug fixes
+
+* fail fast when an `exactly` or `at_most` expectation is exceeded 
+
 ### 2.9.0 / 2012-03-17
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.8.0...v2.9.0)
 

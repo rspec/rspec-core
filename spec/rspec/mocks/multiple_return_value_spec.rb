@@ -2,187 +2,118 @@ require 'spec_helper'
 
 module RSpec
   module Mocks
-    describe "a Mock expectation with multiple return values and no specified count" do
+    describe "a message expectation with multiple return values and no specified count" do
       before(:each) do
-        @mock = RSpec::Mocks::Mock.new("mock")
-        @return_values = ["1",2,Object.new]
-        @mock.should_receive(:message).and_return(@return_values[0],@return_values[1],@return_values[2])
+        @double = double
+        @return_values = [1,2,3]
+        @double.should_receive(:do_something).and_return(@return_values[0],@return_values[1],@return_values[2])
       end
 
-      it "returns values in order to consecutive calls" do
-        @mock.message.should eq @return_values[0]
-        @mock.message.should eq @return_values[1]
-        @mock.message.should eq @return_values[2]
-        @mock.rspec_verify
+      it "returns values in order" do
+        @double.do_something.should eq @return_values[0]
+        @double.do_something.should eq @return_values[1]
+        @double.do_something.should eq @return_values[2]
+        @double.rspec_verify
       end
 
-      it "complains when there are too few calls" do
-        @mock.message.should eq @return_values[0]
-        @mock.message.should eq @return_values[1]
-        expect { @mock.rspec_verify }.to raise_error(
-          RSpec::Mocks::MockExpectationError,
-          %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 2 times|
-        )
+      it "falls back to a previously stubbed value" do
+        @double.stub :do_something => :stub_result
+        @double.do_something.should eq @return_values[0]
+        @double.do_something.should eq @return_values[1]
+        @double.do_something.should eq @return_values[2]
+        @double.do_something.should eq :stub_result
       end
 
-      it "complains when there are too many calls" do
-        @mock.message.should eq @return_values[0]
-        @mock.message.should eq @return_values[1]
-        @mock.message.should eq @return_values[2]
-        @mock.message.should eq @return_values[2]
-        expect { @mock.rspec_verify }.to raise_error(
-          RSpec::Mocks::MockExpectationError,
-          %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 4 times|
-        )
+      it "fails when there are too few calls (if there is no stub)" do
+        @double.do_something
+        @double.do_something
+        expect { @double.rspec_verify }.to raise_error
       end
 
-      it "doesn't complain when there are too many calls but method is stubbed too" do
-        @mock.stub(:message).and_return :stub_result
-        @mock.message.should eq @return_values[0]
-        @mock.message.should eq @return_values[1]
-        @mock.message.should eq @return_values[2]
-        @mock.message.should eq :stub_result
-        expect { @mock.rspec_verify }.to_not raise_error(RSpec::Mocks::MockExpectationError)
+      it "fails when there are too many calls (if there is no stub)" do
+        @double.do_something
+        @double.do_something
+        @double.do_something
+        @double.do_something
+        expect { @double.rspec_verify }.to raise_error
       end
     end
 
-    describe "a Mock expectation with multiple return values with a specified count equal to the number of values" do
+    describe "a message expectation with multiple return values with a specified count equal to the number of values" do
       before(:each) do
-        @mock = RSpec::Mocks::Mock.new("mock")
-        @return_values = ["1",2,Object.new]
-        @mock.should_receive(:message).exactly(3).times.and_return(@return_values[0],@return_values[1],@return_values[2])
+        @double = double
+        @return_values = [1,2,3]
+        @double.should_receive(:do_something).exactly(3).times.and_return(@return_values[0],@return_values[1],@return_values[2])
       end
 
       it "returns values in order to consecutive calls" do
-        @mock.message.should eq @return_values[0]
-        @mock.message.should eq @return_values[1]
-        @mock.message.should eq @return_values[2]
-        @mock.rspec_verify
-      end
-
-      it "complains when there are too few calls" do
-        @mock.message.should eq @return_values[0]
-        @mock.message.should eq @return_values[1]
-        expect { @mock.rspec_verify }.to raise_error(
-          RSpec::Mocks::MockExpectationError,
-          %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 2 times|
-        )
-      end
-
-      it "complains when there are too many calls" do
-        @mock.message.should eq @return_values[0]
-        @mock.message.should eq @return_values[1]
-        @mock.message.should eq @return_values[2]
-        @mock.message.should eq @return_values[2]
-        expect { @mock.rspec_verify }.to raise_error(
-          RSpec::Mocks::MockExpectationError,
-          %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 4 times|
-        )
-      end
-
-      it "complains when there are too many calls and method is stubbed too" do
-        @mock.stub(:message).and_return :stub_result
-        @mock.message.should eq @return_values[0]
-        @mock.message.should eq @return_values[1]
-        @mock.message.should eq @return_values[2]
-        @mock.message.should eq :stub_result
-        expect { @mock.rspec_verify }.to raise_error(
-          RSpec::Mocks::MockExpectationError,
-          %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 4 times|
-        )
+        @double.do_something.should eq @return_values[0]
+        @double.do_something.should eq @return_values[1]
+        @double.do_something.should eq @return_values[2]
+        @double.rspec_verify
       end
     end
 
-    describe "a Mock expectation with multiple return values specifying at_least less than the number of values" do
+    describe "a message expectation with multiple return values specifying at_least less than the number of values" do
       before(:each) do
-        @mock = RSpec::Mocks::Mock.new("mock")
-        @mock.should_receive(:message).at_least(:twice).with(no_args).and_return(11, 22)
+        @double = double
+        @double.should_receive(:do_something).at_least(:twice).with(no_args).and_return(11, 22)
       end
 
       it "uses the last return value for subsequent calls" do
-        @mock.message.should equal(11)
-        @mock.message.should equal(22)
-        @mock.message.should equal(22)
-        @mock.rspec_verify
+        @double.do_something.should equal(11)
+        @double.do_something.should equal(22)
+        @double.do_something.should equal(22)
+        @double.rspec_verify
       end
 
       it "fails when called less than the specified number" do
-        @mock.message.should equal(11)
-        expect { @mock.rspec_verify }.to raise_error(
-          RSpec::Mocks::MockExpectationError,
-          %Q|(Mock "mock").message(no args)\n    expected: 2 times\n    received: 1 time|
-        )
+        @double.do_something.should equal(11)
+        expect { @double.rspec_verify }.to raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       context "when method is stubbed too" do
-        before { @mock.stub(:message).and_return :stub_result }
+        before { @double.stub(:do_something).and_return :stub_result }
 
         it "uses the stub return value for subsequent calls" do
-          @mock.message.should equal(11)
-          @mock.message.should equal(22)
-          @mock.message.should equal(:stub_result)
-          @mock.rspec_verify
+          @double.do_something.should equal(11)
+          @double.do_something.should equal(22)
+          @double.do_something.should equal(:stub_result)
+          @double.rspec_verify
         end
 
         it "fails when called less than the specified number" do
-          @mock.message.should equal(11)
-          expect { @mock.rspec_verify }.to raise_error(
-            RSpec::Mocks::MockExpectationError,
-            %Q|(Mock "mock").message(no args)\n    expected: 2 times\n    received: 1 time|
-          )
+          @double.do_something.should equal(11)
+          expect { @double.rspec_verify }.to raise_error(RSpec::Mocks::MockExpectationError)
         end
       end
-
     end
 
-    describe "a Mock expectation with multiple return values with a specified count larger than the number of values" do
+    describe "a message expectation with multiple return values with a specified count larger than the number of values" do
       before(:each) do
-        @mock = RSpec::Mocks::Mock.new("mock")
-        @mock.should_receive(:message).exactly(3).times.and_return(11, 22)
+        @double = RSpec::Mocks::Mock.new("double")
+        @double.should_receive(:do_something).exactly(3).times.and_return(11, 22)
       end
 
       it "uses the last return value for subsequent calls" do
-        @mock.message.should equal(11)
-        @mock.message.should equal(22)
-        @mock.message.should equal(22)
-        @mock.rspec_verify
+        @double.do_something.should equal(11)
+        @double.do_something.should equal(22)
+        @double.do_something.should equal(22)
+        @double.rspec_verify
       end
 
       it "fails when called less than the specified number" do
-        @mock.message.should equal(11)
-        expect { @mock.rspec_verify }.to raise_error(
-          RSpec::Mocks::MockExpectationError,
-          %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 1 time|
-        )
+        @double.do_something
+        @double.do_something
+        expect { @double.rspec_verify }.to raise_error
       end
 
-      it "fails when called greater than the specified number" do
-        @mock.message.should equal(11)
-        @mock.message.should equal(22)
-        @mock.message.should equal(22)
-        @mock.message.should equal(22)
-        expect { @mock.rspec_verify }.to raise_error(
-          RSpec::Mocks::MockExpectationError,
-          %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 4 times|
-        )
-      end
-
-      context "when method is stubbed too" do
-        before { @mock.stub(:message).and_return :stub_result }
-
-        it "fails when called greater than the specified number" do
-          @mock.message.should equal(11)
-          @mock.message.should equal(22)
-          @mock.message.should equal(22)
-          @mock.message.should equal(:stub_result)
-          expect { @mock.rspec_verify }.to raise_error(
-            RSpec::Mocks::MockExpectationError,
-            %Q|(Mock "mock").message(any args)\n    expected: 3 times\n    received: 4 times|
-          )
-        end
-
+      it "fails fast when called greater than the specified number" do
+        @double.do_something
+        @double.do_something
+        @double.do_something
+        expect { @double.do_something }.to raise_error
       end
     end
   end
 end
-

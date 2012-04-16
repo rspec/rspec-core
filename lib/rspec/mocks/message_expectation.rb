@@ -170,9 +170,9 @@ module RSpec
 
       # @private
       def invoke(*args, &block)
-        if @expected_received_count == 0
-          @failed_fast = true
+        if @expected_received_count == 0 || ((@exactly || @at_most) && (@actual_received_count == @expected_received_count))
           @actual_received_count += 1
+          @failed_fast = true
           @error_generator.raise_expectation_error(@message, @expected_received_count, @actual_received_count, *args)
         end
 

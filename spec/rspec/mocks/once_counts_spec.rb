@@ -2,51 +2,50 @@ require 'spec_helper'
 
 module RSpec
   module Mocks
-    describe "OnceCounts" do
+    describe "#once" do
       before(:each) do
-        @mock = double("test mock")
+        @double = double
       end
 
-      it "once fails when called once with wrong args" do
-        @mock.should_receive(:random_call).once.with("a", "b", "c")
+      it "passes when called once" do
+        @double.should_receive(:do_something).once
+        @double.do_something
+        @double.rspec_verify
+      end
+
+      it "passes when called once with specified args" do
+        @double.should_receive(:do_something).once.with("a", "b", "c")
+        @double.do_something("a", "b", "c")
+        @double.rspec_verify
+      end
+
+      it "passes when called once with unspecified args" do
+        @double.should_receive(:do_something).once
+        @double.do_something("a", "b", "c")
+        @double.rspec_verify
+      end
+
+      it "fails when called with wrong args" do
+        @double.should_receive(:do_something).once.with("a", "b", "c")
         lambda do
-          @mock.random_call("d", "e", "f")
+          @double.do_something("d", "e", "f")
         end.should raise_error(RSpec::Mocks::MockExpectationError)
-        @mock.rspec_reset
+        @double.rspec_reset
       end
 
-      it "once fails when called twice" do
-        @mock.should_receive(:random_call).once
-        @mock.random_call
-        @mock.random_call
+      it "fails fast when called twice" do
+        @double.should_receive(:do_something).once
+        @double.do_something
         lambda do
-          @mock.rspec_verify
+          @double.do_something
         end.should raise_error(RSpec::Mocks::MockExpectationError)
       end
       
-      it "once fails when not called" do
-        @mock.should_receive(:random_call).once
+      it "fails when not called" do
+        @double.should_receive(:do_something).once
         lambda do
-          @mock.rspec_verify
+          @double.rspec_verify
         end.should raise_error(RSpec::Mocks::MockExpectationError)
-      end
-
-      it "once passes when called once" do
-        @mock.should_receive(:random_call).once
-        @mock.random_call
-        @mock.rspec_verify
-      end
-
-      it "once passes when called once with specified args" do
-        @mock.should_receive(:random_call).once.with("a", "b", "c")
-        @mock.random_call("a", "b", "c")
-        @mock.rspec_verify
-      end
-
-      it "once passes when called once with unspecified args" do
-        @mock.should_receive(:random_call).once
-        @mock.random_call("a", "b", "c")
-        @mock.rspec_verify
       end
     end
   end

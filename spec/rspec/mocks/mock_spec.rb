@@ -492,8 +492,8 @@ module RSpec
 
       it "raises an error when a previously stubbed method has a negative expectation" do
         @mock.stub(:msg).and_return(:stub_value)
-        @mock.should_not_receive(:msg).and_return(:mock_value)
-        lambda {@mock.msg(:arg)}.should raise_error(RSpec::Mocks::MockExpectationError)
+        @mock.should_not_receive(:msg)
+        expect { @mock.msg(:arg) }.to raise_error(RSpec::Mocks::MockExpectationError)
       end
 
       it "temporarily replaces a method stub on a non-mock" do
