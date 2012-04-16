@@ -136,8 +136,7 @@ module RSpec
       #   car.stub(:go).and_throw(:out_of_gas)
       #   car.stub(:go).and_throw(:out_of_gas, :level => 0.1)
       def and_throw(symbol, object = nil)
-        @args_to_throw << symbol
-        @args_to_throw << object if object
+        @args_to_throw = [symbol, object].compact
       end
 
       # Tells the object to yield one or more args to a block when the message
@@ -153,9 +152,7 @@ module RSpec
         end
 
         if block
-          @eval_context = Object.new
-          @eval_context.extend RSpec::Mocks::InstanceExec
-          yield @eval_context
+          yield @eval_context = Object.new.extend(RSpec::Mocks::InstanceExec)
         end
 
         @args_to_yield << args
@@ -164,7 +161,7 @@ module RSpec
 
       # @private
       def matches?(message, *args)
-        @message == message and @argument_expectation.args_match?(*args)
+        @message == message && @argument_expectation.args_match?(*args)
       end
 
       # @private
@@ -216,8 +213,7 @@ MESSAGE
 
       # @private
       def called_max_times?
-        @expected_received_count != :any && @expected_received_count > 0 &&
-          @actual_received_count >= @expected_received_count
+        @expected_received_count != :any && @expected_received_count > 0 && @actual_received_count >= @expected_received_count
       end
 
       # @private
