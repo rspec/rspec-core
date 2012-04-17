@@ -116,12 +116,19 @@ Person.stub(:find) { person }
 ```
 
 In this case we're instrumenting Person to return the person object we've
-defined whenever it receives the `find` message. We can do this with any
-object in a system because rspec-mocks adds the `stub` and `should_receive`
-methods to every object. When we use either, RSpec replaces the method
-we're stubbing or mocking with its own test-double-like method. At the
-end of the example, RSpec verifies any message expectations, and then
-restores the original methods.
+defined whenever it receives the `find` message. We can also set a message
+expectation so that the example fails if `find` is not called:
+
+```ruby
+person = double("person")
+Person.should_receive(:find) { person }
+```
+
+We can do this with any object in a system because rspec-mocks adds the `stub`
+and `should_receive` methods to every object, including class objects. When we
+use either, RSpec replaces the method we're stubbing or mocking with its own
+test-double-like method. At the end of the example, RSpec verifies any message
+expectations, and then restores the original methods.
 
 ## Expecting Arguments
 
