@@ -183,7 +183,7 @@ double.should_receive(:other_msg).ordered
   #This will fail if the messages are received out of order
 ```
 
-## Setting Reponses
+## Setting Responses
 
 Whether you are setting a message expectation or a method stub, you can
 tell the object precisely how to respond. The most generic way is to pass
