@@ -149,9 +149,7 @@ module RSpec
       private
 
       def method_double
-        @method_double ||= Hash.new {|h,k|
-          h[k] = MethodDouble.new(@object, k, self)
-        }
+        @method_double ||= Hash.new {|h,k| h[k] = MethodDouble.new(@object, k, self) }
       end
 
       def method_doubles
