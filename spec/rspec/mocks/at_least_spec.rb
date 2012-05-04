@@ -97,19 +97,31 @@ module RSpec
         @double.rspec_verify
       end
 
-      it "passes with at_least(0) with no return" do
+      it "passes with at_least(0) with no return if called once" do
         @double.should_receive(:do_something).at_least(0).times
         @double.do_something
       end
 
-      it "passes with at_least(0) with return block" do
+      it "passes with at_least(0) with return block if called once" do
         @double.should_receive(:do_something).at_least(0).times { true }
         @double.do_something
       end
 
-      it "passes with at_least(0) with and_return" do
+      it "passes with at_least(0) with and_return if called once" do
         @double.should_receive(:do_something).at_least(0).times.and_return true
         @double.do_something
+      end
+
+      it "passes with at_least(0) with no return if never called" do
+        @double.should_receive(:do_something).at_least(0).times
+      end
+
+      it "passes with at_least(0) with return block if never called" do
+        @double.should_receive(:do_something).at_least(0).times { true }
+      end
+
+      it "passes with at_least(0) with and_return if never called" do
+        @double.should_receive(:do_something).at_least(0).times.and_return true
       end
     end
   end

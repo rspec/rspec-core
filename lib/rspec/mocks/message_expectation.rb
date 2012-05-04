@@ -87,7 +87,7 @@ module RSpec
       #   counter.stub(:count) { 1 }
       #   counter.count # => 1
       def and_return(*values, &implementation)
-        @expected_received_count = [@expected_received_count, values.size].max unless ignoring_args?
+        @expected_received_count = [@expected_received_count, values.size].max unless ignoring_args? || (@expected_received_count == 0 and @at_least)
         @consecutive = true if values.size > 1
         @implementation = implementation || build_implementation(values)
       end
