@@ -96,6 +96,21 @@ module RSpec
         @double.to_s.should eq "testing"
         @double.rspec_verify
       end
+
+      it "passes with at_least(0) with no return" do
+        @double.should_receive(:do_something).at_least(0).times
+        @double.do_something
+      end
+
+      it "passes with at_least(0) with return block" do
+        @double.should_receive(:do_something).at_least(0).times { true }
+        @double.do_something
+      end
+
+      it "passes with at_least(0) with and_return" do
+        @double.should_receive(:do_something).at_least(0).times.and_return true
+        @double.do_something
+      end
     end
   end
 end
