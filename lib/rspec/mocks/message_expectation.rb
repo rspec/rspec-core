@@ -467,6 +467,10 @@ MESSAGE
         super(error_generator, expectation_ordering, expected_from, message, 0, {}, &implementation)
       end
 
+      def and_return(*)
+        # no-op
+      end
+
       # @private
       def negative_expectation_for?(message)
         return @message == message
