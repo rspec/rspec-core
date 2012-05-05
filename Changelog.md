@@ -1,3 +1,13 @@
+### 2.10.1 / 2012-05-05
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.10.0...v2.10.1)
+
+Bug fixes
+
+* fix regression of edge case behavior
+  (https://github.com/rspec/rspec-mocks/issues/132)
+    * fixed failure of `object.should_receive(:message).at_least(0).times.and_return value`
+    * fixed failure of `object.should_not_receive(:message).and_return value`
+
 ### 2.10.0 / 2012-05-03
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.9.0...v2.10.0)
 
