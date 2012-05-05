@@ -111,7 +111,7 @@ module RSpec
 
         context "using => value" do
           context "starting with the same message" do
-            it "returns expected value", :focus => true do
+            it "returns expected value" do
               subject.stub_chain(:msg1, :msg2, :msg3 => :first)
               subject.stub_chain(:msg1, :msg2, :msg4 => :second)
 
@@ -121,7 +121,7 @@ module RSpec
           end
 
           context "starting with different messages" do
-            it "returns expected value", :focus => true do
+            it "returns expected value" do
               subject.stub_chain(:msg1, :msg2, :msg3 => :first)
               subject.stub_chain(:msg4, :msg2, :msg3 => :second)
 

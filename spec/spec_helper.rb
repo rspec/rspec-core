@@ -39,7 +39,9 @@ RSpec.configure do |config|
   config.order = :random
   config.extend(Macros)
   config.include(RSpec::Mocks::Methods)
-
+  config.run_all_when_everything_filtered = true
+  config.treat_symbols_as_metadata_keys_with_true_values = true
+  config.filter_run_including :focus
   config.filter_run_excluding :ruby => lambda {|version|
     case version.to_s
     when "!jruby"
