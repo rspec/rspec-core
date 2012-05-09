@@ -1,3 +1,10 @@
+### dev
+
+Enhancements
+
+* expose ArgumentListMatcher as a formal API
+    * supports use by 3rd party mock frameworks like Surrogate
+
 ### 2.10.1 / 2012-05-05
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.10.0...v2.10.1)
 

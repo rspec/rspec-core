@@ -7,6 +7,8 @@ module RSpec
     #
     # With the exception of `any_args` and `no_args`, they all match against
     # the arg in same position in the argument list.
+    #
+    # @see ArgumentListMatcher
     module ArgumentMatchers
 
       class AnyArgsMatcher
@@ -131,26 +133,26 @@ module RSpec
         end
       end
 
-      # Passes if object receives `:message` with any args at all. This is
-      # really a more explicit variation of `object.should_receive(:message)`
+      # Matches any args at all. Supports a more explicit variation of
+      # `object.should_receive(:message)`
       #
       # @example
       #
-      #   object.should_receive(:message).with(any_args())
+      #   object.should_receive(:message).with(any_args)
       def any_args
         AnyArgsMatcher.new
       end
       
-      # Passes as long as there is an argument.
+      # Matches any argument at all.
       #
       # @example
       #
-      #   object.should_receive(:message).with(anything())
+      #   object.should_receive(:message).with(anything)
       def anything
         AnyArgMatcher.new(nil)
       end
       
-      # Passes if no arguments are passed along with the message
+      # Matches no arguments.
       #
       # @example
       #
@@ -159,7 +161,7 @@ module RSpec
         NoArgsMatcher.new
       end
       
-      # Passes if the argument responds to the specified messages.
+      # Matches if the actual argument responds to the specified messages.
       #
       # @example
       #
@@ -169,7 +171,7 @@ module RSpec
         DuckTypeMatcher.new(*args)
       end
 
-      # Passes if the argument is boolean.
+      # Matches a boolean value.
       #
       # @example
       #
@@ -178,8 +180,8 @@ module RSpec
         BooleanMatcher.new(nil)
       end
       
-      # Passes if the argument is a hash that includes the specified key(s) or
-      # key/value pairs. If the hash includes other keys, it will still pass.
+      # Matches a hash that includes the specified key(s) or key/value pairs.
+      # Ignores any additional keys.
       #
       # @example
       #
@@ -190,8 +192,7 @@ module RSpec
         HashIncludingMatcher.new(anythingize_lonely_keys(*args))
       end
       
-      # Passes if the argument is a hash that doesn't include the specified
-      # key(s) or key/value
+      # Matches a hash that doesn't include the specified key(s) or key/value.
       #
       # @example
       #
@@ -204,14 +205,21 @@ module RSpec
 
       alias_method :hash_not_including, :hash_excluding
       
-      # Passes if `arg.instance_of?(klass)`
+      # Matches if `arg.instance_of?(klass)`
+      #
+      # @example
+      #
+      #   object.should_receive(:message).with(instance_of(Thing))
       def instance_of(klass)
         InstanceOf.new(klass)
       end
       
       alias_method :an_instance_of, :instance_of
       
-      # Passes if `arg.kind_of?(klass)`
+      # Matches if `arg.kind_of?(klass)`
+      # @example
+      #
+      #   object.should_receive(:message).with(kind_of(Thing))
       def kind_of(klass)
         KindOf.new(klass)
       end
