@@ -42,7 +42,8 @@ module RSpec::Core
         # into a regexp when received for the first time (see OptionParser).
         # Hence, merely grabbing the source of this regexp will retain the
         # backslashes, so we must remove them.
-        argv << "--example" << @submitted_options[:full_description].source.delete('\\')
+        argv << @submitted_options[:full_description].map {|d| ["--example", d.source.delete('\\')] }
+        argv.flatten!
       end
     end
 

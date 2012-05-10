@@ -463,7 +463,11 @@ EOM
       end
 
       def full_description=(description)
-        filter_run :full_description => /#{description}/
+        if description.is_a?(Array)
+          filter_run :full_description => Regexp.union(description.map { |d| /#{d}/ })
+        else
+          filter_run :full_description => /#{description}/
+        end
       end
 
       # @overload add_formatter(formatter)
@@ -877,6 +881,9 @@ MESSAGE
         when 'p', 'progress'
           require 'rspec/core/formatters/progress_formatter'
           RSpec::Core::Formatters::ProgressFormatter
+        when 'f', 'failures'
+          require 'rspec/core/formatters/failures_formatter'
+          RSpec::Core::Formatters::FailuresFormatter
         end
       end
 
