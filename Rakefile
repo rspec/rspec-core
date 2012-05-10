@@ -1,19 +1,6 @@
 require "bundler"
+Bundler.setup
 Bundler::GemHelper.install_tasks
-
-task :build => :raise_if_psych_is_defined
-
-task :raise_if_psych_is_defined do
-  if defined?(Psych)
-    raise <<-MSG
-===============================================================================
-Gems compiled in Ruby environments with Psych loaded are incompatible with Ruby
-environments that don't have Psych loaded. Try building this gem in Ruby 1.8.7
-instead.
-===============================================================================
-MSG
-  end
-end
 
 require "rake"
 require "yaml"
@@ -24,7 +11,7 @@ require "rspec/core/version"
 require "cucumber/rake/task"
 Cucumber::Rake::Task.new(:cucumber)
 
-desc "Run non-ui examples"
+desc "Run all examples"
 RSpec::Core::RakeTask.new(:spec) do |t|
   t.ruby_opts = %w[-w]
 end
@@ -32,6 +19,7 @@ end
 namespace :spec do
   desc "Run ui examples"
   RSpec::Core::RakeTask.new(:ui) do |t|
+    t.ruby_opts = %w[-w]
     t.rspec_opts = %w[--tag ui]
   end
 end

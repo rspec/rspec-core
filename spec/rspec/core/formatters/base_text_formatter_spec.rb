@@ -321,13 +321,12 @@ describe RSpec::Core::Formatters::BaseTextFormatter do
 
   describe "#dump_profile" do
     before do
-      formatter.stub(:examples) do
-        group = RSpec::Core::ExampleGroup.describe("group") do
-          example("example")
-        end
-        group.run(double('reporter').as_null_object)
-        group.examples
+      group = RSpec::Core::ExampleGroup.describe("group") do
+        example("example") { sleep 0.1 }
       end
+      group.run(double('reporter').as_null_object)
+
+      formatter.stub(:examples) { group.examples }
     end
 
     it "names the example" do
@@ -345,6 +344,11 @@ describe RSpec::Core::Formatters::BaseTextFormatter do
       filename = __FILE__.split(File::SEPARATOR).last
 
       output.string.should =~ /#{filename}\:#{__LINE__ - 21}/
+    end
+
+    it "prints the percentage taken from the total runtime" do
+      formatter.dump_profile
+      output.string.should =~ /, 100.0% of total time\):/
     end
   end
 end

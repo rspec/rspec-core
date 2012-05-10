@@ -1,16 +1,27 @@
 ### dev
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.9.0...master)
+
+Enhancements
+
+* `config.mock_with` and `config.expect_with` yield custom config object to a
+  block if given
+    * aids decoupling from rspec-core's configuation
+
+### 2.10.0 / 2012-05-03
+[full changelog](http://github.com/rspec/rspec-core/compare/v2.9.0...v2.10.0)
 
 Enhancements
 
 * Add `prepend_before` and `append_after` hooks (preethiramdev)
     * intended for extension libs
     * restores rspec-1 behavior
+* Reporting of profiled examples (moro)
+    * Report the total amount of time taken for the top slowest examples.
+    * Report what percentage the slowest examples took from the total runtime.
 
 Bug fixes
 
 * Properly parse `SPEC_OPTS` options.
-* example.description returns the location of the example if there is no
+* `example.description` returns the location of the example if there is no
   explicit description or matcher-generated description.
 * RDoc fixes (Grzegorz Świrski)
 * Do not modify example ancestry when dumping errors (Michael Grosser)
