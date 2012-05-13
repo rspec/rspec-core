@@ -182,7 +182,7 @@ module RSpec
         }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
 
-      context "> 1.8.6", :unless => RUBY_VERSION.to_s == '1.8.6' do
+      context "with Ruby > 1.8.6", :unless => RUBY_VERSION.to_s == '1.8.6' do
         it "passes proc to expectation block without an argument" do
           # We eval this because Ruby 1.8.6's syntax parser barfs on { |&block| ... }
           # and prevents the entire spec suite from running.
