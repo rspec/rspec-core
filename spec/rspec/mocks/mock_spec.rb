@@ -182,26 +182,28 @@ module RSpec
         }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
       end
 
-      it "passes proc to expectation block without an argument", :ruby => '> 1.8.6' do
-        # We eval this because Ruby 1.8.6's syntax parser barfs on { |&block| ... }
-        # and prevents the entire spec suite from running.
-        eval("@double.should_receive(:foo) {|&block| block.call.should eq(:bar)}")
-        @double.foo { :bar }
-      end
+      context "> 1.8.6", :unless => RUBY_VERSION.to_s == '1.8.6' do
+        it "passes proc to expectation block without an argument" do
+          # We eval this because Ruby 1.8.6's syntax parser barfs on { |&block| ... }
+          # and prevents the entire spec suite from running.
+          eval("@double.should_receive(:foo) {|&block| block.call.should eq(:bar)}")
+          @double.foo { :bar }
+        end
 
-      it "passes proc to expectation block with an argument", :ruby => '> 1.8.6' do
-        eval("@double.should_receive(:foo) {|arg, &block| block.call.should eq(:bar)}")
-        @double.foo(:arg) { :bar }
-      end
+        it "passes proc to expectation block with an argument" do
+          eval("@double.should_receive(:foo) {|arg, &block| block.call.should eq(:bar)}")
+          @double.foo(:arg) { :bar }
+        end
 
-      it "passes proc to stub block without an argurment", :ruby => '>1.8.6' do
-        eval("@double.stub(:foo) {|&block| block.call.should eq(:bar)}")
-        @double.foo { :bar }
-      end
+        it "passes proc to stub block without an argurment" do
+          eval("@double.stub(:foo) {|&block| block.call.should eq(:bar)}")
+          @double.foo { :bar }
+        end
 
-      it "passes proc to stub block with an argument", :ruby => '> 1.8.6' do
-        eval("@double.stub(:foo) {|arg, &block| block.call.should eq(:bar)}")
-        @double.foo(:arg) { :bar }
+        it "passes proc to stub block with an argument" do
+          eval("@double.stub(:foo) {|arg, &block| block.call.should eq(:bar)}")
+          @double.foo(:arg) { :bar }
+        end
       end
 
       it "fails right away when method defined as never is received" do
