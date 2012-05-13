@@ -3,10 +3,16 @@ require 'spec_helper'
 module RSpec
   module Mocks
     describe Mock do
-      treats_method_missing_as_private :subject => RSpec::Mocks::Mock.new, :noop => false
-
       before(:each) { @double = double("test double") }
       after(:each)  { @double.rspec_reset }
+
+      it "has method_missing as private" do
+        RSpec::Mocks::Mock.private_instance_methods.should include_method(:method_missing)
+      end
+
+      it "does not respond_to? method_missing (because it's private)" do
+        RSpec::Mocks::Mock.new.should_not respond_to(:method_missing)
+      end
 
       it "reports line number of expectation of unreceived message" do
         expected_error_line = __LINE__; @double.should_receive(:wont_happen).with("x", 3)
