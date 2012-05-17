@@ -3,11 +3,10 @@ module RSpec
 
     class MessageExpectation
       # @private
-      attr_reader :message
-      attr_writer :expected_received_count, :expected_from, :argument_list_matcher, :implementation
-      protected :expected_received_count=, :expected_from=, :implementation=
       attr_accessor :error_generator
-      protected :error_generator, :error_generator=
+      attr_reader :message
+      attr_writer :expected_received_count, :expected_from, :argument_list_matcher
+      protected :expected_received_count=, :expected_from=, :error_generator, :error_generator=
 
       # @private
       def initialize(error_generator, expectation_ordering, expected_from, message, expected_received_count=1, opts={}, &implementation)
@@ -29,6 +28,12 @@ module RSpec
         @eval_context = nil
         @implementation = implementation
       end
+
+      def implementation=(implementation)
+        @consecutive = false
+        @implementation = implementation
+      end
+      protected :implementation=
 
       # @private
       def build_child(expected_from, expected_received_count, opts={}, &implementation)

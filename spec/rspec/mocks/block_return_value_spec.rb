@@ -7,6 +7,14 @@ describe "a double declaration with a block handed to:" do
       obj.should_receive(:foo) { 'bar' }
       obj.foo.should eq('bar')
     end
+
+    it "works when a multi-return stub has already been set" do
+      obj = Object.new
+      return_value = Object.new
+      obj.stub(:foo).and_return(return_value, nil)
+      obj.should_receive(:foo) { return_value }
+      obj.foo.should be(return_value)
+    end
   end
 
   describe "stub" do
