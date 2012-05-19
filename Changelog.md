@@ -1,5 +1,5 @@
-### dev
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.10.0...master)
+### 2.10.1 / 2012-05-19
+[full changelog](http://github.com/rspec/rspec-core/compare/v2.10.0...v2.10.1)
 
 Bug fixes
 
