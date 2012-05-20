@@ -7,7 +7,7 @@ module RSpec
         Object.any_instance.stub(:some_method)
         o = Object.new
         o.some_method
-        o.dup.some_method
+        lambda { o.dup.some_method }.should_not raise_error(SystemStackError)
       end
     end
   end
