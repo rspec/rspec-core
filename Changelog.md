@@ -5,6 +5,12 @@ Enhancements
 * expose ArgumentListMatcher as a formal API
     * supports use by 3rd party mock frameworks like Surrogate
 
+Bug fixes
+
+* Fix regression of edge case behavior. `double.should_receive(:foo) { a }`
+  was causing a NoMethodError when `double.stub(:foo).and_return(a, b)`
+  had been setup before (Myron Marston).
+
 ### 2.10.1 / 2012-05-05
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.10.0...v2.10.1)
 
