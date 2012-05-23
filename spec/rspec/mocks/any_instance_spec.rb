@@ -264,7 +264,7 @@ module RSpec
           klass.any_instance.stub(:existing_method_with_arguments).with(1)
           klass.any_instance.stub(:existing_method_with_arguments).with(2)
           klass.any_instance.unstub(:existing_method_with_arguments)
-          klass.new.existing_method_with_arguments(3).should eq :three
+          klass.new.existing_method_with_arguments(3).should eq(:three)
         end
 
         it "raises a MockExpectationError if the method has not been stubbed" do
@@ -278,6 +278,29 @@ module RSpec
         it "fails if the method is called" do
           klass.any_instance.should_not_receive(:existing_method)
           lambda { klass.new.existing_method }.should raise_error(RSpec::Mocks::MockExpectationError)
+        end
+        
+        it "passes if no method is called" do
+          lambda { klass.any_instance.should_not_receive(:existing_method) }.should_not raise_error
+        end
+        
+        it "passes if only a different method is called" do
+          klass.any_instance.should_not_receive(:existing_method)
+          lambda { klass.new.another_existing_method }.should_not raise_error
+        end
+        
+        context "with constraints" do
+          it "fails if the method is called with the specified parameters" do
+            klass.any_instance.should_not_receive(:existing_method_with_arguments).with(:argument_one, :argument_two)
+            lambda do
+              klass.new.existing_method_with_arguments(:argument_one, :argument_two) 
+            end.should raise_error(RSpec::Mocks::MockExpectationError)
+          end
+          
+          it "passes if the method is called with different parameters" do
+            klass.any_instance.should_not_receive(:existing_method_with_arguments).with(:argument_one, :argument_two)
+            lambda { klass.new.existing_method_with_arguments(:argument_three, :argument_four) }.should_not raise_error
+          end
         end
       end
       
