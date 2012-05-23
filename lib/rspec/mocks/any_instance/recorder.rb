@@ -59,6 +59,11 @@ module RSpec
           message_chains.add(method_name, ExpectationChain.new(method_name, &block))
         end
 
+        def should_not_receive(method_name, &block)
+          observe!(method_name)
+          message_chains.add(method_name, NegativeExpectationChain.new(method_name, &block))
+        end
+
         # Removes any previously recorded stubs, stub_chains or message
         # expectations that use `method_name`.
         #
