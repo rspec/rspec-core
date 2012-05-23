@@ -273,6 +273,14 @@ module RSpec
           end.should raise_error(RSpec::Mocks::MockExpectationError, 'The method `existing_method` was not stubbed or was already unstubbed')
         end
       end
+      
+      context "with #should_not_receive" do
+        it "fails if the method is called" do
+          klass.any_instance.should_not_receive(:existing_method)
+          lambda { klass.new.existing_method }.should raise_error(RSpec::Mocks::MockExpectationError)
+        end
+      end
+      
       context "with #should_receive" do
         let(:foo_expectation_error_message) { 'Exactly one instance should have received the following message(s) but didn\'t: foo' }
         let(:existing_method_expectation_error_message) { 'Exactly one instance should have received the following message(s) but didn\'t: existing_method' }
