@@ -157,7 +157,7 @@ module RSpec
       end
 
       def find_matching_expectation(method_name, *args)
-        method_double[method_name].expectations.find {|expectation| expectation.matches?(method_name, *args) && !expectation.called_max_times?} || 
+        (method_double[method_name].expectations.find {|expectation| expectation.matches?(method_name, *args) && !expectation.called_max_times?}) || 
           method_double[method_name].expectations.find {|expectation| expectation.matches?(method_name, *args)}
       end
 

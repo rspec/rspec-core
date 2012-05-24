@@ -75,10 +75,10 @@ module RSpec
       context "when method is stubbed too" do
         before { @double.stub(:do_something).and_return :stub_result }
 
-        it "uses the stub return value for subsequent calls" do
+        it "uses the last value for subsequent calls" do
           @double.do_something.should equal(11)
           @double.do_something.should equal(22)
-          @double.do_something.should equal(:stub_result)
+          @double.do_something.should equal(22)
           @double.rspec_verify
         end
 

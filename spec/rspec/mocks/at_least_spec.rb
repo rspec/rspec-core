@@ -123,6 +123,20 @@ module RSpec
       it "passes with at_least(0) with and_return if never called" do
         @double.should_receive(:do_something).at_least(0).times.and_return true
       end
+
+      it "uses a stub value if no value set" do
+        @double.stub(:do_something => 'foo')
+        @double.should_receive(:do_something).at_least(:once)
+        @double.do_something.should eq 'foo'
+        @double.do_something.should eq 'foo'
+      end
+
+      it "prefers its own return value over a stub" do
+        @double.stub(:do_something => 'foo')
+        @double.should_receive(:do_something).at_least(:once).and_return('bar')
+        @double.do_something.should eq 'bar'
+        @double.do_something.should eq 'bar'
+      end
     end
   end
 end

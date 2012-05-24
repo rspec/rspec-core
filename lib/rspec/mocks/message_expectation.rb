@@ -199,7 +199,10 @@ MESSAGE
 
       # @private
       def called_max_times?
-        @expected_received_count != :any && @expected_received_count > 0 && @actual_received_count >= @expected_received_count
+        @expected_received_count != :any &&
+          !@at_least &&
+          @expected_received_count > 0 &&
+          @actual_received_count >= @expected_received_count
       end
 
       # @private
