@@ -1,4 +1,4 @@
-# RSpec Mocks
+# RSpec Mocks [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/rspec/rspec-mocks)
 
 rspec-mocks is a test-double framework for rspec with support for method stubs,
 fakes, and message expectations on generated test-doubles and real objects
