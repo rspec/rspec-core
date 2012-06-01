@@ -42,7 +42,7 @@ module RSpec
       end
 
       def stub_const(name, value, options = {})
-        ConstantStubber.stub!(name, value, options)
+        ConstantStubber.stub(name, value, options)
       end
 
     private

@@ -26,7 +26,7 @@ module RSpec
           @transfer_nested_constants = transfer_nested_constants
         end
 
-        def stub!
+        def stub
           context_parts = @full_constant_name.split('::')
           @const_name = context_parts.pop
           @context = recursive_const_get(context_parts.join('::'))
@@ -96,7 +96,7 @@ module RSpec
           # always nil
         end
 
-        def stub!
+        def stub
           context_parts = @full_constant_name.split('::')
           const_name = context_parts.pop
 
@@ -120,7 +120,7 @@ module RSpec
         end
       end
 
-      def self.stub!(constant_name, value, options = {})
+      def self.stub(constant_name, value, options = {})
         stubber = if recursive_const_defined?(constant_name)
           DefinedConstantReplacer.new(constant_name, value, options[:transfer_nested_constants])
         else
@@ -129,7 +129,7 @@ module RSpec
 
         stubbers << stubber
 
-        stubber.stub!
+        stubber.stub
         ensure_registered_with_rspec_mocks
         stubber.original_value
       end
