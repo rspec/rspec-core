@@ -56,13 +56,6 @@ module RSpec
           const.should be(original_value)
         end
 
-        it 'does not reset the value to its original value when rspec clears its mocks if the example modifies the value of the constant' do
-          stub_const(const_name, :a)
-          change_const_value_to(new_const_value = Object.new)
-          reset_rspec_mocks
-          const.should be(new_const_value)
-        end
-
         it 'returns the original value' do
           orig_value = const
           returned_value = stub_const(const_name, 7)
@@ -99,19 +92,6 @@ module RSpec
           stub_const(const_name, 7)
           reset_rspec_mocks
           recursive_const_defined?(const_name).should be_false
-        end
-
-        it 'does not remove the constant when the example manually sets it' do
-          begin
-            stub_const(const_name, 7)
-            stubber = RSpec::Mocks::ConstantStubber.stubbers.first
-            change_const_value_to(new_const_value = Object.new)
-            reset_rspec_mocks
-            const.should equal(new_const_value)
-          ensure
-            change_const_value_to(7)
-            stubber.rspec_reset
-          end
         end
 
         it 'returns nil since it was not originally set' do

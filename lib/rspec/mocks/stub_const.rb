@@ -41,10 +41,8 @@ module RSpec
         end
 
         def rspec_reset
-          if recursive_const_get(@full_constant_name).equal?(@stubbed_value)
-            @context.send(:remove_const, @const_name)
-            @context.const_set(@const_name, @original_value)
-          end
+          @context.send(:remove_const, @const_name)
+          @context.const_set(@const_name, @original_value)
         end
 
         def transfer_nested_constants(constants)
@@ -118,9 +116,7 @@ module RSpec
         end
 
         def rspec_reset
-          if recursive_const_get(@full_constant_name).equal?(@stubbed_value)
-            @deepest_defined_const.send(:remove_const, @const_to_remove)
-          end
+          @deepest_defined_const.send(:remove_const, @const_to_remove)
         end
       end
 
