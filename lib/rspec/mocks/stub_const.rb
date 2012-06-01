@@ -6,9 +6,10 @@ module RSpec
       end
 
       def recursive_const_defined?(name)
-        name.split('::').inject(Object) do |mod, name|
+        name.split('::').inject([Object, '']) do |(mod, full_name), name|
+          yield(full_name, name) if block_given? && !mod.is_a?(Module)
           return false unless mod.const_defined?(name)
-          mod.const_get name
+          [mod.const_get(name), [mod, name].join('::')]
         end
       end
     end
@@ -121,7 +122,7 @@ module RSpec
       end
 
       def self.stub(constant_name, value, options = {})
-        stubber = if recursive_const_defined?(constant_name)
+        stubber = if recursive_const_defined?(constant_name, &raise_on_invalid_const)
           DefinedConstantReplacer.new(constant_name, value, options[:transfer_nested_constants])
         else
           UndefinedConstantSetter.new(constant_name, value)
@@ -159,6 +160,13 @@ module RSpec
         stubber = stubbers.find { |s| s.full_constant_name == constant_name }
         yield stubber.original_value if stubber
         self
+      end
+
+      def self.raise_on_invalid_const
+        lambda do |const_name, failed_name|
+          raise "Cannot stub constant #{failed_name} on #{const_name} " +
+                "since #{const_name} is not a module."
+        end
       end
     end
   end

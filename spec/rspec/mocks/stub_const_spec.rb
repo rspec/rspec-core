@@ -225,6 +225,11 @@ module RSpec
             defined?(TestClass).should be_true
             defined?(TestClass::X).should be_false
           end
+
+          it 'raises a helpful error if it cannot be stubbed due to an intermediary constant that is not a module' do
+            TestClass::M.should be_a(Symbol)
+            expect { stub_const("TestClass::M::X", 5) }.to raise_error(/cannot stub/i)
+          end
         end
 
         context 'for an unloaded constant nested deeply within a deeply nested loaded constant' do
