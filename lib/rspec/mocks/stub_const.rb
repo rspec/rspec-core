@@ -156,12 +156,6 @@ module RSpec
         @stubbers ||= []
       end
 
-      def self.find_original_value_for(constant_name)
-        stubber = stubbers.find { |s| s.full_constant_name == constant_name }
-        yield stubber.original_value if stubber
-        self
-      end
-
       def self.raise_on_invalid_const
         lambda do |const_name, failed_name|
           raise "Cannot stub constant #{failed_name} on #{const_name} " +
