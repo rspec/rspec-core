@@ -41,6 +41,10 @@ module RSpec
         Proxy.allow_message_expectations_on_nil
       end
 
+      def stub_const(name, value, options = {})
+        ConstantStubber.stub!(name, value, options)
+      end
+
     private
       
       def declare_double(declared_as, *args)
