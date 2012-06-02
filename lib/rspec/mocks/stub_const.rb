@@ -1,5 +1,8 @@
 module RSpec
   module Mocks
+    # Provides recursive constant lookup methods useful for
+    # constant stubbing.
+    # @api private
     module RecursiveConstMethods
       def recursive_const_get(name)
         name.split('::').inject(Object) { |mod, name| mod.const_get name }
@@ -14,9 +17,38 @@ module RSpec
       end
     end
 
+    # Provides a means to stub constants.
     class ConstantStubber
       extend RecursiveConstMethods
 
+      # Stubs a constant.
+      #
+      # @param (see ExampleMethods#stub_const)
+      # @option (see ExampleMethods#stub_const)
+      # @return (see ExampleMethods#stub_const)
+      #
+      # @see ExampleMethods#stub_const
+      # @note It's recommended that you use `stub_const` in your
+      #  examples. This is an alternate public API that is provided
+      #  so you can stub constants in other contexts (e.g. helper
+      #  classes).
+      def self.stub(constant_name, value, options = {})
+        stubber = if recursive_const_defined?(constant_name, &raise_on_invalid_const)
+          DefinedConstantReplacer.new(constant_name, value, options[:transfer_nested_constants])
+        else
+          UndefinedConstantSetter.new(constant_name, value)
+        end
+
+        stubbers << stubber
+
+        stubber.stub
+        ensure_registered_with_mocks_space
+        stubber.original_value
+      end
+
+      # Replaces a defined constant for the duration of an example.
+      #
+      # @api private
       class DefinedConstantReplacer
         include RecursiveConstMethods
         attr_reader :original_value, :full_constant_name
@@ -83,6 +115,9 @@ module RSpec
         end
       end
 
+      # Sets an undefined constant for the duration of an example.
+      #
+      # @api private
       class UndefinedConstantSetter
         include RecursiveConstMethods
 
@@ -121,28 +156,23 @@ module RSpec
         end
       end
 
-      def self.stub(constant_name, value, options = {})
-        stubber = if recursive_const_defined?(constant_name, &raise_on_invalid_const)
-          DefinedConstantReplacer.new(constant_name, value, options[:transfer_nested_constants])
-        else
-          UndefinedConstantSetter.new(constant_name, value)
-        end
-
-        stubbers << stubber
-
-        stubber.stub
-        ensure_registered_with_rspec_mocks
-        stubber.original_value
-      end
-
-      def self.ensure_registered_with_rspec_mocks
-        return if @registered_with_rspec_mocks
+      # Ensures the constant stubbing is registered with
+      # rspec-mocks space so that stubbed constants can
+      # be restored when examples finish.
+      #
+      # @api private
+      def self.ensure_registered_with_mocks_space
+        return if @registered_with_mocks_space
         ::RSpec::Mocks.space.add(self)
-        @registered_with_rspec_mocks = true
+        @registered_with_mocks_space = true
       end
 
+      # Resets all stubbed constants. This is called automatically
+      # by rspec-mocks when an example finishes.
+      #
+      # @api private
       def self.rspec_reset
-        @registered_with_rspec_mocks = false
+        @registered_with_mocks_space = false
 
         # We use reverse order so that if the same constant
         # was stubbed multiple times, the original value gets
@@ -152,10 +182,20 @@ module RSpec
         stubbers.clear
       end
 
+      # The list of constant stubbers that have been used for
+      # the current example.
+      #
+      # @api private
       def self.stubbers
         @stubbers ||= []
       end
 
+      # Used internally by the constant stubbing to raise a helpful
+      # error when a constant like "A::B::C" is stubbed and A::B is
+      # not a module (and thus, it's impossible to define "A::B::C"
+      # since only modules can have nested constants).
+      #
+      # @api private
       def self.raise_on_invalid_const
         lambda do |const_name, failed_name|
           raise "Cannot stub constant #{failed_name} on #{const_name} " +
