@@ -1,8 +1,8 @@
 ## Stubbing Constants
 
 Support is provided for stubbing constants. Like with method stubs, the
-stubbed constants will be restored to their original state when a method
-completes.
+stubbed constants will be restored to their original state when an
+example completes.
 
 ``` ruby
 stub_const("Foo", fake_foo)
