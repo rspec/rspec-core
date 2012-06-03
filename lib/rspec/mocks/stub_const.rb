@@ -34,11 +34,12 @@ module RSpec
       #  classes).
       def self.stub(constant_name, value, options = {})
         stubber = if recursive_const_defined?(constant_name, &raise_on_invalid_const)
-          DefinedConstantReplacer.new(constant_name, value, options[:transfer_nested_constants])
+          DefinedConstantReplacer
         else
-          UndefinedConstantSetter.new(constant_name, value)
+          UndefinedConstantSetter
         end
 
+        stubber = stubber.new(constant_name, value, options[:transfer_nested_constants])
         stubbers << stubber
 
         stubber.stub
@@ -46,23 +47,29 @@ module RSpec
         stubber.original_value
       end
 
-      # Replaces a defined constant for the duration of an example.
+      # Contains common functionality used by both of the constant stubbers.
       #
       # @api private
-      class DefinedConstantReplacer
+      class BaseStubber
         include RecursiveConstMethods
+
         attr_reader :original_value, :full_constant_name
 
         def initialize(full_constant_name, stubbed_value, transfer_nested_constants)
           @full_constant_name        = full_constant_name
           @stubbed_value             = stubbed_value
           @transfer_nested_constants = transfer_nested_constants
+          @context_parts             = @full_constant_name.split('::')
+          @const_name                = @context_parts.pop
         end
+      end
 
+      # Replaces a defined constant for the duration of an example.
+      #
+      # @api private
+      class DefinedConstantReplacer < BaseStubber
         def stub
-          context_parts = @full_constant_name.split('::')
-          @const_name = context_parts.pop
-          @context = recursive_const_get(context_parts.join('::'))
+          @context = recursive_const_get(@context_parts.join('::'))
           @original_value = @context.const_get(@const_name)
 
           constants_to_transfer = verify_constants_to_transfer!
@@ -118,26 +125,10 @@ module RSpec
       # Sets an undefined constant for the duration of an example.
       #
       # @api private
-      class UndefinedConstantSetter
-        include RecursiveConstMethods
-
-        attr_reader :full_constant_name
-
-        def initialize(full_constant_name, stubbed_value)
-          @full_constant_name = full_constant_name
-          @stubbed_value      = stubbed_value
-        end
-
-        def original_value
-          # always nil
-        end
-
+      class UndefinedConstantSetter < BaseStubber
         def stub
-          context_parts = @full_constant_name.split('::')
-          const_name = context_parts.pop
-
-          remaining_parts = context_parts.dup
-          @deepest_defined_const = context_parts.inject(Object) do |klass, name|
+          remaining_parts = @context_parts.dup
+          @deepest_defined_const = @context_parts.inject(Object) do |klass, name|
             break klass unless klass.const_defined?(name)
             remaining_parts.shift
             klass.const_get(name)
@@ -147,8 +138,8 @@ module RSpec
             klass.const_set(name, Module.new)
           end
 
-          @const_to_remove = remaining_parts.first || const_name
-          context.const_set(const_name, @stubbed_value)
+          @const_to_remove = remaining_parts.first || @const_name
+          context.const_set(@const_name, @stubbed_value)
         end
 
         def rspec_reset
