@@ -208,10 +208,10 @@ module RSpec
         end.should raise_error(/received :foo with unexpected arguments/)
       end
 
-      it "complains if called with other arg" do
+      it "complains if called with other arg", :github_issue => [123,147] do
         lambda do
           @stub.foo("other")
-        end.should raise_error(/received :foo with unexpected arguments/)
+        end.should raise_error(/received :foo with unexpected arguments.*Please stub a default value/m)
       end
 
       it "does not complain if also mocked w/ different args" do

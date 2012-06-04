@@ -128,9 +128,7 @@ module RSpec
           raise_unexpected_message_args_error(expectation, *args) unless (has_negative_expectation?(message) or null_object?)
         elsif stub = find_almost_matching_stub(message, *args)
           stub.advise(*args)
-          raise_unexpected_message_args_error(stub, *args)
-        elsif expectation = find_almost_matching_satisfied_expectation(message,*args)
-           raise_missing_default_stub_error(expectation, *args) if not null_object?
+          raise_missing_default_stub_error(stub, *args)
         elsif @object.is_a?(Class)
           @object.superclass.__send__(message, *args, &block)
         else
@@ -139,13 +137,13 @@ module RSpec
       end
 
       # @private
-      def raise_unexpected_message_args_error(expectation, *args)
-        @error_generator.raise_unexpected_message_args_error(expectation, *args)
+      def raise_unexpected_message_error(method_name, *args)
+        @error_generator.raise_unexpected_message_error method_name, *args
       end
 
       # @private
-      def raise_unexpected_message_error(method_name, *args)
-        @error_generator.raise_unexpected_message_error method_name, *args
+      def raise_unexpected_message_args_error(expectation, *args)
+        @error_generator.raise_unexpected_message_args_error(expectation, *args)
       end
 
       # @private
@@ -170,10 +168,6 @@ module RSpec
 
       def find_almost_matching_expectation(method_name, *args)
         method_double[method_name].expectations.find {|expectation| expectation.matches_name_but_not_args(method_name, *args) && !expectation.called_max_times?}
-      end
-
-      def find_almost_matching_satisfied_expectation(method_name, *args)
-       method_double[method_name].expectations.find {|expectation| expectation.matches_name_but_not_args(method_name, *args) }
       end
 
       def find_matching_method_stub(method_name, *args)
