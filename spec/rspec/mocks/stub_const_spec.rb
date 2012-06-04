@@ -78,11 +78,6 @@ module RSpec
           const_name.split('::').last
         end
 
-        def change_const_value_to(value)
-          parent_const.send(:remove_const, last_const_part)
-          parent_const.const_set(last_const_part, value)
-        end
-
         it 'allows it to be stubbed' do
           stub_const(const_name, 7)
           const.should eq(7)
