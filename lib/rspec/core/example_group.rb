@@ -371,14 +371,37 @@ An error occurred in an after(:all) hook.
 
       # @private
       def self.run_examples(reporter)
-        filtered_examples.ordered.map do |example|
-          next if RSpec.wants_to_quit
-          instance = new
-          set_ivars(instance, before_all_ivars)
-          succeeded = example.run(instance, reporter)
-          RSpec.wants_to_quit = true if fail_fast? && !succeeded
-          succeeded
-        end.all?
+        examples_ran = 0
+        examples = filtered_examples.ordered
+        begin
+          filtered_examples.ordered.map do |example|
+            next if RSpec.wants_to_quit
+            instance = new
+            set_ivars(instance, before_all_ivars)
+            succeeded = example.run(instance, reporter)
+            RSpec.wants_to_quit = true if fail_fast? && !succeeded
+            succeeded
+          end.all?
+        ensure
+          STDERR.puts %Q{
+ !!!
+ !!! Warning! Not all examples completed in #{description.inspect}!
+ !!!
+ !!! Only #{examples_ran} of #{examples.size} examples managed to complete.
+ !!!
+ !!! This may mean that you have `return` statement somewhere in your examples.
+ !!! Beware that `return` will not return from your example, but instead from
+ !!! your example runner, causing abnormal termination of your spec suite!
+ !!!
+ !!! Do not do this:
+ !!!
+ !!! it "should do something" do
+ !!!   # `return` will cause it to fail!
+ !!!   return unless some_condition
+ !!!   raise "test failed"
+ !!! end
+ !!!
+          } if examples_ran != examples.size
       end
 
       # @private
