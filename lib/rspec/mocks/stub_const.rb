@@ -17,6 +17,45 @@ module RSpec
       end
     end
 
+    class Constant
+      extend RecursiveConstMethods
+
+      def initialize(name)
+        @name = name
+      end
+
+      attr_reader :name
+      attr_accessor :original_value
+      attr_writer :previously_defined, :stubbed
+
+      def previously_defined?
+        @previously_defined
+      end
+
+      def stubbed?
+        @stubbed
+      end
+
+      def to_s
+        "#<#{self.class.name} #{name}>"
+      end
+      alias inspect to_s
+
+      def self.unstubbed(name)
+        const = new(name)
+        const.previously_defined = recursive_const_defined?(name)
+        const.stubbed = false
+        const.original_value = recursive_const_get(name) if const.previously_defined?
+
+        const
+      end
+
+      def self.original(name)
+        stubber = ConstantStubber.find(name)
+        stubber ? stubber.to_constant : unstubbed(name)
+      end
+    end
+
     # Provides a means to stub constants.
     class ConstantStubber
       extend RecursiveConstMethods
@@ -62,6 +101,15 @@ module RSpec
           @context_parts             = @full_constant_name.split('::')
           @const_name                = @context_parts.pop
         end
+
+        def to_constant
+          const = Constant.new(full_constant_name)
+          const.stubbed = true
+          const.previously_defined = previously_defined?
+          const.original_value = original_value
+
+          const
+        end
       end
 
       # Replaces a defined constant for the duration of an example.
@@ -78,6 +126,10 @@ module RSpec
           @context.const_set(@const_name, @stubbed_value)
 
           transfer_nested_constants(constants_to_transfer)
+        end
+
+        def previously_defined?
+          true
         end
 
         def rspec_reset
@@ -142,6 +194,10 @@ module RSpec
           context.const_set(@const_name, @stubbed_value)
         end
 
+        def previously_defined?
+          false
+        end
+
         def rspec_reset
           @deepest_defined_const.send(:remove_const, @const_to_remove)
         end
@@ -179,6 +235,10 @@ module RSpec
       # @api private
       def self.stubbers
         @stubbers ||= []
+      end
+
+      def self.find(name)
+        stubbers.find { |s| s.full_constant_name == name }
       end
 
       # Used internally by the constant stubbing to raise a helpful

@@ -240,6 +240,70 @@ module RSpec
         end
       end
     end
+
+    describe Constant do
+      describe ".original" do
+        context 'for a previously defined unstubbed constant' do
+          subject { Constant.original("TestClass::M") }
+
+          its(:name)                { should eq("TestClass::M") }
+          its(:previously_defined?) { should be_true }
+          its(:stubbed?)            { should be_false }
+          its(:original_value)      { should eq(:m) }
+        end
+
+        context 'for a previously defined stubbed constant' do
+          before { stub_const("TestClass::M", :other) }
+          subject { Constant.original("TestClass::M") }
+
+          its(:name)                { should eq("TestClass::M") }
+          its(:previously_defined?) { should be_true }
+          its(:stubbed?)            { should be_true }
+          its(:original_value)      { should eq(:m) }
+        end
+
+        context 'for a previously undefined stubbed constant' do
+          before { stub_const("TestClass::Undefined", :other) }
+          subject { Constant.original("TestClass::Undefined") }
+
+          its(:name)                { should eq("TestClass::Undefined") }
+          its(:previously_defined?) { should be_false }
+          its(:stubbed?)            { should be_true }
+          its(:original_value)      { should be_nil }
+        end
+
+        context 'for a previously undefined unstubbed constant' do
+          subject { Constant.original("TestClass::Undefined") }
+
+          its(:name)                { should eq("TestClass::Undefined") }
+          its(:previously_defined?) { should be_false }
+          its(:stubbed?)            { should be_false }
+          its(:original_value)      { should be_nil }
+        end
+
+        context 'for a previously defined constant that has been stubbed twice' do
+          before { stub_const("TestClass::M", 1) }
+          before { stub_const("TestClass::M", 2) }
+          subject { Constant.original("TestClass::M") }
+
+          its(:name)                { should eq("TestClass::M") }
+          its(:previously_defined?) { should be_true }
+          its(:stubbed?)            { should be_true }
+          its(:original_value)      { should eq(:m) }
+        end
+
+        context 'for a previously undefined constant that has been stubbed twice' do
+          before { stub_const("TestClass::Undefined", 1) }
+          before { stub_const("TestClass::Undefined", 2) }
+          subject { Constant.original("TestClass::Undefined") }
+
+          its(:name)                { should eq("TestClass::Undefined") }
+          its(:previously_defined?) { should be_false }
+          its(:stubbed?)            { should be_true }
+          its(:original_value)      { should be_nil }
+        end
+      end
+    end
   end
 end
 
