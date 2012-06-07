@@ -55,7 +55,7 @@ module RSpec
       #   what nested constants, if any, will be transferred from the original value
       #   of the constant to the new value of the constant. This only works if both
       #   the original and new values are modules (or classes).
-      # @return [Object] the original value of the constant if it was already defined
+      # @return [Object] the stubbed value of the constant
       #
       # @example
       #

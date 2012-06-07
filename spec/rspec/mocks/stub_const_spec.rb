@@ -56,10 +56,9 @@ module RSpec
           const.should be(original_value)
         end
 
-        it 'returns the original value' do
+        it 'returns the stubbed value' do
           orig_value = const
-          returned_value = stub_const(const_name, 7)
-          returned_value.should be(orig_value)
+          stub_const(const_name, 7).should eq(7)
         end
       end
 
@@ -89,8 +88,8 @@ module RSpec
           recursive_const_defined?(const_name).should be_false
         end
 
-        it 'returns nil since it was not originally set' do
-          stub_const(const_name, 7).should be_nil
+        it 'returns the stubbed value' do
+          stub_const(const_name, 7).should eq(7)
         end
 
         it 'ignores the :transfer_nested_constants option if passed' do

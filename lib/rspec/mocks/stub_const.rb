@@ -44,7 +44,7 @@ module RSpec
 
         stubber.stub
         ensure_registered_with_mocks_space
-        stubber.original_value
+        value
       end
 
       # Contains common functionality used by both of the constant stubbers.
