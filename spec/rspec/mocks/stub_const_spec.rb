@@ -244,63 +244,63 @@ module RSpec
     describe Constant do
       describe ".original" do
         context 'for a previously defined unstubbed constant' do
-          subject { Constant.original("TestClass::M") }
+          let(:const) { Constant.original("TestClass::M") }
 
-          its(:name)                { should eq("TestClass::M") }
-          its(:previously_defined?) { should be_true }
-          its(:stubbed?)            { should be_false }
-          its(:original_value)      { should eq(:m) }
+          it("exposes its name")                    { const.name.should eq("TestClass::M") }
+          it("indicates it was previously defined") { const.should be_previously_defined }
+          it("indicates it has not been stubbed")   { const.should_not be_stubbed }
+          it("exposes its original value")          { const.original_value.should eq(:m) }
         end
 
         context 'for a previously defined stubbed constant' do
           before { stub_const("TestClass::M", :other) }
-          subject { Constant.original("TestClass::M") }
+          let(:const) { Constant.original("TestClass::M") }
 
-          its(:name)                { should eq("TestClass::M") }
-          its(:previously_defined?) { should be_true }
-          its(:stubbed?)            { should be_true }
-          its(:original_value)      { should eq(:m) }
+          it("exposes its name")                    { const.name.should eq("TestClass::M") }
+          it("indicates it was previously defined") { const.should be_previously_defined }
+          it("indicates it has been stubbed")       { const.should be_stubbed }
+          it("exposes its original value")          { const.original_value.should eq(:m) }
         end
 
         context 'for a previously undefined stubbed constant' do
           before { stub_const("TestClass::Undefined", :other) }
-          subject { Constant.original("TestClass::Undefined") }
+          let(:const) { Constant.original("TestClass::Undefined") }
 
-          its(:name)                { should eq("TestClass::Undefined") }
-          its(:previously_defined?) { should be_false }
-          its(:stubbed?)            { should be_true }
-          its(:original_value)      { should be_nil }
+          it("exposes its name")                        { const.name.should eq("TestClass::Undefined") }
+          it("indicates it was not previously defined") { const.should_not be_previously_defined }
+          it("indicates it has been stubbed")           { const.should be_stubbed }
+          it("returns nil for the original value")      { const.original_value.should be_nil }
         end
 
         context 'for a previously undefined unstubbed constant' do
-          subject { Constant.original("TestClass::Undefined") }
+          let(:const) { Constant.original("TestClass::Undefined") }
 
-          its(:name)                { should eq("TestClass::Undefined") }
-          its(:previously_defined?) { should be_false }
-          its(:stubbed?)            { should be_false }
-          its(:original_value)      { should be_nil }
+          it("exposes its name")                        { const.name.should eq("TestClass::Undefined") }
+          it("indicates it was not previously defined") { const.should_not be_previously_defined }
+          it("indicates it has not been stubbed")       { const.should_not be_stubbed }
+          it("returns nil for the original value")      { const.original_value.should be_nil }
         end
 
         context 'for a previously defined constant that has been stubbed twice' do
           before { stub_const("TestClass::M", 1) }
           before { stub_const("TestClass::M", 2) }
-          subject { Constant.original("TestClass::M") }
+          let(:const) { Constant.original("TestClass::M") }
 
-          its(:name)                { should eq("TestClass::M") }
-          its(:previously_defined?) { should be_true }
-          its(:stubbed?)            { should be_true }
-          its(:original_value)      { should eq(:m) }
+          it("exposes its name")                    { const.name.should eq("TestClass::M") }
+          it("indicates it was previously defined") { const.should be_previously_defined }
+          it("indicates it has been stubbed")       { const.should be_stubbed }
+          it("exposes its original value")          { const.original_value.should eq(:m) }
         end
 
         context 'for a previously undefined constant that has been stubbed twice' do
           before { stub_const("TestClass::Undefined", 1) }
           before { stub_const("TestClass::Undefined", 2) }
-          subject { Constant.original("TestClass::Undefined") }
+          let(:const) { Constant.original("TestClass::Undefined") }
 
-          its(:name)                { should eq("TestClass::Undefined") }
-          its(:previously_defined?) { should be_false }
-          its(:stubbed?)            { should be_true }
-          its(:original_value)      { should be_nil }
+          it("exposes its name")                        { const.name.should eq("TestClass::Undefined") }
+          it("indicates it was not previously defined") { const.should_not be_previously_defined }
+          it("indicates it has been stubbed")           { const.should be_stubbed }
+          it("returns nil for the original value")      { const.original_value.should be_nil }
         end
       end
     end
