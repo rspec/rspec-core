@@ -49,6 +49,7 @@ module RSpec
 
         const
       end
+      private_class_method :unstubbed
 
       def self.original(name)
         stubber = ConstantStubber.find(name)
