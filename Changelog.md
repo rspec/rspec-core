@@ -4,6 +4,8 @@ Enhancements
 
 * expose ArgumentListMatcher as a formal API
     * supports use by 3rd party mock frameworks like Surrogate
+* Add `stub_const` API to stub constants for the duration of an
+  example (Myron Marston).
 
 Bug fixes
 
