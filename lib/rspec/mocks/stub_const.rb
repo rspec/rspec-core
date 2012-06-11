@@ -17,21 +17,35 @@ module RSpec
       end
     end
 
+    # Provides information about constants that may (or may not)
+    # have been stubbed by rspec-mocks.
     class Constant
       extend RecursiveConstMethods
 
+      # @api private
       def initialize(name)
         @name = name
       end
 
+      # @return [String] The fully qualified name of the constant.
       attr_reader :name
+
+      # @return [Object, nil] The original value (e.g. before it
+      #   was stubbed by rspec-mocks) of the constant, or
+      #   nil if the constant was not previously defined.
       attr_accessor :original_value
+
+      # @api private
       attr_writer :previously_defined, :stubbed
 
+      # @return [Boolean] Whether or not the constant was defined
+      #   before the current example.
       def previously_defined?
         @previously_defined
       end
 
+      # @return [Boolean] Whether or not rspec-mocks has stubbed
+      #   this constant.
       def stubbed?
         @stubbed
       end
@@ -41,6 +55,7 @@ module RSpec
       end
       alias inspect to_s
 
+      # @api private
       def self.unstubbed(name)
         const = new(name)
         const.previously_defined = recursive_const_defined?(name)
@@ -51,6 +66,11 @@ module RSpec
       end
       private_class_method :unstubbed
 
+      # Queries rspec-mocks to find out information about the named constant.
+      #
+      # @param [String] name the name of the constant
+      # @return [Constant] an object contaning information about the named
+      #   constant.
       def self.original(name)
         stubber = ConstantStubber.find(name)
         stubber ? stubber.to_constant : unstubbed(name)
