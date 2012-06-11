@@ -246,6 +246,12 @@ While this is a good thing when you really need it, you probably don't really
 need it! Take care to specify only the things that matter to the behavior of
 your code.
 
+## Stubbing Constants
+
+See the [stubbing constants
+README](https://github.com/rspec/rspec-mocks/blob/master/features/stubbing_constants/README.md)
+for info on this feature.
+
 ## Use `before(:each)`, not `before(:all)`
 
 Stubs in `before(:all)` are not supported. The reason is that all stubs and mocks get cleared out after each example, so any stub that is set in `before(:all)` would work in the first example that happens to run in that group, but not for any others.
