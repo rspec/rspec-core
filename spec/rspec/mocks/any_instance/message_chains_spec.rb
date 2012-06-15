@@ -3,7 +3,7 @@ require 'spec_helper'
 describe RSpec::Mocks::AnyInstance::MessageChains do
   let(:chains) { RSpec::Mocks::AnyInstance::MessageChains.new }
   let(:stub_chain) { RSpec::Mocks::AnyInstance::StubChain.new }
-  let(:expectation_chain) { RSpec::Mocks::AnyInstance::ExpectationChain.new }
+  let(:expectation_chain) { RSpec::Mocks::AnyInstance::PositiveExpectationChain.new }
 
   it "knows if a method does not have an expectation set on it" do
     chains.add(:method_name, stub_chain)

@@ -56,7 +56,7 @@ module RSpec
         def should_receive(method_name, &block)
           @expectation_set = true
           observe!(method_name)
-          message_chains.add(method_name, ExpectationChain.new(method_name, &block))
+          message_chains.add(method_name, PositiveExpectationChain.new(method_name, &block))
         end
 
         def should_not_receive(method_name, &block)

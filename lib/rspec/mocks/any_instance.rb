@@ -2,7 +2,6 @@ require 'rspec/mocks/any_instance/chain'
 require 'rspec/mocks/any_instance/stub_chain'
 require 'rspec/mocks/any_instance/stub_chain_chain'
 require 'rspec/mocks/any_instance/expectation_chain'
-require 'rspec/mocks/any_instance/negative_expectation_chain'
 require 'rspec/mocks/any_instance/message_chains'
 require 'rspec/mocks/any_instance/recorder'
 
