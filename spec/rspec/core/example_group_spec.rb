@@ -863,6 +863,9 @@ module RSpec::Core
         end
       end
 
+      extend Forwardable
+      def_delegators "RSpec::Core::ExampleGroup", :describe
+
       context "with all examples passing" do
         it "returns true" do
           group = describe("something") do

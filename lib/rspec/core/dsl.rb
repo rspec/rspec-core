@@ -21,4 +21,9 @@ module RSpec
   end
 end
 
-include RSpec::Core::DSL
+# make describe available on the main object, but not all objects
+extend RSpec::Core::DSL
+
+# make describe available on modules so example groups
+# can be nested within them.
+Module.send(:include, RSpec::Core::DSL)
