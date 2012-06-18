@@ -17,9 +17,10 @@ module RSpec
       end
 
       it "raises an error when interpolated in a string as an integer" do
-        expected_error = RUBY_VERSION =~ /1.8/ ?
-                         TypeError :
-                         RSpec::Mocks::MockExpectationError
+        # Not sure why, but 1.9.2 raises a different error than 1.8.7 and 1.9.3...
+        expected_error = RUBY_VERSION == '1.9.2' ?
+                         RSpec::Mocks::MockExpectationError :
+                         TypeError
 
         expect { "%i" % @double }.to raise_error(expected_error)
       end
