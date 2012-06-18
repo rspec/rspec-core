@@ -15,6 +15,14 @@ module RSpec
         @double.stub(:foo)
         @double.should respond_to(:foo)
       end
+
+      it "raises an error when interpolated in a string as an integer" do
+        expected_error = RUBY_VERSION =~ /1.8/ ?
+                         TypeError :
+                         RSpec::Mocks::MockExpectationError
+
+        expect { "%i" % @double }.to raise_error(expected_error)
+      end
     end
 
     describe "a double acting as a null object" do
@@ -58,6 +66,14 @@ module RSpec
         @double.should_receive(:message).with(:expected_arg)
         @double.message(:expected_arg)
         @double.message(:unexpected_arg)
+      end
+
+      it "can be interpolated in a string as an integer" do
+        # This form of string interpolation calls
+        # @double.to_int.to_int.to_int...etc until it gets an integer,
+        # and thus gets stuck in an infinite loop unless our double
+        # returns an int value from #to_int.
+        ("%i" % @double).should eq("0")
       end
     end
     
