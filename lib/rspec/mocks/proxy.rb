@@ -65,6 +65,7 @@ module RSpec
 
       # @private
       def add_message_expectation(location, method_name, opts={}, &block)        
+        block ||= Proc.new { @object } if null_object?
         method_double[method_name].add_expectation @error_generator, @expectation_ordering, location, opts, &block
       end
 

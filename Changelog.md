@@ -17,6 +17,8 @@ Bug fixes
   even if `:foo` is already stubbed.
 * Prevent infinite loop when interpolating a null double into a string
   as an integer (`"%i" % double.as_null_object`). (Myron Marston)
+* Fix `should_receive` so that null object behavior (e.g. returning
+  self) is preserved if no implementation is given (Myron Marston).
 
 ### 2.10.1 / 2012-05-05
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.10.0...v2.10.1)

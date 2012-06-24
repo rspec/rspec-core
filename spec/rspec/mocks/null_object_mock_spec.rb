@@ -45,6 +45,11 @@ module RSpec
         @double.something
       end
 
+      it 'continues to return self from an explicit expectation' do
+        @double.should_receive(:bar)
+        @double.foo.bar.should be(@double)
+      end
+
       it "fails verification when explicit exception not met" do
         lambda do
           @double.should_receive(:something)
