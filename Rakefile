@@ -68,4 +68,4 @@ task :relish, :version do |t, args|
   sh "rm features/Changelog.md"
 end
 
-task :default => [:spec, "spec:ui", :cucumber]
+task :default => [:spec, :cucumber]
