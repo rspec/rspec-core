@@ -1,9 +1,6 @@
 require 'spec_helper'
 
-describe 'command line', :ui do
-  let(:stderr) { StringIO.new }
-  let(:stdout) { StringIO.new }
-
+describe 'command line' do
   before :all do
     write_file 'spec/order_spec.rb', """
       describe 'group 1' do
@@ -129,9 +126,5 @@ describe 'command line', :ui do
   def split_in_half(array)
     length, midpoint = array.length, array.length / 2
     return array.slice(0, midpoint), array.slice(midpoint, length)
-  end
-
-  def run_command(cmd)
-    RSpec::Core::Runner.run(cmd.split, stderr, stdout)
   end
 end

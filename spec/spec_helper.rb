@@ -66,22 +66,19 @@ Spork.prefork do
     ENV.has_key?('TM_MODE') || ENV.has_key?('EMACS') || ENV.has_key?('VIM')
   end
 
-  RSpec.configure do |c|
+  RSpec.configure do |config|
     # structural
-    c.alias_it_behaves_like_to 'it_has_behavior'
-    c.around {|example| sandboxed { example.run }}
-    c.include(RSpecHelpers)
-    c.include Aruba::Api, :example_group => {
-      :file_path => /spec\/command_line/
-    }
+    config.alias_it_behaves_like_to 'it_has_behavior'
+    config.around {|example| sandboxed { example.run }}
+    config.include(RSpecHelpers)
 
     # runtime options
-    c.treat_symbols_as_metadata_keys_with_true_values = true
-    c.color = !in_editor?
-    c.filter_run :focus
-    c.include FakeFS::SpecHelpers, :fakefs
-    c.run_all_when_everything_filtered = true
-    c.filter_run_excluding :ruby => lambda {|version|
+    config.treat_symbols_as_metadata_keys_with_true_values = true
+    config.color = !in_editor?
+    config.filter_run :focus
+    config.include FakeFS::SpecHelpers, :fakefs
+    config.run_all_when_everything_filtered = true
+    config.filter_run_excluding :ruby => lambda {|version|
       case version.to_s
       when "!jruby"
         RUBY_ENGINE == "jruby"
