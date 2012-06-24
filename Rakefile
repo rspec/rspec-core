@@ -17,10 +17,10 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 namespace :spec do
-  desc "Run ui examples"
-  RSpec::Core::RakeTask.new(:ui) do |t|
+  desc "Run integration examples"
+  RSpec::Core::RakeTask.new(:integration) do |t|
     t.ruby_opts = %w[-w]
-    t.rspec_opts = %w[--tag ui]
+    t.pattern = 'spec/integration/**/*_spec.rb'
   end
 end
 
