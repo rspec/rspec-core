@@ -66,7 +66,7 @@ module RSpec
           "hash_including(#{@expected.inspect.sub(/^\{/,"").sub(/\}$/,"")})"
         end
       end
-      
+
       class HashExcludingMatcher
         def initialize(expected)
           @expected = expected
@@ -82,7 +82,7 @@ module RSpec
           "hash_not_including(#{@expected.inspect.sub(/^\{/,"").sub(/\}$/,"")})"
         end
       end
-      
+
       class DuckTypeMatcher
         def initialize(*methods_to_respond_to)
           @methods_to_respond_to = methods_to_respond_to
@@ -112,22 +112,22 @@ module RSpec
           @given == expected
         end
       end
-      
+
       class InstanceOf
         def initialize(klass)
           @klass = klass
         end
-        
+
         def ==(actual)
           actual.instance_of?(@klass)
         end
       end
-      
+
       class KindOf
         def initialize(klass)
           @klass = klass
         end
-        
+
         def ==(actual)
           actual.kind_of?(@klass)
         end
@@ -142,7 +142,7 @@ module RSpec
       def any_args
         AnyArgsMatcher.new
       end
-      
+
       # Matches any argument at all.
       #
       # @example
@@ -151,7 +151,7 @@ module RSpec
       def anything
         AnyArgMatcher.new(nil)
       end
-      
+
       # Matches no arguments.
       #
       # @example
@@ -160,7 +160,7 @@ module RSpec
       def no_args
         NoArgsMatcher.new
       end
-      
+
       # Matches if the actual argument responds to the specified messages.
       #
       # @example
@@ -179,7 +179,7 @@ module RSpec
       def boolean
         BooleanMatcher.new(nil)
       end
-      
+
       # Matches a hash that includes the specified key(s) or key/value pairs.
       # Ignores any additional keys.
       #
@@ -191,7 +191,7 @@ module RSpec
       def hash_including(*args)
         HashIncludingMatcher.new(anythingize_lonely_keys(*args))
       end
-      
+
       # Matches a hash that doesn't include the specified key(s) or key/value.
       #
       # @example
@@ -204,7 +204,7 @@ module RSpec
       end
 
       alias_method :hash_not_including, :hash_excluding
-      
+
       # Matches if `arg.instance_of?(klass)`
       #
       # @example
@@ -213,9 +213,9 @@ module RSpec
       def instance_of(klass)
         InstanceOf.new(klass)
       end
-      
+
       alias_method :an_instance_of, :instance_of
-      
+
       # Matches if `arg.kind_of?(klass)`
       # @example
       #
@@ -223,11 +223,11 @@ module RSpec
       def kind_of(klass)
         KindOf.new(klass)
       end
-      
+
       alias_method :a_kind_of, :kind_of
-      
+
       private
-      
+
       def anythingize_lonely_keys(*args)
         hash = args.last.class == Hash ? args.delete_at(-1) : {}
         args.each { | arg | hash[arg] = anything }
