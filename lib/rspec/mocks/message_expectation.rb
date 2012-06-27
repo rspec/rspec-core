@@ -115,7 +115,7 @@ module RSpec
       #   car.stub(:go).and_raise
       #   car.stub(:go).and_raise(OutOfGas)
       #   car.stub(:go).and_raise(OutOfGas.new(2, :oz))
-      def and_raise(exception=Exception)
+      def and_raise(exception=RuntimeError)
         @exception_to_raise = exception
       end
 

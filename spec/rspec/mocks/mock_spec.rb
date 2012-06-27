@@ -215,7 +215,12 @@ module RSpec
       end
 
       it "raises when told to" do
-        @double.should_receive(:something).and_raise(RuntimeError)
+        @double.should_receive(:something).and_raise(StandardError)
+        expect { @double.something }.to raise_error(StandardError)
+      end
+
+      it "raises RuntimeError by default" do
+        @double.should_receive(:something).and_raise
         expect { @double.something }.to raise_error(RuntimeError)
       end
 
