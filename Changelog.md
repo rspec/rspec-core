@@ -19,6 +19,8 @@ Bug fixes
   as an integer (`"%i" % double.as_null_object`). (Myron Marston)
 * Fix `should_receive` so that null object behavior (e.g. returning
   self) is preserved if no implementation is given (Myron Marston).
+* Fix `and_raise` so that it raises `RuntimeError` rather than
+  `Exception` by default, just like ruby does. (Andrew Marshall)
 
 ### 2.10.1 / 2012-05-05
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.10.0...v2.10.1)
