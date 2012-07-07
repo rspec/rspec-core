@@ -1,4 +1,5 @@
-### dev
+### 2.11.0 / 2012-07-07
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.10.1...v2.11.0)
 
 Enhancements
 
