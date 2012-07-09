@@ -65,8 +65,15 @@ module RSpec
 
       # @private
       def add_message_expectation(location, method_name, opts={}, &block)        
-        block ||= Proc.new { @object } if null_object?
-        method_double[method_name].add_expectation @error_generator, @expectation_ordering, location, opts, &block
+        meth_double = method_double[method_name]
+
+        if null_object? && !block
+          meth_double.add_default_stub(@error_generator, @expectation_ordering, location, opts) do
+            @object
+          end
+        end
+
+        meth_double.add_expectation @error_generator, @expectation_ordering, location, opts, &block
       end
 
       # @private

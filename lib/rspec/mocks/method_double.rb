@@ -159,6 +159,12 @@ module RSpec
       end
 
       # @private
+      def add_default_stub(*args, &implementation)
+        return if stubs.any?
+        add_stub(*args, &implementation)
+      end
+
+      # @private
       def remove_stub
         raise_method_not_stubbed_error if stubs.empty?
         expectations.empty? ? reset : stubs.clear

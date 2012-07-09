@@ -1,3 +1,12 @@
+### dev
+
+Bug fixes
+
+* Fix `should_receive` so that when it is called on an `as_null_object`
+  double with no implementation, and there is a previous explicit stub
+  for the same method, the explicit stub remains (rather than being
+  overriden with the null object implementation--`return self`). (Myron Marston)
+
 ### 2.11.0 / 2012-07-07
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.10.1...v2.11.0)
 

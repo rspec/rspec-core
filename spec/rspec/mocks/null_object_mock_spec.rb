@@ -50,6 +50,12 @@ module RSpec
         @double.foo.bar.should be(@double)
       end
 
+      it 'returns an explicitly stubbed value from an expectation with no implementation' do
+        @double.stub(:foo => "bar")
+        @double.should_receive(:foo)
+        @double.foo.should eq("bar")
+      end
+
       it "fails verification when explicit exception not met" do
         lambda do
           @double.should_receive(:something)
