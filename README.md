@@ -152,8 +152,8 @@ specify certain kinds of arguments:
 ```ruby
 double.should_receive(:msg).with(no_args())
 double.should_receive(:msg).with(any_args())
-double.should_receive(:msg).with(1, kind_of(Numeric), "b") #2nd argument can any kind of Numeric
-double.should_receive(:msg).with(1, boolean(), "b") #2nd argument can true or false
+double.should_receive(:msg).with(1, kind_of(Numeric), "b") #2nd argument can be any kind of Numeric
+double.should_receive(:msg).with(1, boolean(), "b") #2nd argument can be true or false
 double.should_receive(:msg).with(1, /abc/, "b") #2nd argument can be any String matching the submitted Regexp
 double.should_receive(:msg).with(1, anything(), "b") #2nd argument can be anything at all
 double.should_receive(:msg).with(1, duck_type(:abs, :div), "b")
