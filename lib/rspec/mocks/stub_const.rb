@@ -4,12 +4,12 @@ module RSpec
     # constant stubbing.
     # @api private
     module RecursiveConstMethods
-      def recursive_const_get(name)
-        name.split('::').inject(Object) { |mod, name| mod.const_get name }
+      def recursive_const_get(const_name)
+        const_name.split('::').inject(Object) { |mod, name| mod.const_get name }
       end
 
-      def recursive_const_defined?(name)
-        name.split('::').inject([Object, '']) do |(mod, full_name), name|
+      def recursive_const_defined?(const_name)
+        const_name.split('::').inject([Object, '']) do |(mod, full_name), name|
           yield(full_name, name) if block_given? && !mod.is_a?(Module)
           return false unless mod.const_defined?(name)
           [mod.const_get(name), [mod, name].join('::')]
@@ -230,7 +230,7 @@ module RSpec
       #
       # @api private
       def self.ensure_registered_with_mocks_space
-        return if @registered_with_mocks_space
+        return if defined?(@registered_with_mocks_space) && @registered_with_mocks_space
         ::RSpec::Mocks.space.add(self)
         @registered_with_mocks_space = true
       end

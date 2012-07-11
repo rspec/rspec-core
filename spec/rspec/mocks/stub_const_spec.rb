@@ -57,7 +57,6 @@ module RSpec
         end
 
         it 'returns the stubbed value' do
-          orig_value = const
           stub_const(const_name, 7).should eq(7)
         end
       end

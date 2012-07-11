@@ -31,7 +31,7 @@ module RSpec
       def raise_missing_default_stub_error(expectation,*args)
         expected_args = format_args(*expectation.expected_args)
         actual_args = args.collect {|a| format_args(*a)}.join(", ")
-        __raise "#{intro} received #{expectation.message.inspect} with unexpected arguments\n Please stub a default value first if message might be received with other args as well. \n"
+        __raise "#{intro} received #{expectation.message.inspect} with unexpected arguments\n  expected: #{expected_args}\n       got: #{actual_args}\n Please stub a default value first if message might be received with other args as well. \n"
       end
 
       # @private
