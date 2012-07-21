@@ -291,7 +291,7 @@ An error occurred #{context}
 
       def record_finished(status, results={})
         finished_at = Time.now
-        record results.merge(:status => status, :finished_at => finished_at, :run_time => (finished_at - execution_result[:started_at]))
+        record results.merge(:status => status, :finished_at => finished_at, :run_time => (finished_at - (execution_result[:started_at] + (execution_result[:gc_time] || 0))))
       end
 
       def run_before_each
@@ -305,6 +305,7 @@ An error occurred #{context}
       rescue Exception => e
         set_exception(e, "in an after(:each) hook")
       ensure
+        execution_result[:gc_time] = RSpec.configuration.gc_if_needed
         @example_group_instance.teardown_mocks_for_rspec
       end
 
