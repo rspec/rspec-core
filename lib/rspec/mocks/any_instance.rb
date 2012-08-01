@@ -54,7 +54,7 @@ module RSpec
       
       private
       def modify_dup_to_remove_mock_proxy_when_invoked
-        unless self.method_defined?(:__rspec_original_dup)
+        if self.method_defined?(:dup) and !self.method_defined?(:__rspec_original_dup)
           self.class_eval do
             def __rspec_dup
               __remove_mock_proxy

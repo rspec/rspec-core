@@ -818,6 +818,13 @@ module RSpec
           o.some_method
           lambda { o.dup.some_method }.should_not raise_error(SystemStackError)
         end
+
+        it "doesn't bomb if the object doesn't support `dup`" do
+          klass = Class.new do
+            undef_method :dup
+          end
+          klass.any_instance
+        end
       end
 
     end

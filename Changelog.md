@@ -1,3 +1,10 @@
+### dev
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.11.1...master)
+
+Bug fixes
+
+* Don't modify `dup` on classes that don't support `dup` (David Chelimsky)
+
 ### 2.11.1 / 2012-07-09
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.11.0...v2.11.1)
 
@@ -13,7 +20,7 @@ Bug fixes
 
 Enhancements
 
-* expose ArgumentListMatcher as a formal API
+* Expose ArgumentListMatcher as a formal API
     * supports use by 3rd party mock frameworks like Surrogate
 * Add `stub_const` API to stub constants for the duration of an
   example (Myron Marston).
