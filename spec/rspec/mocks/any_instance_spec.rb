@@ -827,6 +827,24 @@ module RSpec
         end
       end
 
+      context "when used with base class" do
+        let(:sub_klass) { Class.new(klass) }
+    
+        it "should stub method in base class" do
+          klass.any_instance.stub(:existing_method).and_return("foo")
+          sub_klass.new.existing_method.should == "foo"
+        end
+    
+        it "fails if the method is invoked on a second instance" do
+          instance_one = sub_klass.new
+          instance_two = sub_klass.new
+          expect do
+            klass.any_instance.should_receive(:existing_method)
+            instance_one.existing_method
+            instance_two.existing_method
+          end.to raise_error(RSpec::Mocks::MockExpectationError, "The message 'existing_method' was received by #{instance_two.inspect} but has already been received by #{instance_one.inspect}")
+        end
+      end
     end
   end
 end
