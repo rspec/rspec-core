@@ -827,15 +827,15 @@ module RSpec
         end
       end
 
-      context "when used with base class" do
+      context "when directed at a method defined on a superclass" do
         let(:sub_klass) { Class.new(klass) }
-    
-        it "should stub method in base class" do
+
+        it "stubs the method correctly" do
           klass.any_instance.stub(:existing_method).and_return("foo")
           sub_klass.new.existing_method.should == "foo"
         end
-    
-        it "fails if the method is invoked on a second instance" do
+
+        it "mocks the method correctly" do
           instance_one = sub_klass.new
           instance_two = sub_klass.new
           expect do
