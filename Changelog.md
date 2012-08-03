@@ -4,6 +4,8 @@
 Bug fixes
 
 * Don't modify `dup` on classes that don't support `dup` (David Chelimsky)
+* Fix `any_instance` so that it works properly with methods defined on
+  a superclass. (Daniel Eguzkiza)
 
 ### 2.11.1 / 2012-07-09
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.11.0...v2.11.1)
