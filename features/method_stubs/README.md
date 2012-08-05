@@ -1,12 +1,16 @@
 ### Stub return values
 
+    # create a double
+    obj = double()
+
+    # specify a return value
     obj.stub(:message) { :value }
     obj.stub(:message => :value)
     obj.stub(:message).and_return(:value)
 
-These forms are somewhat interchangeable. The difference is that the block
-contents are evaluated lazily when the `obj` receives the `message` message,
-whereas the others are evaluated as they are read.
+These forms are somewhat interchangeable. The difference is that the
+block contents are evaluated lazily when the `obj` receives the
+`message` message, whereas the others are evaluated as they are read.
 
 ### Fake implementation
 
@@ -20,7 +24,7 @@ whereas the others are evaluated as they are read.
     obj.stub(:message).and_raise("this error")
     obj.stub(:message).and_throw(:this_symbol)
 
-You can also use the block format, for consistency with other stubs:
+You can also use the block format:
 
     obj.stub(:message) { raise "this error" }
     obj.stub(:message) { throw :this_symbol }
