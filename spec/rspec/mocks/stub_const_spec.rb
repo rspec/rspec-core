@@ -177,6 +177,10 @@ module RSpec
           it_behaves_like "loaded constant stubbing", "TestClass::Nested"
         end
 
+        context 'for an unloaded constant with nested name that matches a top-level constant' do
+          it_behaves_like "unloaded constant stubbing", "TestClass::Hash"
+        end
+
         context 'for a loaded deeply nested constant' do
           it_behaves_like "loaded constant stubbing", "TestClass::Nested::NestedEvenMore"
         end
