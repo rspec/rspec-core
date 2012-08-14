@@ -1,5 +1,30 @@
 require 'spec_helper'
 
+
+# Works fine with it
+describe '1' do
+  it { subject.to_s.should == '1' }
+end
+
+# Works fine with to_i
+describe 1.to_i do
+  its(:to_i) { should == 1 }
+end
+describe '1'.to_i do
+  its(:to_i) { should == 1 }
+end
+
+# But with its and to_s...
+describe 1 do
+  # fails with got: "to_s"
+  its(:to_s) { should == 1 }
+end
+describe '1' do
+  # fails with got: "to_s"
+  its(:to_s) { should == '1' }
+end
+
+
 module RSpec::Core
 
   describe Subject do
