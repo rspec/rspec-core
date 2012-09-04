@@ -820,9 +820,13 @@ module RSpec::Core
       let(:reporter) { double("reporter").as_null_object }
 
       context "with fail_fast? => true" do
-        it "does not run examples after the failed example" do
+        let(:group) do
           group = RSpec::Core::ExampleGroup.describe
           group.stub(:fail_fast?) { true }
+          group
+        end
+
+        it "does not run examples after the failed example" do
           examples_run = []
           group.example('example 1') { examples_run << self }
           group.example('example 2') { examples_run << self; fail; }
@@ -831,6 +835,13 @@ module RSpec::Core
           group.run
 
           examples_run.length.should eq(2)
+        end
+
+        it "sets RSpec.wants_to_quit flag if encountering an exception in before(:all)" do
+          group.before(:all) { raise "error in before all" }
+          example = group.example("equality") { 1.should eq(2) }
+          group.run.should be_false
+          RSpec.wants_to_quit.should be_true
         end
       end
 
