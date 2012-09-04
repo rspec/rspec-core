@@ -40,6 +40,43 @@ Feature: fail fast
     When I run `rspec spec/example_spec.rb -fd`
     Then the output should contain "1 example, 1 failure"
 
+  Scenario: fail_fast with an Error raised in a before block (only runs the first spec file)
+    Given a file named "spec/example_1_spec.rb" with:
+      """
+      require "spec_helper"
+      describe "something" do
+        before(:all) { raise RuntimeError }
+        it "passes" do
+        end
+
+        it "fails" do
+          fail
+        end
+      end
+
+      describe "something else" do
+        it "fails" do
+          fail
+        end
+      end
+      """
+    And a file named "spec/example_2_spec.rb" with:
+      """
+      require "spec_helper"
+      describe "something" do
+        it "passes" do
+        end
+      end
+
+      describe "something else" do
+        it "fails" do
+          fail
+        end
+      end
+      """
+    When I run `rspec spec -fd`
+    Then the output should contain "2 examples, 2 failures"
+
   Scenario: fail_fast with multiple files, second example failing (only runs the first two examples)
     Given a file named "spec/example_1_spec.rb" with:
       """
