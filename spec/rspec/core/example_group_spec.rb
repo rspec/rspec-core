@@ -385,6 +385,15 @@ module RSpec::Core
         order.should eq([1,2,3])
       end
 
+      it "does not set RSpec.wants_to_quit in case of an error in before all (without fail_fast?)" do
+        group = ExampleGroup.describe
+        group.before(:all) { raise "error in before all" }
+        group.example("example") {}
+
+        group.run
+        RSpec.wants_to_quit.should be_false
+      end
+
       it "runs the before eachs in order" do
         group = ExampleGroup.describe
         order = []
