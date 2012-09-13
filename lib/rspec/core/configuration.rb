@@ -345,7 +345,6 @@ MESSAGE
         end
       end
 
-
       # Returns the configured expectation framework adapter module(s)
       def expectation_frameworks
         expect_with :rspec if @expectation_frameworks.empty?
