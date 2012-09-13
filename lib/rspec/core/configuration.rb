@@ -303,24 +303,7 @@ MESSAGE
       #       mod_config.custom_setting = true
       #     end
       def mock_with(framework)
-        framework_module = case framework
-        when Module
-          framework
-        when String, Symbol
-          require case framework.to_s
-                  when /rspec/i
-                    'rspec/core/mocking/with_rspec'
-                  when /mocha/i
-                    'rspec/core/mocking/with_mocha'
-                  when /rr/i
-                    'rspec/core/mocking/with_rr'
-                  when /flexmock/i
-                    'rspec/core/mocking/with_flexmock'
-                  else
-                    'rspec/core/mocking/with_absolutely_nothing'
-                  end
-          RSpec::Core::MockFrameworkAdapter
-        end
+        framework_module = get_framework_module framework
 
         new_name, old_name = [framework_module, @mock_framework].map do |mod|
           mod.respond_to?(:framework_name) ?  mod.framework_name : :unnamed
@@ -337,6 +320,31 @@ MESSAGE
 
         @mock_framework = framework_module
       end
+
+      def get_framework_module(framework)
+        if framework.is_a? String or framework.is_a? Symbol
+          require framework_path framework
+          RSpec::Core::MockFrameworkAdapter
+        elsif framework.is_a? Module
+          framework
+        end
+      end
+
+      def framework_path(framework)
+        case framework.to_s
+        when /rspec/i
+          'rspec/core/mocking/with_rspec'
+        when /mocha/i
+          'rspec/core/mocking/with_mocha'
+        when /rr/i
+          'rspec/core/mocking/with_rr'
+        when /flexmock/i
+          'rspec/core/mocking/with_flexmock'
+        else
+          'rspec/core/mocking/with_absolutely_nothing'
+        end
+      end
+
 
       # Returns the configured expectation framework adapter module(s)
       def expectation_frameworks
