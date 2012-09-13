@@ -323,14 +323,14 @@ MESSAGE
 
       def get_framework_module(framework)
         if framework.is_a? String or framework.is_a? Symbol
-          require framework_path framework
+          require framework_require_path framework
           RSpec::Core::MockFrameworkAdapter
         elsif framework.is_a? Module
           framework
         end
       end
 
-      def framework_path(framework)
+      def framework_require_path(framework)
         case framework.to_s
         when /rspec/i
           'rspec/core/mocking/with_rspec'
