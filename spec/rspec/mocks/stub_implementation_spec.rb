@@ -56,6 +56,19 @@ module RSpec
         obj.unstub(:foo)
         obj.foo(3).should eq :three
       end
+
+      it "restores the correct implementations when stubbed and unstubbed on a parent and child class" do
+        parent = Class.new
+        child  = Class.new(parent)
+
+        parent.stub(:new)
+        child.stub(:new)
+        parent.unstub(:new)
+        child.unstub(:new)
+
+        parent.new.should be_an_instance_of parent
+        child.new.should be_an_instance_of child
+      end
     
       it "raises a MockExpectationError if the method has not been stubbed" do
         obj = Object.new

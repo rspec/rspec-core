@@ -3,6 +3,7 @@
 # object in the system.
 
 require 'rspec/mocks/extensions/instance_exec'
+require 'rspec/mocks/stashed_instance_method'
 require 'rspec/mocks/method_double'
 require 'rspec/mocks/methods'
 require 'rspec/mocks/argument_matchers'

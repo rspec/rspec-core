@@ -10,17 +10,22 @@ module RSpec
       # we need to conditionally define methods to ignore the top-level/inherited
       # constants.
       #
-      # Given `class A; end`:
+      # Given:
+      #   class A; B = 1; end
+      #   class C < A; end
       #
       # On 1.8:
-      #   - A.const_get("Hash") # => ::Hash
-      #   - A.const_defined?("Hash") # => false
-      #   - Neither method accepts the extra `inherit` argument
+      #   - C.const_get("Hash") # => ::Hash
+      #   - C.const_defined?("Hash") # => false
+      #   - C.constants # => ["A"]
+      #   - None of these methods accept the extra `inherit` argument
       # On 1.9:
-      #   - A.const_get("Hash") # => ::Hash
-      #   - A.const_defined?("Hash") # => true
-      #   - A.const_get("Hash", false) # => raises NameError
-      #   - A.const_defined?("Hash", false) # => false
+      #   - C.const_get("Hash") # => ::Hash
+      #   - C.const_defined?("Hash") # => true
+      #   - C.const_get("Hash", false) # => raises NameError
+      #   - C.const_defined?("Hash", false) # => false
+      #   - C.constants # => [:A]
+      #   - C.constants(false) #=> []
       if Module.method(:const_defined?).arity == 1
         def const_defined_on?(mod, const_name)
           mod.const_defined?(const_name)
@@ -33,6 +38,10 @@ module RSpec
 
           raise NameError, "uninitialized constant #{mod.name}::#{const_name}"
         end
+
+        def constants_defined_on(mod)
+          mod.constants.select { |c| const_defined_on?(mod, c) }
+        end
       else
         def const_defined_on?(mod, const_name)
           mod.const_defined?(const_name, false)
@@ -40,6 +49,10 @@ module RSpec
 
         def get_const_defined_on(mod, const_name)
           mod.const_get(const_name, false)
+        end
+
+        def constants_defined_on(mod)
+          mod.constants(false)
         end
       end
 
@@ -217,10 +230,10 @@ module RSpec
 
           if @transfer_nested_constants.is_a?(Array)
             @transfer_nested_constants = @transfer_nested_constants.map(&:to_s) if RUBY_VERSION == '1.8.7'
-            undefined_constants = @transfer_nested_constants - @original_value.constants
+            undefined_constants = @transfer_nested_constants - constants_defined_on(@original_value)
 
             if undefined_constants.any?
-              available_constants = @original_value.constants - @transfer_nested_constants
+              available_constants = constants_defined_on(@original_value) - @transfer_nested_constants
               raise ArgumentError,
                 "Cannot transfer nested constant(s) #{undefined_constants.join(' and ')} " +
                 "for #{@full_constant_name} since they are not defined. Did you mean " +
@@ -229,7 +242,7 @@ module RSpec
 
             @transfer_nested_constants
           else
-            @original_value.constants
+            constants_defined_on(@original_value)
           end
         end
       end

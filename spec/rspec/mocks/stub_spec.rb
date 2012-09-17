@@ -112,6 +112,15 @@ module RSpec
           @class.rspec_reset
           @class.send(:existing_private_class_method).should eq(:original_value)
         end
+
+        it "does not remove existing methods that have been stubbed twice" do
+          @instance.stub(:existing_instance_method)
+          @instance.stub(:existing_instance_method)
+
+          @instance.rspec_reset
+
+          @instance.existing_instance_method.should eq(:original_value)
+        end
       end
 
       it "returns values in order to consecutive calls" do

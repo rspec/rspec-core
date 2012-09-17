@@ -12,6 +12,10 @@ class TestClass
   end
 end
 
+class TestSubClass < TestClass
+  P = :p
+end
+
 module RSpec
   module Mocks
     describe "Constant Stubbing" do
@@ -119,6 +123,24 @@ module RSpec
             stub::M.should eq(:m)
             stub::N.should eq(:n)
             stub::Nested.should be(tc_nested)
+          end
+
+          it 'does not transfer nested constants that are inherited from a superclass' do
+            stub = Module.new
+            stub_const("TestSubClass", stub, :transfer_nested_constants => true)
+            stub::P.should eq(:p)
+            defined?(stub::M).should be_false
+            defined?(stub::N).should be_false
+          end
+
+          it 'raises an error when asked to transfer a nested inherited constant' do
+            original_tsc = TestSubClass
+
+            expect {
+              stub_const("TestSubClass", Module.new, :transfer_nested_constants => [:M])
+            }.to raise_error(ArgumentError)
+
+            TestSubClass.should be(original_tsc)
           end
 
           it 'allows nested constants to be selectively transferred to a stub module' do

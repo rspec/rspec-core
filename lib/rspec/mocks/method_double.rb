@@ -10,7 +10,9 @@ module RSpec
         @method_name = method_name
         @object = object
         @proxy = proxy
-        @stashed = false
+
+        @stashed_method = StashedInstanceMethod.new(object_singleton_class, @method_name)
+        @method_is_proxied = false
         store(:expectations, [])
         store(:stubs, [])
       end
@@ -44,72 +46,38 @@ module RSpec
       end
 
       # @private
-      def obfuscate(method_name)
-        "obfuscated_by_rspec_mocks__#{method_name}"
-      end
-
-      # @private
-      def stashed_method_name
-        obfuscate(method_name)
-      end
-
-      # @private
-      def object_responds_to?(method_name)
-        if @proxy.already_proxied_respond_to?
-          @object.__send__(obfuscate(:respond_to?), method_name)
-        elsif method_name == :respond_to?
-          @proxy.already_proxied_respond_to
-        else
-          @object.respond_to?(method_name, true)
-        end
-      end
-
-      # @private
       def configure_method
         RSpec::Mocks::space.add(@object) if RSpec::Mocks::space
         warn_if_nil_class
-        unless @stashed
-          stash_original_method
-          define_proxy_method
-        end
-      end
-
-      # @private
-      def stash_original_method
-        stashed = stashed_method_name
-        orig = @method_name
-        object_singleton_class.class_eval do
-          alias_method(stashed, orig) if method_defined?(orig) || private_method_defined?(orig)
-        end
-        @stashed = true
+        @stashed_method.stash unless @method_is_proxied
+        define_proxy_method
       end
 
       # @private
       def define_proxy_method
-        method_name = @method_name
-        visibility_for_method = "#{visibility} :#{method_name}"
-        object_singleton_class.class_eval(<<-EOF, __FILE__, __LINE__)
-          def #{method_name}(*args, &block)
-            __mock_proxy.message_received :#{method_name}, *args, &block
+        return if @method_is_proxied
+
+        object_singleton_class.class_eval <<-EOF, __FILE__, __LINE__ + 1
+          def #{@method_name}(*args, &block)
+            __mock_proxy.message_received :#{@method_name}, *args, &block
           end
-        #{visibility_for_method}
+          #{visibility_for_method}
         EOF
+        @method_is_proxied = true
+      end
+
+      # @private
+      def visibility_for_method
+        "#{visibility} :#{method_name}"
       end
 
       # @private
       def restore_original_method
-        if @stashed
-          method_name = @method_name
-          stashed_method_name = self.stashed_method_name
-          object_singleton_class.instance_eval do
-            remove_method method_name
-            if method_defined?(stashed_method_name) || private_method_defined?(stashed_method_name)
-              alias_method method_name, stashed_method_name
-              remove_method stashed_method_name
-            end
-          end
-          @stashed = false
-        end
+        return unless @method_is_proxied
+
+        object_singleton_class.__send__(:remove_method, @method_name)
+        @stashed_method.restore
+        @method_is_proxied = false
       end
 
       # @private

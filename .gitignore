@@ -13,3 +13,4 @@ Gemfile.lock
 .yardoc
 bin
 Gemfile-custom
+bundle

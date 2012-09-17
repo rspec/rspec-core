@@ -59,7 +59,7 @@ module RSpec
         end
 
         it 'serializes to yaml the same with and without stubbing, using YAML.dump' do
-          expect { set_stub }.to_not change { YAML.dump(serializable_object) }
+          expect { set_stub }.to_not change { ::YAML.dump(serializable_object) }
         end
       end
 
@@ -73,12 +73,12 @@ module RSpec
 
         if compiled_with_psych
           context 'using Syck as the YAML engine' do
-            before(:each) { YAML::ENGINE.yamler = 'syck' }
+            before(:each) { ::YAML::ENGINE.yamler = 'syck' }
             it_behaves_like 'normal YAML serialization'
           end
 
           context 'using Psych as the YAML engine' do
-            before(:each) { YAML::ENGINE.yamler = 'psych' }
+            before(:each) { ::YAML::ENGINE.yamler = 'psych' }
             it_behaves_like 'normal YAML serialization'
           end
         else

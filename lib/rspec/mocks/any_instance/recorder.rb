@@ -175,7 +175,7 @@ module RSpec
           backup_method!(method_name)
           @klass.class_eval(<<-EOM, __FILE__, __LINE__)
             def #{method_name}(*args, &blk)
-              klass = self.method(:#{method_name}).owner
+              klass = ::Object.instance_method(:method).bind(self).call(:#{method_name}).owner
               klass.__recorder.playback!(self, :#{method_name})
               self.__send__(:#{method_name}, *args, &blk)
             end
@@ -187,7 +187,7 @@ module RSpec
           @klass.class_eval(<<-EOM, __FILE__, __LINE__)
             def #{method_name}(*args, &blk)
               method_name = :#{method_name}
-              klass = self.method(:#{method_name}).owner
+              klass = ::Object.instance_method(:method).bind(self).call(:#{method_name}).owner
               invoked_instance = klass.__recorder.instance_that_received(method_name)
               raise RSpec::Mocks::MockExpectationError, "The message '#{method_name}' was received by \#{self.inspect} but has already been received by \#{invoked_instance}"
             end

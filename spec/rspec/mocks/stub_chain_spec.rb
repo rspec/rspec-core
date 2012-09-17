@@ -144,6 +144,11 @@ module RSpec
         object.msg1.msg2.msg3.msg4.should equal(:first)
         object.msg1.msg2.msg3.msg5.should equal(:second)
       end
+
+      it "handles private instance methods (like Object#select) in the middle of a chain" do
+        object.stub_chain(:msg1, :select, :msg3 => 'answer')
+        expect(object.msg1.select.msg3).to eq 'answer'
+      end
     end
   end
 end
