@@ -120,14 +120,15 @@ module RSpec
         begin
           dot_rspec   = File.join(File.expand_path("~"), ".rspec")
           dot_rspecrc = File.join(File.expand_path("~"), ".rspecrc")
-          existence   = [dot_rspec, dot_rspecrc].map{|file| File.exists? file}
 
-          #Throw an error if both `.rspec` and `.rspecrc` exist
-          raise "Both ~/.rspec and ~/.rspecrc exist. RSpec supports either file for global options, but does not both at the same time.  Please delete one." if existence.all?
+          existing_dot_files = [dot_rspec, dot_rspecrc].select{|file| File.exists? file}
 
-          #Return whichever one exists
-          return dot_rspec   if existence[0]
-          return dot_rspecrc if existence[1]
+          return existing_dot_files.first if existing_dot_files.length <= 1
+
+          raise "Both ~/.rspec and ~/.rspecrc exist. \
+RSpec supports either file for global \
+options, but does not both at the same time. \
+Please delete one."
         rescue ArgumentError
           warn "Unable to find ~/.rspec because the HOME environment variable is not set"
           nil
