@@ -118,7 +118,17 @@ module RSpec
 
       def global_options_file
         begin
-          File.join(File.expand_path("~"), ".rspec")
+          dot_rspec   = File.join(File.expand_path("~"), ".rspec")
+          dot_rspecrc = File.join(File.expand_path("~"), ".rspecrc")
+
+          existing_dot_files = [dot_rspec, dot_rspecrc].select{|file| File.exists? file}
+
+          return existing_dot_files.first if existing_dot_files.length <= 1
+
+          raise "Both ~/.rspec and ~/.rspecrc exist. \
+RSpec supports either file for global \
+options, but does not both at the same time. \
+Please delete one."
         rescue ArgumentError
           warn "Unable to find ~/.rspec because the HOME environment variable is not set"
           nil

@@ -360,6 +360,18 @@ describe RSpec::Core::ConfigurationOptions, :fakefs do
       parse_options[:formatters].should eq([['local']])
     end
 
+    it "finds the ~/.rspecrc file" do
+      File.open("~/.rspecrc", "w") {|f| f << "--color"}
+      options = parse_options()
+      options[:color].should be_true
+    end
+
+    it "errors when both ~/.rspec and ~/.rspecrc exist" do
+      File.open("~/.rspecrc", "w") {|f| f << "--color"}
+      File.open("~/.rspec", "w") {|f| f << "--color"}
+      lambda {parse_options()}.should raise_error RuntimeError
+    end
+
     context "with custom options file" do
       it "ignores local and global options files" do
         File.open("./.rspec", "w") {|f| f << "--format local"}
