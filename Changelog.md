@@ -9,6 +9,8 @@ Bug fixes
   (Andy Lindeman)
 * Methods stubbed with `any_instance` are unstubbed after the test finishes.
   (Andy Lindeman)
+* Fix confusing error message when calling a mocked class method an
+  extra time with the wrong arguments (Myron Marston).
 
 ### 2.11.2 / 2012-08-11
 [full changelog](http://github.com/rspec/rspec-mocks/compare/v2.11.1...v2.11.2)

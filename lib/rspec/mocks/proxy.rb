@@ -175,7 +175,11 @@ module RSpec
       end
 
       def find_almost_matching_expectation(method_name, *args)
-        method_double[method_name].expectations.find {|expectation| expectation.matches_name_but_not_args(method_name, *args) && !expectation.called_max_times?}
+        method_double[method_name].expectations.find do |expectation|
+          expectation.matches_name_but_not_args(method_name, *args) && !expectation.called_max_times?
+        end || method_double[method_name].expectations.find do |expectation|
+          expectation.matches_name_but_not_args(method_name, *args)
+        end
       end
 
       def find_matching_method_stub(method_name, *args)

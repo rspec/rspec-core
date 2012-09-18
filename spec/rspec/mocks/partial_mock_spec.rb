@@ -93,6 +93,21 @@ module RSpec
           %Q|(nil).foobar(any args)\n    expected: 1 time\n    received: 0 times|
         )
       end
+
+      it "includes the class name in the error when mocking a class method that is called an extra time with the wrong args" do
+        klass = Class.new do
+          def self.to_s
+            "MyClass"
+          end
+        end
+
+        klass.should_receive(:bar).with(1)
+        klass.bar(1)
+
+        expect {
+          klass.bar(2)
+        }.to raise_error(RSpec::Mocks::MockExpectationError, /MyClass/)
+      end
     end
     
     describe "Partially mocking an object that defines ==, after another mock has been defined" do
