@@ -123,7 +123,7 @@ module RSpec
           existence   = [dot_rspec, dot_rspecrc].map{|file| File.exists? file}
 
           #Throw an error if both `.rspec` and `.rspecrc` exist
-          raise "Both ~/.rspec and ~/.rspecrc exist!" if existence.all?
+          raise "Both ~/.rspec and ~/.rspecrc exist. RSpec supports either file for global options, but does not both at the same time.  Please delete one." if existence.all?
 
           #Return whichever one exists
           return dot_rspec   if existence[0]
