@@ -1,5 +1,5 @@
-### dev
-[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.11.2...master)
+### 2.11.3 / 2012-09-19
+[full changelog](http://github.com/rspec/rspec-mocks/compare/v2.11.2...v2.11.3)
 
 Bug fixes
 
