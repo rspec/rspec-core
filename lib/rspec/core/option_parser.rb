@@ -18,7 +18,13 @@ module RSpec::Core
         args[args.index("--formatter")] = "--format"
       end
       options = args.delete('--tty') ? {:tty => true} : {}
-      parser(options).parse!(args)
+      begin
+        parser(options).parse!(args)
+      rescue OptionParser::InvalidOption => e
+        puts e.message
+        puts "please use --help for documentation on the options available"
+        exit
+      end
       options
     end
 
