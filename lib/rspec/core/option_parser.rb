@@ -23,7 +23,7 @@ module RSpec::Core
       rescue OptionParser::InvalidOption => e
         puts e.message
         puts "please use --help for documentation on the options available"
-        exit
+        exit(false) #exit with error
       end
       options
     end
