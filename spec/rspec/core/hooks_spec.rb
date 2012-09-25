@@ -6,6 +6,25 @@ module RSpec::Core
       include Hooks
     end
 
+    describe "before(:all)" do
+      it "should store state after a before(:all) call raises" do
+        group = ExampleGroup.describe do
+          before(:all) do
+            @state = "state"
+            raise "fail"
+          end
+
+          it "runs a spec" do
+            1.should == 2
+          end
+        end
+
+        expect {ExampleGroup.run_before_all_hooks(group)}.to raise_error
+        group.instance_variable_get("@state").should == "state"
+
+      end
+    end
+
     [:before, :after, :around].each do |type|
       [:each, :all].each do |scope|
         next if type == :around && scope == :all
