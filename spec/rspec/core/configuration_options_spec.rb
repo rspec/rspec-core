@@ -182,6 +182,10 @@ describe RSpec::Core::ConfigurationOptions, :fakefs do
       parse_options('-l','3', '-l', '6').should include(:line_numbers => ['3', '6'])
       parse_options('--line_number','3', '--line_number', '6').should include(:line_numbers => ['3', '6'])
     end
+
+    it "accepts --line-number" do
+      parse_options("--line-number", "3").should include(:line_numbers => ['3'])
+    end
   end
 
   describe "--example" do
@@ -314,6 +318,10 @@ describe RSpec::Core::ConfigurationOptions, :fakefs do
       config.should_receive(:files_or_directories_to_run=).ordered
       opts = config_options_object("--default_path", "foo")
       opts.configure(config)
+    end
+
+    it "accepts --default-path" do
+      parse_options("--default-path", "foo").should include(:default_path => "foo")
     end
   end
 
