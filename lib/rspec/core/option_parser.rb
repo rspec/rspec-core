@@ -17,7 +17,11 @@ module RSpec::Core
       convert_deprecated_args(args)
 
       options = args.delete('--tty') ? {:tty => true} : {}
-      parser(options).parse!(args)
+      begin
+        parser(options).parse!(args)
+      rescue OptionParser::InvalidOption => e
+        abort(e.message + "\n" + "please use --help for documentation on the options available")
+      end
       options
     end
 
