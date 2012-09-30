@@ -49,7 +49,6 @@ module RSpec
       # there is one, otherwise returns a message including the location of the
       # example.
       def description
-        metadata[:description].to_s.empty? ? "example at #{location}" : metadata[:description]
         if metadata[:description].to_s.empty?
           "example at #{location}"
         else
