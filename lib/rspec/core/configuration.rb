@@ -140,9 +140,6 @@ MESSAGE
       # without reporting it as a failure (default: false).
       add_setting :show_failures_in_pending_blocks
 
-      # Replaces consecutive whitespace with one space each in the doc formatter.
-      add_setting :squish_descriptions
-
       # Convert symbols to hashes with the symbol as a key with a value of
       # `true` (default: false).
       #

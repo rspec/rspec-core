@@ -49,18 +49,7 @@ module RSpec
       # there is one, otherwise returns a message including the location of the
       # example.
       def description
-        if metadata[:description].to_s.empty?
-          "example at #{location}"
-        else
-          description = metadata[:description]
-          
-          if RSpec.configuration.squish_descriptions?
-            description.strip!
-            description.gsub!(/\s+/, ' ')
-          end
-      
-          description
-        end
+        metadata[:description].to_s.empty? ? "example at #{location}" : metadata[:description]
       end
 
       # @attr_reader
