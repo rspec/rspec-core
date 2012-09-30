@@ -50,6 +50,18 @@ module RSpec
       # example.
       def description
         metadata[:description].to_s.empty? ? "example at #{location}" : metadata[:description]
+        if metadata[:description].to_s.empty?
+          "example at #{location}"
+        else
+          description = metadata[:description]
+          
+          if RSpec.configuration.squish_descriptions?
+            description.strip!
+            description.gsub!(/\s+/, ' ')
+          end
+      
+          description
+        end
       end
 
       # @attr_reader

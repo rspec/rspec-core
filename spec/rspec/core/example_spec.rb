@@ -45,6 +45,29 @@ describe RSpec::Core::Example, :parent_metadata => 'sample' do
     end
   end
 
+  describe "when there is an explicit description with consecutive whitespace" do
+    context "when config.squish_descriptions? is true" do
+      it "replaces consecutive whitespace with a single space" do
+        RSpec.configuration.stub(:squish_descriptions?).and_return(true)
+        example_group.example(' whitespace  
+                              example ') { }
+        example_group.run
+        example_group.examples.first.description.should eq("whitespace example")
+      end
+    end
+  
+    context "when config.squish_descriptions? is false" do
+      it "retains all whitespace" do
+        RSpec.configuration.stub(:squish_descriptions?).and_return(false)
+        example_group.example(' whitespace  
+                              example ') { }
+        example_group.run
+        example_group.examples.first.description.should eq(' whitespace  
+                              example ')
+      end
+    end
+  end
+
   describe "when there is no explicit description" do
     def expect_with(*frameworks)
       RSpec.configuration.stub(:expecting_with_rspec?).and_return(frameworks.include?(:rspec))
