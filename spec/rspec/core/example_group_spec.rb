@@ -19,6 +19,24 @@ module RSpec::Core
       end
     end
 
+    context "when RSpec.configuration.format_docstrings is set to a block" do
+      it "formats the description with that block" do
+        RSpec.configuration.format_docstrings { |s| s.upcase }
+        group = ExampleGroup.describe(' an example ')
+        group.description.should eq(' AN EXAMPLE ')
+      end
+    end
+
+    context "when RSpec.configuration.format_docstrings is set to nil or false" do
+      it "doesn't apply formatting to the description" do
+        [nil, false].each do |value|
+          RSpec.configuration.format_docstrings value
+          group = ExampleGroup.describe(' an Example ')
+          group.description.should eq(' an Example ')
+        end
+      end
+    end
+
     context 'when RSpec.configuration.treat_symbols_as_metadata_keys_with_true_values is set to false' do
       before(:each) do
         RSpec.configure { |c| c.treat_symbols_as_metadata_keys_with_true_values = false }

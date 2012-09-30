@@ -45,6 +45,28 @@ describe RSpec::Core::Example, :parent_metadata => 'sample' do
     end
   end
 
+  describe "when there is an explicit description" do
+    context "when RSpec.configuration.format_docstrings is set to a block" do
+      it "formats the description using the block" do
+        RSpec.configuration.format_docstrings { |s| s.strip }
+        example = example_group.example(' an example with whitespace ') {}
+        example_group.run
+        example.description.should eql('an example with whitespace')
+      end
+    end
+
+    context "when RSpec.configuration.format_docstrings is set to nil or false" do
+      it "applies no formatting to the description" do
+        [nil, false].each do |value|
+          RSpec.configuration.format_docstrings value
+          example = example_group.example(' an example with whitespace ') {}
+          example_group.run
+          example.description.should eql(' an example with whitespace ')
+        end
+      end
+    end
+  end
+
   describe "when there is no explicit description" do
     def expect_with(*frameworks)
       RSpec.configuration.stub(:expecting_with_rspec?).and_return(frameworks.include?(:rspec))

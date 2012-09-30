@@ -49,7 +49,17 @@ module RSpec
       # there is one, otherwise returns a message including the location of the
       # example.
       def description
-        metadata[:description].to_s.empty? ? "example at #{location}" : metadata[:description]
+        if metadata[:description].to_s.empty?
+          "example at #{location}"
+        else
+          description = metadata[:description]
+          
+          if format_block = RSpec.configuration.format_docstrings_block
+            description = format_block.call(description)
+          end
+
+          description
+        end
       end
 
       # @attr_reader
