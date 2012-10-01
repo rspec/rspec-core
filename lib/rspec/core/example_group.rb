@@ -46,11 +46,7 @@ module RSpec
 
         def description
           description = metadata[:example_group][:description]
-          if format_block = RSpec.configuration.format_docstrings_block
-            description = format_block.call(description)
-          end
-
-          description
+          RSpec.configuration.format_docstrings_block.call(description)
         end
 
         delegate_to_metadata :described_class, :file_path

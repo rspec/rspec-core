@@ -858,11 +858,12 @@ EOM
         @group_ordering_block ||= DEFAULT_ORDERING
       end
 
+      # @private
+      DEFAULT_FORMATTER = lambda { |string| string }
       # Formats the docstring output using the block provided.
       # 
       # @example
-      #   # This will strip the descriptions of both examples and example group
-      #   # descriptions:
+      #   # This will strip the descriptions of both examples and example groups.
       #   RSpec.configure do |config|
       #     config.format_docstrings { |s| s.strip }
       #   end
@@ -873,10 +874,13 @@ EOM
       #     config.format_docstrings false
       #   end
       def format_docstrings(boolean = nil, &block)
-        @format_docstrings_block = block_given? ? block : boolean
+        @format_docstrings_block = block_given? ? block : DEFAULT_FORMATTER
       end
 
-      attr_reader :format_docstrings_block
+      # @private
+      def format_docstrings_block
+        @format_docstrings_block ||= DEFAULT_FORMATTER
+      end
 
       # Sets a strategy by which to order groups and examples.
       #

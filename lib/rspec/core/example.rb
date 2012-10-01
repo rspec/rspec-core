@@ -52,13 +52,7 @@ module RSpec
         if metadata[:description].to_s.empty?
           "example at #{location}"
         else
-          description = metadata[:description]
-          
-          if format_block = RSpec.configuration.format_docstrings_block
-            description = format_block.call(description)
-          end
-
-          description
+          RSpec.configuration.format_docstrings_block.call(metadata[:description])
         end
       end
 
