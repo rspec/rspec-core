@@ -54,17 +54,6 @@ describe RSpec::Core::Example, :parent_metadata => 'sample' do
         example.description.should eql('an example with whitespace')
       end
     end
-
-    context "when RSpec.configuration.format_docstrings is set to nil or false" do
-      it "applies no formatting to the description" do
-        [nil, false].each do |value|
-          RSpec.configuration.format_docstrings value
-          example = example_group.example(' an example with whitespace ') {}
-          example_group.run
-          example.description.should eql(' an example with whitespace ')
-        end
-      end
-    end
   end
 
   describe "when there is no explicit description" do
@@ -77,6 +66,16 @@ describe RSpec::Core::Example, :parent_metadata => 'sample' do
             raise "Expected #{val} to be true" unless val
           end
         end
+      end
+    end
+
+    context "when RSpec.configuration.format_docstrings is set to a block" do
+      it "formats the description using the block" do
+        RSpec.configuration.format_docstrings { |s| s.upcase }
+        example_group.example { 5.should eq(5) }
+        example_group.run
+        pattern = /EXAMPLE AT #{relative_path(__FILE__).upcase}:#{__LINE__ - 2}/
+        example_group.examples.first.description.should match(pattern)
       end
     end
 

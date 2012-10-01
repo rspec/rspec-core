@@ -873,7 +873,7 @@ EOM
       #   RSpec.configure do |config|
       #     config.format_docstrings false
       #   end
-      def format_docstrings(boolean = nil, &block)
+      def format_docstrings(&block)
         @format_docstrings_block = block_given? ? block : DEFAULT_FORMATTER
       end
 
