@@ -860,18 +860,13 @@ EOM
 
       # @private
       DEFAULT_FORMATTER = lambda { |string| string }
+      
       # Formats the docstring output using the block provided.
       # 
       # @example
       #   # This will strip the descriptions of both examples and example groups.
       #   RSpec.configure do |config|
       #     config.format_docstrings { |s| s.strip }
-      #   end
-      # 
-      # If you want to override configuration to turn off formatting:
-      # @example
-      #   RSpec.configure do |config|
-      #     config.format_docstrings false
       #   end
       def format_docstrings(&block)
         @format_docstrings_block = block_given? ? block : DEFAULT_FORMATTER
