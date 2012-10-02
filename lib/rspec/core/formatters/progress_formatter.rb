@@ -14,6 +14,12 @@ module RSpec
           super(example)
           output.print yellow('*')
         end
+        
+        # 09/14/2012 rgunter
+        def example_manual(example)
+          super(example)
+          output.print blue('*')
+        end
 
         def example_failed(example)
           super(example)

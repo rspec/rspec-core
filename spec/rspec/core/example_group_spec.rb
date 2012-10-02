@@ -683,6 +683,26 @@ module RSpec::Core
         end
       end
     end
+    
+    # 09/14/2012 rgunter
+    %w[manual mit xspecify xexample].each do |method_name|
+      describe "::#{method_name}" do
+        before do
+          @group = ExampleGroup.describe
+          @group.send(method_name, "is manual") { }
+        end
+
+        it "generates a manual example" do
+          @group.run
+          @group.examples.first.should be_manual
+        end
+
+        it "sets the manual message", :if => method_name == 'manual' do
+          @group.run
+          @group.examples.first.metadata[:execution_result][:manual_message].should eq(RSpec::Core::Manual::NO_REASON_GIVEN)
+        end
+      end
+    end
 
     describe "adding examples" do
 

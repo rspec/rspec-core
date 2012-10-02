@@ -113,6 +113,17 @@ module RSpec
           @printer.flush
         end
 
+        # 09/14/2012 rgunter
+        def example_manual(example)
+          message = example.metadata[:execution_result][:manual_message]
+          @output.puts "    <script type=\"text/javascript\">makeBlue('rspec-header');</script>" unless @header_red
+          @output.puts "    <script type=\"text/javascript\">makeBlue('div_group_#{example_group_number}');</script>" unless @example_group_red
+          @output.puts "    <script type=\"text/javascript\">makeBlue('example_group_#{example_group_number}');</script>" unless @example_group_red
+          move_progress
+          @output.puts "    <dd class=\"example manual_test\"><span class=\"manual_spec_name\">#{h(example.description)} (MANUAL: #{h(message)})</span></dd>"
+          @output.flush
+        end
+
         # Override this method if you wish to output extra HTML for a failed spec. For example, you
         # could output links to images or other files produced during the specs.
         #
@@ -136,6 +147,9 @@ module RSpec
         end
 
         def dump_pending
+        end
+
+        def dump_manual
         end
 
         def dump_summary(duration, example_count, failure_count, pending_count)

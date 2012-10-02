@@ -36,6 +36,7 @@ function moveProgressBar(percentDone) {
 function makeRed(element_id) {
   removeClass(element_id, 'passed');
   removeClass(element_id, 'not_implemented');
+  removeClass(element_id, 'manual_test');
   addClass(element_id,'failed');
 }
 
@@ -44,19 +45,32 @@ function makeYellow(element_id) {
   if (elem.className.indexOf("failed") == -1) {  // class doesn't includes failed
     if (elem.className.indexOf("not_implemented") == -1) { // class doesn't include not_implemented
       removeClass(element_id, 'passed');
+      removeClass(element_id, 'manual_test');
       addClass(element_id,'not_implemented');
     }
   }
 }
 
+function makeBlue(element_id) {
+    var elem = document.getElementById(element_id);
+    if (elem.className.indexOf("failed") == -1) {  // class doesn't includes failed
+        if (elem.className.indexOf("not_implemented") == -1) { // class doesn't include not_implemented
+            removeClass(element_id, 'passed');
+            removeClass(element_id, 'pending');
+            addClass(element_id,'not_implemented');
+        }
+    }
+}
 function apply_filters() {
   var passed_filter = document.getElementById('passed_checkbox').checked;
   var failed_filter = document.getElementById('failed_checkbox').checked;
   var pending_filter = document.getElementById('pending_checkbox').checked;
+  var manual_filter = document.getElementById('manual_checkbox').checked;
 
   assign_display_style("example passed", passed_filter);
   assign_display_style("example failed", failed_filter);
   assign_display_style("example not_implemented", pending_filter);
+  assign_display_style("example manual_test", manual_filter);
 
   assign_display_style_for_group("example_group passed", passed_filter);
   assign_display_style_for_group("example_group not_implemented", pending_filter, pending_filter || passed_filter);
@@ -174,6 +188,12 @@ dd.example.not_implemented {
   background: #FCFB98; color: #131313;
 }
 
+dd.example.manual_test {
+    border-left: 5px solid #FAF834;
+    border-bottom: 1px solid #FAF834;
+    background: #98cbfc; color: #131313;
+}
+
 dd.example.pending_fixed {
   border-left: 5px solid #0000C2;
   border-bottom: 1px solid #0000C2;
@@ -272,6 +292,7 @@ a {
     <input id="passed_checkbox" name="passed_checkbox" type="checkbox" checked onchange="apply_filters()" value="1"> <label for="passed_checkbox">Passed</label>
     <input id="failed_checkbox" name="failed_checkbox" type="checkbox" checked onchange="apply_filters()" value="2"> <label for="failed_checkbox">Failed</label>
     <input id="pending_checkbox" name="pending_checkbox" type="checkbox" checked onchange="apply_filters()" value="3"> <label for="pending_checkbox">Pending</label>
+    <input id="manual_checkbox" name="manual_checkbox" type="checkbox" checked onchange="apply_filters()" value="4"> <label for="manual_checkbox">Manual</label>
   </div>
 
   <div id="summary">
@@ -290,6 +311,7 @@ a {
     <script type="text/javascript">makeYellow('example_group_1');</script>
     <script type="text/javascript">moveProgressBar('14.2');</script>
     <dd class="example not_implemented"><span class="not_implemented_spec_name">is pending (PENDING: Not yet implemented)</span></dd>
+    <dd class="example manual_test"><span class="manual_spec_name">is a manual test (Manual: Manual test)</span></dd>
   </dl>
 </div>
 <div id="div_group_2" class="example_group passed">
@@ -305,6 +327,7 @@ a {
     <script type="text/javascript">makeYellow('example_group_3');</script>
     <script type="text/javascript">moveProgressBar('28.5');</script>
     <dd class="example not_implemented"><span class="not_implemented_spec_name">is pending (PENDING: No reason given)</span></dd>
+    <dd class="example manual_test"><span class="manual_spec_name">is a manual test (Manual: Manual test)</span></dd>
   </dl>
 </div>
 <div id="div_group_4" class="example_group passed">

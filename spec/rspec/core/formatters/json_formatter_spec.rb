@@ -66,6 +66,7 @@ describe RSpec::Core::Formatters::JsonFormatter do
         :example_count => 3,
         :failure_count => 1,
         :pending_count => 1,
+        :manual_count => 0
       },
       :summary_line => "3 examples, 1 failure, 1 pending"
     }
@@ -97,8 +98,8 @@ describe RSpec::Core::Formatters::JsonFormatter do
 
   describe "#dump_summary" do
     it "adds summary info to the output hash" do
-      duration, example_count, failure_count, pending_count = 1.0, 2, 1, 1
-      formatter.dump_summary(duration, example_count, failure_count, pending_count)
+      duration, example_count, failure_count, pending_count = 1.0, 2, 1, 1, 0
+      formatter.dump_summary(duration, example_count, failure_count, pending_count, manual_count)
       summary = formatter.output_hash[:summary]
       %w(duration example_count failure_count pending_count).each do |key|
         summary[key.to_sym].should == eval(key)

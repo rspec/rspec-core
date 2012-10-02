@@ -26,6 +26,7 @@ require_rspec['core/hooks']
 require_rspec['core/subject']
 require_rspec['core/let']
 require_rspec['core/metadata']
+require_rspec['core/manual']
 require_rspec['core/pending']
 
 require_rspec['core/world']

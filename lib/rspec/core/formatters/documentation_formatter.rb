@@ -31,6 +31,12 @@ module RSpec
           super(example)
           output.puts pending_output(example, example.execution_result[:pending_message])
         end
+        
+        # 09/14/2012 rgunter
+        def example_manual(example)
+          super(example)
+          output.puts manual_output(example, example.execution_result[:manual_message])
+        end
 
         def example_failed(example)
           super(example)
@@ -52,6 +58,11 @@ module RSpec
 
         def pending_output(example, message)
           yellow("#{current_indentation}#{example.description.strip} (PENDING: #{message})")
+        end
+        
+        # 09/14/2012 rgunter
+        def manual_output(example, message)
+          blue("#{current_indentation}#{example.description.strip} (MANUAL: #{message})")
         end
 
         def current_indentation

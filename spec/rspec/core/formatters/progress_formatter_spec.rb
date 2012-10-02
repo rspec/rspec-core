@@ -17,7 +17,7 @@ describe RSpec::Core::Formatters::ProgressFormatter do
 
    it "produces standard summary without pending when pending has a 0 count" do
      @formatter.start_dump
-     @formatter.dump_summary(0.00001, 2, 0, 0)
+     @formatter.dump_summary(0.00001, 2, 0, 0, 0)
      @output.string.should =~ /2 examples, 0 failures/i
      @output.string.should_not =~ /0 pending/i
    end

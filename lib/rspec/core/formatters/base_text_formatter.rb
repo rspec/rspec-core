@@ -26,17 +26,19 @@ module RSpec
             red(summary)
           elsif pending_count > 0
             yellow(summary)
+          elsif manual_count > 0
+            blue(summary)
           else
             green(summary)
           end
         end
 
-        def dump_summary(duration, example_count, failure_count, pending_count)
-          super(duration, example_count, failure_count, pending_count)
+        def dump_summary(duration, example_count, failure_count, pending_count, manual_count)
+          super(duration, example_count, failure_count, pending_count, manual_count)
           # Don't print out profiled info if there are failures, it just clutters the output
           dump_profile if profile_examples? && failure_count == 0
           output.puts "\nFinished in #{format_duration(duration)}\n"
-          output.puts colorise_summary(summary_line(example_count, failure_count, pending_count))
+          output.puts colorise_summary(summary_line(example_count, failure_count, pending_count, manual_count))
           dump_commands_to_rerun_failed_examples
         end
 
@@ -69,10 +71,11 @@ module RSpec
           end
         end
 
-        def summary_line(example_count, failure_count, pending_count)
+        def summary_line(example_count, failure_count, pending_count, manual_count)
           summary = pluralize(example_count, "example")
           summary << ", " << pluralize(failure_count, "failure")
           summary << ", #{pending_count} pending" if pending_count > 0
+          summary << ", #{manual_count} manual" if manual_count > 0
           summary
         end
 
@@ -88,6 +91,23 @@ module RSpec
                 && RSpec.configuration.show_failures_in_pending_blocks?
                 dump_failure_info(pending_example)
                 dump_backtrace(pending_example)
+              end
+            end
+          end
+        end
+
+        def dump_manual
+          unless manual_examples.empty?
+            output.puts
+            output.puts "Manual:"
+            manual_examples.each do |manual_example|
+              output.puts blue("  #{manual_example.full_description}")
+              output.puts blue("    # #{manual_example.execution_result[:manual_message]}")
+              output.puts blue("    # #{format_caller(manual_example.location)}")
+              if manual_example.execution_result[:exception] \
+                && RSpec.configuration.show_failures_in_manual_blocks?
+                dump_failure_info(manual_example)
+                dump_backtrace(manual_example)
               end
             end
           end

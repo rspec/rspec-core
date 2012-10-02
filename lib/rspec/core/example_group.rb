@@ -21,6 +21,7 @@ module RSpec
       include Extensions::InstanceEvalWithArgs
       include Subject::ExampleMethods
       include Pending
+      include Manual
       include Let
       include SharedExampleGroup
 
@@ -92,6 +93,15 @@ module RSpec
         # Shortcut to define an example with :pending => 'Temporarily disabled with xspecify'
         define_example_method :xspecify, :pending => 'Temporarily disabled with xspecify'
 
+        # 09/14/2012 rgunter
+        # Shortcut to define an example with :manual => true
+        define_example_method :manual,  :manual => true
+        # Shortcut to define an example with :manual => 'Temporarily disabled with xexample'
+        define_example_method :mexample, :manual => 'Manual test marked by xexample'
+        # Shortcut to define an example with :manual => 'Temporarily disabled with xit'
+        define_example_method :mit,      :manual => 'Manual test marked by xit'
+        # Shortcut to define an example with :manual => 'Temporarily disabled with xspecify'
+        define_example_method :mspecify, :manual => 'Manual test marked by xspecify'
         # Works like `alias_method :name, :example` with the added benefit of
         # assigning default metadata to the generated example.
         #
