@@ -4,7 +4,8 @@ require "rspec/core/version"
 
 Gem::Specification.new do |s|
   s.name        = "rspec-core"
-  s.version     = RSpec::Core::Version::STRING
+  #s.version     = RSpec::Core::Version::STRING
+  s.version     = "2.10.0"
   s.platform    = Gem::Platform::RUBY
   s.license     = "MIT"
   s.authors     = ["Steven Baker", "David Chelimsky", "Chad Humphries"]
