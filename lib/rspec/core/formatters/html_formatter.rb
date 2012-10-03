@@ -152,13 +152,14 @@ module RSpec
         def dump_manual
         end
 
-        def dump_summary(duration, example_count, failure_count, pending_count)
+        def dump_summary(duration, example_count, failure_count, pending_count, manual_count)
           @printer.print_summary(
             dry_run?,
             duration,
             example_count,
             failure_count,
-            pending_count
+            pending_count,
+            manual_count
           )
           @printer.flush
         end

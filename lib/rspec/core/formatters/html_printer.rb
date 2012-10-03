@@ -50,7 +50,7 @@ module RSpec
           @output.puts "    <dd class=\"example not_implemented\"><span class=\"not_implemented_spec_name\">#{h(description)} (PENDING: #{h(pending_message)})</span></dd>"
         end
 
-        def print_summary( was_dry_run, duration, example_count, failure_count, pending_count )
+        def print_summary( was_dry_run, duration, example_count, failure_count, pending_count, manual_count)
           # TODO - kill dry_run?
           if was_dry_run
             totals = "This was a dry-run"
@@ -58,6 +58,7 @@ module RSpec
             totals =  "#{example_count} example#{'s' unless example_count == 1}, "
             totals << "#{failure_count} failure#{'s' unless failure_count == 1}"
             totals << ", #{pending_count} pending" if pending_count > 0
+            totals << ", #{manual_count} manual" if manual_count > 0
           end
 
           formatted_duration = sprintf("%.5f", duration)

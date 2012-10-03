@@ -101,11 +101,11 @@ describe RSpec::Core::Formatters::JsonFormatter do
       duration, example_count, failure_count, pending_count = 1.0, 2, 1, 1, 0
       formatter.dump_summary(duration, example_count, failure_count, pending_count, manual_count)
       summary = formatter.output_hash[:summary]
-      %w(duration example_count failure_count pending_count).each do |key|
+      %w(duration example_count failure_count pending_count manual_count).each do |key|
         summary[key.to_sym].should == eval(key)
       end
       summary_line = formatter.output_hash[:summary_line]
-      summary_line.should == "2 examples, 1 failure, 1 pending"
+      summary_line.should == "2 examples, 1 failure, 1 pending, 0 manual"
     end
   end
 end
