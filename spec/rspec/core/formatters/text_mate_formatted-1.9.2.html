@@ -36,7 +36,7 @@ function moveProgressBar(percentDone) {
 function makeRed(element_id) {
   removeClass(element_id, 'passed');
   removeClass(element_id, 'not_implemented');
-  removeClass(element_id, 'manual_test');
+  removeClass(element_id, 'manual');
   addClass(element_id,'failed');
 }
 
@@ -45,7 +45,7 @@ function makeYellow(element_id) {
   if (elem.className.indexOf("failed") == -1) {  // class doesn't includes failed
     if (elem.className.indexOf("not_implemented") == -1) { // class doesn't include not_implemented
       removeClass(element_id, 'passed');
-      removeClass(element_id, 'manual_test');
+      removeClass(element_id, 'manual');
       addClass(element_id,'not_implemented');
     }
   }
@@ -70,7 +70,7 @@ function apply_filters() {
   assign_display_style("example passed", passed_filter);
   assign_display_style("example failed", failed_filter);
   assign_display_style("example not_implemented", pending_filter);
-  assign_display_style("example manual_test", manual_filter);
+  assign_display_style("example manual", manual_filter);
 
   assign_display_style_for_group("example_group passed", passed_filter);
   assign_display_style_for_group("example_group not_implemented", pending_filter, pending_filter || passed_filter);
@@ -182,10 +182,10 @@ dd.example.passed {
   background: #DBFFB4; color: #3D7700;
 }
 
-dd.example.manual_test {
+dd.example.manual {
     border-left: 5px solid #FAF834;
     border-bottom: 1px solid #FAF834;
-    background: #98cbfc; color: #131313;
+    background: #0F6DD2; color: #131313;
 }
 dd.example.not_implemented {
   border-left: 5px solid #FAF834;
@@ -210,6 +210,10 @@ dt.not_implemented {
   color: #000000; background: #FAF834;
 }
 
+dt.manual {
+    color: #000000; background: #0042D2;
+}
+
 dt.pending_fixed {
   color: #FFFFFF; background: #C40D0D;
 }
@@ -221,6 +225,10 @@ dt.failed {
 
 #rspec-header.not_implemented {
   color: #000000; background: #FAF834;
+}
+
+#rspec-header.manual {
+    color: #000000; background: #0042D2;
 }
 
 #rspec-header.pending_fixed {
@@ -310,7 +318,7 @@ a {
     <script type="text/javascript">makeYellow('example_group_1');</script>
     <script type="text/javascript">moveProgressBar('14.2');</script>
     <dd class="example not_implemented"><span class="not_implemented_spec_name">is pending (PENDING: Not yet implemented)</span></dd>
-    <dd class="example manual_test"><span class="manual_spec_name">is a manual test (Manual: Manual test)</span></dd>
+    <dd class="example manual"><span class="manual_spec_name">is a manual test (MANUAL: Manual test)</span></dd>
   </dl>
 </div>
 <div id="div_group_2" class="example_group passed">
@@ -326,7 +334,7 @@ a {
     <script type="text/javascript">makeYellow('example_group_3');</script>
     <script type="text/javascript">moveProgressBar('28.5');</script>
     <dd class="example not_implemented"><span class="not_implemented_spec_name">is pending (PENDING: No reason given)</span></dd>
-    <dd class="example manual_test"><span class="manual_spec_name">is a manual test (Manual: Manual test)</span></dd>
+    <dd class="example manual"><span class="manual_spec_name">is a manual test (MANUAL: Manual test)</span></dd>
   </dl>
 </div>
 <div id="div_group_4" class="example_group passed">
