@@ -26,12 +26,6 @@ module RSpec::Core
       let(:err) { StringIO.new }
       let(:out) { StringIO.new }
 
-      it "tells RSpec to reset" do
-        RSpec.configuration.stub(:files_to_run => [])
-        RSpec.should_receive(:reset)
-        RSpec::Core::Runner.run([], err, out)
-      end
-
       context "with --drb or -X" do
 
         before(:each) do

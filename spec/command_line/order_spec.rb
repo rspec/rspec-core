@@ -194,6 +194,7 @@ describe 'command line', :ui do
 
   def run_command(cmd)
     RSpec::Core::Runner.run(cmd.split, stderr, stdout)
+    RSpec.reset
   end
 
   def run_command_expecting_error(cmd)
