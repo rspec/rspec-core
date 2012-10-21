@@ -16,6 +16,43 @@ module RSpec::Core
       end
     end
 
+    describe "#get_files_to_run" do
+      context "with some files, and a random seed" do
+        let(:paths)  { ["1.rb", "2.rb", "3.rb", "4.rb", "5.rb"] }
+        let(:subset)  { ["2.rb", "3.rb", "5.rb"] }
+        let(:backwards) { paths.reverse }
+        subject do
+          RSpec.configuration.seed = 1337
+          RSpec.configuration
+        end
+
+        it "orders them consistently with the same seed" do
+          first  = subject.__send__(:get_files_to_run, paths)
+          second = subject.__send__(:get_files_to_run, paths)
+          first.should == second
+        end
+
+        it "doesn't lose any files" do
+          first  = subject.__send__(:get_files_to_run, paths)
+          first.sort.should == paths
+        end
+
+        it "orders the same files in the same way, regardless of order passed" do
+          first  = subject.__send__(:get_files_to_run, paths)
+          second = subject.__send__(:get_files_to_run, backwards)
+          first.should == second
+        end
+
+        it "orders subsets with the same relative order as the full set" do
+          first  = subject.__send__(:get_files_to_run, paths)
+          second = subject.__send__(:get_files_to_run, subset)
+          first.select {|x| subset.include? x }.should == second
+        end
+
+      end
+
+    end
+
     describe "#load_spec_files" do
 
       it "loads files using load" do

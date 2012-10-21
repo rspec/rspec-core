@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'digest'
 
 module RSpec
   module Core
@@ -899,10 +900,25 @@ EOM
 
       def get_files_to_run(paths)
         patterns = pattern.split(",")
-        paths.map do |path|
+        files = paths.map do |path|
           path = path.gsub(File::ALT_SEPARATOR, File::SEPARATOR) if File::ALT_SEPARATOR
           File.directory?(path) ? gather_directories(path, patterns) : extract_location(path)
         end.flatten
+
+        if randomize?
+
+          Kernel.srand RSpec.configuration.seed
+          files = files.uniq.sort.sort_by do |x|
+            sha256 = Digest::SHA256.new
+            sha256 << x
+            sha256 << seed.to_s
+            bytes = sha256.digest.bytes.to_a[0...4]
+            (bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + bytes[3]
+          end
+        end
+
+        files
+
       end
 
       def gather_directories(path, patterns)
