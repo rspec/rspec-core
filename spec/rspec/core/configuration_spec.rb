@@ -402,14 +402,7 @@ module RSpec::Core
       end
 
       context 'when the given directories match the pattern' do
-        it 'orders the files in a consistent ordering, regardless of the underlying OS ordering' do
-          specify_consistent_ordering_of_files_to_run do
-            config.pattern = 'a/*.rb'
-            config.files_or_directories_to_run = 'a'
-          end
-        end
-
-        it "orders the files alphabetically" do
+        it 'orders the files in a consistent alphabetical ordering, regardless of the underlying OS ordering' do
           files_to_run = specify_consistent_ordering_of_files_to_run do
             config.pattern = 'a/*.rb'
             config.files_or_directories_to_run = 'a'
@@ -420,14 +413,7 @@ module RSpec::Core
       end
 
       context 'when the pattern is given relative to the given directories' do
-        it 'orders the files in a consistent ordering, regardless of the underlying OS ordering' do
-          specify_consistent_ordering_of_files_to_run do
-            config.pattern = '*.rb'
-            config.files_or_directories_to_run = 'a'
-          end
-        end
-
-        it "orders the files alphabetically" do
+        it 'orders the files in a consistent alphabetical ordering, regardless of the underlying OS ordering' do
           files_to_run = specify_consistent_ordering_of_files_to_run do
             config.pattern = '*.rb'
             config.files_or_directories_to_run = 'a'
