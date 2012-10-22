@@ -397,6 +397,8 @@ module RSpec::Core
         end
 
         orderings.uniq.size.should eq(1)
+
+        orderings.first
       end
 
       context 'when the given directories match the pattern' do
@@ -406,6 +408,15 @@ module RSpec::Core
             config.files_or_directories_to_run = 'a'
           end
         end
+
+        it "orders the files alphabetically" do
+          files_to_run = specify_consistent_ordering_of_files_to_run do
+            config.pattern = 'a/*.rb'
+            config.files_or_directories_to_run = 'a'
+          end
+
+          files_to_run.should == ["a/1.rb", "a/2.rb", "a/3.rb"]
+        end
       end
 
       context 'when the pattern is given relative to the given directories' do
@@ -414,6 +425,15 @@ module RSpec::Core
             config.pattern = '*.rb'
             config.files_or_directories_to_run = 'a'
           end
+        end
+
+        it "orders the files alphabetically" do
+          files_to_run = specify_consistent_ordering_of_files_to_run do
+            config.pattern = '*.rb'
+            config.files_or_directories_to_run = 'a'
+          end
+
+          files_to_run.should == ["a/1.rb", "a/2.rb", "a/3.rb"]
         end
       end
     end
