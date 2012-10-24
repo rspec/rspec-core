@@ -169,18 +169,13 @@ there is a `.rspec` file in the project's root directory.
 
 ## rcov integration
 
-If you are using a version of Rcov above 2.6 you will need to do one of three things:
+If you are using a version of Rcov above 2.6 you will need to do one of 
+two things:
 
 1. Use the [Rcov rake task](http://www.rubydoc.info/github/relevance/rcov/master/Rcov/RcovTask).
 
-2. Include rspec/autorun in your spec_helper:
-
-```ruby
-# in spec/spec_helper.rb
-require 'rspec/autorun'
-```
-
-3. Include Rcov in your rspec Rakefile:
+2. If you are using the rcov option in the rspec rake task, Include 
+   rspec/autorun in your spec_helper:
 
 ```ruby
 # Rakefile
@@ -191,6 +186,9 @@ RSpec::Core::RakeTask.new(:spec) do |config|
 end
 
 task :default => :spec
+
+# in spec/spec_helper.rb
+require 'rspec/autorun'
 ```
 
 Using the Rcov rake task is preferable, and going forward there is a

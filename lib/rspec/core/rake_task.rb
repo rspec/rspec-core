@@ -60,7 +60,9 @@ module RSpec
       #   true
       attr_accessor :verbose
 
-      # Use rcov for code coverage?
+      # Use rcov for code coverage?  Set this to true.  But if you do
+      # that, you'll also need to include `require 'rspec/autorun'` in
+      # your spec_helper to get this to work properly.
       #
       # default:
       #   false
