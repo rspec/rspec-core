@@ -167,6 +167,33 @@ the command line.
 rspec-core ships with an Autotest extension, which is loaded automatically if
 there is a `.rspec` file in the project's root directory.
 
+## rcov integration
+
+If you are using a version of Rcov above 2.6 you will need to do one of 
+two things:
+
+1. Use the [Rcov rake task](http://www.rubydoc.info/github/relevance/rcov/master/Rcov/RcovTask).
+
+2. If you are using the rcov option in the rspec rake task, Include 
+   rspec/autorun in your spec_helper:
+
+```ruby
+# Rakefile
+require 'rspec/core/rake_task'
+
+RSpec::Core::RakeTask.new(:spec) do |config|
+  config.rcov = true
+end
+
+task :default => :spec
+
+# in spec/spec_helper.rb
+require 'rspec/autorun'
+```
+
+Using the Rcov rake task is preferable, and going forward there is a
+good chance that will be the only way to do it.
+
 ## get started
 
 Start with a simple example of behavior you expect from your system. Do
