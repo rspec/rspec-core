@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'digest'
 
 module RSpec
   module Core
@@ -899,7 +900,7 @@ EOM
 
       def get_files_to_run(paths)
         patterns = pattern.split(",")
-        paths.map do |path|
+        files = paths.map do |path|
           path = path.gsub(File::ALT_SEPARATOR, File::SEPARATOR) if File::ALT_SEPARATOR
           File.directory?(path) ? gather_directories(path, patterns) : extract_location(path)
         end.flatten.sort
