@@ -20,6 +20,25 @@ module RSpec::Core
         RSpec::Core::Runner.should_receive(:at_exit).never
         RSpec::Core::Runner.autorun
       end
+
+      context 'when dealing with exceptions' do
+        let(:ruby) { 'ruby -I lib -r rspec/autorun' }
+
+        it 'runs specs if no exception was raised' do
+          `#{ruby} -e nil`.should_not be_empty
+        end
+
+        it 'runs specs if SystemExit was raised' do
+          `#{ruby} -e exit`.should_not be_empty
+          `#{ruby} -e 'at_exit { exit }'`.should_not be_empty
+          `#{ruby} -e 'at_exit { raise SystemExit }'`.should_not be_empty
+        end
+
+        it 'does not run specs if an exception other than SystemExit was raised' do
+          `#{ruby} -e 'at_exit { raise }' 2>/dev/null`.should be_empty
+          `#{ruby} -e 'at_exit { raise Exception }' 2>/dev/null`.should be_empty
+        end
+      end
     end
 
     describe "#run" do
