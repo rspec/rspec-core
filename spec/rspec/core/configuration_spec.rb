@@ -66,6 +66,17 @@ module RSpec::Core
       end
     end
 
+    describe "#drb_port" do
+      it "defaults to 8989" do
+        config.drb_port.should == 8989
+      end
+
+      it "can be set to any value you like" do
+        config.drb_port = 42
+        config.drb_port.should == 42
+      end
+    end
+
     shared_examples "a configurable framework adapter" do |m|
       it "yields a config object if the framework_module supports it" do
         custom_config = Struct.new(:custom_setting).new

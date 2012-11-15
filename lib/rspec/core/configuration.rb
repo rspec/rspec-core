@@ -189,6 +189,7 @@ MESSAGE
         @default_path = 'spec'
         @filter_manager = FilterManager.new
         @preferred_options = {}
+        @drb_port = 8989
         @seed = srand % 0xFFFF
       end
 
