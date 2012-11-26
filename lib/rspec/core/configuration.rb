@@ -2,7 +2,10 @@ require 'fileutils'
 
 module RSpec
   module Core
-    # Stores runtime configuration information.
+    # Stores runtime configuration information. Configuration options are loaded
+    # from the following files: .rspec-local, .rspec and ~/.rspec. They are
+    # loaded from those files in presedence (highest to lowest) order.
+    #
     #
     # @example Standard settings
     #     RSpec.configure do |c|
