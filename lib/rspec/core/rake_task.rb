@@ -158,7 +158,7 @@ module RSpec
 
     private
 
-      if RUBY_VERSION == '1.8.6'
+      if RUBY_VERSION =~ /^1\.8\.\d/
         def shellescape(string)
           string.gsub(/"/, '\"').gsub(/'/, "\\\\'")
         end
