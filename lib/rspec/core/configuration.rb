@@ -128,6 +128,15 @@ MESSAGE
       # Run all examples if none match the configured filters (default: `false`).
       add_setting :run_all_when_everything_filtered
 
+      # Allow user to configure their own success/pending/failure colors
+      # @param [Symbol] should be one of the following: [:black, :white, :red, :green, :yellow, :blue, :magenta, :cyan]
+      add_setting :success_color
+      add_setting :pending_color
+      add_setting :failure_color
+      add_setting :default_color
+      add_setting :fixed_color
+      add_setting :detail_color
+
       # Seed for random ordering (default: generated randomly each run).
       #
       # When you run specs with `--order random`, RSpec generates a random seed
@@ -195,6 +204,12 @@ MESSAGE
         @filter_manager = FilterManager.new
         @preferred_options = {}
         @seed = srand % 0xFFFF
+        @failure_color = :red
+        @success_color = :green
+        @pending_color = :yellow
+        @default_color = :white
+        @fixed_color = :blue
+        @detail_color = :cyan
       end
 
       # @private
