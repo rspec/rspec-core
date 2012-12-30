@@ -31,7 +31,7 @@ describe Autotest::Rspec2 do
     it "uses double quotes for windows compatibility" do
       actual_command = rspec_autotest.make_test_cmd(@files_to_test)
       expected_pattern = /^[^\']+$/
-      actual_command.should match(actual_command)
+      actual_command.should match(expected_pattern)
     end
 
     it "makes the appropriate test command" do
