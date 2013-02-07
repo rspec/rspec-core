@@ -234,6 +234,10 @@ module RSpec
       class << self
         alias_method :context, :describe
       end
+      
+      class << self
+        alias_method :action, :describe
+      end
 
       # @private
       def self.subclass(parent, args, &example_group_block)
