@@ -20,7 +20,7 @@ module RSpec
         include HookExtension
 
         def run(example)
-          example.instance_eval(&self)
+          example.instance_eval(&block)
         end
 
         def display_name
@@ -32,7 +32,7 @@ module RSpec
         include HookExtension
 
         def run(example)
-          example.instance_eval_with_rescue("in an after hook", &self)
+          example.instance_eval_with_rescue("in an after hook", &block)
         end
 
         def display_name
@@ -90,7 +90,7 @@ module RSpec
         def run
           inject(@initial_procsy) do |procsy, around_hook|
             Example.procsy(procsy.metadata) do
-              @example.instance_eval_with_args(procsy, &around_hook)
+              @example.instance_eval_with_args(procsy, &around_hook.block)
             end
           end.call
         end
@@ -431,6 +431,14 @@ module RSpec
 
     private
 
+      class HookProxy
+        attr_reader :block
+
+        def initialize(&block)
+          @block = block
+        end
+      end
+
       SCOPES = [:each, :all, :suite]
 
       EXTENSIONS = {
@@ -457,7 +465,7 @@ module RSpec
 
       def register_hook prepend_or_append, hook, *args, &block
         scope, options = scope_and_options_from(*args)
-        hooks[hook][scope].send(prepend_or_append, block.extend(EXTENSIONS[hook]).with(options))
+        hooks[hook][scope].send(prepend_or_append, HookProxy.new(&block).extend(EXTENSIONS[hook]).with(options))
       end
 
       def find_hook(hook, scope, example_or_group, initial_procsy)
