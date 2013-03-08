@@ -587,6 +587,27 @@ module RSpec::Core
           match(/let declaration `list` accessed.*#{__FILE__}:#{line}/m)
         })
       end
+
+      it 'does not raise an error when there is nesting involved' do
+        ciao_value = nil
+        ex = nil
+
+        ExampleGroup.describe do
+          let(:ciao) { 'ciao' }
+
+          context 'nested context' do
+            before(:all) { ciao }
+
+            context 'other nested context' do
+              let(:ciao) { 'ola' }
+              ex = example { ciao_value = self.ciao }
+            end
+          end
+        end.run
+
+        expect(ex.execution_result[:exception]).to be_nil
+        expect(ciao_value).to eq('ola')
+      end
     end
   end
 

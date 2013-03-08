@@ -368,7 +368,7 @@ module RSpec
               # cause it to leak into other examples, so we delete the
               # :subject key before each example in this case.
               running_group.prepend_before(:each) do
-                @__memoized.delete(:subject)
+                @__memoized.delete(:subject) if @__memoized
               end
             elsif @__memoized.keys == [:subject]
               # Only `:subject` has been referenced in `before(:all)`.
@@ -378,7 +378,7 @@ module RSpec
               running_group.prepend_before(:each) do
                 @__memoized.delete_if do |k, v|
                   k != :subject
-                end
+                end if @__memoized
               end
             else
               # both `subject` and one or more `let` declarations have been
