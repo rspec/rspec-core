@@ -325,13 +325,66 @@ module RSpec
       end
 
       def self.handle_memoized_methods(example_group_instance)
+        running_group = self
+
         example_group_instance.instance_eval do
           @__memoized = BeforeAllMemoizedHash.new
 
           begin
             yield
           ensure
-            @__memoized = nil
+            @__memoized = @__memoized.hash
+
+            # On 2.12 and before, `subject`  and `let` declarations
+            # would be memoized from before(:all) to individual examples
+            # (since they resulted in instance variables being set in
+            # the before(:all)). In addition, once one `let` is memoized,
+            # it causes any additional `let` declarations referenced in an
+            # individual example to "leak", because it would cause the
+            # @__memoized object to mutate, and be reassigned in each
+            # example.
+            #
+            # However, since they were separate instance variables,
+            # referencing `subject` in before(:all) would NOT mess
+            # with `let` declarations and referencing a `let` declaration
+            # would not mess with `subject`.
+            #
+            # In 2.13, we refactored `subject` to be written in terms of
+            # `let`, which caused any reference to a `subject` or `let`
+            # in a `before(:all)` block to cause leakage of both `subject`
+            # and all `let` values across examples.
+            #
+            # We have a full fix for this in master (to be released in
+            # RSpec 2.14), but for now, we just want to fix the regression
+            # in 2.13.1 as per SemVer.
+            if @__memoized.empty?
+              # Nothing is memoized. Clear the ivar so each example
+              # gets a fresh @__memoized hash.
+              @__memoized = nil
+            elsif !@__memoized.has_key?(:subject)
+              # `subject` has not been referenced in `before(:all)` but
+              # one or more `let` declarations have. We
+              # need to make sure referencing it in an example does not
+              # cause it to leak into other examples, so we delete the
+              # :subject key before each example in this case.
+              running_group.prepend_before(:each) do
+                @__memoized.delete(:subject) if @__memoized
+              end
+            elsif @__memoized.keys == [:subject]
+              # Only `:subject` has been referenced in `before(:all)`.
+              # We need to ensure referencing a `let` declaration in
+              # an example does not cause it to leak into subsequent
+              # examples, so we delete all keys except `:subject`.
+              running_group.prepend_before(:each) do
+                @__memoized.delete_if do |k, v|
+                  k != :subject
+                end if @__memoized
+              end
+            else
+              # both `subject` and one or more `let` declarations have been
+              # referenced in `before(:all). Total leakage occurs. This
+              # is just how 2.12 and before worked.
+            end
           end
         end
       end
