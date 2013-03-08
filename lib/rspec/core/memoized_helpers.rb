@@ -101,7 +101,9 @@ WARNING: #{description} accessed in a `before(:all)` hook at:
   #{caller[1]}
 
 `let` and `subject` declarations are not intended to be called
-in a `before(:all)` hook. The memoized value will be discarded.
+in a `before(:all)` hook. In RSpec 2.14, the memoized values
+will be discarded. In #{::RSpec::Core::Version::STRING}, it can
+lead to odd behavior where memoized values leak across examples.
 EOS
 
           @hash.fetch(key, &block)
