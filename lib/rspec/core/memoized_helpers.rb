@@ -87,6 +87,8 @@ module RSpec
           @hash = {}
         end
 
+        attr_reader :hash
+
         def fetch(key, &block)
           description = if key == :subject
             "subject"
