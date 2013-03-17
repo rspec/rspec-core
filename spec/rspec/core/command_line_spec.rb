@@ -36,6 +36,12 @@ module RSpec::Core
       expect(command_line.instance_eval { @options }).to be(config_options)
     end
 
+    it "loads submitted ConfigurationOptions into @configuration" do
+      config_options = ConfigurationOptions.new(%w[--color])
+      config.should_receive(:load_options).with(config_options.parse_options)
+      CommandLine.new(config_options)
+    end
+
     describe "#run" do
       context "running files" do
         include_context "spec files"

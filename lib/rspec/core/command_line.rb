@@ -8,6 +8,7 @@ module RSpec
         end
         @options       = options
         @configuration = configuration
+        @configuration.load_options options.parse_options
         @world         = world
       end
 

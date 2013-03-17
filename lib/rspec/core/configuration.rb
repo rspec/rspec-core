@@ -40,6 +40,15 @@ module RSpec
       end
 
       # @private
+      def self.define_option_reader(name)
+        eval <<-CODE
+          def cmdline_#{name}
+            option_for(#{name.inspect})
+          end
+        CODE
+      end
+
+      # @private
       def self.deprecate_alias_key
         RSpec.warn_deprecation <<-MESSAGE
 The :alias option to add_setting is deprecated. Use :alias_with on the original setting instead.
@@ -171,6 +180,17 @@ MESSAGE
       #     end
       add_setting :treat_symbols_as_metadata_keys_with_true_values
 
+      # Allow access to the configuration options that RSpec was started with
+      define_option_reader :debug
+      define_option_reader :requires
+      define_option_reader :libs
+      define_option_reader :drb
+      define_option_reader :line_numbers
+      define_option_reader :full_backtrace
+      define_option_reader :profile
+      define_option_reader :files_or_directories_to_run
+      define_option_reader :full_description
+
       # @private
       add_setting :tty
       # @private
@@ -212,6 +232,13 @@ MESSAGE
         @fixed_color = :blue
         @detail_color = :cyan
         @profile_examples = false
+        @configuration_options = {}
+      end
+
+      # @private
+      # Used to load in configuration options
+      def load_options(options)
+        @configuration_options = options
       end
 
       # @private
@@ -960,6 +987,10 @@ EOM
 
       def value_for(key, default=nil)
         @preferred_options.has_key?(key) ? @preferred_options[key] : default
+      end
+
+      def option_for(key)
+        @configuration_options.fetch(key)
       end
 
       def assert_no_example_groups_defined(config_option)
