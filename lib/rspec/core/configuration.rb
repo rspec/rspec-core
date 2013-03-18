@@ -41,11 +41,7 @@ module RSpec
 
       # @private
       def self.define_option_reader(name)
-        eval <<-CODE
-          def cmdline_#{name}
-            option_for(#{name.inspect})
-          end
-        CODE
+        define_method("config_option_#{name}") { option_for name }
       end
 
       # @private

@@ -1385,15 +1385,15 @@ module RSpec::Core
       before do
         config.load_options options
       end
-      specify { expect(config.cmdline_debug).to eq 'debug' }
-      specify { expect(config.cmdline_requires).to eq 'requires' }
-      specify { expect(config.cmdline_libs).to eq 'libs' }
-      specify { expect(config.cmdline_profile).to eq 'profile' }
-      specify { expect(config.cmdline_drb).to eq 'drb' }
-      specify { expect(config.cmdline_files_or_directories_to_run).to eq 'files_or_directories_to_run' }
-      specify { expect(config.cmdline_line_numbers).to eq 'line_numbers' }
-      specify { expect(config.cmdline_full_description).to eq 'full_description' }
-      specify { expect(config.cmdline_full_backtrace).to eq 'full_backtrace' }
+      specify { expect(config.configured_option_debug).to eq 'debug' }
+      specify { expect(config.configured_option_requires).to eq 'requires' }
+      specify { expect(config.configured_option_libs).to eq 'libs' }
+      specify { expect(config.configured_option_profile).to eq 'profile' }
+      specify { expect(config.configured_option_drb).to eq 'drb' }
+      specify { expect(config.configured_option_files_or_directories_to_run).to eq 'files_or_directories_to_run' }
+      specify { expect(config.configured_option_line_numbers).to eq 'line_numbers' }
+      specify { expect(config.configured_option_full_description).to eq 'full_description' }
+      specify { expect(config.configured_option_full_backtrace).to eq 'full_backtrace' }
     end
   end
 end
