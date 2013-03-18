@@ -452,6 +452,13 @@ module RSpec::Core
         config.full_description = "foo"
         expect(config.filter).not_to have_key(:focused)
       end
+      specify do
+        config.full_description = "foo"
+        expect(config.full_description).to eq true
+      end
+      specify do
+        expect(config.full_description).to eq false
+      end
     end
 
     context "with line number" do
@@ -906,6 +913,15 @@ module RSpec::Core
         expect(config.filter).to eq({:line_numbers => [37]})
       end
     end
+    describe "line_numbers" do
+      specify "returns true when filter" do
+        config.line_numbers = ['42']
+        expect(config.line_numbers).to eq true
+      end
+      specify "returns false when no filter" do
+        expect(config.line_numbers).to eq false
+      end
+    end
 
     describe "#full_backtrace=" do
       context "given true" do
@@ -928,6 +944,16 @@ module RSpec::Core
 
         config_1.full_backtrace = true
         expect(config_2.backtrace_clean_patterns).not_to be_empty
+      end
+    end
+    describe 'full_backtrace' do
+      it 'returns true when backtrace patterns is empty' do
+        config.backtrace_clean_patterns = []
+        expect(config.full_backtrace).to eq true
+      end
+      it 'returns false when backtrace patterns isnt empty' do
+        config.backtrace_clean_patterns = [:lib]
+        expect(config.full_backtrace).to eq false
       end
     end
 
@@ -961,6 +987,7 @@ module RSpec::Core
         else
           @orig_debugger = nil
         end
+        config.stub(:require)
         Object.const_set("Debugger", debugger)
       end
 
@@ -977,9 +1004,12 @@ module RSpec::Core
       end
 
       it "starts the debugger" do
-        config.stub(:require)
         debugger.should_receive(:start)
         config.debug = true
+      end
+      it 'sets the reader to true' do
+        config.debug = true
+        expect(config.debug).to eq true
       end
     end
 
@@ -987,6 +1017,10 @@ module RSpec::Core
       it "does not require 'ruby-debug'" do
         config.should_not_receive(:require).with('ruby-debug')
         config.debug = false
+      end
+      it 'sets the reader to false' do
+        config.debug = false
+        expect(config.debug).to eq false
       end
     end
 
@@ -1004,11 +1038,23 @@ module RSpec::Core
         config.libs = ["a/dir"]
       end
     end
+    describe "libs" do
+      it 'exposes load path' do
+        expect(config.libs).to eq $LOAD_PATH
+      end
+    end
 
     describe "#requires=" do
       it "requires paths" do
         config.should_receive(:require).with("a/path")
         config.requires = ["a/path"]
+      end
+    end
+    describe '#requires' do
+      it "requires paths" do
+        config.should_receive(:require).with("a/path")
+        config.requires = ["a/path"]
+        expect(config.requires).to eq ["a/path"]
       end
     end
 

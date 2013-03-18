@@ -212,6 +212,7 @@ MESSAGE
         @fixed_color = :blue
         @detail_color = :cyan
         @profile_examples = false
+        @paths = []
       end
 
       # @private
@@ -423,6 +424,9 @@ MESSAGE
         @expectation_frameworks.push(*modules)
       end
 
+      def full_backtrace
+        @backtrace_clean_patterns.empty?
+      end
       def full_backtrace=(true_or_false)
         @backtrace_clean_patterns = true_or_false ? [] : DEFAULT_BACKTRACE_PATTERNS
       end
@@ -455,9 +459,16 @@ MESSAGE
       def libs=(libs)
         libs.map {|lib| $LOAD_PATH.unshift lib}
       end
+      def libs
+        $LOAD_PATH
+      end
 
       def requires=(paths)
+        @paths += paths
         paths.map {|path| require path}
+      end
+      def requires
+        @paths
       end
 
       def debug=(bool)
@@ -480,14 +491,23 @@ If you have it installed as a ruby gem, then you need to either require
 EOM
         end
       end
+      def debug
+        !!defined?(Debugger)
+      end
 
       # Run examples defined on `line_numbers` in all files to run.
       def line_numbers=(line_numbers)
         filter_run :line_numbers => line_numbers.map{|l| l.to_i}
       end
+      def line_numbers
+        filter.has_key? :line_numbers
+      end
 
       def full_description=(description)
         filter_run :full_description => Regexp.union(*Array(description).map {|d| Regexp.new(d) })
+      end
+      def full_description
+        filter.has_key? :full_description
       end
 
       # @overload add_formatter(formatter)
