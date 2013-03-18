@@ -41,7 +41,7 @@ module RSpec
 
       # @private
       def self.define_option_reader(name)
-        define_method("config_option_#{name}") { option_for name }
+        define_method("configured_option_#{name}") { option_for name }
       end
 
       # @private
