@@ -1403,5 +1403,28 @@ module RSpec::Core
         expect(groups.ordered).to eq([4, 3, 2, 1])
       end
     end
+
+    describe 'accessing command line options' do
+      let(:options) do
+        {
+          :debug => 'debug', :requires => 'requires', :libs => 'libs', :profile => 'profile',
+          :drb => 'drb', :files_or_directories_to_run => 'files_or_directories_to_run',
+          :line_numbers => 'line_numbers', :full_description => 'full_description',
+          :full_backtrace => 'full_backtrace'
+        }
+      end
+      before do
+        config.load_options options
+      end
+      specify { expect(config.configured_option_debug).to eq 'debug' }
+      specify { expect(config.configured_option_requires).to eq 'requires' }
+      specify { expect(config.configured_option_libs).to eq 'libs' }
+      specify { expect(config.configured_option_profile).to eq 'profile' }
+      specify { expect(config.configured_option_drb).to eq 'drb' }
+      specify { expect(config.configured_option_files_or_directories_to_run).to eq 'files_or_directories_to_run' }
+      specify { expect(config.configured_option_line_numbers).to eq 'line_numbers' }
+      specify { expect(config.configured_option_full_description).to eq 'full_description' }
+      specify { expect(config.configured_option_full_backtrace).to eq 'full_backtrace' }
+    end
   end
 end
