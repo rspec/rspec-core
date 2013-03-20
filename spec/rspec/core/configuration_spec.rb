@@ -913,6 +913,7 @@ module RSpec::Core
         expect(config.filter).to eq({:line_numbers => [37]})
       end
     end
+
     describe "line_numbers" do
       specify "returns true when filter" do
         config.line_numbers = ['42']
@@ -946,6 +947,7 @@ module RSpec::Core
         expect(config_2.backtrace_clean_patterns).not_to be_empty
       end
     end
+
     describe 'full_backtrace' do
       it 'returns true when backtrace patterns is empty' do
         config.backtrace_clean_patterns = []
