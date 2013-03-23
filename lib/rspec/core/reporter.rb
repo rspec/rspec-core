@@ -37,7 +37,7 @@ module RSpec::Core
       end
     end
 
-    def start(expected_example_count,time = RSpec::Core::Time.now)
+    def start(expected_example_count, time = RSpec::Core::Time.now)
       @start = time
       load_time = (@start - RSpec.configuration.start_time).to_f
       notify :start, expected_example_count, load_time

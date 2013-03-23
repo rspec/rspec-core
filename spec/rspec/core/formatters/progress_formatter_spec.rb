@@ -6,7 +6,7 @@ describe RSpec::Core::Formatters::ProgressFormatter do
    before do
      @output = StringIO.new
      @formatter = RSpec::Core::Formatters::ProgressFormatter.new(@output)
-     @formatter.start(2,0)
+     @formatter.start(2, 0)
      @formatter.stub(:color_enabled?).and_return(false)
    end
 
@@ -23,7 +23,7 @@ describe RSpec::Core::Formatters::ProgressFormatter do
    end
 
    it "pushes nothing on start" do
-     @formatter.start(4,0)
+     @formatter.start(4, 0)
      expect(@output.string).to eq("")
    end
 

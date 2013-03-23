@@ -39,7 +39,7 @@ module RSpec
         # is {#example_group_started}.
         #
         # @param example_count
-        def start(example_count,load_time)
+        def start(example_count, load_time)
           start_sync_output
           @example_count = example_count
           @load_time = load_time
