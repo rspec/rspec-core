@@ -33,8 +33,8 @@ module RSpec
           @example_number
         end
 
-        def start(example_count)
-          super(example_count)
+        def start(example_count,load_time)
+          super(example_count,load_time)
           @printer.print_html_start
           @printer.flush
         end
