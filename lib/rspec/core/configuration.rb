@@ -170,6 +170,9 @@ MESSAGE
       #     end
       add_setting :treat_symbols_as_metadata_keys_with_true_values
 
+      # Record the start time of the spec suite to measure load time
+      add_setting :start_time
+
       # @private
       add_setting :tty
       # @private
@@ -184,6 +187,7 @@ MESSAGE
       attr_reader :backtrace_cleaner
 
       def initialize
+        @start_time = Time.now
         @expectation_frameworks = []
         @include_or_extend_modules = []
         @mock_framework = nil
