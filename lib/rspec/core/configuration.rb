@@ -95,6 +95,10 @@ MESSAGE
       # run all the examples in the `spec` directory.
       add_setting :default_path
 
+      # Set the io used for deprection warnings
+      # Defaults to $stderr
+      add_setting :deprecation_io
+
       # Run examples over DRb (default: `false`). RSpec doesn't supply the DRb
       # server, but you can use tools like spork.
       add_setting :drb
@@ -202,6 +206,7 @@ MESSAGE
         @failure_exit_code = 1
         @backtrace_clean_patterns = DEFAULT_BACKTRACE_PATTERNS.dup
         @default_path = 'spec'
+        @deprecation_io = $stderr
         @filter_manager = FilterManager.new
         @preferred_options = {}
         @seed = srand % 0xFFFF
