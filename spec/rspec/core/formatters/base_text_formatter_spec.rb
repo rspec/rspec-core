@@ -420,7 +420,7 @@ describe RSpec::Core::Formatters::BaseTextFormatter do
       end
 
       it "prints a deprecation warning" do
-        RSpec.should_receive(:warn).with(/#{name}/)
+        RSpec.should_receive(:warn_deprecation).with(/#{name}/)
         formatter.send(name, "text")
       end
     end
