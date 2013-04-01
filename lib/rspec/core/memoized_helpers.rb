@@ -191,10 +191,13 @@ EOS
         def let(name, &block)
           # We have to pass the block directly to `define_method` to
           # allow it to use method constructs like `super` and `return`.
-          MemoizedHelpers.module_for(self).define_method(name, &block)
+          mod = MemoizedHelpers.module_for self
+          mod.undef_method name if mod.method_defined? name
+          mod.define_method name, &block
 
           # Apply the memoization. The method has been defined in an ancestor
           # module so we can use `super` here to get the value.
+          undef_method name if method_defined? name
           define_method(name) do
             __memoized.fetch(name) { |k| __memoized[k] = super(&nil) }
           end
@@ -472,6 +475,7 @@ EOS
             # Expose `define_method` as a public method, so we can
             # easily use it below.
             public_class_method :define_method
+            public_class_method :undef_method
           end
 
           example_group.__send__(:include, mod)
