@@ -307,7 +307,7 @@ module RSpec
 
       # @private
       def self.assign_before_all_ivars(ivars, example_group_instance)
-        ivars.each { |ivar, val| example_group_instance.instance_variable_set(ivar, val) }
+        ivars.each { |ivar, val| example_group_instance.instance_variable_set(ivar, val) unless ivar == :@__memoized }
       end
 
       # @private
