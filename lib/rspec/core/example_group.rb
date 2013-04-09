@@ -58,15 +58,14 @@ module RSpec
         #   @param [Hash] extra_options
         #   @param [Block] implementation
         def self.define_example_method(name, extra_options={})
-          module_eval(<<-END_RUBY, __FILE__, __LINE__)
-            def #{name}(desc=nil, *args, &block)
-              options = build_metadata_hash_from(args)
-              options.update(:pending => RSpec::Core::Pending::NOT_YET_IMPLEMENTED) unless block
-              options.update(#{extra_options.inspect})
-              examples << RSpec::Core::Example.new(self, desc, options, block)
-              examples.last
-            end
-          END_RUBY
+          define_method(name) do |*args, &block|
+            desc = args.shift
+            options = build_metadata_hash_from(args)
+            options.update(:pending => RSpec::Core::Pending::NOT_YET_IMPLEMENTED) unless block
+            options.update(extra_options)
+            examples << RSpec::Core::Example.new(self, desc, options, block)
+            examples.last
+          end
         end
 
         # Defines an example within a group.
