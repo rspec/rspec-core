@@ -17,7 +17,6 @@ module RSpec
       extend  Hooks
 
       include MemoizedHelpers
-      include Extensions::InstanceEvalWithArgs
       include Pending
       include SharedExampleGroup
 
