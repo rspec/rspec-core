@@ -224,7 +224,7 @@ module RSpec
       #     end
       #
       # @see DSL#describe
-      def self.describe(*args, &example_group_block)
+      def self.example_group(*args, &example_group_block)
         @_subclass_count ||= 0
         @_subclass_count += 1
         args << {} unless args.last.is_a?(Hash)
@@ -240,7 +240,8 @@ module RSpec
       end
 
       class << self
-        alias_method :context, :describe
+        alias_method :describe, :example_group
+        alias_method :context, :example_group
       end
 
       # @private
