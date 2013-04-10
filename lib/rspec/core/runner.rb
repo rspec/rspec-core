@@ -79,8 +79,6 @@ module RSpec
         else
           CommandLine.new(options).run(err, out)
         end
-      ensure
-        RSpec.reset
       end
     end
   end
