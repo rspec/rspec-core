@@ -149,7 +149,7 @@ module RSpec
           (class << self; self; end).send(:define_method, name) do |*args, &block|
             combined_metadata = metadata.dup
             combined_metadata.merge!(args.pop) if args.last.is_a? Hash
-            describe(*args, combined_metadata, &block)
+            example_group(*args, combined_metadata, &block)
           end
         end
       end
