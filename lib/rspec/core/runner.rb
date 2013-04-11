@@ -1,6 +1,10 @@
 module RSpec
   module Core
     class Runner
+      class << self
+        #we need access to the main object in .set_up_dsl
+        attr_accessor :main_object
+      end
 
       # Register an at_exit hook that runs the suite.
       def self.autorun
@@ -49,8 +53,7 @@ module RSpec
       end
 
       def self.set_up_dsl
-        # sends extend to the main-Object
-        TOPLEVEL_BINDING.eval('self').send(:extend, RSpec::Core::DSL)
+        main_object.send(:extend, RSpec::Core::DSL)
         Module.send(:include, RSpec::Core::DSL)
       end
 
@@ -94,3 +97,6 @@ module RSpec
     end
   end
 end
+
+RSpec::Core::Runner.main_object = self
+
