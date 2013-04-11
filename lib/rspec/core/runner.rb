@@ -4,6 +4,7 @@ module RSpec
 
       # Register an at_exit hook that runs the suite.
       def self.autorun
+        set_up_dsl
         return if autorun_disabled? || installed_at_exit? || running_in_drb?
         at_exit do
           # Don't bother running any specs and just let the program terminate
@@ -47,6 +48,12 @@ module RSpec
         end
       end
 
+      def self.set_up_dsl
+        # sends extend to the main-Object
+        TOPLEVEL_BINDING.eval('self').send(:extend, RSpec::Core::DSL)
+        Module.send(:include, RSpec::Core::DSL)
+      end
+
       # Run a suite of RSpec examples.
       #
       # This is used internally by RSpec to run a suite, but is available
@@ -67,6 +74,8 @@ module RSpec
         trap_interrupt
         options = ConfigurationOptions.new(args)
         options.parse_options
+
+        set_up_dsl unless options.options[:toplevel_off]
 
         if options.options[:drb]
           require 'rspec/core/drb_command_line'

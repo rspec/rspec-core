@@ -95,6 +95,10 @@ module RSpec::Core
           options[:drb_port] = o.to_i
         end
 
+        parser.on('--toplevel-off', "Don't include DSL methods into main Object") do |o|
+          options[:toplevel_off] = true
+        end
+
         parser.on('--init', 'Initialize your project with RSpec.') do |cmd|
           ProjectInitializer.new(cmd).run
           exit

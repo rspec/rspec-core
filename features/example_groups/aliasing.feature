@@ -8,6 +8,10 @@ Feature: aliasing
   You can also make these aliases available at the top-level of your
   specs, just add :toplevel_alias as an option.
 
+  By default, top level aliases are included in the main- and the
+  Module-namespace. This can be avoided by running with the option
+  `--toplevel-off`.
+
   Scenario: custom example group aliases with metadata
     Given a file named "nested_example_group_aliases_spec.rb" with:
     """ruby
@@ -33,6 +37,7 @@ Feature: aliasing
     a thing
       something less important
     """
+
   Scenario: custom example group alias at the top-level
     Given a file named "top_level_example_group_aliases_spec.rb" with:
     """ruby
@@ -50,5 +55,17 @@ Feature: aliasing
     """
     a thing
       works
+    """
+
+  Scenario: Turn off toplevel methods
+    Given a file named "top_level_example_group_aliases_spec.rb" with:
+    """ruby
+    describe "is not available" do
+    end
+    """
+    When I run `rspec --toplevel-off top_level_example_group_aliases_spec.rb -fdoc`
+    Then the output should contain:
+    """
+    undefined method `describe'
     """
 

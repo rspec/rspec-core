@@ -31,6 +31,3 @@ module RSpec
   end
 end
 
-extend RSpec::Core::DSL
-Module.send(:include, RSpec::Core::DSL)
-
