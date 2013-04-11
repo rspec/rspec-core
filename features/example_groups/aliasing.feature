@@ -16,7 +16,7 @@ Feature: aliasing
     Given a file named "nested_example_group_aliases_spec.rb" with:
     """ruby
     RSpec.configure do |c|
-      c.alias_example_group_to :detail, detailed: true, focused: false
+      c.alias_example_group_to :detail, :detailed => true, :focused => false
     end
 
     describe "a thing" do
