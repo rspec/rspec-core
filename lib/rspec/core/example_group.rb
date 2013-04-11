@@ -106,14 +106,6 @@ module RSpec
           (class << self; self; end).define_example_method name, extra
         end
 
-        def alias_example_group_to(name, metadata={})
-          define_singleton_method(name) do |*args, &block|
-            combined_metadata = metadata.dup
-            combined_metadata.merge!(args.delete_at(-1)) if args.last.is_a? Hash
-            describe(*args, combined_metadata, &block)
-          end
-        end
-
         # @private
         # @macro [attach] define_nested_shared_group_method
         #
@@ -146,6 +138,19 @@ module RSpec
         #   compatibility), but we also add docs for that method.
         def alias_it_behaves_like_to name, *args, &block
           (class << self; self; end).define_nested_shared_group_method name, *args, &block
+        end
+
+        # Works like `alias_method :name, :example_group` with the added benefit of
+        # assigning default metadata to the generated example group.
+        #
+        # @note Use with caution. This extends the language used in your
+        #   specs, but does not add any additional documentation.
+        def alias_example_group_to(name, metadata={})
+          define_singleton_method(name) do |*args, &block|
+            combined_metadata = metadata.dup
+            combined_metadata.merge!(args.delete_at(-1)) if args.last.is_a? Hash
+            describe(*args, combined_metadata, &block)
+          end
         end
       end
 

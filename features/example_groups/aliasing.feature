@@ -1,15 +1,18 @@
 Feature: aliasing
   `describe` and `context` are the default aliases for `example_group`.
-  `describe` is defined at the top level, i.e. on Object. Context is only
-  available from within an example group, i.e. within a describe block.
-  You can describe your own aliases for `example_group` and give those
-  custom aliases default meta data.
+  `describe` is defined at the top level, i.e. on the main Object.
+  `context` is only available from within an example group, i.e. within
+  a describe block.  You can describe your own aliases for `example_group`
+  and give those custom aliases default meta data.
+
+  You can also make these aliases available at the top-level of your
+  specs, just add :toplevel_alias as an option.
 
   Scenario: custom example group aliases with metadata
     Given a file named "nested_example_group_aliases_spec.rb" with:
     """ruby
     RSpec.configure do |c|
-      c.alias_example_group_to :detail, { detailed: true }
+      c.alias_example_group_to :detail, detailed: true, focused: false
     end
 
     describe "a thing" do
@@ -26,8 +29,26 @@ Feature: aliasing
     """
     When I run `rspec nested_example_group_aliases_spec.rb --tag detailed -fdoc`
     Then the output should contain:
-      """
-      a thing
-        something less important
-      """
+    """
+    a thing
+      something less important
+    """
+  Scenario: custom example group alias at the top-level
+    Given a file named "top_level_example_group_aliases_spec.rb" with:
+    """ruby
+    RSpec.configure do |c|
+      c.alias_example_group_to :detail, :toplevel_alias
+    end
+
+    detail "a thing" do
+      it "works" do
+      end
+    end
+    """
+    When I run `rspec top_level_example_group_aliases_spec.rb -fdoc`
+    Then the output should contain:
+    """
+    a thing
+      works
+    """
 

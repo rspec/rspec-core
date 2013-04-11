@@ -604,9 +604,11 @@ EOM
         RSpec::Core::ExampleGroup.alias_example_to(new_name, extra_options)
       end
 
-      def alias_example_group_to(new_name, *args)
-        extra_options = build_metadata_hash_from(args)
+      def alias_example_group_to(new_name, *metadata_and_opts)
+        top_level_method = !!metadata_and_opts.delete(:toplevel_alias)
+        extra_options = build_metadata_hash_from(metadata_and_opts)
         RSpec::Core::ExampleGroup.alias_example_group_to(new_name, extra_options)
+        RSpec::Core::DSL.register_example_group_alias(new_name) if top_level_method
       end
 
       # Define an alias for it_should_behave_like that allows different
