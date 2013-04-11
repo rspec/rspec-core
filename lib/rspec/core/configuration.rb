@@ -605,8 +605,8 @@ EOM
       end
 
       def alias_example_group_to(new_name, *metadata_and_opts)
-        top_level_method = !!metadata_and_opts.delete(:toplevel_alias)
-        extra_options = build_metadata_hash_from(metadata_and_opts)
+        extra_options = build_metadata_hash_from(metadata_and_opts).dup
+        top_level_method = !!extra_options.delete(:toplevel_alias)
         RSpec::Core::ExampleGroup.alias_example_group_to(new_name, extra_options)
         RSpec::Core::DSL.register_example_group_alias(new_name) if top_level_method
       end

@@ -1249,9 +1249,17 @@ module RSpec::Core
       end
 
       it "allows adding additional metadata" do
-        config.alias_example_group_to :my_group_method, { some: "thing" }
-        group = ExampleGroup.my_group_method("a group", another: "thing")
-        expect(group.metadata).to include(some: "thing", another: "thing")
+        RSpec.configuration.stub(:treat_symbols_as_metadata_keys_with_true_values?) { true }
+        config.alias_example_group_to :my_group_method, :one_thing, { some: "thing" }
+        group = ExampleGroup.my_group_method("a group", :second_thing, another: "thing")
+        expect(group.metadata).to include(some: "thing", another: "thing",
+                                          one_thing: true, second_thing: true)
+      end
+
+      it "doesn't delete from the original hash" do
+        hash = { :toplevel_alias => true }
+        config.alias_example_group_to :my_group_method, hash
+        expect(hash).to be == { :toplevel_alias => true }
       end
     end
 

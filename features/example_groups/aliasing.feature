@@ -42,7 +42,7 @@ Feature: aliasing
     Given a file named "top_level_example_group_aliases_spec.rb" with:
     """ruby
     RSpec.configure do |c|
-      c.alias_example_group_to :detail, :toplevel_alias
+      c.alias_example_group_to :detail, :toplevel_alias => true
     end
 
     detail "a thing" do
