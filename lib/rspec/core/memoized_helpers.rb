@@ -192,12 +192,15 @@ EOS
           # We have to pass the block directly to `define_method` to
           # allow it to use method constructs like `super` and `return`.
           raise "#let or #subject called without a block" if block.nil?
-          MemoizedHelpers.module_for(self).define_method(name, &block)
+
+          method_name = let_method(name)
+
+          MemoizedHelpers.module_for(self).define_method(method_name, &block)
 
           # Apply the memoization. The method has been defined in an ancestor
           # module so we can use `super` here to get the value.
           define_method(name) do
-            __memoized.fetch(name) { |k| __memoized[k] = super(&nil) }
+            __memoized.fetch(name) { |k| __memoized[k] = send("__rspec_let_definition_#{name}",&nil) }
           end
         end
 
@@ -290,12 +293,8 @@ EOS
         # @see MemoizedHelpers#should
         def subject(name=nil, &block)
           if name
-            let(name, &block)
+            define_method(name) { __memoized.fetch(name) {|k| __memoized[k] = instance_eval(&block) } }
             alias_method :subject, name
-
-            self::NamedSubjectPreventSuper.define_method(name) do
-              raise NotImplementedError, "`super` in named subjects is not supported"
-            end
           else
             let(:subject, &block)
           end
@@ -448,6 +447,13 @@ EOS
             example(&block)
           end
         end
+
+        private
+
+          def let_method name
+            "__rspec_let_definition_#{name}"
+          end
+
       end
 
       # @api private
