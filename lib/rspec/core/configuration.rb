@@ -87,6 +87,7 @@ MESSAGE
       # `"spec"`). Allows you to just type `rspec` instead of `rspec spec` to
       # run all the examples in the `spec` directory.
       add_setting :default_path
+      add_setting :toplevel_dsl
 
       # Run examples over DRb (default: `false`). RSpec doesn't supply the DRb
       # server, but you can use tools like spork.

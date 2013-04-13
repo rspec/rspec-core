@@ -8,8 +8,9 @@ module RSpec
 
       # Register an at_exit hook that runs the suite.
       def self.autorun
-        set_up_dsl
         return if autorun_disabled? || installed_at_exit? || running_in_drb?
+
+        configure_and_set_up(ARGV)
         at_exit do
           # Don't bother running any specs and just let the program terminate
           # if we got here due to an unrescued exception (anything other than
@@ -19,7 +20,7 @@ module RSpec
           # We got here because either the end of the program was reached or
           # somebody called Kernel#exit.  Run the specs and then override any
           # existing exit status with RSpec's exit status if any specs failed.
-          status = run(ARGV, $stderr, $stdout).to_i
+          status = run.to_i
           exit status if status != 0
         end
         @installed_at_exit = true
@@ -53,8 +54,23 @@ module RSpec
       end
 
       def self.set_up_dsl
+        return if !@options.options[:toplevel_dsl] || @dsl_setup_done
+
         main_object.send(:extend, RSpec::Core::DSL)
         Module.send(:include, RSpec::Core::DSL)
+        @dsl_setup_done = true
+      end
+
+      def self.configure_and_set_up(args)
+        return if args.empty? && !@options.nil?
+        @options = begin
+          options = ConfigurationOptions.new(args)
+          options.parse_options
+
+          options
+        end
+
+        set_up_dsl
       end
 
       # Run a suite of RSpec examples.
@@ -73,23 +89,20 @@ module RSpec
       #
       # #### Returns
       # * +Fixnum+ - exit status code (0/1)
-      def self.run(args, err=$stderr, out=$stdout)
+      def self.run(args=[], err=$stderr, out=$stdout)
         trap_interrupt
-        options = ConfigurationOptions.new(args)
-        options.parse_options
+        configure_and_set_up(args)
 
-        set_up_dsl unless options.options[:toplevel_off]
-
-        if options.options[:drb]
+        if @options.options[:drb]
           require 'rspec/core/drb_command_line'
           begin
-            DRbCommandLine.new(options).run(err, out)
+            DRbCommandLine.new(@options).run(err, out)
           rescue DRb::DRbConnError
             err.puts "No DRb server is running. Running in local process instead ..."
-            CommandLine.new(options).run(err, out)
+            CommandLine.new(@options).run(err, out)
           end
         else
-          CommandLine.new(options).run(err, out)
+          CommandLine.new(@options).run(err, out)
         end
       ensure
         RSpec.reset

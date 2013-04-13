@@ -63,7 +63,7 @@ Feature: aliasing
     describe "is not available" do
     end
     """
-    When I run `rspec --toplevel-off top_level_example_group_aliases_spec.rb -fdoc`
+    When I run `rspec --no-toplevel-dsl top_level_example_group_aliases_spec.rb -fdoc`
     Then the output should contain:
     """
     undefined method `describe'

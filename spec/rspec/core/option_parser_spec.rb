@@ -9,12 +9,6 @@ module RSpec::Core
       File.stub(:open).with("foo.txt",'w') { (output_file) }
     end
 
-    it "does not parse empty args" do
-      parser = Parser.new
-      OptionParser.should_not_receive(:new)
-      parser.parse!([])
-    end
-
     it "proposes you to use --help and returns an error on incorrect argument" do
       parser = Parser.new
       option = "--my_wrong_arg"
@@ -49,6 +43,23 @@ module RSpec::Core
       it "gets converted to --line-number" do
         options = Parser.parse!(%w[--line_number 3])
         expect(options[:line_numbers]).to eq ["3"]
+      end
+    end
+
+    describe "--[no-]toplevel-dsl" do
+      it "can be set to true" do
+        options = Parser.parse!(%w[--toplevel-dsl])
+        expect(options[:toplevel_dsl]).to be_true
+      end
+
+      it "can be set to false" do
+        options = Parser.parse!(%w[--no-toplevel-dsl])
+        expect(options[:toplevel_dsl]).to be_false
+      end
+
+      it "is true by default" do
+        options = Parser.parse!([])
+        expect(options[:toplevel_dsl]).to be_true
       end
     end
 
