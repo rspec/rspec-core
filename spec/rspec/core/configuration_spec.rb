@@ -365,7 +365,7 @@ module RSpec::Core
 
         it "loads files in the default path when run with DRB (e.g., spork)" do
           config.stub(:command) { 'spork' }
-          RSpec::Core::Runner.stub(:running_in_drb?) { true }
+          RSpec::Core::Runner.instance.stub(:running_in_drb?) { true }
           config.files_or_directories_to_run = []
           expect(config.files_to_run).not_to be_empty
         end
