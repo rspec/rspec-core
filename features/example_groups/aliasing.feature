@@ -8,9 +8,9 @@ Feature: aliasing
   You can also make these aliases available at the top-level of your
   specs, just add :toplevel_alias as an option.
 
-  By default, top level aliases are included in the main- and the
-  Module-namespace. This can be avoided by running with the option
-  `--toplevel-off`.
+  By default, top level aliases, such as `describe` also `shared_context`
+  are included in the main- and the Module-namespace. This can be avoided
+  by running with the option `--toplevel-off`.
 
   Scenario: custom example group aliases with metadata
     Given a file named "nested_example_group_aliases_spec.rb" with:
@@ -36,6 +36,10 @@ Feature: aliasing
     """
     a thing
       something less important
+    """
+    And the output should not contain:
+    """
+    in broad strokes
     """
 
   Scenario: custom example group alias at the top-level
@@ -67,5 +71,17 @@ Feature: aliasing
     Then the output should contain:
     """
     undefined method `describe'
+    """
+
+  Scenario: Turn off toplevel methods
+    Given a file named "top_level_example_group_aliases_spec.rb" with:
+    """ruby
+    shared_context "is not available" do
+    end
+    """
+    When I run `rspec --no-toplevel-dsl top_level_example_group_aliases_spec.rb -fdoc`
+    Then the output should contain:
+    """
+    undefined method `shared_context'
     """
 
