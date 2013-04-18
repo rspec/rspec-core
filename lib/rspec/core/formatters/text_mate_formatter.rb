@@ -21,7 +21,7 @@ module RSpec
           end
         end
 
-        def extra_failure_content(exception)
+        def extra_failure_content(exception, example)
           require 'rspec/core/formatters/snippet_extractor'
           backtrace = exception.backtrace.map {|line| backtrace_line(line, :skip_textmate_conversion)}
           backtrace.compact!
