@@ -13,7 +13,7 @@ module RSpec
       class BaseFormatter
         include Helpers
         attr_accessor :example_group
-        attr_reader :duration, :examples, :output
+        attr_reader :duration, :examples, :output, :load_time
         attr_reader :example_count, :pending_count, :failure_count
         attr_reader :failed_examples, :pending_examples
 
@@ -27,6 +27,7 @@ module RSpec
           @failed_examples = []
           @pending_examples = []
           @example_group = nil
+          @load_time = 0
         end
 
         # @api public
@@ -39,9 +40,10 @@ module RSpec
         # is {#example_group_started}.
         #
         # @param example_count
-        def start(example_count)
+        def start(example_count, load_time)
           start_sync_output
           @example_count = example_count
+          @load_time = load_time
         end
 
         # @api public
