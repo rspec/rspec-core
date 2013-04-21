@@ -8,9 +8,13 @@ module RSpec::Core
       let(:reporter)  { Reporter.new(formatter) }
 
       %w[start_dump dump_pending dump_failures dump_summary close].each do |message|
-        it "sends #{message} to the formatter(s)" do
+        it "sends #{message} to the formatter(s) that respond to message" do
           formatter.should_receive(message)
           reporter.abort(nil)
+        end
+
+        it "doesnt notify formatters about messages they dont implement" do
+          Reporter.new(double("uninterested formatter")).abort(nil)
         end
       end
     end
