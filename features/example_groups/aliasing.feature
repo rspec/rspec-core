@@ -8,9 +8,10 @@ Feature: aliasing
   You can also make these aliases available at the top-level of your
   specs, just add :toplevel_alias as an option.
 
-  By default, top level aliases, such as `describe` also `shared_context`
-  are included in the main- and the Module-namespace. This can be avoided
-  by running with the option `--toplevel-off`.
+  By default, top level aliases are included in the main- and the
+  Module-namespace. This can be avoided by running with the option
+  `--no-toplevel-dsl`. You can always access the DSL-methods through the
+  RSpec-Module, e.g. `RSpec.describe`.
 
   Scenario: custom example group aliases with metadata
     Given a file named "nested_example_group_aliases_spec.rb" with:
@@ -83,5 +84,24 @@ Feature: aliasing
     Then the output should contain:
     """
     undefined method `shared_context'
+    """
+
+  Scenario: Access example group aliases through RSpec
+    Given a file named "example_group_aliases_in_namespace_spec.rb" with:
+    """ruby
+    RSpec.configure do |c|
+      c.alias_example_group_to :detail, :toplevel_alias => true
+    end
+
+    RSpec.detail "aliases" do
+      it "are available in the RSpec module" do
+      end
+    end
+    """
+    When I run `rspec --no-toplevel-dsl example_group_aliases_in_namespace_spec.rb -fdoc`
+    Then the output should contain:
+    """
+    aliases
+      are available in the RSpec module
     """
 
