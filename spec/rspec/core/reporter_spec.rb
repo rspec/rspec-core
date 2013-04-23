@@ -15,15 +15,22 @@ module RSpec::Core
       end
     end
 
+    context "given a formatter not implementing an event listener method" do
+      let(:formatter) { double('formatter') }
+      let(:reporter)  { Reporter.new(formatter) }
+
+      it "does not send unhandled events to the formatter" do
+        reporter.message(nil)
+      end
+    end
+
     context "given one formatter" do
+      let(:formatter) { double('formatter') }
+
       it "passes messages to that formatter" do
-        formatter = double("formatter")
-        example = double("example")
+        formatter.should_receive(:example_started).with(example)
+
         reporter = Reporter.new(formatter)
-
-        formatter.should_receive(:example_started).
-          with(example)
-
         reporter.example_started(example)
       end
 
@@ -56,30 +63,24 @@ module RSpec::Core
     end
 
     context "given an example group with no examples" do
+      let(:formatter) { double("formatter").as_null_object }
+
       it "does not pass example_group_started or example_group_finished to formatter" do
-        formatter = double("formatter").as_null_object
         formatter.should_not_receive(:example_group_started)
         formatter.should_not_receive(:example_group_finished)
 
-        group = ExampleGroup.describe("root")
-
-        group.run(Reporter.new(formatter))
+        ExampleGroup.describe("root").run(Reporter.new(formatter))
       end
     end
 
     context "given multiple formatters" do
       it "passes messages to all formatters" do
         formatters = [double("formatter"), double("formatter")]
-        example = double("example")
-        reporter = Reporter.new(*formatters)
-
         formatters.each do |formatter|
-          formatter.
-            should_receive(:example_started).
-            with(example)
+          formatter.should_receive(:example_started).with(example)
         end
 
-        reporter.example_started(example)
+        Reporter.new(*formatters).example_started(example)
       end
     end
 
