@@ -14,7 +14,7 @@ module RSpec::Core
         end
 
         it "doesnt notify formatters about messages they dont implement" do
-          expect { reporter.abort(nil) }.to_not raise_error NoMethodError
+          expect { reporter.abort(nil) }.to_not raise_error
         end
       end
     end
