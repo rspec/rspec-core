@@ -1,7 +1,26 @@
 module RSpec::Core
   class Reporter
+    EVENTS = [
+      :start,
+      :message,
+      :example_group_started,
+      :example_group_finished,
+      :example_started,
+      :example_passed,
+      :example_failed,
+      :example_pending,
+      :stop,
+      :start_dump,
+      :dump_pending,
+      :dump_failures,
+      :dump_summary,
+      :seed,
+      :close
+    ].freeze
+
     def initialize(*formatters)
-      @formatters = formatters
+      @listeners = Hash.new { |h, k| h[k] = [] }
+      formatters.each { |formatter| register_listeners formatter }
       @example_count = @failure_count = @pending_count = 0
       @duration = @start = nil
     end
@@ -93,10 +112,19 @@ module RSpec::Core
       notify :stop
     end
 
-    def notify(method, *args, &block)
-      @formatters.each do |formatter|
-        formatter.send method, *args, &block
+    def notify(event, *args, &block)
+      @listeners[event].each do |formatter|
+        formatter.send event, *args, &block
       end
     end
+
+    private
+
+    def register_listeners(formatter)
+      EVENTS.each do |event|
+        @listeners[event] << formatter if formatter.respond_to? event
+      end
+    end
+
   end
 end
