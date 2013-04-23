@@ -1256,10 +1256,22 @@ module RSpec::Core
                                           :one_thing => true, :second_thing => true)
       end
 
-      it "doesn't delete from the original hash" do
-        hash = { :toplevel_alias => true }
-        config.alias_example_group_to :my_group_method, hash
-        expect(hash).to be == { :toplevel_alias => true }
+      it "creates an example_group alias" do
+        RSpec::Core::ExampleGroup.should_receive(:alias_example_group_to).with(:my_group_method, {})
+        config.alias_example_group_to :my_group_method
+      end
+
+      it "doesn't create a toplevel method" do
+        RSpec::Core::DSL.should_not_receive(:register_example_group_alias)
+        config.alias_example_group_to :my_group_method
+      end
+
+      context "at toplevel" do
+        it "aliases example group and registers it in the dsl" do
+          RSpec::Core::DSL.should_receive(:register_example_group_alias).with(:my_group_method)
+          RSpec::Core::ExampleGroup.should_receive(:alias_example_group_to).with(:my_group_method, {})
+          config.toplevel_alias_example_group_to :my_group_method
+        end
       end
     end
 
