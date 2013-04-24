@@ -112,7 +112,7 @@ module RSpec
               begin
                 run_before_each
                 @example_group_instance.instance_eval(&@example_block)
-              rescue Pending::PendingDeclaredInExample => e
+              rescue ExampleInterrupted, Pending::PendingDeclaredInExample => e
                 @pending_declared_in_example = e.message
               rescue Exception => e
                 set_exception(e)
@@ -296,17 +296,31 @@ An error occurred #{context}
       end
 
       def run_before_each
+        set_interrupt_trap
         @example_group_instance.setup_mocks_for_rspec
         @example_group_class.run_before_each_hooks(self)
       end
 
       def run_after_each
+        unset_interrupt_trap
         @example_group_class.run_after_each_hooks(self)
         verify_mocks
       rescue Exception => e
         set_exception(e, "in an after(:each) hook")
       ensure
         @example_group_instance.teardown_mocks_for_rspec
+      end
+
+      def set_interrupt_trap
+        if trap_type = RSpec.configuration.skip_example_trap
+          trap(trap_type[:signal]) { raise ExampleInterrupted.new(trap_type[:message]) }
+        end
+      end
+
+      def unset_interrupt_trap
+        if trap_type = RSpec.configuration.skip_example_trap
+          trap(trap_type[:signal], 'DEFAULT')
+        end
       end
 
       def verify_mocks
@@ -327,5 +341,7 @@ An error occurred #{context}
         execution_result.update(results)
       end
     end
+
+    class ExampleInterrupted < StandardError ; end
   end
 end

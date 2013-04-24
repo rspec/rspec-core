@@ -1005,6 +1005,20 @@ EOM
         order_examples(&block)
       end
 
+      # @private
+      def skip_example_trap
+        if @skip_example_trap.nil?
+          if(Signal.list['INFO'])
+            @skip_example_trap = { :signal => 'INFO', :message => 'Skipped at runtime via Ctrl+T'}
+          elsif(Signal.list['TSTP'])
+            @skip_example_trap = { :signal => 'TSTP', :message => 'Skipped at runtime via Ctrl+Z'}
+          else
+            @skip_example_trap = false
+          end
+        end
+        @skip_example_trap
+      end
+
     private
 
       def get_files_to_run(paths)
