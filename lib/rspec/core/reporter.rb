@@ -95,7 +95,7 @@ module RSpec::Core
 
     def notify(method, *args, &block)
       @formatters.each do |formatter|
-        formatter.send method, *args, &block
+        formatter.send(method, *args, &block) if formatter.respond_to? method
       end
     end
   end
