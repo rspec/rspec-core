@@ -4,21 +4,42 @@ require 'rspec/core/drb_command_line'
 module RSpec::Core
   describe Runner do
     describe 'at_exit' do
+      let(:runner) { RSpec::Core::Runner.new }
+      before { runner.stub(:running_in_drb?).and_return(false) }
+
       it 'sets an at_exit hook if none is already set' do
-        RSpec::Core::Runner.stub(:installed_at_exit?).and_return(false)
-        RSpec::Core::Runner.stub(:running_in_drb?).and_return(false)
-        RSpec::Core::Runner.stub(:at_exit_hook_disabled?).and_return(false)
-        RSpec::Core::Runner.stub(:run).and_return(-1)
-        RSpec::Core::Runner.should_receive(:at_exit)
-        RSpec::Core::Runner.autorun
+        runner.stub(:installed_at_exit?).and_return(false)
+        runner.should_receive(:at_exit)
+        runner.autorun
       end
 
       it 'does not set the at_exit hook if it is already set' do
-        RSpec::Core::Runner.stub(:installed_at_exit?).and_return(true)
-        RSpec::Core::Runner.stub(:running_in_drb?).and_return(false)
-        RSpec::Core::Runner.stub(:at_exit_hook_disabled?).and_return(false)
-        RSpec::Core::Runner.should_receive(:at_exit).never
-        RSpec::Core::Runner.autorun
+        runner.stub(:installed_at_exit?).and_return(true)
+        runner.should_not_receive(:at_exit)
+        runner.autorun
+      end
+    end
+
+    describe "configuration and setup" do
+      let(:runner) { RSpec::Core::Runner.new }
+      before { RSpec::Core::CommandLine.stub(:new).and_return(double(:run => 1)) }
+
+      it "sets up the dsl once" do
+        Module.should_receive(:include).with(RSpec::Core::DSL).once
+        RSpec::Core::Runner.main_object.should_receive(:extend).with(RSpec::Core::DSL).once
+        2.times { runner.run }
+      end
+
+      it "doesn't set up the dsl if we don't want it to" do
+        Module.should_not_receive(:include)
+        RSpec::Core::Runner.main_object.should_not_receive(:extend)
+        runner.run(["--no-toplevel-dsl"])
+      end
+
+      it "doesn't overwrite existing options with empty options" do
+        ConfigurationOptions.should_receive(:new).once.and_call_original
+        runner.run(["--fail-fast"])
+        runner.run([])
       end
     end
 

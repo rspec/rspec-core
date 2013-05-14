@@ -21,5 +21,10 @@ describe "The RSpec DSL" do
       end
     end
   end
+
+  it "can alias new names" do
+    RSpec::Core::DSL.register_example_group_alias(:my_group_alias)
+    expect(main).to respond_to(:my_group_alias)
+  end
 end
 

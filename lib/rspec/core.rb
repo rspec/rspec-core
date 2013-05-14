@@ -42,6 +42,7 @@ require_rspec['core/version']
 
 module RSpec
   autoload :SharedContext, 'rspec/core/shared_context'
+  extend Core::DSL
 
   # @private
   def self.wants_to_quit

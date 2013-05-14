@@ -139,6 +139,19 @@ module RSpec
         def alias_it_behaves_like_to name, *args, &block
           (class << self; self; end).define_nested_shared_group_method name, *args, &block
         end
+
+        # Works like `alias_method :name, :example_group` with the added benefit of
+        # assigning default metadata to the generated example group.
+        #
+        # @note Use with caution. This extends the language used in your
+        #   specs, but does not add any additional documentation.
+        def alias_example_group_to(name, metadata={})
+          (class << self; self; end).send(:define_method, name) do |*args, &block|
+            combined_metadata = metadata.dup
+            combined_metadata.merge!(args.pop) if args.last.is_a? Hash
+            example_group(*(args << combined_metadata), &block)
+          end
+        end
       end
 
       # Includes shared content mapped to `name` directly in the group in which
@@ -216,7 +229,7 @@ module RSpec
       #     end
       #
       # @see DSL#describe
-      def self.describe(*args, &example_group_block)
+      def self.example_group(*args, &example_group_block)
         @_subclass_count ||= 0
         @_subclass_count += 1
         args << {} unless args.last.is_a?(Hash)
@@ -232,7 +245,8 @@ module RSpec
       end
 
       class << self
-        alias_method :context, :describe
+        alias_method :describe, :example_group
+        alias_method :context, :example_group
       end
 
       # @private

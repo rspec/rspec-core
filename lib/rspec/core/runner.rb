@@ -1,10 +1,24 @@
 module RSpec
   module Core
     class Runner
+      class << self
+        #we need access to the main object in .set_up_dsl
+        attr_accessor :main_object
+      end
+
+      def self.instance
+        @instance ||= new
+      end
+
+      def self.autorun
+        instance.autorun
+      end
 
       # Register an at_exit hook that runs the suite.
-      def self.autorun
-        return if autorun_disabled? || installed_at_exit? || running_in_drb?
+      def autorun
+        return if installed_at_exit? || running_in_drb?
+
+        configure_and_set_up(ARGV)
         at_exit do
           # Don't bother running any specs and just let the program terminate
           # if we got here due to an unrescued exception (anything other than
@@ -14,37 +28,17 @@ module RSpec
           # We got here because either the end of the program was reached or
           # somebody called Kernel#exit.  Run the specs and then override any
           # existing exit status with RSpec's exit status if any specs failed.
-          status = run(ARGV, $stderr, $stdout).to_i
+          status = run.to_i
           exit status if status != 0
         end
         @installed_at_exit = true
       end
       AT_EXIT_HOOK_BACKTRACE_LINE = "#{__FILE__}:#{__LINE__ - 2}:in `autorun'"
 
-      def self.disable_autorun!
-        @autorun_disabled = true
-      end
-
-      def self.autorun_disabled?
-        @autorun_disabled ||= false
-      end
-
-      def self.installed_at_exit?
-        @installed_at_exit ||= false
-      end
-
-      def self.running_in_drb?
+      def running_in_drb?
         defined?(DRb) &&
         (DRb.current_server rescue false) &&
          DRb.current_server.uri =~ /druby\:\/\/127.0.0.1\:/
-      end
-
-      def self.trap_interrupt
-        trap('INT') do
-          exit!(1) if RSpec.wants_to_quit
-          RSpec.wants_to_quit = true
-          STDERR.puts "\nExiting... Interrupt again to exit immediately."
-        end
       end
 
       # Run a suite of RSpec examples.
@@ -63,10 +57,13 @@ module RSpec
       #
       # #### Returns
       # * +Fixnum+ - exit status code (0/1)
-      def self.run(args, err=$stderr, out=$stdout)
+      def self.run(*args)
+        instance.run(*args)
+      end
+
+      def run(args=[], err=$stderr, out=$stdout)
         trap_interrupt
-        options = ConfigurationOptions.new(args)
-        options.parse_options
+        configure_and_set_up(args)
 
         if options.options[:drb]
           require 'rspec/core/drb_command_line'
@@ -82,6 +79,46 @@ module RSpec
       ensure
         RSpec.reset
       end
+
+      private
+      def options
+        @options
+      end
+
+      def installed_at_exit?
+        @installed_at_exit ||= false
+      end
+
+      def trap_interrupt
+        trap('INT') do
+          exit!(1) if RSpec.wants_to_quit
+          RSpec.wants_to_quit = true
+          STDERR.puts "\nExiting... Interrupt again to exit immediately."
+        end
+      end
+
+      def set_up_dsl
+        return if !options.options[:toplevel_dsl] || @dsl_setup_done
+
+        self.class.main_object.send(:extend, RSpec::Core::DSL)
+        Module.send(:include, RSpec::Core::DSL)
+        @dsl_setup_done = true
+      end
+
+      def configure_and_set_up(args)
+        return if args.empty? && !@options.nil?
+        @options = begin
+          options = ConfigurationOptions.new(args)
+          options.parse_options
+
+          options
+        end
+
+        set_up_dsl
+      end
     end
   end
 end
+
+RSpec::Core::Runner.main_object = self
+

@@ -86,6 +86,7 @@ MESSAGE
       # `"spec"`). Allows you to just type `rspec` instead of `rspec spec` to
       # run all the examples in the `spec` directory.
       add_setting :default_path
+      add_setting :toplevel_dsl
 
       # Run examples over DRb (default: `false`). RSpec doesn't supply the DRb
       # server, but you can use tools like spork.
@@ -604,7 +605,7 @@ EOM
       # @private
       def files_or_directories_to_run=(*files)
         files = files.flatten
-        files << default_path if (command == 'rspec' || Runner.running_in_drb?) && default_path && files.empty?
+        files << default_path if (command == 'rspec' || Runner.instance.running_in_drb?) && default_path && files.empty?
         self.files_to_run = get_files_to_run(files)
       end
 
@@ -632,6 +633,16 @@ EOM
       def alias_example_to(new_name, *args)
         extra_options = build_metadata_hash_from(args)
         RSpec::Core::ExampleGroup.alias_example_to(new_name, extra_options)
+      end
+
+      def alias_example_group_to(new_name, *metadata)
+        extra_options = build_metadata_hash_from(metadata)
+        RSpec::Core::ExampleGroup.alias_example_group_to(new_name, extra_options)
+      end
+
+      def toplevel_alias_example_group_to(new_name, *metadata)
+        alias_example_group_to(new_name, metadata)
+        RSpec::Core::DSL.register_example_group_alias(new_name)
       end
 
       # Define an alias for it_should_behave_like that allows different

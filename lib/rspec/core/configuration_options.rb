@@ -47,7 +47,7 @@ module RSpec
 
       NON_FORCED_OPTIONS = [
         :debug, :requires, :libs, :profile, :drb, :files_or_directories_to_run,
-        :line_numbers, :full_description, :full_backtrace, :tty
+        :line_numbers, :full_description, :full_backtrace, :tty, :toplevel_dsl
       ].to_set
 
       MERGED_OPTIONS = [:requires, :libs].to_set

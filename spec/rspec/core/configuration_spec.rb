@@ -373,7 +373,7 @@ module RSpec::Core
 
         it "loads files in the default path when run with DRB (e.g., spork)" do
           config.stub(:command) { 'spork' }
-          RSpec::Core::Runner.stub(:running_in_drb?) { true }
+          RSpec::Core::Runner.instance.stub(:running_in_drb?) { true }
           config.files_or_directories_to_run = []
           expect(config.files_to_run).not_to be_empty
         end
@@ -1312,6 +1312,50 @@ module RSpec::Core
 
         config.configure_group(group)
         config.configure_group(child)
+      end
+    end
+
+    describe "#alias_example_group_to" do
+      after do
+        RSpec::Core::ExampleGroup.module_eval do
+          class << self
+            undef :my_group_method if method_defined? :my_group_method
+          end
+        end
+      end
+
+      it_behaves_like "metadata hash builder" do
+        def metadata_hash(*args)
+          config.alias_example_group_to :my_group_method, *args
+          group = ExampleGroup.my_group_method("a group")
+          group.metadata
+        end
+      end
+
+      it "allows adding additional metadata" do
+        RSpec.configuration.stub(:treat_symbols_as_metadata_keys_with_true_values?) { true }
+        config.alias_example_group_to :my_group_method, :one_thing, { :some => "thing" }
+        group = ExampleGroup.my_group_method("a group", :second_thing, :another => "thing")
+        expect(group.metadata).to include(:some => "thing", :another => "thing",
+                                          :one_thing => true, :second_thing => true)
+      end
+
+      it "creates an example_group alias" do
+        RSpec::Core::ExampleGroup.should_receive(:alias_example_group_to).with(:my_group_method, {})
+        config.alias_example_group_to :my_group_method
+      end
+
+      it "doesn't create a toplevel method" do
+        RSpec::Core::DSL.should_not_receive(:register_example_group_alias)
+        config.alias_example_group_to :my_group_method
+      end
+
+      context "at toplevel" do
+        it "aliases example group and registers it in the dsl" do
+          RSpec::Core::DSL.should_receive(:register_example_group_alias).with(:my_group_method)
+          RSpec::Core::ExampleGroup.should_receive(:alias_example_group_to).with(:my_group_method, {})
+          config.toplevel_alias_example_group_to :my_group_method
+        end
       end
     end
 

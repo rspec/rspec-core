@@ -12,8 +12,6 @@ module RSpec::Core
     end
 
     def parse!(args)
-      return {} if args.empty?
-
       convert_deprecated_args(args)
 
       options = args.delete('--tty') ? {:tty => true} : {}
@@ -93,6 +91,11 @@ module RSpec::Core
 
         parser.on('--drb-port PORT', 'Port to connect to the DRb server.') do |o|
           options[:drb_port] = o.to_i
+        end
+
+        options[:toplevel_dsl] = true
+        parser.on('--[no-]toplevel-dsl', "Include DSL methods into main Object (on by default)") do |o|
+          options[:toplevel_dsl] = o
         end
 
         parser.on('--init', 'Initialize your project with RSpec.') do |cmd|
