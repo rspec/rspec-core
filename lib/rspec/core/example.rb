@@ -71,6 +71,8 @@ module RSpec
       # running this example.
       attr_reader :example_group_instance
 
+      attr_accessor :order
+
       # Creates a new instance of Example.
       # @param example_group_class the subclass of ExampleGroup in which this Example is declared
       # @param description the String passed to the `it` method (or alias)
@@ -81,6 +83,7 @@ module RSpec
         @metadata  = @example_group_class.metadata.for_example(description, metadata)
         @example_group_instance = @exception = nil
         @pending_declared_in_example = false
+        @order = metadata[:order]
       end
 
       # @deprecated access options via metadata instead
