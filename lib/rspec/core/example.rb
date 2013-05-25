@@ -83,7 +83,7 @@ module RSpec
         @metadata  = @example_group_class.metadata.for_example(description, metadata)
         @example_group_instance = @exception = nil
         @pending_declared_in_example = false
-        @order = metadata[:order]
+        @order = example_group_class.order
       end
 
       # @deprecated access options via metadata instead

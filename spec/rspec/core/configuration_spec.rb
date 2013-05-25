@@ -1430,6 +1430,51 @@ module RSpec::Core
           Kernel.should_receive(:rand).and_return(3, 1, 4, 2)
           expect(list.ordered).to eq([2, 4, 1, 3])
         end
+
+        it 'can be overridden by setting :order => :default on an example group' do
+          RSpec.stub(:configuration => config)
+          group = ExampleGroup.describe "something", :order => :default do
+            10.times do |i|
+              it "#{i}" do
+              end
+            end
+          end
+
+          list = group.examples.extend(Extensions::Ordered::Examples)
+          expect(list.ordered.map {|x| x.description}).to eq((0...10).map(&:to_s))
+        end
+
+        context "with a nested example group" do
+          let(:group) do
+            ExampleGroup.describe "something", :order => :random do
+              10.times do |i|
+                it "#{i}" do
+                end
+              end
+
+              describe "something else", :order => :default do
+                it "nested-1" do
+                end
+
+                it "nested-2" do
+                end
+              end
+            end
+          end
+          it "lets a nested example group override it's parent ordering" do
+            RSpec.stub(:configuration => config)
+            nested = group.children.first
+            list = nested.examples.extend(Extensions::Ordered::Examples)
+            expect(list.ordered.map(&:description)).to eq(["nested-1", "nested-2"])
+          end
+
+          it "gives the examples in the parent group the parent ordering" do
+            RSpec.stub(:configuration => config)
+            list = group.examples.extend(Extensions::Ordered::Examples)
+            expect(list.ordered.map {|x| x.description}).not_to eq((0...10).map(&:to_s))
+          end
+        end
+
       end
 
       context 'given "default"' do
