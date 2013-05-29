@@ -25,7 +25,21 @@ module RSpec
         @configuration.reporter.report(@world.example_count, @configuration.randomize? ? @configuration.seed : nil) do |reporter|
           begin
             @configuration.run_hook(:before, :suite)
-            @world.example_groups.ordered.map {|g| g.run(reporter)}.all? ? 0 : @configuration.failure_exit_code
+            unless @configuration.stress_test
+              @world.example_groups.ordered.map {|g| g.run(reporter)}.all?
+            else
+              success = true
+              random = Random.new(@configuration.seed)
+              all_examples = @world.all_examples
+              end_time = Time.now + @configuration.stress_test
+              while Time.now < end_time
+                example = all_examples.sample(random: random)
+                chain_to_execute = [example] + example.example_group.parent_groups.dup
+                success &= chain_to_execute.pop.run(reporter, chain_to_execute)
+                break if RSpec.wants_to_quit
+              end
+              success
+            end ? 0 : @configuration.failure_exit_code
           ensure
             @configuration.run_hook(:after, :suite)
           end

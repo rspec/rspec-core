@@ -52,6 +52,12 @@ module RSpec
         end
       end
 
+      def all_examples
+        example_groups.collect {|g| g.descendants}.flatten.inject([]) do |array, g|
+          array += g.filtered_examples
+        end
+      end
+
       def preceding_declaration_line(filter_line)
         declaration_line_numbers.sort.inject(nil) do |highest_prior_declaration_line, line|
           line <= filter_line ? line : highest_prior_declaration_line

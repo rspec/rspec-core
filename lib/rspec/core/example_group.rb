@@ -359,7 +359,7 @@ An error occurred in an after(:all) hook.
       end
 
       # Runs all the examples in this group
-      def self.run(reporter)
+      def self.run(reporter, chain_to_execute=nil)
         if RSpec.wants_to_quit
           RSpec.clear_remaining_example_groups if top_level?
           return
@@ -368,9 +368,17 @@ An error occurred in an after(:all) hook.
 
         begin
           run_before_all_hooks(new)
-          result_for_this_group = run_examples(reporter)
-          results_for_descendants = children.ordered.map {|child| child.run(reporter)}.all?
-          result_for_this_group && results_for_descendants
+          unless RSpec.configuration.stress_test
+            result_for_this_group = run_examples(reporter)
+            results_for_descendants = children.ordered.map {|child| child.run(reporter)}.all?
+            result_for_this_group && results_for_descendants
+          else
+            if chain_to_execute.size == 1
+              run_example(chain_to_execute.first, reporter)
+            else
+              chain_to_execute.pop.run(reporter, chain_to_execute)
+            end
+          end
         rescue Exception => ex
           RSpec.wants_to_quit = true if fail_fast?
           fail_filtered_examples(ex, reporter)
@@ -385,12 +393,17 @@ An error occurred in an after(:all) hook.
       def self.run_examples(reporter)
         filtered_examples.ordered.map do |example|
           next if RSpec.wants_to_quit
-          instance = new
-          set_ivars(instance, before_all_ivars)
-          succeeded = example.run(instance, reporter)
-          RSpec.wants_to_quit = true if fail_fast? && !succeeded
-          succeeded
+          run_example(example, reporter)
         end.all?
+      end
+
+      # @private
+      def self.run_example(example, reporter)
+        instance = new
+        set_ivars(instance, before_all_ivars)
+        succeeded = example.run(instance, reporter)
+        RSpec.wants_to_quit = true if fail_fast? && !succeeded
+        succeeded
       end
 
       # @private

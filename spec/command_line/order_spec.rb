@@ -177,6 +177,25 @@ describe 'command line', :ui do
     end
   end
 
+  describe '--stress-test' do
+    it 'repeatedly runs randomly selected examples until time limit' do
+      run_command 'tmp/aruba/spec/order_spec.rb --stress-test 0.1 --seed 123 -f doc'
+
+      # there should be some repetition
+      groups = top_level_groups {|g| g}.flatten
+      expect(groups.size).to be > 100
+      # group1 should be chosen about 30 times more than group2
+      ratio = groups.count('group 1') / groups.count('group 2')
+      expect(ratio).to be >= 30 / 2
+      expect(ratio).to be <= 30 * 2
+
+      # examples1 should be chosen about the same as examples11
+      ratio = examples('group 1') {|e| e}.flatten.size / examples('group 1-1') {|e| e}.flatten.size
+      expect(ratio).to be >= 1 / 2
+      expect(ratio).to be <= 1 * 2
+    end
+  end
+
   def examples(group)
     yield split_in_half(stdout.string.scan(/^\s+#{group} example.*$/))
   end
