@@ -433,7 +433,11 @@ EOS
               let(:__its_subject) do
                 attribute_chain = attribute.to_s.split('.')
                 attribute_chain.inject(subject) do |inner_subject, attr|
-                  inner_subject.send(attr)
+                  if _visible?(inner_subject, attr)
+                    inner_subject.send(attr)
+                  else
+                    raise NoMethodError, "This method is not available."
+                  end
                 end
               end
             end
@@ -450,6 +454,12 @@ EOS
           end
         end
       end
+
+      def _visible?(klass, name)
+        klass.public_methods.include?(name.to_sym)
+      end
+      private :_visible?
+
 
       # @api private
       #

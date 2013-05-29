@@ -340,6 +340,48 @@ module RSpec::Core
         its(:call_count) { should eq(1) }
       end
 
+      context "its raises error when instance method under test is private" do
+        subject do
+          Class.new do
+            def name
+              private_name
+            end
+
+            private
+
+            def private_name
+              "foo"
+            end
+          end.new
+        end
+
+        its(:private_name) do
+          expect do
+            should eq("foo")
+          end.to raise_error(NoMethodError)
+        end
+      end
+
+      context "its raises error when class method under test is private" do
+        subject do
+          class TestPublicAvailability
+            class << self
+              private
+              def private_name
+                "foo"
+              end
+            end
+            self
+          end
+        end
+
+        its(:private_name) do
+          expect do
+            should eq("foo")
+          end.to raise_error(NoMethodError)
+        end
+      end
+
       context "with nil value" do
         subject do
           Class.new do
