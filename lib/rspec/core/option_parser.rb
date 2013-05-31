@@ -75,6 +75,10 @@ module RSpec::Core
           options[:order] = "rand:#{seed}"
         end
 
+        parser.on('--stress-test LIMIT', Float, 'Repeatedly run randomly selected examples for LIMIT seconds.') do |o|
+          options[:stress_test] = o.to_f
+        end
+
         parser.on('-d', '--debugger', 'Enable debugging.') do |o|
           options[:debug] = true
         end

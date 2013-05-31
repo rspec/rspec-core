@@ -48,8 +48,8 @@ Spork.prefork do
 
       (class << RSpec::Core::ExampleGroup; self; end).class_eval do
         alias_method :orig_run, :run
-        def run(reporter=nil)
-          orig_run(reporter || NullObject.new)
+        def run(reporter=nil, chain_to_execute=nil)
+          orig_run(reporter || NullObject.new, chain_to_execute || NullObject.new)
         end
       end
 

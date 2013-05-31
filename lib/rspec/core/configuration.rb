@@ -150,6 +150,9 @@ module RSpec
       # don't accidentally leave the seed encoded.
       define_reader :seed
 
+      # Time limit for stress testing, if any (default: nil).
+      add_setting :stress_test
+
       # When a block passed to pending fails (as expected), display the failure
       # without reporting it as a failure (default: false).
       add_setting :show_failures_in_pending_blocks
@@ -931,7 +934,7 @@ EOM
       end
 
       def randomize?
-        order.to_s.match(/rand/)
+        order.to_s.match(/rand/) || stress_test
       end
 
       # @private
