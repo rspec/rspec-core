@@ -109,7 +109,7 @@ module RSpec
           # stop if we've only one example group
           return if example_groups.keys.length <= 1
           
-          example_groups.each do |loc, hash|
+          example_groups.each_value do |hash|
             hash[:average] = hash[:total_time].to_f / hash[:count]
           end
           
