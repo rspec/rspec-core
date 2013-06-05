@@ -6,9 +6,15 @@ Before do
   @aruba_timeout_seconds = timeouts.fetch(RUBY_PLATFORM) { 10 }
 end
 
-Aruba.configure do |config|
-  config.before_cmd do |cmd|
-    set_env('JRUBY_OPTS', "-X-C #{ENV['JRUBY_OPTS']}") # disable JIT since these processes are so short lived
+if RUBY_PLATFORM == "java"
+  pid = Process.spawn("jruby --ng-server &")
+  Aruba.configure do |config|
+    config.before_cmd do |cmd|
+      set_env('JRUBY_OPTS', "--ng -X-C #{ENV['JRUBY_OPTS']}") # disable JIT since these processes are so short lived
+    end
   end
-end if RUBY_PLATFORM == 'java'
 
+  at_exit do
+    Process.spawn("kill #{pid}")
+  end
+end
