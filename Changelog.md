@@ -1,8 +1,15 @@
-### DEv
+### Dev
 
 Enhancements
 
 * Clean up some internal use of Enumerable methods. (Vipul A M)
+
+Bug fixes
+
+* Refactor memoized helpers (let, subject, named subject) to use an internalised
+  method name to avoid conflict with outside methods. Avoids complex ordering
+  issues with `LetDefinitions` module. See #908 #817 #871 rspec/rspec-rails#738 .
+  (Andy Lindeman, Jon Rowe)
 
 ### 2.14.0.rc1 / 2013-05-27
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.13.1...v2.14.0.rc1)
