@@ -95,7 +95,9 @@ module RSpec::Core
           subject_value = nil
           group.describe("I'm nested!") do
             example { subject_value = subject }
-          end.run
+          end
+
+          group.run
 
           expect(subject_value).to eq([4, 5, 6])
         end
@@ -106,7 +108,9 @@ module RSpec::Core
             describe("Nesting level 2") do
               example { subject_value = subject }
             end
-          end.run
+          end
+
+          group.run
 
           expect(subject_value).to eq([4, 5, 6])
         end
@@ -116,7 +120,9 @@ module RSpec::Core
           group.describe("Nested") do
             subject { super() + [:override] }
             example { subject_value = subject }
-          end.run
+          end
+
+          group.run
 
           expect(subject_value).to eq([4, 5, 6, :override])
         end
