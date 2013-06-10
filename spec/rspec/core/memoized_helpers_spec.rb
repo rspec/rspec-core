@@ -619,6 +619,8 @@ module RSpec::Core
 
     context "when included modules have hooks that define memoized helpers" do
       it "allows memoized helpers to override methods in previously included modules" do
+        value_from_example = nil
+
         group = ExampleGroup.describe do
           include Module.new {
             def self.included(m); m.let(:unrelated) { :unrelated }; end
@@ -629,9 +631,11 @@ module RSpec::Core
           }
 
           let(:hello_message) { "Hello from let" }
+          example { value_from_example = hello_message }
         end
+        group.run
 
-        expect(group.new.hello_message).to eq("Hello from let")
+        expect(value_from_example).to eq("Hello from let")
       end
     end
   end
