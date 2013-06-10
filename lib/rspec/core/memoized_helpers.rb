@@ -481,14 +481,14 @@ EOS
 
       # @api private
       def self.define_memoized_method(example_group, name, memoized_method_name, &block)
-        # We have to pass the block directly to `define_method` to
-        # allow it to use method constructs like `super` and `return`.
         raise "#let or #subject called without a block" if block.nil?
 
-        MemoizedHelpers.module_for(example_group).__send__(:define_method, memoized_method_name, &block)
+        # We have to pass the block directly to `define_method` to
+        # allow it to use method constructs like `super` and `return`.
+        module_for(example_group).__send__(:define_method, memoized_method_name, &block)
 
         # Apply the memoization. The method has been defined in an ancestor
-        # module so we can use `super` here to get the value.
+        # module so we can use the decorated name here to get the value.
         example_group.__send__(:define_method, name) do
           __memoized.fetch(name) { |k| __memoized[k] = send(memoized_method_name, &nil) }
         end

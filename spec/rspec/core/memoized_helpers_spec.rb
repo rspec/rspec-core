@@ -620,6 +620,7 @@ module RSpec::Core
     context "when included modules have hooks that define memoized helpers" do
       it "allows memoized helpers to override methods in previously included modules" do
         group = ExampleGroup.describe do
+          # this replicates the ordering scenario that breaks in #817
           include Module.new {
             def self.included(m); m.let(:unrelated) { :unrelated }; end
           }
