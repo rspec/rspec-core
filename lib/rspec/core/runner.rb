@@ -71,7 +71,7 @@ module RSpec
         major, minor, point = RUBY_VERSION.split('.').map { |v| v.to_i }
 
         if major == 1 && ( (minor == 9 && point < 2) || (minor == 8 && point < 7) )
-          RSpec.deprecate "Ruby version #{RUBY_VERSION}",
+          RSpec.deprecate "RSpec support for Ruby #{RUBY_VERSION}",
                           :replacement => "1.8.7 or >= 1.9.2",
                           :call_site   => nil
         end
