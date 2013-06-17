@@ -917,7 +917,10 @@ EOM
       # @private
       RANDOM_ORDERING = lambda do |list|
         Kernel.srand RSpec.configuration.seed
-        ordering = list.sort_by { Kernel.rand(list.size) }
+        orders = list.map {|x| !(x.respond_to?(:order)) || x.order.nil? || x.order == :random ? Kernel.rand(list.size) : 1}
+        zipped = list.zip(orders)
+
+        ordering = zipped.sort_by { |x| x[1] }.map { |x| x.first }
         Kernel.srand # reset random generation
         ordering
       end

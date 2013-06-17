@@ -20,6 +20,10 @@ module RSpec
       include Pending
       include SharedExampleGroup
 
+      def self.order
+        nil
+      end
+
       # @private
       def self.world
         RSpec.world
@@ -233,6 +237,11 @@ module RSpec
       # @private
       def self.subclass(parent, args, &example_group_block)
         subclass = Class.new(parent)
+        if args.last[:order]
+          subclass.define_singleton_method(:order) { args.last[:order] }
+        elsif parent && parent.order
+          subclass.define_singleton_method(:order) { parent.order }
+        end
         subclass.set_it_up(*args)
         subclass.module_eval(&example_group_block) if example_group_block
 
@@ -289,6 +298,7 @@ module RSpec
         args << build_metadata_hash_from(args)
         args.unshift(symbol_description) if symbol_description
         @metadata = RSpec::Core::Metadata.new(superclass_metadata).process(*args)
+        @order = nil
         hooks.register_globals(self, RSpec.configuration.hooks)
         world.configure_group(self)
       end
