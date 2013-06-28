@@ -84,6 +84,22 @@ Feature: around hooks
     When I run `rspec example_spec.rb`
     Then the output should contain "this should show up in the output"
 
+  Scenario: honors treat_symbols_as_metadata_keys_with_true_values
+    Given a file named "example_spec.rb" with:
+      """ruby
+      RSpec.configure { |c| c.treat_symbols_as_metadata_keys_with_true_values = true  }
+      describe "something" do
+        around(:each) do |example|
+          example.metadata[:foo].should be_true
+        end
+
+        it "does nothing", :bar do
+        end
+      end
+      """
+    When I run `rspec example_spec.rb`
+    Then the examples should all pass
+
   Scenario: define a global around hook
     Given a file named "example_spec.rb" with:
       """ruby
