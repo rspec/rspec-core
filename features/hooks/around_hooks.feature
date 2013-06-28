@@ -7,7 +7,7 @@ Feature: around hooks
 
   Where around hooks shine is when you want to run an example in a block. For
   example, if your database library offers a transaction method that receives
-  a block, you can use an around hook as described in the first scenario:
+  a block, you can use an around hook as described in the first scenario.
 
   WARNING: around hooks do not share state with the example the way before and
   after hooks do. This means that you can not share instance variables between
