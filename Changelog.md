@@ -1,6 +1,19 @@
 ### Dev
 
 Bug fixes
+=======
+Breaking Changes for 3.0.0:
+
+* Remove explicit support for 1.8.6 (Jon Rowe)
+
+Enhancements
+
+* Clean up some internal use of Enumerable methods. (Vipul A M)
+* Replace unmaintained syntax gem with coderay gem. (Xavier Shay)
+* Apply focus to examples defined with `fit` (equivalent of
+  `it "description", focus: true`) (Michael de Silva)
+
+Bug fix
 
 * Ensure methods defined by `let` take precedence over others
   when there is a name collision (e.g. from an included module).
