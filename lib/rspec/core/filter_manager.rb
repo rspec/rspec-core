@@ -74,11 +74,11 @@ module RSpec
       STANDALONE_FILTERS = [:locations, :line_numbers, :full_description]
 
       module Describable
-        PROC_HEX_NUMBER = /0x[0-9a-f]+@/
+        PROC_HEX_NUMBER = /0x[0-9a-f]+\s?@/
         PROJECT_DIR = File.expand_path('.')
 
         def description
-          reject { |k, v| RSpec::Core::FilterManager::DEFAULT_EXCLUSIONS[k] == v }.inspect.gsub(PROC_HEX_NUMBER, '').gsub(PROJECT_DIR, '.').gsub(' (lambda)','')
+          reject { |k, v| RSpec::Core::FilterManager::DEFAULT_EXCLUSIONS[k] == v }.inspect.gsub(PROC_HEX_NUMBER, '').gsub(PROJECT_DIR, '.').gsub(' (lambda)','').gsub('__is_lambda__=true','')
         end
 
         def empty_without_conditional_filters?
