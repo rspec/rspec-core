@@ -1,4 +1,5 @@
-### Dev
+### 2.14.0 / 2013-07-06
+[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.0.rc1...v2.14.0)
 
 Enhancements
 
