@@ -1,11 +1,5 @@
 ### Dev
 
-Bug fixes
-=======
-Breaking Changes for 3.0.0:
-
-* Remove explicit support for 1.8.6 (Jon Rowe)
-
 Enhancements
 
 * Clean up some internal use of Enumerable methods. (Vipul A M)
