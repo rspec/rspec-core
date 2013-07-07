@@ -1,6 +1,19 @@
 ### Dev
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.0...2-99-maintenance)
 
+Enhancements
+
+* Block-based DSL methods that run in the context of an example
+  (`it`, `before(:each)`, `after(:each)`, `let` and `subject`)
+  now yield the example as a block argument (David Chelimsky).
+
+Deprecations
+
+* Deprecate `RSpec::Core::ExampleGroup#example` and
+  `RSpec::Core::ExampleGroup#running_example` methods. If you need
+  access to the example (e.g. to get its metadata), use a block arg
+  instead (David Chelimsky).
+
 ### 2.14.0 / 2013-07-06
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.0.rc1...v2.14.0)
 
