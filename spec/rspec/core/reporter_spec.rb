@@ -120,6 +120,28 @@ module RSpec::Core
       end
     end
 
+    describe 'when message implemented on kernel' do
+      def with_message_defined_on_kernel
+        return yield if ::Kernel.method_defined?(:start)
+
+        begin
+          ::Kernel.module_eval { def start(*); raise "boom"; end }
+          yield
+        ensure
+          ::Kernel.module_eval { undef start }
+        end
+      end
+
+      let(:formatter) { double("formatter") }
+
+      it 'does not blow up when `Kernel` defines message instead of a formatter' do
+        with_message_defined_on_kernel do
+          reporter = ::RSpec::Core::Reporter.new(formatter)
+          reporter.start(3)
+        end
+      end
+    end
+
     describe "timing" do
       it "uses RSpec::Core::Time as to not be affected by changes to time in examples" do
         formatter = double(:formatter).as_null_object
