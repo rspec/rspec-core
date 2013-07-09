@@ -4,6 +4,13 @@ require 'tempfile'
 
 module RSpec::Core::Formatters
   describe DeprecationFormatter do
+    describe '#start' do
+      it 'prevents Kernel#start from being called on jruby' do
+        formatter = DeprecationFormatter.new StringIO.new, StringIO.new
+        expect(formatter.start).to eq nil
+      end
+    end
+
     describe "#deprecation" do
       let(:deprecation_stream) { StringIO.new }
       let(:summary_stream)     { StringIO.new }
