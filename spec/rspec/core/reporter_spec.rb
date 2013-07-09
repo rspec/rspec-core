@@ -9,7 +9,7 @@ module RSpec::Core
 
       %w[start_dump dump_pending dump_failures dump_summary close].each do |message|
         it "sends #{message} to the formatter(s) that respond to message" do
-          formatter.as_null_object.should_receive(message)
+          formatter.should_receive(message)
           reporter.abort(nil)
         end
 
@@ -34,7 +34,7 @@ module RSpec::Core
       it "passes example_group_started and example_group_finished messages to that formatter in that order" do
         order = []
 
-        formatter = double("formatter").as_null_object
+        formatter = double("formatter")
         formatter.stub(:example_group_started) { |group| order << "Started: #{group.description}" }
         formatter.stub(:example_group_finished) { |group| order << "Finished: #{group.description}" }
 
@@ -61,7 +61,7 @@ module RSpec::Core
 
     context "given an example group with no examples" do
       it "does not pass example_group_started or example_group_finished to formatter" do
-        formatter = double("formatter").as_null_object
+        formatter = double("formatter")
         formatter.should_not_receive(:example_group_started)
         formatter.should_not_receive(:example_group_finished)
 
@@ -120,17 +120,40 @@ module RSpec::Core
       end
     end
 
+    describe 'when message implemented on kernel' do
+      def with_message_defined_on_kernel
+        return yield if ::Kernel.method_defined?(:start)
+
+        begin
+          ::Kernel.module_eval { def start(*); raise "boom"; end }
+          yield
+        ensure
+          ::Kernel.module_eval { undef start }
+        end
+      end
+
+      let(:formatter) { double("formatter") }
+
+      it 'does not blow up when `Kernel` defines message instead of a formatter' do
+        with_message_defined_on_kernel do
+          reporter = ::RSpec::Core::Reporter.new(formatter)
+          reporter.start(3)
+        end
+      end
+    end
+
     describe "timing" do
       it "uses RSpec::Core::Time as to not be affected by changes to time in examples" do
-        formatter = double(:formatter).as_null_object
-        reporter = Reporter.new formatter
-        reporter.start 1
-        Time.stub(:now => ::Time.utc(2012, 10, 1))
-
+        formatter = double(:formatter)
         duration = nil
         formatter.stub(:dump_summary) do |dur, _, _, _|
           duration = dur
         end
+
+        reporter = Reporter.new formatter
+        reporter.start 1
+        Time.stub(:now => ::Time.utc(2012, 10, 1))
+
 
         reporter.finish 1234
         expect(duration).to be < 0.2
