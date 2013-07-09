@@ -14,6 +14,10 @@ Deprecations
   access to the example (e.g. to get its metadata), use a block arg
   instead (David Chelimsky).
 
+Bug fix
+* Implement `#start` on the Deprecation Formatter to prevent collision with
+  `ruby-debug` on JRuby (Alex Portnov, Jon Rowe)
+
 ### 2.14.0 / 2013-07-06
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.0.rc1...v2.14.0)
 

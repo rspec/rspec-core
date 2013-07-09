@@ -21,7 +21,7 @@ module RSpec::Core
     # events to all registered listeners
     def register_listener(listener, *notifications)
       notifications.each do |notification|
-        @listeners[notification.to_sym] << listener if listener.respond_to?(notification)
+        @listeners[notification.to_sym] << listener if understands(listener, notification)
       end
       true
     end
@@ -127,5 +127,19 @@ module RSpec::Core
         formatter.send(event, *args, &block)
       end
     end
+
+    private
+      if Method.method_defined?(:owner) # 1.8.6 lacks Method#owner
+        def understands(listener, notification)
+          listener.respond_to?(notification) && listener.method(notification).owner != ::Kernel
+        end
+      else
+        def understands(listener, notification)
+          # Hack for 1.8.6
+          # {}.method(:=~).to_s # => "#<Method: Hash(Kernel)#=~>"
+          listener.respond_to?(notification) && !listener.method(notification).to_s.include('(Kernel)')
+        end
+      end
+
   end
 end
