@@ -4,29 +4,12 @@ require 'tempfile'
 
 module RSpec::Core::Formatters
   describe DeprecationFormatter do
-    let(:deprecation_stream) { StringIO.new }
-    let(:summary_stream)     { StringIO.new }
-    let(:formatter) { DeprecationFormatter.new deprecation_stream, summary_stream }
-
-    def with_start_defined_on_kernel
-      return yield if ::Kernel.method_defined?(:start)
-
-      begin
-        ::Kernel.module_eval { def start(*); raise "boom"; end }
-        yield
-      ensure
-        ::Kernel.module_eval { undef start }
-      end
-    end
-
-    it 'does not blow up when `Kernel` defines `start`' do
-      with_start_defined_on_kernel do
-        reporter = ::RSpec::Core::Reporter.new(formatter)
-        reporter.start(3)
-      end
-    end
 
     describe "#deprecation" do
+      let(:deprecation_stream) { StringIO.new }
+      let(:summary_stream)     { StringIO.new }
+      let(:formatter) { DeprecationFormatter.new deprecation_stream, summary_stream }
+
       it "includes the method" do
         formatter.deprecation(:deprecated => "i_am_deprecated")
         deprecation_stream.rewind

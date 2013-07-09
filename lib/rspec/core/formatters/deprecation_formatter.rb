@@ -8,10 +8,6 @@ module RSpec
           @count = 0
         end
 
-        def start(example_count=nil)
-          #no-op to fix #966
-        end
-
         def deprecation(data)
           @count += 1
           if data[:message]
