@@ -45,25 +45,39 @@ module RSpec::Core
     end
 
     context "with rcov" do
+      before { allow(RSpec).to receive(:deprecate) }
+
       it "renders rcov" do
         with_rcov do
           expect(spec_command).to match(/^#{ruby} -S rcov/)
         end
       end
+
+      it 'warns of deprecation' do
+        expect(RSpec).to receive(:deprecate)
+        with_rcov { spec_command }
+      end
     end
 
     context "with ruby options" do
       it "renders them before -S" do
-          task.ruby_opts = "-w"
-          expect(spec_command).to match(/^#{ruby} -w -S rspec/)
+        task.ruby_opts = "-w"
+        expect(spec_command).to match(/^#{ruby} -w -S rspec/)
       end
     end
 
     context "with rcov_opts" do
+      before { allow(RSpec).to receive(:deprecate) }
+
       context "with rcov=false (default)" do
         it "does not add the rcov options to the command" do
           task.rcov_opts = '--exclude "mocks"'
           expect(spec_command).not_to match(/--exclude "mocks"/)
+        end
+
+        it 'warns of deprecation' do
+          expect(RSpec).to receive(:deprecate)
+          task.rcov_opts = '--exclude "mocks"'
         end
       end
 
@@ -79,10 +93,17 @@ module RSpec::Core
           task.rcov_opts = '--exclude "mocks"'
           expect(spec_command).to match(/rcov.*-Ispec:lib/)
         end
+
+        it 'warns of deprecation' do
+          expect(RSpec).to receive(:deprecate)
+          task.rcov_opts = '--exclude "mocks"'
+        end
       end
     end
 
     context "with rspec_opts" do
+      before { allow(RSpec).to receive(:deprecate) }
+
       context "with rcov=true" do
         it "adds the rspec_opts after the rcov_opts and files" do
           task.stub(:files_to_run) { "this.rb that.rb" }

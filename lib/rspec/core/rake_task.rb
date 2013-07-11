@@ -68,19 +68,34 @@ module RSpec
       #
       # default:
       #   false
-      attr_accessor :rcov
+      attr_reader :rcov
+
+      def rcov=(true_or_false)
+        RSpec.deprecate("RSpec::Core::RakeTask#rcov=")
+        @rcov = true_or_false
+      end
 
       # Path to rcov.
       #
       # default:
       #   'rcov'
-      attr_accessor :rcov_path
+      attr_reader :rcov_path
+
+      def rcov_path=(path)
+        RSpec.deprecate("RSpec::Core::RakeTask#rcov_path=")
+        @rcov_path = path
+      end
 
       # Command line options to pass to rcov.
       #
       # default:
       #   nil
-      attr_accessor :rcov_opts
+      attr_reader :rcov_opts
+
+      def rcov_opts=(opts)
+        RSpec.deprecate("RSpec::Core::RakeTask#rcov_opts=")
+        @rcov_opts = opts
+      end
 
       # Command line options to pass to ruby.
       #
