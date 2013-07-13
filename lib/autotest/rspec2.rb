@@ -73,5 +73,5 @@ rescue LoadError
       File.exist?('./Gemfile')
     end
   end
-  Autotest.add_hook(:ran_command) { warn "\n\e[31mUsing the inbuilt rspec-core autotest support is deprecated and will be removed in RSpec 3. Please switch to rspec-autotest\e[0m" }
+  Autotest.add_hook(:ran_command) { warn "\n\e[31mUsing the built in rspec-core autotest support is deprecated and will be removed in RSpec 3. Please switch to the rspec-autotest gem\e[0m" }
 end
