@@ -13,6 +13,7 @@ Deprecations
   `RSpec::Core::ExampleGroup#running_example` methods. If you need
   access to the example (e.g. to get its metadata), use a block arg
   instead (David Chelimsky).
+* Deprecate use of `autotest/rspec2` in favour of `rspec-autotest` (Jon Rowe)
 
 ### 2.14.2 / 2013-07-09
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.1...v2.14.2)
