@@ -1,5 +1,4 @@
 require 'rspec/core/backward_compatibility'
-require 'rspec/core/deprecation'
 require 'rake'
 require 'rake/tasklib'
 require 'shellwords'
@@ -24,13 +23,13 @@ module RSpec
       # @deprecated
       # Has no effect. The rake task now checks ENV['BUNDLE_GEMFILE'] instead.
       def skip_bundler=(*)
-        RSpec.deprecate("RSpec::Core::RakeTask#skip_bundler=")
+        deprecate("RSpec::Core::RakeTask#skip_bundler=")
       end
 
       # @deprecated
       # Has no effect. The rake task now checks ENV['BUNDLE_GEMFILE'] instead.
       def gemfile=(*)
-        RSpec.deprecate("RSpec::Core::RakeTask#gemfile=", :replacement => 'ENV["BUNDLE_GEMFILE"]')
+        deprecate("RSpec::Core::RakeTask#gemfile=", :replacement => 'ENV["BUNDLE_GEMFILE"]')
       end
 
       # @deprecated
@@ -42,7 +41,7 @@ module RSpec
       # default:
       #   false
       def warning=(true_or_false)
-        RSpec.deprecate("RSpec::Core::RakeTask#warning=", :replacement => 'ruby_opts="-w"')
+        deprecate("RSpec::Core::RakeTask#warning=", :replacement => 'ruby_opts="-w"')
         @warning = true_or_false
       end
 
@@ -109,7 +108,7 @@ module RSpec
       # default:
       #   nil
       def spec_opts=(opts)
-        RSpec.deprecate('RSpec::Core::RakeTask#spec_opts=', :replacement => 'rspec_opts=')
+        deprecate('RSpec::Core::RakeTask#spec_opts=', :replacement => 'rspec_opts=')
         @rspec_opts = opts
       end
 
@@ -189,6 +188,19 @@ module RSpec
       def blank
         lambda {|s| s.nil? || s == ""}
       end
+
+      def deprecate deprecated, opts = {}
+        # unless RSpec is loaded, deprecate won't work (simply requiring the
+        # deprecate file isn't enough) so this is a check for "is rspec already
+        # loaded?" "ok use the main deprecate hook" otherwise "simple fallback"
+        # Note that we don't need rspec to be loaded for the rake task to work
+        if RSpec.respond_to?(:deprecate)
+          RSpec.deprecate deprecated, opts
+        else
+          warn "DEPRECATION: #{deprecated} is deprecated."
+        end
+      end
+
     end
   end
 end
