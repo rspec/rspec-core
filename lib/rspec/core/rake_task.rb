@@ -68,19 +68,43 @@ module RSpec
       #
       # default:
       #   false
-      attr_accessor :rcov
+      def rcov
+        deprecate("RSpec::Core::RakeTask#rcov")
+        @rcov
+      end
+
+      def rcov=(true_or_false)
+        deprecate("RSpec::Core::RakeTask#rcov=")
+        @rcov = true_or_false
+      end
 
       # Path to rcov.
       #
       # default:
       #   'rcov'
-      attr_accessor :rcov_path
+      def rcov_path
+        deprecate("RSpec::Core::RakeTask#rcov_path")
+        @rcov_path
+      end
+
+      def rcov_path=(path)
+        deprecate("RSpec::Core::RakeTask#rcov_path=")
+        @rcov_path = path
+      end
 
       # Command line options to pass to rcov.
       #
       # default:
       #   nil
-      attr_accessor :rcov_opts
+      def rcov_opts
+        deprecate("RSpec::Core::RakeTask#rcov_opts")
+        @rcov_opts
+      end
+
+      def rcov_opts=(opts)
+        deprecate("RSpec::Core::RakeTask#rcov_opts=")
+        @rcov_opts = opts
+      end
 
       # Command line options to pass to ruby.
       #
@@ -174,15 +198,15 @@ module RSpec
         cmd_parts << ruby_opts
         cmd_parts << "-w" if @warning
         cmd_parts << "-S" << runner
-        cmd_parts << "-Ispec:lib" << rcov_opts if rcov
+        cmd_parts << "-Ispec:lib" << @rcov_opts if @rcov
         cmd_parts << files_to_run
-        cmd_parts << "--" if rcov && rspec_opts
+        cmd_parts << "--" if @rcov && rspec_opts
         cmd_parts << rspec_opts
         cmd_parts.flatten.reject(&blank).join(" ")
       end
 
       def runner
-        rcov ? rcov_path : rspec_path
+        @rcov ? @rcov_path : rspec_path
       end
 
       def blank
