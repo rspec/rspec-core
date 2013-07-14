@@ -14,6 +14,9 @@ Deprecations
   access to the example (e.g. to get its metadata), use a block arg
   instead (David Chelimsky).
 * Deprecate use of `autotest/rspec2` in favour of `rspec-autotest` (Jon Rowe)
+* Deprecate RSpec's built-in debugger support. Use a CLI option like
+  `-rruby-debug` (for the ruby-debug gem) or `-rdebugger` (for the
+  debugger gem) instead (Myron Marston).
 
 ### 2.14.3 / 2013-07-13
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.2...v2.14.3)
