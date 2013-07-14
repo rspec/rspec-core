@@ -1088,6 +1088,8 @@ module RSpec::Core
         end
         config.stub(:require)
         Object.const_set("Debugger", debugger)
+
+        allow_deprecation
       end
 
       after do
@@ -1106,16 +1108,30 @@ module RSpec::Core
         debugger.should_receive(:start)
         config.debug = true
       end
+
+      it "warns that this feature is deprecated" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1)
+        config.debug = true
+      end
     end
 
     describe "#debug=false" do
+      before { allow_deprecation }
+
       it "does not require 'ruby-debug'" do
         config.should_not_receive(:require).with('ruby-debug')
+        config.debug = false
+      end
+
+      it "warns that this feature is deprecated" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1)
         config.debug = false
       end
     end
 
     describe "#debug?" do
+      before { allow_deprecation }
+
       it 'returns true if the debugger has been loaded' do
         stub_const("Debugger", Object.new)
         expect(config.debug?).to be_true
@@ -1124,6 +1140,11 @@ module RSpec::Core
       it 'returns false if the debugger has not been loaded' do
         hide_const("Debugger")
         expect(config.debug?).to be_false
+      end
+
+      it "warns that this feature is deprecated" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1)
+        config.debug?
       end
     end
 
