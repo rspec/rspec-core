@@ -198,15 +198,15 @@ module RSpec
         cmd_parts << ruby_opts
         cmd_parts << "-w" if @warning
         cmd_parts << "-S" << runner
-        cmd_parts << "-Ispec:lib" << rcov_opts if rcov
+        cmd_parts << "-Ispec:lib" << @rcov_opts if @rcov
         cmd_parts << files_to_run
-        cmd_parts << "--" if rcov && rspec_opts
+        cmd_parts << "--" if @rcov && rspec_opts
         cmd_parts << rspec_opts
         cmd_parts.flatten.reject(&blank).join(" ")
       end
 
       def runner
-        rcov ? rcov_path : rspec_path
+        @rcov ? @rcov_path : rspec_path
       end
 
       def blank
