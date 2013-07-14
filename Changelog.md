@@ -1,5 +1,5 @@
 ### Dev
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.2...2-99-maintenance)
+[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.3...2-99-maintenance)
 
 Enhancements
 
@@ -14,6 +14,15 @@ Deprecations
   access to the example (e.g. to get its metadata), use a block arg
   instead (David Chelimsky).
 * Deprecate use of `autotest/rspec2` in favour of `rspec-autotest` (Jon Rowe)
+
+### 2.14.3 / 2013-07-13
+[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.2...v2.14.3)
+
+Bug fixes
+
+* Fix deprecation notices issued from `RSpec::Core::RakeTask` so
+  that they work properly when all of rspec-core is not loaded.
+  (This was a regression in 2.14) (Jon Rowe)
 
 ### 2.14.2 / 2013-07-09
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.1...v2.14.2)
