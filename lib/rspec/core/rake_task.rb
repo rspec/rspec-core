@@ -68,10 +68,13 @@ module RSpec
       #
       # default:
       #   false
-      attr_reader :rcov
+      def rcov
+        deprecate("RSpec::Core::RakeTask#rcov")
+        @rcov
+      end
 
       def rcov=(true_or_false)
-        RSpec.deprecate("RSpec::Core::RakeTask#rcov=")
+        deprecate("RSpec::Core::RakeTask#rcov=")
         @rcov = true_or_false
       end
 
@@ -79,10 +82,13 @@ module RSpec
       #
       # default:
       #   'rcov'
-      attr_reader :rcov_path
+      def rcov_path
+        deprecate("RSpec::Core::RakeTask#rcov_path")
+        @rcov_path
+      end
 
       def rcov_path=(path)
-        RSpec.deprecate("RSpec::Core::RakeTask#rcov_path=")
+        deprecate("RSpec::Core::RakeTask#rcov_path=")
         @rcov_path = path
       end
 
@@ -90,10 +96,13 @@ module RSpec
       #
       # default:
       #   nil
-      attr_reader :rcov_opts
+      def rcov_opts
+        deprecate("RSpec::Core::RakeTask#rcov_opts")
+        @rcov_opts
+      end
 
       def rcov_opts=(opts)
-        RSpec.deprecate("RSpec::Core::RakeTask#rcov_opts=")
+        deprecate("RSpec::Core::RakeTask#rcov_opts=")
         @rcov_opts = opts
       end
 
