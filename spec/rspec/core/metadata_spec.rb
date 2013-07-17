@@ -27,9 +27,7 @@ module RSpec
       end
 
       def metadata_for_group(parent_metadata, *args)
-        m = Metadata.new(parent_metadata)
-        m.process(*args)
-        m
+        Metadata.new_for_example_group(parent_metadata, *args)
       end
 
       Metadata::RESERVED_KEYS.each do |key|
@@ -37,6 +35,24 @@ module RSpec
           expect do
             metadata_for_group(nil, 'group', key => {})
           end.to raise_error(/:#{key} is not allowed/)
+        end
+      end
+
+      it 'reports that it is a hash (so the `include` matcher can work with it)' do
+        m = Metadata.new(:a => 5)
+        expect(m.is_a?(Hash)).to be_true
+        expect(m).to include(:a => 5)
+        expect(m).not_to include(:b => 4)
+      end
+
+      [:dup, :clone].each do |method|
+        it "#{method}s properly" do
+          m = Metadata.new(:a => 5)
+          m2 = m.send(method)
+
+          m[:b] = 4
+          expect(m[:b]).to eq(4)
+          expect(m2[:b]).to be_nil
         end
       end
 
@@ -421,8 +437,7 @@ module RSpec
 
       describe ":line_number" do
         it "finds the line number with the first non-rspec lib file in the backtrace" do
-          m = Metadata.new
-          m.process({})
+          m = Metadata.new_for_example_group(nil, {})
           expect(m[:example_group][:line_number]).to eq(__LINE__ - 1)
         end
 

@@ -1,3 +1,5 @@
+require 'delegate'
+
 module RSpec
   module Core
     # Each ExampleGroup class and Example instance owns an instance of
@@ -24,7 +26,7 @@ module RSpec
     # @see FilterManager
     # @see Configuration#filter_run_including
     # @see Configuration#filter_run_excluding
-    class Metadata < Hash
+    class Metadata < DelegateClass(Hash)
 
       def self.relative_path(line)
         line = line.sub(File.expand_path("."), ".")
@@ -35,19 +37,29 @@ module RSpec
         nil
       end
 
-      def initialize(parent_group_metadata=nil)
-        if parent_group_metadata
-          update(parent_group_metadata)
-          store(:example_group, {:example_group => parent_group_metadata[:example_group].extend(GroupMetadataHash)}.extend(GroupMetadataHash))
-        else
-          store(:example_group, {}.extend(GroupMetadataHash))
-        end
-
+      def initialize(hash = {})
+        super(hash)
         yield self if block_given?
       end
 
+      def self.new_for_example_group(parent_group_metadata, *args)
+        new do |meta|
+          meta.setup_for_example_group(parent_group_metadata, *args)
+        end
+      end
+
       # @private
-      def process(*args)
+      def setup_for_example_group(parent_group_metadata, *args)
+        if parent_group_metadata
+          update(parent_group_metadata)
+
+          store(:example_group, GroupMetadataHash.new(
+            :example_group => GroupMetadataHash.new(parent_group_metadata[:example_group])
+          ))
+        else
+          store(:example_group, GroupMetadataHash.new)
+        end
+
         user_metadata = args.last.is_a?(Hash) ? args.pop : {}
         ensure_valid_keys(user_metadata)
 
@@ -59,7 +71,9 @@ module RSpec
 
       # @private
       def for_example(description, user_metadata)
-        dup.extend(ExampleMetadataHash).configure_for_example(description, user_metadata)
+        ExampleMetadataHash.new(dup).tap do |hash|
+          hash.configure_for_example(description, user_metadata)
+        end
       end
 
       # @private
@@ -70,6 +84,29 @@ module RSpec
       # @private
       def all_apply?(filters)
         filters.all? {|k,v| filter_applies?(k,v)}
+      end
+
+      # Report that this is a Hash (since it provides the full
+      # Hash interface). This is necessary so that it will work
+      # as expected with the `include` matcher.
+      def is_a?(klass)
+        super || __getobj__.is_a?(klass)
+      end
+
+      # Ensures that `dup` works as expected. Without overriding
+      # it like this, the dup'd instance would retain a reference
+      # to the exact same hash instance, and thus would change
+      # the original when hash entries are changed.
+      def dup
+        super.tap { |the_dup| the_dup.__setobj__(__getobj__.dup) }
+      end
+
+      # Ensures that `clone` works as expected. Without overriding
+      # it like this, the cloned instance would retain a reference
+      # to the exact same hash instance, and thus would change
+      # the original when hash entries are changed.
+      def clone
+        super.tap { |the_clone| the_clone.__setobj__(__getobj__.clone) }
       end
 
       # @private
@@ -174,8 +211,8 @@ Here are all of RSpec's reserved hash keys:
 
         # @private
         # Supports lazy evaluation of some values. Extended by
-        # ExampleMetadataHash and GroupMetadataHash, which get mixed in to
-        # Metadata for ExampleGroups and Examples (respectively).
+        # ExampleMetadataHash and GroupMetadataHash, which which are used for
+        # Examples and ExampleGroups (respectively).
         def [](key)
           store_computed(key) unless has_key?(key)
           super
@@ -241,9 +278,8 @@ Here are all of RSpec's reserved hash keys:
         end
       end
 
-      # Mixed in to Metadata for an Example (extends MetadataHash) to support
-      # lazy evaluation of some values.
-      module ExampleMetadataHash
+      # Wraps the metadata for an Example to support lazy evaluation of some values.
+      class ExampleMetadataHash < Metadata
         include MetadataHash
 
         def described_class
@@ -255,9 +291,8 @@ Here are all of RSpec's reserved hash keys:
         end
       end
 
-      # Mixed in to Metadata for an ExampleGroup (extends MetadataHash) to
-      # support lazy evaluation of some values.
-      module GroupMetadataHash
+      # Wraps the metadata for an ExampleGroup to support lazy evaluation of some values.
+      class GroupMetadataHash < Metadata
         include MetadataHash
 
         def described_class
