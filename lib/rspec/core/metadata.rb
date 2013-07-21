@@ -46,8 +46,32 @@ module RSpec
         @meta_hash
       end
 
-      %w[[] []= has_key? store fetch delete ==].each do |name|
-        define_method(name) { |*args| @meta_hash.send(name,*args) }
+      def [](key)
+        @meta_hash[key]
+      end
+
+      def []=(key, value)
+        @meta_hash[key] = value
+      end
+
+      def has_key?(name)
+        @meta_hash.has_key?(name)
+      end
+
+      def store(key, value)
+        @meta_hash.store(key,value)
+      end
+
+      def fetch(key, default_value = nil)
+        @meta_hash.fetch(key,default_value)
+      end
+
+      def delete(key)
+        @meta_hash.delete(key)
+      end
+
+      def ==(other)
+        other == @meta_hash
       end
 
       def update(other)
