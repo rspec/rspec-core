@@ -466,24 +466,20 @@ An error occurred in an after(:all) hook.
         ivars.each {|name, value| instance.instance_variable_set(name, value)}
       end
 
-      def initialize
-        @_current_rspec_example = nil
-      end
-
       def example=(current_example)
-        @_current_rspec_example = current_example
+        RSpec.current_example = current_example
       end
 
       # @deprecated use a block argument
       def example
         RSpec.deprecate("example", :replacement => "a block argument")
-        @_current_rspec_example
+        RSpec.current_example
       end
 
       # @deprecated use a block argument
       def running_example
         RSpec.deprecate("running_example", :replacement => "a block argument")
-        @_current_rspec_example
+        RSpec.current_example
       end
 
       # Returns the class or module passed to the `describe` method (or alias).
@@ -507,8 +503,11 @@ An error occurred in an after(:all) hook.
         begin
           instance_eval_with_args(example, &hook)
         rescue Exception => e
-          raise unless @_current_rspec_example
-          @_current_rspec_example.set_exception(e, context)
+          if RSpec.current_example
+            RSpec.current_example.set_exception(e, context)
+          else
+            raise
+          end
         end
       end
     end

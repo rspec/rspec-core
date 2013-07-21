@@ -39,6 +39,7 @@ Spork.prefork do
     def self.sandboxed(&block)
       @orig_config = RSpec.configuration
       @orig_world  = RSpec.world
+      @orig_example = RSpec.current_example
       new_config = RSpec::Core::Configuration.new
       new_world  = RSpec::Core::World.new(new_config)
       RSpec.configuration = new_config
@@ -49,6 +50,7 @@ Spork.prefork do
       (class << RSpec::Core::ExampleGroup; self; end).class_eval do
         alias_method :orig_run, :run
         def run(reporter=nil)
+          RSpec.current_example = nil
           orig_run(reporter || NullObject.new)
         end
       end
@@ -65,6 +67,7 @@ Spork.prefork do
 
       RSpec.configuration = @orig_config
       RSpec.world = @orig_world
+      RSpec.current_example = @orig_example
     end
   end
 
