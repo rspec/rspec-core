@@ -26,7 +26,7 @@ module RSpec
     # @see FilterManager
     # @see Configuration#filter_run_including
     # @see Configuration#filter_run_excluding
-    class Metadata < DelegateClass(Hash)
+    class Metadata
 
       def self.relative_path(line)
         line = line.sub(File.expand_path("."), ".")
@@ -38,8 +38,20 @@ module RSpec
       end
 
       def initialize(hash = {})
-        super(hash)
+        @meta_hash = hash
         yield self if block_given?
+      end
+
+      def to_hash
+        @meta_hash
+      end
+
+      %w[[] []= has_key? store fetch delete ==].each do |name|
+        define_method(name) { |*args| @meta_hash.send(name,*args) }
+      end
+
+      def update(other)
+        @meta_hash.update other.to_hash
       end
 
       def self.new_for_example_group(parent_group_metadata, *args)
@@ -90,7 +102,7 @@ module RSpec
       # Hash interface). This is necessary so that it will work
       # as expected with the `include` matcher.
       def is_a?(klass)
-        super || __getobj__.is_a?(klass)
+        super || @meta_hash.is_a?(klass)
       end
 
       # Ensures that `dup` works as expected. Without overriding
@@ -98,7 +110,9 @@ module RSpec
       # to the exact same hash instance, and thus would change
       # the original when hash entries are changed.
       def dup
-        super.tap { |the_dup| the_dup.__setobj__(__getobj__.dup) }
+        dup = super
+        @meta_hash = @meta_hash.dup
+        dup
       end
 
       # Ensures that `clone` works as expected. Without overriding
@@ -106,7 +120,9 @@ module RSpec
       # to the exact same hash instance, and thus would change
       # the original when hash entries are changed.
       def clone
-        super.tap { |the_clone| the_clone.__setobj__(__getobj__.clone) }
+        clone = super
+        @meta_hash = @meta_hash.clone
+        clone
       end
 
       # @private
