@@ -1,5 +1,5 @@
-### Dev
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.3...2-14-maintenance)
+### 2.14.4 / 2013-07-21
+[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.3...v2.14.4)
 
 Bug fixes
 
