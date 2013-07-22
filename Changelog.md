@@ -18,6 +18,9 @@ Deprecations
   `-rruby-debug` (for the ruby-debug gem) or `-rdebugger` (for the
   debugger gem) instead (Myron Marston).
 
+Bugfixes
+* Clear shared example registry using accessor, (thepoho, Jon Rowe)
+
 ### 2.14.4 / 2013-07-21
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.3...v2.14.4)
 
