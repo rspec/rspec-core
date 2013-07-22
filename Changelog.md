@@ -16,6 +16,10 @@ Bug fixes
   it seemed like a safe change -- but caused a problem for some authors
   of libraries that integrate with RSpec. This fixes that problem.
   (Myron Marston)
+* Gracefully handle a command like `rspec --profile path/to/spec.rb`:
+  the `path/to/spec.rb` arg was being wrongly treated as the `profile`
+  integer arg, which got cast `0` using `to_i`, causing no profiled
+  examples to be printed. (Jon Rowe)
 
 ### 2.14.3 / 2013-07-13
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.2...v2.14.3)
