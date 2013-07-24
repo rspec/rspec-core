@@ -29,7 +29,7 @@ module RSpec
       # @see ExampleGroup.include_examples
       # @see ExampleGroup.include_context
       def shared_examples(*args, &block)
-        Registry.add_group(self, *args, &block)
+        SharedExampleGroup.registry.add_group(self, *args, &block)
       end
 
       alias_method :shared_context,      :shared_examples
@@ -44,12 +44,12 @@ module RSpec
       end
 
       def shared_example_groups
-        Registry.shared_example_groups_for('main', *ancestors[0..-1])
+        SharedExampleGroup.registry.shared_example_groups_for('main', *ancestors[0..-1])
       end
 
       module TopLevelDSL
         def shared_examples(*args, &block)
-          Registry.add_group('main', *args, &block)
+          SharedExampleGroup.registry.add_group('main', *args, &block)
         end
 
         alias_method :shared_context,      :shared_examples
@@ -63,8 +63,12 @@ module RSpec
         end
 
         def shared_example_groups
-          Registry.shared_example_groups_for('main')
+          SharedExampleGroup.registry.shared_example_groups_for('main')
         end
+      end
+
+      def self.registry
+        @registry ||= Registry.new
       end
 
       # @private
@@ -74,9 +78,7 @@ module RSpec
       # to objects we don't own (main and Module) so this allows
       # us to have helper methods that don't get added to those
       # objects.
-      module Registry
-        extend self
-
+      class Registry
         def add_group(source, *args, &block)
           ensure_block_has_source_location(block, caller[1])
 
