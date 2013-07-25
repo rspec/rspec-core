@@ -140,3 +140,18 @@ end
 
 Spork.each_run do
 end
+
+shared_context "with isolated syntax" do
+  orig_matchers_syntax = nil
+  orig_mocks_syntax = nil
+
+  before(:each) do
+    orig_matchers_syntax = RSpec::Matchers.configuration.syntax
+    orig_mocks_syntax = RSpec::Mocks.configuration.syntax
+  end
+
+  after(:each) do
+    RSpec::Matchers.configuration.syntax = orig_matchers_syntax
+    RSpec::Mocks.configuration.syntax = orig_mocks_syntax
+  end
+end

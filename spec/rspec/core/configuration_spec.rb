@@ -28,6 +28,47 @@ module RSpec::Core
       end
     end
 
+    describe "#use_rspec_syntaxes" do
+      include_context "with isolated syntax"
+
+      shared_examples_for "setting the syntaxes on -mocks and -expectations" do
+
+        it "sets the syntax on -expectations" do
+          RSpec.configuration.use_rspec_syntax(syntax)
+          expect(RSpec::Matchers.configuration.syntax).to eq(Array(syntax))
+        end
+
+        it "sets the syntax on -mocks" do
+          RSpec.configuration.use_rspec_syntax(syntax)
+          expect(RSpec::Mocks.configuration.syntax).to eq(Array(syntax))
+        end
+      end
+
+      context "setting the syntax to :expect" do
+        let(:syntax) { :expect }
+        it_behaves_like "setting the syntaxes on -mocks and -expectations"
+      end
+
+      context "setting the syntax to :should, [:expect]" do
+        let(:syntax) { [:should, :expect] }
+        it_behaves_like "setting the syntaxes on -mocks and -expectations"
+      end
+
+      context "setting the syntax to :should" do
+        let(:syntax) { :should }
+
+        it "sets the syntax on -expectations" do
+          RSpec.configuration.use_rspec_syntax(syntax)
+          RSpec::Matchers.configuration.syntax.should eq(Array(syntax))
+        end
+
+        it "sets the syntax on -mocks" do
+          RSpec.configuration.use_rspec_syntax(syntax)
+          RSpec::Mocks.configuration.syntax.should eq(Array(syntax))
+        end
+      end
+    end
+
     describe "#setup_load_path_and_require" do
       include_context "isolate load path mutation"
 
