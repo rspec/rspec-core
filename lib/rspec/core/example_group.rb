@@ -21,6 +21,7 @@ module RSpec
       include Extensions::InstanceEvalWithArgs
       include Pending
       include SharedExampleGroup
+      extend SharedExampleGroup
 
       # @private
       def self.world
