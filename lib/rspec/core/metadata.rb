@@ -1,3 +1,5 @@
+require 'delegate'
+
 module RSpec
   module Core
     # Each ExampleGroup class and Example instance owns an instance of
@@ -24,7 +26,7 @@ module RSpec
     # @see FilterManager
     # @see Configuration#filter_run_including
     # @see Configuration#filter_run_excluding
-    class Metadata < Hash
+    class Metadata < DelegateClass(Hash)
 
       def self.relative_path(line)
         line = line.sub(File.expand_path("."), ".")
@@ -35,144 +37,29 @@ module RSpec
         nil
       end
 
-      # @private
-      module MetadataHash
-
-        # @private
-        # Supports lazy evaluation of some values. Extended by
-        # ExampleMetadataHash and GroupMetadataHash, which get mixed in to
-        # Metadata for ExampleGroups and Examples (respectively).
-        def [](key)
-          store_computed(key) unless has_key?(key)
-          super
-        end
-
-        def fetch(key, *args)
-          store_computed(key) unless has_key?(key)
-          super
-        end
-
-        private
-
-        def store_computed(key)
-          case key
-          when :location
-            store(:location, location)
-          when :file_path, :line_number
-            file_path, line_number = file_and_line_number
-            store(:file_path, file_path)
-            store(:line_number, line_number)
-          when :execution_result
-            store(:execution_result, {})
-          when :describes, :described_class
-            klass = described_class
-            store(:described_class, klass)
-            # TODO (2011-11-07 DC) deprecate :describes as a key
-            store(:describes, klass)
-          when :full_description
-            store(:full_description, full_description)
-          when :description
-            store(:description, build_description_from(*self[:description_args]))
-          when :description_args
-            store(:description_args, [])
-          end
-        end
-
-        def location
-          "#{self[:file_path]}:#{self[:line_number]}"
-        end
-
-        def file_and_line_number
-          first_caller_from_outside_rspec =~ /(.+?):(\d+)(|:\d+)/
-          return [Metadata::relative_path($1), $2.to_i]
-        end
-
-        def first_caller_from_outside_rspec
-          self[:caller].detect {|l| l !~ /\/lib\/rspec\/core/}
-        end
-
-        def method_description_after_module?(parent_part, child_part)
-          return false unless parent_part.is_a?(Module)
-          child_part =~ /^(#|::|\.)/
-        end
-
-        def build_description_from(first_part = '', *parts)
-          description, _ = parts.inject([first_part.to_s, first_part]) do |(desc, last_part), this_part|
-            this_part = this_part.to_s
-            this_part = (' ' + this_part) unless method_description_after_module?(last_part, this_part)
-            [(desc + this_part), this_part]
-          end
-
-          description
-        end
-      end
-
-      # Mixed in to Metadata for an Example (extends MetadataHash) to support
-      # lazy evaluation of some values.
-      module ExampleMetadataHash
-        include MetadataHash
-
-        def described_class
-          self[:example_group].described_class
-        end
-
-        def full_description
-          build_description_from(self[:example_group][:full_description], *self[:description_args])
-        end
-      end
-
-      # Mixed in to Metadata for an ExampleGroup (extends MetadataHash) to
-      # support lazy evaluation of some values.
-      module GroupMetadataHash
-        include MetadataHash
-
-        def described_class
-          container_stack.each do |g|
-            [:described_class, :describes].each do |key|
-              if g.has_key?(key)
-                value = g[key]
-                return value unless value.nil?
-              end
-            end
-          end
-
-          container_stack.reverse.each do |g|
-            candidate = g[:description_args].first
-            return candidate unless String === candidate || Symbol === candidate
-          end
-
-          nil
-        end
-
-        def full_description
-          build_description_from(*container_stack.reverse.map {|a| a[:description_args]}.flatten)
-        end
-
-        def container_stack
-          @container_stack ||= begin
-                                 groups = [group = self]
-                                 while group.has_key?(:example_group)
-                                   groups << group[:example_group]
-                                   group = group[:example_group]
-                                 end
-                                 groups
-                               end
-        end
-      end
-
-      def initialize(parent_group_metadata=nil)
-        if parent_group_metadata
-          update(parent_group_metadata)
-          store(:example_group, {:example_group => parent_group_metadata[:example_group].extend(GroupMetadataHash)}.extend(GroupMetadataHash))
-        else
-          store(:example_group, {}.extend(GroupMetadataHash))
-        end
-
+      def initialize(hash = {})
+        super(hash)
         yield self if block_given?
       end
 
+      def self.new_for_example_group(parent_group_metadata, *args)
+        new do |meta|
+          meta.setup_for_example_group(parent_group_metadata, *args)
+        end
+      end
+
       # @private
-      def process(*args)
+      def setup_for_example_group(parent_group_metadata, *args)
+        if parent_group_metadata
+          update(parent_group_metadata)
+
+          store(:example_group, GroupMetadataHash.new(
+            :example_group => GroupMetadataHash.new(parent_group_metadata[:example_group])
+          ))
+        else
+          store(:example_group, GroupMetadataHash.new)
+        end
+
         user_metadata = args.last.is_a?(Hash) ? args.pop : {}
         ensure_valid_keys(user_metadata)
 
@@ -184,7 +71,9 @@ module RSpec
 
       # @private
       def for_example(description, user_metadata)
-        dup.extend(ExampleMetadataHash).configure_for_example(description, user_metadata)
+        ExampleMetadataHash.new(dup).tap do |hash|
+          hash.configure_for_example(description, user_metadata)
+        end
       end
 
       # @private
@@ -195,6 +84,29 @@ module RSpec
       # @private
       def all_apply?(filters)
         filters.all? {|k,v| filter_applies?(k,v)}
+      end
+
+      # Report that this is a Hash (since it provides the full
+      # Hash interface). This is necessary so that it will work
+      # as expected with the `include` matcher.
+      def is_a?(klass)
+        super || __getobj__.is_a?(klass)
+      end
+
+      # Ensures that `dup` works as expected. Without overriding
+      # it like this, the dup'd instance would retain a reference
+      # to the exact same hash instance, and thus would change
+      # the original when hash entries are changed.
+      def dup
+        super.tap { |the_dup| the_dup.__setobj__(__getobj__.dup) }
+      end
+
+      # Ensures that `clone` works as expected. Without overriding
+      # it like this, the cloned instance would retain a reference
+      # to the exact same hash instance, and thus would change
+      # the original when hash entries are changed.
+      def clone
+        super.tap { |the_clone| the_clone.__setobj__(__getobj__.clone) }
       end
 
       # @private
@@ -294,6 +206,129 @@ Here are all of RSpec's reserved hash keys:
         [metadata[:line_number]] + (metadata[:example_group] ? relevant_line_numbers(metadata[:example_group]) : [])
       end
 
+      # @private
+      module MetadataHash
+
+        # @private
+        # Supports lazy evaluation of some values. Extended by
+        # ExampleMetadataHash and GroupMetadataHash, which which are used for
+        # Examples and ExampleGroups (respectively).
+        def [](key)
+          store_computed(key) unless has_key?(key)
+          super
+        end
+
+        def fetch(key, *args)
+          store_computed(key) unless has_key?(key)
+          super
+        end
+
+        private
+
+        def store_computed(key)
+          case key
+          when :location
+            store(:location, location)
+          when :file_path, :line_number
+            file_path, line_number = file_and_line_number
+            store(:file_path, file_path)
+            store(:line_number, line_number)
+          when :execution_result
+            store(:execution_result, {})
+          when :describes, :described_class
+            klass = described_class
+            store(:described_class, klass)
+            # TODO (2011-11-07 DC) deprecate :describes as a key
+            store(:describes, klass)
+          when :full_description
+            store(:full_description, full_description)
+          when :description
+            store(:description, build_description_from(*self[:description_args]))
+          when :description_args
+            store(:description_args, [])
+          end
+        end
+
+        def location
+          "#{self[:file_path]}:#{self[:line_number]}"
+        end
+
+        def file_and_line_number
+          first_caller_from_outside_rspec =~ /(.+?):(\d+)(|:\d+)/
+          return [Metadata::relative_path($1), $2.to_i]
+        end
+
+        def first_caller_from_outside_rspec
+          self[:caller].detect {|l| l !~ /\/lib\/rspec\/core/}
+        end
+
+        def method_description_after_module?(parent_part, child_part)
+          return false unless parent_part.is_a?(Module)
+          child_part =~ /^(#|::|\.)/
+        end
+
+        def build_description_from(first_part = '', *parts)
+          description, _ = parts.inject([first_part.to_s, first_part]) do |(desc, last_part), this_part|
+            this_part = this_part.to_s
+            this_part = (' ' + this_part) unless method_description_after_module?(last_part, this_part)
+            [(desc + this_part), this_part]
+          end
+
+          description
+        end
+      end
+
+      # Wraps the metadata for an Example to support lazy evaluation of some values.
+      class ExampleMetadataHash < Metadata
+        include MetadataHash
+
+        def described_class
+          self[:example_group].described_class
+        end
+
+        def full_description
+          build_description_from(self[:example_group][:full_description], *self[:description_args])
+        end
+      end
+
+      # Wraps the metadata for an ExampleGroup to support lazy evaluation of some values.
+      class GroupMetadataHash < Metadata
+        include MetadataHash
+
+        def described_class
+          container_stack.each do |g|
+            [:described_class, :describes].each do |key|
+              if g.has_key?(key)
+                value = g[key]
+                return value unless value.nil?
+              end
+            end
+          end
+
+          container_stack.reverse.each do |g|
+            candidate = g[:description_args].first
+            return candidate unless String === candidate || Symbol === candidate
+          end
+
+          nil
+        end
+
+        def full_description
+          build_description_from(*container_stack.reverse.map {|a| a[:description_args]}.flatten)
+        end
+
+        def container_stack
+          @container_stack ||= begin
+                                 groups = [group = self]
+                                 while group.has_key?(:example_group)
+                                   groups << group[:example_group]
+                                   group = group[:example_group]
+                                 end
+                                 groups
+                               end
+        end
+      end
     end
   end
 end
+

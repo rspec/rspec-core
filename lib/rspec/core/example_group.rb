@@ -311,7 +311,7 @@ module RSpec
         symbol_description = args.shift if args.first.is_a?(Symbol)
         args << build_metadata_hash_from(args)
         args.unshift(symbol_description) if symbol_description
-        @metadata = RSpec::Core::Metadata.new(superclass_metadata).process(*args)
+        @metadata = RSpec::Core::Metadata.new_for_example_group(superclass_metadata, *args)
         hooks.register_globals(self, RSpec.configuration.hooks)
         world.configure_group(self)
       end
