@@ -7,6 +7,8 @@ Enhancements
   (`it`, `before(:each)`, `after(:each)`, `let` and `subject`)
   now yield the example as a block argument (David Chelimsky).
 
+* Limit spamminess of deprecation messages (Bradley Schaefer, Loren Segal)
+
 Deprecations
 
 * Deprecate `RSpec::Core::ExampleGroup#example` and
