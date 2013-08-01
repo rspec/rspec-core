@@ -1,5 +1,6 @@
 require 'benchmark'
 require 'delegate'
+require 'forwardable'
 
 class Original
 
@@ -21,6 +22,16 @@ class Composed
   end
 
   define_method(:my_method) { @original.my_method }
+end
+
+class Forwarded
+  extend Forwardable
+
+  def initialize
+    @object = Original.new
+  end
+
+  def_delegators :@object, :my_method
 end
 
 n = 100_000
@@ -46,6 +57,13 @@ Benchmark.benchmark do |bm|
   bm.report do
     n.times do
       Composed.new.my_method
+    end
+  end
+
+  puts "[forwarded] passed to obj"
+  bm.report do
+    n.times do
+      Forwarded.new.my_method
     end
   end
 
