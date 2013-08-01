@@ -454,7 +454,7 @@ An error occurred in an after(:all) hook.
 
       # @private
       def self.top_level_description
-        parent_groups.last.description
+        parent_groups.last.description.dup
       end
 
       # @private
