@@ -40,7 +40,7 @@ module RSpec
 
       it 'reports that it is a hash (so the `include` matcher can work with it)' do
         m = Metadata.new(:a => 5)
-        expect(m.is_a?(Hash)).to be_true
+        expect(m.is_a?(Hash)).to be_truthy
         expect(m).to include(:a => 5)
         expect(m).not_to include(:b => 4)
       end
