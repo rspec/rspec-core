@@ -53,6 +53,19 @@ module RSpec::Core
         expect(outer_subject_value).to eq([:parent_group])
         expect(inner_subject_value).to eq([:parent_group, :child_group])
       end
+
+      describe "when used with an matcher expecting an implementation" do
+        let(:thing) { Struct.new(:value).new(1) }
+
+        before do
+          allow_any_instance_of(RSpec::Matchers::BuiltIn::Change).to receive(:expects_implementation?).and_return(true)
+        end
+
+        subject { thing.value += 1 }
+
+        it { should change { thing.value }.by(1) }
+        it { should_not change(thing,:value).to(3) }
+      end
     end
 
     describe "explicit subject" do

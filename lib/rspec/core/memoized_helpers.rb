@@ -65,7 +65,7 @@ module RSpec
       #
       # @see #subject
       def should(matcher=nil, message=nil)
-        RSpec::Expectations::PositiveExpectationHandler.handle_matcher(subject, matcher, message)
+        RSpec::Expectations::PositiveExpectationHandler.handle_matcher(__subject_for(matcher), matcher, message)
       end
 
       # Just like `should`, `should_not` delegates to the subject (implicit or
@@ -79,10 +79,19 @@ module RSpec
       #
       # @see #subject
       def should_not(matcher=nil, message=nil)
-        RSpec::Expectations::NegativeExpectationHandler.handle_matcher(subject, matcher, message)
+        RSpec::Expectations::NegativeExpectationHandler.handle_matcher(__subject_for(matcher), matcher, message)
       end
 
       private
+
+      # @private
+      def __subject_for(matcher)
+        if matcher.respond_to?(:expects_implementation?) && matcher.expects_implementation?
+          method(:subject)
+        else
+          subject
+        end
+      end
 
       # @private
       def __memoized
