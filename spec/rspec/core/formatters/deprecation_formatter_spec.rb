@@ -6,7 +6,7 @@ module RSpec::Core::Formatters
   describe DeprecationFormatter do
     let(:deprecation_stream) { StringIO.new }
     let(:summary_stream)     { StringIO.new }
-    let(:formatter) { DeprecationFormatter[deprecation_stream, summary_stream] }
+    let(:formatter) { DeprecationFormatter.new(deprecation_stream, summary_stream) }
 
     def with_start_defined_on_kernel
       return yield if ::Kernel.method_defined?(:start)
@@ -27,7 +27,7 @@ module RSpec::Core::Formatters
     end
 
     describe "#deprecation" do
-      let(:formatter) { DeprecationFormatter[deprecation_stream, summary_stream] }
+      let(:formatter) { DeprecationFormatter.new(deprecation_stream, summary_stream) }
       let(:summary_stream)     { StringIO.new }
 
       context "with a File deprecation_stream" do
@@ -70,7 +70,7 @@ module RSpec::Core::Formatters
     end
 
     describe "#deprecation_summary" do
-      let(:formatter) { DeprecationFormatter[deprecation_stream, summary_stream] }
+      let(:formatter) { DeprecationFormatter.new(deprecation_stream, summary_stream) }
       let(:summary_stream) { StringIO.new }
 
       context "with a File deprecation_stream" do
