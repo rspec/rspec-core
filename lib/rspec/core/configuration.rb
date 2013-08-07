@@ -981,6 +981,16 @@ module RSpec
         $VERBOSE
       end
 
+      def use_rspec_syntax(syntax)
+        mock_with(:rspec) do |configuration|
+          configuration.syntax = syntax
+        end
+
+        expect_with(:rspec) do |configuration|
+          configuration.syntax = syntax
+        end
+      end
+
     private
 
       def get_files_to_run(paths)
