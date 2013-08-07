@@ -44,9 +44,26 @@ CONTENT
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
+  # Specify metadata using just symbols. Each symbol used will effectively be
+  # treated as a `true` value, allowing easier filtering when running specs.
+  #     it 'can be filtered using simple metadata', :fast, :simple do
+  #     end
+  #
+  #     rspec -t fast
+  #
   config.treat_symbols_as_metadata_keys_with_true_values = true
-  config.run_all_when_everything_filtered = true
-  config.filter_run :focus
+
+  # Run all specs when none match the provided filter. This works well in
+  # conjunction with `config.filter_run :focus`, as it will run the entire
+  # suite when no specs have `:filter` metadata.
+  #
+  # config.run_all_when_everything_filtered = true
+
+  # Limit the spec run to only specs with the focus metadata. If no specs have
+  # the filtering metadata and `run_all_when_everything_filtered = true` then
+  # all specs will run.
+  #
+  # config.filter_run :focus
 
   # Run specs in random order to surface order dependencies. If you find an
   # order dependency and want to debug it, you can fix the order by providing

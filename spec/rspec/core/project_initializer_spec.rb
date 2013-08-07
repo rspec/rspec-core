@@ -50,6 +50,16 @@ module RSpec::Core
             command_line_config.run
             expect(File.read('spec/spec_helper.rb')).to match(/RSpec\.configure do \|config\|/m)
           end
+
+          it "leaves 'run_all_when_everything_filtered' commented out" do
+            command_line_config.run
+            expect(File.read('spec/spec_helper.rb')).to match /^\s\s# config\.run_all_when_everything_filtered = true/m
+          end
+
+          it "leaves 'filter_run' commented out" do
+            command_line_config.run
+            expect(File.read('spec/spec_helper.rb')).to match /^\s\s# config\.filter_run :focus/m
+          end
         end
 
         context "with a spec/spec_helper.rb file" do
