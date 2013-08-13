@@ -106,5 +106,10 @@ describe RSpec::Core::Formatters::JsonFormatter do
       summary_line = formatter.output_hash[:summary_line]
       expect(summary_line).to eq "2 examples, 1 failure, 1 pending"
     end
+
+    it "ignores --profile" do
+      allow(RSpec.configuration).to receive(:profile_examples).and_return(true)
+      formatter.dump_summary(1.0, 2, 1, 1)
+    end
   end
 end
