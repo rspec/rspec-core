@@ -27,8 +27,6 @@ module RSpec
             :pending_count => pending_count
           }
           @output_hash[:summary_line] = summary_line(example_count, failure_count, pending_count)
-
-          dump_profile unless mute_profile_output?(failure_count)
         end
 
         def summary_line(example_count, failure_count, pending_count)
