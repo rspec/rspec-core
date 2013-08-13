@@ -9,6 +9,7 @@ Bugfixes
   (Jon Rowe)
 * Fix after(:all) hooks so consecutive (same context) scopes will run even if
   one raises an error. (Jon Rowe, Trejkaz)
+* JsonFormatter no longer dies if `dump_profile` isn't defined (Alex / @MasterLambaster, Jon Rowe)
 
 ### 2.14.4 / 2013-07-21
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.3...v2.14.4)
