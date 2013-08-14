@@ -178,6 +178,14 @@ module RSpec
       #     end
       add_setting :treat_symbols_as_metadata_keys_with_true_values
 
+      def treat_symbols_as_metadata_keys_with_true_values=(value)
+        unless value
+          RSpec.deprecate("RSpec.configuration.treat_symbols_as_metadata_keys_with_true_values = false")
+        end
+
+        @treat_symbols_as_metadata_keys_with_true_values = value
+      end
+
       # @private
       add_setting :tty
       # @private
