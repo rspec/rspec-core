@@ -20,6 +20,7 @@ shared_examples_for "metadata hash builder" do
     let(:warning_receiver) { Kernel }
 
     before(:each) do
+      allow_deprecation
       RSpec.configure { |c| c.treat_symbols_as_metadata_keys_with_true_values = false }
       warning_receiver.stub(:warn)
     end
