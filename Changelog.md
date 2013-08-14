@@ -1,5 +1,5 @@
 ### Dev
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.3...2-99-maintenance)
+[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.5...2-99-maintenance)
 
 Enhancements
 
@@ -18,7 +18,11 @@ Deprecations
   `-rruby-debug` (for the ruby-debug gem) or `-rdebugger` (for the
   debugger gem) instead (Myron Marston).
 
-Bugfixes
+### 2.14.5 / 2013-08-13
+[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.4...v2.14.5)
+
+Bug fixes:
+
 * Fix a `NoMethodError` that was being raised when there were no shared
   examples or contexts declared and `RSpec.world.reset` is invoked.
   (thepoho, Jon Rowe, Myron Marston)
@@ -27,6 +31,7 @@ Bugfixes
   (Jon Rowe)
 * Fix after(:all) hooks so consecutive (same context) scopes will run even if
   one raises an error. (Jon Rowe, Trejkaz)
+* JsonFormatter no longer dies if `dump_profile` isn't defined (Alex / @MasterLambaster, Jon Rowe)
 
 ### 2.14.4 / 2013-07-21
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.3...v2.14.4)
