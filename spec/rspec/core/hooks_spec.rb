@@ -26,6 +26,7 @@ module RSpec::Core
         context "when RSpec.configuration.treat_symbols_as_metadata_keys_with_true_values is set to #{config_value}" do
           before(:each) do
             Kernel.stub(:warn)
+            allow_deprecation unless config_value
             RSpec.configure { |c| c.treat_symbols_as_metadata_keys_with_true_values = config_value }
           end
 
@@ -57,6 +58,7 @@ module RSpec::Core
         [true, false].each do |config_value|
           context "when RSpec.configuration.treat_symbols_as_metadata_keys_with_true_values is set to #{config_value}" do
             before(:each) do
+              allow_deprecation unless config_value
               RSpec.configure { |c| c.treat_symbols_as_metadata_keys_with_true_values = config_value }
             end
 

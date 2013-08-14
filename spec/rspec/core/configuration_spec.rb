@@ -97,6 +97,12 @@ module RSpec::Core
         expect(config.treat_symbols_as_metadata_keys_with_true_values?).to be_falsey
       end
 
+      it 'prints a deprecation warning when explicitly set to false since RSpec 3 will not support that' do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1)
+        config.treat_symbols_as_metadata_keys_with_true_values = false
+        expect(config.treat_symbols_as_metadata_keys_with_true_values?).to be false
+      end
+
       it 'can be set to true' do
         config.treat_symbols_as_metadata_keys_with_true_values = true
         expect(config.treat_symbols_as_metadata_keys_with_true_values?).to be_truthy

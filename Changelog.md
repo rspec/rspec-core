@@ -17,6 +17,8 @@ Deprecations
 * Deprecate RSpec's built-in debugger support. Use a CLI option like
   `-rruby-debug` (for the ruby-debug gem) or `-rdebugger` (for the
   debugger gem) instead (Myron Marston).
+* Deprecate `RSpec.configuration.treat_symbols_as_metadata_keys_with_true_values = false`.
+  RSpec 3 will not support having this option set to `false` (Myron Marston).
 
 ### 2.14.5 / 2013-08-13
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.4...v2.14.5)

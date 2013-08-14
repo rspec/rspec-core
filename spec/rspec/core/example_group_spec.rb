@@ -29,6 +29,7 @@ module RSpec::Core
 
     context 'when RSpec.configuration.treat_symbols_as_metadata_keys_with_true_values is set to false' do
       before(:each) do
+        allow_deprecation
         RSpec.configure { |c| c.treat_symbols_as_metadata_keys_with_true_values = false }
       end
 
