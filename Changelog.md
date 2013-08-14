@@ -1,6 +1,8 @@
-### Development
+### 2.14.5 / 2013-08-13
+[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.4...v2.14.5)
 
-Bugfixes
+Bug fixes:
+
 * Fix a `NoMethodError` that was being raised when there were no shared
   examples or contexts declared and `RSpec.world.reset` is invoked.
   (thepoho, Jon Rowe, Myron Marston)
