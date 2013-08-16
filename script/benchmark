@@ -1,27 +1,30 @@
 #!/usr/bin/env ruby
 
-if ENV["TRAVIS_BRANCH"] == "master" || `git rev-parse --abbrev-ref HEAD`.chomp == "master"
-  times = []
+times = 20.times.map do
+  start_time = Time.now
+  system "bin/rspec spec/rspec/core/configuration_spec.rb &>/dev/null"
+  end_time = Time.now
+  end_time-start_time
+end
 
-  times = 20.times.map do
-    start_time = Time.now
-    system "bin/rspec &>/dev/null"
-    end_time = Time.now
-    end_time-start_time
-  end
+n              = times.count
+sum            = 0.0
+sum_of_squares = 0.0
 
-  n              = times.count
-  sum            = 0.0
-  sum_of_squares = 0.0
+times.each do |time|
+  sum            += time
+  sum_of_squares += time*time
+end
 
-  times.each do |time|
-    sum            += time
-    sum_of_squares += time*time
-  end
+mean = sum/n
+stdev = Math.sqrt( (sum_of_squares - n * mean * mean)/(n - 1))
 
-  mean = sum/n
-  stdev = Math.sqrt( (sum_of_squares - n * mean * mean)/(n - 1))
+benchmark_group = "#{RUBY_VERSION}-#{Dir.pwd.split('/').last}"
 
-  benchmark_group = "#{RUBY_VERSION}-#{Dir.pwd.split('/').last}"
+current_branch = ENV["TRAVIS_BRANCH"] || `git rev-parse --abbrev-ref HEAD`.chomp
+
+if current_branch == "master"
   system "curl 'http://rspec-benchmarks.herokuapp.com/stats?time=#{mean}&deviation=#{stdev}&app=#{benchmark_group}'"
+else
+  system "curl 'http://rspec-benchmarks.herokuapp.com/stats_pr?time=#{mean}&deviation=#{stdev}&app=#{benchmark_group}&branch=#{current_branch}'"
 end
