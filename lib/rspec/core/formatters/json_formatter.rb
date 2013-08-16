@@ -31,13 +31,6 @@ module RSpec
           dump_profile unless mute_profile_output?(failure_count)
         end
 
-        def summary_line(example_count, failure_count, pending_count)
-          summary = pluralize(example_count, "example")
-          summary << ", " << pluralize(failure_count, "failure")
-          summary << ", #{pending_count} pending" if pending_count > 0
-          summary
-        end
-
         def stop
           super
           @output_hash[:examples] = examples.map do |example|

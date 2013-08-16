@@ -103,17 +103,6 @@ module RSpec
           end
         end
 
-        # @api public
-        #
-        # Outputs summary with number of examples, failures and pending.
-        #
-        def summary_line(example_count, failure_count, pending_count)
-          summary = pluralize(example_count, "example")
-          summary << ", " << pluralize(failure_count, "failure")
-          summary << ", #{pending_count} pending" if pending_count > 0
-          summary
-        end
-
         def dump_pending
           unless pending_examples.empty?
             output.puts
