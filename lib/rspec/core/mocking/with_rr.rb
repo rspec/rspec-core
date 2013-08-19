@@ -1,6 +1,10 @@
 require 'rr'
 
-RSpec.configuration.backtrace_clean_patterns.push(RR::Errors::BACKTRACE_IDENTIFIER)
+if RSpec.configuration.respond_to?(:backtrace_exclusion_patterns)
+  RSpec.configuration.backtrace_exclusion_patterns.push(RR::Errors::BACKTRACE_IDENTIFIER)
+else
+  RSpec.configuration.backtrace_clean_patterns.push(RR::Errors::BACKTRACE_IDENTIFIER)
+end
 
 module RSpec
   module Core
