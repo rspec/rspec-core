@@ -116,6 +116,7 @@ Spork.prefork do
     c.include Aruba::Api, :example_group => {
       :file_path => /spec\/command_line/
     }
+    c.include Aruba::Api, :type => :aruba
 
     c.expect_with :rspec do |expectations|
       expectations.syntax = :expect
