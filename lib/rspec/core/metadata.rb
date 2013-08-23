@@ -273,7 +273,7 @@ module RSpec
 RSpec reserves some hash keys for its own internal use,
 including :#{key}, which is used on:
 
-            #{caller(0)[4]}.
+            #{CallerFilter.first_non_rspec_line}.
 
 Here are all of RSpec's reserved hash keys:
 
