@@ -32,13 +32,7 @@ module RSpec
 
             # Autotest files are only loaded by the autotest executable
             # and not by the rspec command and thus won't be in backtraces.
-            file.include?('autotest') ||
-
-            # TEMP: only needed because of CallerFilter in other
-            # libs overriding the one in rspec-core. Once I update
-            # those, we can removethse two.
-            file.include?('autorun') ||
-            file.end_with?('rspec/caller_filter.rb')
+            file.include?('autotest')
           end
 
           expect(unmatched_from files).to eq([])
