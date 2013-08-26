@@ -84,6 +84,6 @@ describe RSpec do
   it 'correctly raises an error when an invalid const is referenced' do
     expect {
       RSpec::NotAConst
-    }.to raise_error(NameError, /uninitialized constant RSpec::NotAConst/)
+    }.to raise_error(NameError, /RSpec::NotAConst/)
   end
 end
