@@ -2,7 +2,6 @@ require 'spec_helper'
 
 module RSpec
   describe CallerFilter do
-    # IGNORE =
     def ruby_files_in_lib(lib)
       # http://rubular.com/r/HYpUMftlG2
       path = $LOAD_PATH.find { |p| p.match(/\/rspec-#{lib}(-[a-f0-9]+)?\/lib/) }
@@ -20,11 +19,27 @@ module RSpec
 
       %w[ core mocks expectations ].each do |lib|
         it "matches all ruby files in rspec-#{lib}" do
-          files     = ruby_files_in_lib(lib)
+          files = ruby_files_in_lib(lib)
 
-          # We don't care about this file -- it only has a single require statement
-          # and won't show up in any backtraces.
-          files.reject! { |file| file.end_with?('lib/rspec-expectations.rb') }
+          files.reject! do |file|
+            # We don't care about this file -- it only has a single require statement
+            # and won't show up in any backtraces.
+            file.end_with?('lib/rspec-expectations.rb') ||
+
+            # This has a single require and a single deprecation, and won't be
+            # in backtraces.
+            file.end_with?('lib/spec/mocks.rb') ||
+
+            # Autotest files are only loaded by the autotest executable
+            # and not by the rspec command and thus won't be in backtraces.
+            file.include?('autotest') ||
+
+            # TEMP: only needed because of CallerFilter in other
+            # libs overriding the one in rspec-core. Once I update
+            # those, we can removethse two.
+            file.include?('autorun') ||
+            file.end_with?('rspec/caller_filter.rb')
+          end
 
           expect(unmatched_from files).to eq([])
         end
