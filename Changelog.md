@@ -6,6 +6,8 @@ Enhancements
 * Block-based DSL methods that run in the context of an example
   (`it`, `before(:each)`, `after(:each)`, `let` and `subject`)
   now yield the example as a block argument (David Chelimsky).
+* Warn when the name of more than one example group is submitted to
+  `include_examples` and it's aliases (David Chelimsky)
 
 Deprecations
 
