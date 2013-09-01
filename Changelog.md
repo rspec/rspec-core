@@ -9,6 +9,8 @@ Enhancements
 * Warn when the name of more than one example group is submitted to
   `include_examples` and it's aliases (David Chelimsky)
 
+* Limit spamminess of deprecation messages (Bradley Schaefer, Loren Segal)
+
 Deprecations
 
 * Deprecate `RSpec::Core::ExampleGroup#example` and
