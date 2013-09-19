@@ -52,6 +52,13 @@ Feature: User-defined metadata
           example.metadata[:bazz].should eq(33)
           example.metadata.should_not include(:foo)
         end
+
+        describe "has an #its example with metadata" do
+          subject{ "foo" }
+          its :to_s, :foo => 42 do |example|
+            example.metadata[:foo].should eq(42)
+          end
+        end
       end
       """
     When I run `rspec define_example_metadata_with_hash_spec.rb`

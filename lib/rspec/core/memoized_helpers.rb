@@ -430,8 +430,8 @@ EOS
         #     before { subject.age = 25 }
         #     its(:age) { should eq(25) }
         #   end
-        def its(attribute, &block)
-          describe(attribute) do
+        def its(attribute, *args, &block)
+          describe(attribute, *args) do
             if Array === attribute
               let(:__its_subject) { subject[*attribute] }
             else
