@@ -54,7 +54,7 @@ Feature: User-defined metadata
         end
 
         describe "has an #its example with metadata" do
-          subject{ "foo" }
+          subject { "foo" }
           its :to_s, :foo => 42 do |example|
             example.metadata[:foo].should eq(42)
           end
