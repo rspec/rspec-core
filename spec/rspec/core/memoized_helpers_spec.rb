@@ -384,6 +384,20 @@ module RSpec::Core
         end
       end
 
+      context "accessing options within a running example" do
+        it "can look up option values by key" do
+          group = ExampleGroup.describe(Array) do
+            subject { Object.new }
+
+            its(:class, :demo => :data) do |ex|
+              expect(ex.metadata[:demo]).to eq(:data)
+            end
+          end
+
+          expect(group.run).to be_truthy
+        end
+      end
+
       context "calling and overriding super" do
         it "calls to the subject defined in the parent group" do
           group = ExampleGroup.describe(Array) do
