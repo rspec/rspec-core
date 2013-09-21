@@ -23,6 +23,8 @@ Deprecations
   debugger gem) instead (Myron Marston).
 * Deprecate `RSpec.configuration.treat_symbols_as_metadata_keys_with_true_values = false`.
   RSpec 3 will not support having this option set to `false` (Myron Marston).
+* Deprecate accessing a `let` or `subject` declaration in
+  a `before(:all)` or `after(:all)` hook. (Myron Marston, Jon Rowe)
 
 ### 2.14.5 / 2013-08-13
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.4...v2.14.5)
