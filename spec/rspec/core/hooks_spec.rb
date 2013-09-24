@@ -124,6 +124,18 @@ module RSpec::Core
             expect(instance.hook_collection_for(type, scope)).to include(hook)
           end
 
+          it "respects metadata conditions" do
+            types = []
+            RSpec.configuration.send(type, scope, metadata: :triggered) do |example|
+              types = [type, scope, :triggered]
+            end
+            ExampleGroup.describe do
+              metadata[:metadata] = :triggered
+              it("runs when matched") { true }
+            end.run
+            expect(types).to eq [type, scope, :triggered]
+          end
+
           it 'does not run when in dry run mode' do
             RSpec.configuration.dry_run = true
 
