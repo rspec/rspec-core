@@ -9,7 +9,10 @@ Enhancements
 * Warn when the name of more than one example group is submitted to
   `include_examples` and it's aliases (David Chelimsky)
 
+Bug fixes
+
 * Limit spamminess of deprecation messages (Bradley Schaefer, Loren Segal)
+* Format stringified numbers correctly when mathn library is loaded (Jay Hayes)
 
 Deprecations
 
