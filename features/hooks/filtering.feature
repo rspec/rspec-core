@@ -46,6 +46,37 @@ Feature: filters
     When I run `rspec filter_before_each_hooks_spec.rb`
     Then the examples should all pass
 
+  Scenario: filter `before(:all)` hooks using arbitrary metadata
+    Given a file named "filter_before_all_hooks_spec.rb" with:
+      """ruby
+      RSpec.configure do |config|
+        config.before(:all, :foo => :bar) do
+          @@invoked_hooks ||= []
+          @@invoked_hooks << :before_all_foo_bar
+        end
+      end
+
+      describe "a filtered before :all hook" do
+        describe "group without matching metadata" do
+          it "does not run the hook" do
+            expect(defined?(@@invoked_hooks)).to eq nil
+          end
+
+          it "runs the hook for an example with matching metadata", :foo => :bar do
+            @@invoked_hooks.should == [:before_all_foo_bar]
+          end
+        end
+
+        describe "group with matching metadata", :foo => :bar do
+          it "runs the hook" do
+            @@invoked_hooks.should == [:before_all_foo_bar]
+          end
+        end
+      end
+      """
+    When I run `rspec filter_before_all_hooks_spec.rb`
+    Then the examples should all pass
+
   Scenario: filter `after(:each)` hooks using arbitrary metadata
     Given a file named "filter_after_each_hooks_spec.rb" with:
       """ruby
