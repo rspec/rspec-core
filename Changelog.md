@@ -1,3 +1,11 @@
+### 2.14.6 Development
+[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.5...v2.14.6)
+
+Bug fixes:
+
+* Format stringified numbers correctly when mathn library is loaded.
+  (Jay Hayes)
+
 ### 2.14.5 / 2013-08-13
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.4...v2.14.5)
 
