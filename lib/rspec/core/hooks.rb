@@ -142,7 +142,7 @@ EOS
           process(host, globals, :after,  :all)
         end
 
-        private
+      private
 
         def process(host, globals, position, scope)
           globals[position][scope].each do |hook|

@@ -50,6 +50,16 @@ module RSpec
         hash
       end
 
+      # @private
+      def on_change &block
+        @callback = block
+      end
+
+      def []=(key, value)
+        super
+        @callback.call if defined?(@callback)
+      end
+
       module MetadataHash
 
         # @private
