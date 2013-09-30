@@ -225,6 +225,19 @@ module RSpec::Core
         expect(examples_run.count).to eq(1)
       end
 
+      it "runs before hooks when configured with metadata" do
+        examples_run = 0
+        RSpec.configuration.before(:all, :type => :run_counter) { examples_run += 1 }
+
+        group = ExampleGroup.describe("parent") do
+          metadata[:type] = :run_counter
+          specify { true }
+        end
+
+        group.run
+        expect(examples_run).to eq(1)
+      end
+
       context "with a failure in the top level group" do
         it "runs its children " do
           examples_run = []
