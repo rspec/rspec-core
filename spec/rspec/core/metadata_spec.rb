@@ -47,6 +47,7 @@ module RSpec
         let(:metadata) { Metadata.new }
 
         before do
+          metadata[:key] = :old_value
           metadata.on_change { @callback_run = true }
         end
 
@@ -61,8 +62,13 @@ module RSpec
         end
 
         it 'runs the callback on #merge!' do
-          metadata.merge! :key => :value
+          metadata.merge! :key => :new_value
           expect(@callback_run).to eq true
+        end
+
+        it 'supports the block on #merge!' do
+          metadata.merge!( :key => :new_value ) { |key, v1, v2| v2 }
+          expect(metadata[:key]).to eq :new_value
         end
       end
 
