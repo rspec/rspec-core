@@ -52,12 +52,14 @@ module RSpec
 
       # @private
       def on_change &block
-        @callback = block
+        @update_after_change = block
       end
 
-      def []=(key, value)
-        super
-        @callback.call if defined?(@callback)
+      [:[]=, :store, :merge!].each do |name|
+        define_method(name) do |*args|
+          super(*args)
+          @update_after_change.call if defined?(@update_after_change)
+        end
       end
 
       module MetadataHash

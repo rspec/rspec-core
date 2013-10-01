@@ -43,6 +43,29 @@ module RSpec
         end
       end
 
+      describe '#on_change' do
+        let(:metadata) { Metadata.new }
+
+        before do
+          metadata.on_change { @callback_run = true }
+        end
+
+        it 'runs the callback on #[]=' do
+          metadata[:key] = :value
+          expect(@callback_run).to eq true
+        end
+
+        it 'runs the callback on #store' do
+          metadata.store :key, :value
+          expect(@callback_run).to eq true
+        end
+
+        it 'runs the callback on #merge!' do
+          metadata.merge! :key => :value
+          expect(@callback_run).to eq true
+        end
+      end
+
       describe "#filter_applies?" do
         let(:parent_group_metadata) { Metadata.new.process('parent group', :caller => ["foo_spec.rb:#{__LINE__}"]) }
         let(:group_metadata) { Metadata.new(parent_group_metadata).process('group', :caller => ["foo_spec.rb:#{__LINE__}"]) }
