@@ -138,6 +138,16 @@ describe 'command line', :ui do
 
       run_command 'spec/order_spec.rb --order defined -f doc'
 
+      expect(stdout.string).to match(
+        /group 1.*group 1 example 1.*group 1 example 2.*group 1-1.*group 1-2.*group 2.*/m
+      )
+    end
+  end
+
+  describe '--order defined with --seed' do
+    it 'uses the defined order' do
+      run_command 'spec/order_spec.rb --order defined --seed 2 -f doc'
+
       expect(stdout.string).not_to match(/Randomized/)
 
       expect(stdout.string).to match(
