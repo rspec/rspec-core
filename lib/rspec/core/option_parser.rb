@@ -72,7 +72,7 @@ module RSpec::Core
         end
 
         parser.on('--seed SEED', Integer, 'Equivalent of --order rand:SEED.') do |seed|
-          options[:order] = "rand:#{seed}"
+          options[:seed] = seed
         end
 
         parser.on('--fail-fast', 'Abort the run on first failure.') do |o|
