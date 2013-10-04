@@ -199,9 +199,9 @@ module RSpec::Core
     end
 
     describe "--seed" do
-      it "sets the order to rand:SEED" do
+      it "sets the seed to the specified value" do
         options = Parser.parse!(%w[--seed 123])
-        expect(options[:order]).to eq("rand:123")
+        expect(options[:seed]).to eq(123)
       end
     end
 
