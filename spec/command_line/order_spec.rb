@@ -39,7 +39,6 @@ describe 'command line', :ui do
         specify('group 1 example 4')  {}
         specify('group 1 example 5')  {}
         specify('group 1 example 6')  {}
-        specify('group 1 example 5')  {}
         specify('group 1 example 7')  {}
         specify('group 1 example 8')  {}
         specify('group 1 example 9')  {}
