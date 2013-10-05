@@ -149,6 +149,11 @@ module RSpec
           )
           @printer.flush
         end
+
+        def seed(seed)
+          @printer.print_seed seed
+          @printer.flush
+        end
       end
     end
   end

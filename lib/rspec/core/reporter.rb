@@ -104,7 +104,7 @@ module RSpec::Core
         notify :dump_failures
         notify :dump_summary, @duration, @example_count, @failure_count, @pending_count
         notify :deprecation_summary
-        notify :seed, @configuration.seed if seed_used?
+        notify :seed, @configuration.seed
       ensure
         notify :close
       end
@@ -121,12 +121,6 @@ module RSpec::Core
       registered_listeners(event).each do |formatter|
         formatter.send(event, *args, &block)
       end
-    end
-
-  private
-
-    def seed_used?
-      @configuration.seed && @configuration.seed_used?
     end
   end
 end

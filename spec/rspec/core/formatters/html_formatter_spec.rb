@@ -31,7 +31,8 @@ module RSpec
           command_line = RSpec::Core::CommandLine.new(options)
           command_line.instance_variable_get("@configuration").backtrace_formatter.inclusion_patterns = []
           command_line.run(err, out)
-          out.string.gsub(/\d+\.\d+(s| seconds)/, "n.nnnn\\1")
+          out.string.gsub!(/\d+\.\d+(s| seconds)/, "n.nnnn\\1")
+          out.string.gsub!(/Randomized with seed \d+/, "Randomized with seed nnn")
         end
 
         let(:expected_html) do

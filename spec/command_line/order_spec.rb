@@ -185,6 +185,8 @@ describe 'command line', :ui do
 
       run_command 'spec/order_spec.rb --order defined -f doc'
 
+      expect(stdout.string).to match(/Randomized with seed \d+/)
+
       expect(stdout.string).to match(
         /group 1.*group 1 example 1.*group 1 example 2.*group 1-1.*group 1-2.*group 2.*/m
       )
@@ -226,6 +228,8 @@ describe 'command line', :ui do
 
     it 'orders the groups and examples by the provided strategy' do
       run_command 'spec/custom_order_spec.rb -f doc'
+
+      expect(stdout.string).to match(/Randomized with seed \d+/)
 
       top_level_groups    { |groups| expect(groups.flatten).to eq(['group A', 'group B']) }
       examples('group B') do |examples|

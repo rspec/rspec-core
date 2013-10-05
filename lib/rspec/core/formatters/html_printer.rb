@@ -68,10 +68,6 @@ module RSpec
 
           @output.puts "<script type=\"text/javascript\">document.getElementById('duration').innerHTML = \"Finished in <strong>#{formatted_duration} seconds</strong>\";</script>"
           @output.puts "<script type=\"text/javascript\">document.getElementById('totals').innerHTML = \"#{totals}\";</script>"
-          @output.puts "</div>"
-          @output.puts "</div>"
-          @output.puts "</body>"
-          @output.puts "</html>"
         end
 
         def flush
@@ -101,6 +97,13 @@ module RSpec
           @output.puts "    <script type=\"text/javascript\">makeYellow('example_group_#{group_id}');</script>"
         end
 
+        def print_seed(seed)
+          @output.puts "<script type=\"text/javascript\">document.getElementById('seed').innerHTML = \"Randomized with seed #{seed}\";</script>"
+          @output.puts "</div>"
+          @output.puts "</div>"
+          @output.puts "</body>"
+          @output.puts "</html>"
+        end
 
         private
 
@@ -126,6 +129,7 @@ module RSpec
   <div id="summary">
     <p id="totals">&#160;</p>
     <p id="duration">&#160;</p>
+    <p id="seed">&#160;</p>
   </div>
 </div>
 
