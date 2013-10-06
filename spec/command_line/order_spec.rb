@@ -131,7 +131,6 @@ describe 'command line', :ui do
   describe '--order rand' do
     it 'runs the examples and groups in a different order each time' do
       run_command 'spec/order_spec.rb --order rand -f doc'
-      RSpec.configuration.seed = srand && srand # reset seed in same process
       run_command 'spec/order_spec.rb --order rand -f doc'
 
       expect(stdout.string).to match(/Randomized with seed \d+/)

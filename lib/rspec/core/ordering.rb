@@ -89,7 +89,7 @@ module RSpec
 
         def initialize
           @ordering_registry = Registry.new(self)
-          @seed = srand % 0xFFFF
+          @seed = rand(0xFFFF)
           @seed_forced = false
           @order_forced = false
         end
