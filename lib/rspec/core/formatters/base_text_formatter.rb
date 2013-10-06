@@ -285,7 +285,7 @@ module RSpec
         end
 
         def pending_fixed?(example)
-          example.execution_result[:exception].pending_fixed?
+          example.execution_result[:pending_fixed]
         end
 
         def dump_failure(example, index)
