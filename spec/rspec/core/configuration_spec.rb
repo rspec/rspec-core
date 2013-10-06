@@ -1266,8 +1266,9 @@ module RSpec::Core
         let(:ordering_strategy) { config.ordering_registry.fetch(:global) }
 
         let(:shuffled) do
-          Kernel.srand(37)
-          list.shuffle
+          shuffle_config = RSpec::Core::Configuration.new
+          shuffle_config.seed = 37
+          RSpec::Core::Ordering::Random.new(shuffle_config).order list
         end
 
         specify "CLI `--order defined` takes precedence over `config.order = rand`" do

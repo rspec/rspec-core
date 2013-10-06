@@ -24,9 +24,16 @@ module RSpec
 
         def order(items)
           @used = true
-          Kernel.srand @configuration.seed
-          ordering = items.shuffle
-          Kernel.srand # reset random generation
+
+          rng = RSpec::Core::Random.new(@configuration.seed)
+
+          ordering = items.dup
+          ordering.size.times do |i|
+            j = i + rng.rand(ordering.size - i)
+            next if i == j
+            ordering[i], ordering[j] = ordering[j], ordering[i]
+          end
+
           ordering
         end
       end
