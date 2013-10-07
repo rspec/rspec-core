@@ -330,26 +330,6 @@ module RSpec
       end
     end
 
-    module Kernel
-      def require_with_backports(lib)
-        begin
-          return false unless require_without_backports(lib)
-          paths = Backports::StdLib.extended_lib.fetch(lib, nil)
-        rescue LoadError
-          return false if Backports::StdLib::LoadedFeatures.new.include?(lib)
-          raise unless paths = Backports::StdLib.extended_lib.fetch(lib, nil)
-          Backports::StdLib::LoadedFeatures.mark_as_loaded(lib)
-        end
-        if paths
-          paths.each do |path|
-            require_without_backports(path)
-          end
-        end
-        true
-      end
-      Backports.alias_method_chain self, :require, :backports
-    end
-
     class Random
       # An implementation of Mersenne Twister MT19937 in Ruby
       class MT19937
@@ -604,8 +584,7 @@ module RSpec
       end
 
       def self.new_seed
-        Kernel::srand # use the built-in seed generator
-        Kernel::srand # return the generated seed
+        (2 ** 62) + Kernel::rand(2 ** 62)
       end
     end
 
@@ -619,8 +598,6 @@ module RSpec
       def inspect
         "#<#{self.class.name}:#{object_id}>"
       end
-
-      srand
     end
   end
 end
