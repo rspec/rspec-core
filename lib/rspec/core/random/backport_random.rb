@@ -510,6 +510,7 @@ module RSpec
 
         def srand(new_seed = 0)
           new_seed = Backports.coerce_to_int(new_seed)
+          @seed = nil unless defined?(@seed)
           old, @seed = @seed, new_seed.nonzero? || Random.new_seed
           @mt = MT19937[ @seed ]
           old
