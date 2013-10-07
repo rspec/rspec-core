@@ -425,13 +425,10 @@ module RSpec
           y ^= (y >> 18)
         end
       end
-    end
 
-    class Random
       # Supplement the MT19937 class with methods to do
       # conversions the same way as MRI.
       # No argument checking is done here either.
-
       class MT19937
         FLOAT_FACTOR = 1.0/9007199254740992.0
         # generates a random number on [0,1) with 53-bit resolution
@@ -508,7 +505,8 @@ module RSpec
           new(convert_seed(seed))
         end
 
-      private
+        private
+
         MASK_BY = [1,2,4,8,16]
         def mask_32_bits(n)
           MASK_BY.each do |shift|
@@ -517,14 +515,11 @@ module RSpec
           n
         end
       end
-    end
 
-    class Random
       # Implementation corresponding to the actual Random class of Ruby
       # The actual random generator (mersenne twister) is in MT19937.
       # Ruby specific conversions are handled in bits_and_bytes.
       # The high level stuff (argument checking) is done here.
-      #
       module Implementation
         attr_reader :seed
 
@@ -577,7 +572,8 @@ module RSpec
           @mt.marshal_load(ary)
         end
 
-      private
+        private
+
         def state
           @mt.state_as_bignum
         end
@@ -615,6 +611,7 @@ module RSpec
 
     class Random
       include Implementation
+
       class << self
         include Implementation
       end
