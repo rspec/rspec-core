@@ -404,12 +404,11 @@ module RSpec
           y ^= (y << 15) & 0xefc60000
           y ^= (y >> 18)
         end
-      end
 
-      # Supplement the MT19937 class with methods to do
-      # conversions the same way as MRI.
-      # No argument checking is done here either.
-      class MT19937
+        # Supplement the MT19937 class with methods to do
+        # conversions the same way as MRI.
+        # No argument checking is done here either.
+
         FLOAT_FACTOR = 1.0/9007199254740992.0
         # generates a random number on [0,1) with 53-bit resolution
         def random_float
