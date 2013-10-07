@@ -78,6 +78,9 @@ module RSpec
         options = ConfigurationOptions.new(args)
         options.parse_options
 
+        seed = options.options[:seed] || RSpec::configuration.seed
+        RSpec::Core::Random.srand seed
+
         if options.options[:drb]
           require 'rspec/core/drb_command_line'
           begin

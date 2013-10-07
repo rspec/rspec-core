@@ -51,7 +51,6 @@ describe 'command line', :ui do
     expected
   end
 
-
   before :all do
     write_file 'spec/simple_spec.rb', """
       describe 'group 1' do
@@ -260,6 +259,7 @@ describe 'command line', :ui do
   end
 
   def run_command(cmd)
+    allow(RSpec::Core::Random).to receive :srand
     in_current_dir do
       RSpec::Core::Runner.run(cmd.split, stderr, stdout)
     end
