@@ -505,15 +505,23 @@ module RSpec
 
         def initialize(seed = 0)
           super()
-          srand(seed)
+          seed_rand seed
         end
 
-        def srand(new_seed = 0)
+        def seed_rand(new_seed = 0)
           new_seed = Backports.coerce_to_int(new_seed)
           @seed = nil unless defined?(@seed)
           old, @seed = @seed, new_seed.nonzero? || Random.new_seed
           @mt = MT19937[ @seed ]
           old
+        end
+
+        # This is a subtle, but important implementation detail.
+        # Random.srand updates Kernel.srand in Ruby 1.9,
+        # so this needs to follow suit, but RSpec should limit
+        # calls to very specific places (and ideally only one).
+        def srand(seed = 0)
+          Kernel.srand seed
         end
 
         def rand(limit = Backports::Undefined)
