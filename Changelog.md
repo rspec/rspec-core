@@ -28,6 +28,7 @@ Deprecations
   RSpec 3 will not support having this option set to `false` (Myron Marston).
 * Deprecate accessing a `let` or `subject` declaration in
   a `after(:all)` hook. (Myron Marston, Jon Rowe)
+* Fix an issue that prevented the use of frozen error objects. (Lars Gierth)
 
 ### 2.14.5 / 2013-08-13
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.4...v2.14.5)
