@@ -455,6 +455,7 @@ EOS
         #     its(:age) { should eq(25) }
         #   end
         def its(attribute, &block)
+          RSpec.deprecate('Use of rspec-core\'s "its" method', :replacement => 'rspec-its gem')
           describe(attribute) do
             if Array === attribute
               let(:__its_subject) { subject[*attribute] }
