@@ -71,7 +71,7 @@ module RSpec::Core
           options[:order] = o
         end
 
-        parser.on('--seed SEED', Integer, 'Equivalent of --order rand:SEED.') do |seed|
+        parser.on('--seed SEED', Integer, 'Seed to use for random number generation (also affects random ordering).') do |seed|
           options[:seed] = seed
         end
 
