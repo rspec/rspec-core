@@ -350,7 +350,7 @@ module RSpec::Core
     describe "#its" do
 
       it "should issue deprecation warning" do
-        expect_deprecation_with_call_site(__FILE__, __LINE__+1, '"its" method')
+        expect_deprecation_with_call_site(__FILE__, __LINE__+1, '`its` method')
         RSpec::Core::ExampleGroup.its(nil) {}
       end
 
