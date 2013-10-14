@@ -27,11 +27,15 @@ module RSpec
 
           rng = RSpec::Core::Random.new(@configuration.seed)
 
-          ordering = items.dup
-          ordering.size.times do |i|
-            j = i + rng.rand(ordering.size - i)
-            next if i == j
-            ordering[i], ordering[j] = ordering[j], ordering[i]
+          if RUBY_VERSION > '1.9.3'
+            ordering = items.shuffle(:random => rng)
+          else
+            ordering = items.dup
+            ordering.size.times do |i|
+              j = i + rng.rand(ordering.size - i)
+              next if i == j
+              ordering[i], ordering[j] = ordering[j], ordering[i]
+            end
           end
 
           ordering
