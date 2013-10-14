@@ -96,6 +96,7 @@ module RSpec
           @seed = rand(0xFFFF)
           @seed_forced = false
           @order_forced = false
+          @seed_locked = false
         end
 
         def seed_used?
@@ -103,9 +104,15 @@ module RSpec
         end
 
         def seed=(seed)
-          return if @seed_forced
+          return if @seed_forced || @seed_locked
           register_ordering(:global, ordering_registry.fetch(:random))
           @seed = seed.to_i
+        end
+
+        def lock_seed(new_seed)
+          @seed_locked = true
+          @seed = new_seed || @seed
+          RSpec::Core::Random.srand @seed
         end
 
         def order=(type)

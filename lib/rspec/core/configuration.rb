@@ -909,6 +909,11 @@ module RSpec
       delegate_to_ordering_manager :seed=
 
       # @macro delegate_to_ordering_manager
+      #
+      # Locks the seed to prevent further changes.
+      delegate_to_ordering_manager :lock_seed
+
+      # @macro delegate_to_ordering_manager
       # Seed for random ordering (default: generated randomly each run).
       #
       # When you run specs with `--order random`, RSpec generates a random seed
