@@ -77,10 +77,6 @@ module RSpec
         def register(sym, strategy)
           @strategies[sym] = strategy
         end
-
-        def used_random_seed?
-          @strategies[:random].used?
-        end
       end
 
       # @private

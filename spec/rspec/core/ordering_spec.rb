@@ -42,22 +42,6 @@ module RSpec
         let(:configuration) { Configuration.new }
         subject(:registry) { Registry.new(configuration) }
 
-        describe "#used_random_seed?" do
-          it 'returns false if the random orderer has not been used' do
-            expect(registry.used_random_seed?).to be false
-          end
-
-          it 'returns false if the random orderer has been fetched but not used' do
-            expect(registry.fetch(:random)).to be_a(Random)
-            expect(registry.used_random_seed?).to be false
-          end
-
-          it 'returns true if the random orderer has been used' do
-            registry.fetch(:random).order([1, 2])
-            expect(registry.used_random_seed?).to be true
-          end
-        end
-
         describe "#fetch" do
           it "gives the registered ordering when called with a symbol" do
             ordering = Object.new
