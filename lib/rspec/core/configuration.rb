@@ -905,7 +905,7 @@ module RSpec
 
       # @macro delegate_to_ordering_manager
       #
-      # Sets the seed value and sets the default global ordering to random.
+      # Sets the seed value.
       delegate_to_ordering_manager :seed=
 
       # @macro delegate_to_ordering_manager
