@@ -97,7 +97,6 @@ module RSpec
 
         def seed=(seed)
           return if @seed_forced || @seed_locked
-          register_ordering(:global, ordering_registry.fetch(:random))
           @seed = seed.to_i
         end
 

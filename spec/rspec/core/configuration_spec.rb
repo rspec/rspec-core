@@ -1264,6 +1264,7 @@ module RSpec::Core
       context "for ordering options" do
         let(:list) { [1, 2, 3, 4] }
         let(:ordering_strategy) { config.ordering_registry.fetch(:global) }
+        let(:default_order) { RSpec::Core::Ordering::Identity.new.order list }
 
         let(:shuffled) do
           shuffle_config = RSpec::Core::Configuration.new
@@ -1285,11 +1286,11 @@ module RSpec::Core
           expect(ordering_strategy.order(list)).to eq(shuffled)
         end
 
-        specify "CLI `--seed 37` forces seed" do
+        specify "CLI `--seed 37` forces seed and uses default ordering" do
           config.force :seed => 37
-          config.seed  = 145
-
+          config.seed = 145
           expect(config.seed).to eq(37)
+          expect(ordering_strategy.order(list)).to eq default_order
         end
 
         specify "CLI `--order defined` takes precedence over `config.register_ordering(:global)`" do
