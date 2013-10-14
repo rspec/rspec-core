@@ -1285,12 +1285,10 @@ module RSpec::Core
           expect(ordering_strategy.order(list)).to eq(shuffled)
         end
 
-        specify "CLI `--seed 37` forces order and seed" do
+        specify "CLI `--seed 37` forces seed" do
           config.force :seed => 37
-          config.order = "defined"
           config.seed  = 145
 
-          expect(ordering_strategy.order(list)).to eq(shuffled)
           expect(config.seed).to eq(37)
         end
 
