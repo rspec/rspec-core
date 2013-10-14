@@ -155,17 +155,6 @@ describe 'command line', :ui do
   end
 
   describe '--seed SEED' do
-    it "forces '--order rand' and runs the examples and groups in the same order each time" do
-      2.times { run_command 'spec/order_spec.rb --seed 123 -f doc' }
-
-      expect(stdout.string).to match(/Randomized with seed 123/)
-
-      top_level_groups      {|first_run, second_run| expect(first_run).to eq(second_run)}
-      nested_groups         {|first_run, second_run| expect(first_run).to eq(second_run)}
-      examples('group 1')   {|first_run, second_run| expect(first_run).to eq(second_run)}
-      examples('group 1-1') {|first_run, second_run| expect(first_run).to eq(second_run)}
-    end
-
     it "runs examples in the same order, regardless of the order in which files are given" do
       run_command 'spec/simple_spec.rb spec/simple_spec2.rb --seed 1337 -f doc'
       run_command 'spec/simple_spec2.rb spec/simple_spec.rb --seed 1337 -f doc'
