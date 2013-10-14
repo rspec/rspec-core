@@ -99,10 +99,6 @@ module RSpec
           @seed_locked = false
         end
 
-        def seed_used?
-          ordering_registry.used_random_seed?
-        end
-
         def seed=(seed)
           return if @seed_forced || @seed_locked
           register_ordering(:global, ordering_registry.fetch(:random))

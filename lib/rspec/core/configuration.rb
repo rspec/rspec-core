@@ -959,7 +959,7 @@ module RSpec
       delegate_to_ordering_manager :register_ordering
 
       # @private
-      delegate_to_ordering_manager :seed_used?, :ordering_registry
+      delegate_to_ordering_manager :ordering_registry
 
       # Set Ruby warnings on or off
       def warnings= value

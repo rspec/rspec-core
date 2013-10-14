@@ -1317,21 +1317,6 @@ module RSpec::Core
       end
     end
 
-    describe "#seed_used?" do
-      def use_seed_on(registry)
-        registry.fetch(:random).order([1, 2])
-      end
-
-      it 'returns false if neither ordering registry used the seed' do
-        expect(config.seed_used?).to be false
-      end
-
-      it 'returns true if the ordering registry used the seed' do
-        use_seed_on(config.ordering_registry)
-        expect(config.seed_used?).to be true
-      end
-    end
-
     describe '#lock_seed' do
       let(:seed)         { rand 999 }
       let(:ignored_seed) { seed + 1 }
