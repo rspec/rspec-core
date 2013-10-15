@@ -8,9 +8,9 @@ RSpec.configure do |config|
       "#{RSpec::Core::Random}.srand should always be stubbed or mocked. " +
       "This appears to be an unintended call."
 
-    if defined?(Kernel::Random)
-      allow(Kernel::Random).to receive(:srand).and_raise NotImplementedError,
-        "#{Kernel::Random}.srand should always be stubbed or mocked. " +
+    if defined?(::Random)
+      allow(::Random).to receive(:srand).and_raise NotImplementedError,
+        "#{::Random}.srand should always be stubbed or mocked. " +
         "This appears to be an unintended call."
     end
   end

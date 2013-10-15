@@ -43,7 +43,7 @@ module RSpec
         end
       end
 
-      if !defined?(Kernel::Random)
+      if !defined?(::Random)
         describe '.srand' do
           before { allow(Random).to receive(:srand).and_call_original }
           before { allow(Kernel).to receive(:srand) }

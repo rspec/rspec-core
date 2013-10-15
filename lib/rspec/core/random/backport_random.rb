@@ -296,7 +296,7 @@ module RSpec
       end
 
       def self.new_seed
-        (2 ** 62) + Kernel::rand(2 ** 62)
+        (2 ** 62) + Kernel.rand(2 ** 62)
       end
     end
 
