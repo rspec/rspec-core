@@ -72,10 +72,6 @@ module RSpec::Core
         end
 
         parser.on('--seed SEED', Integer, 'Seed to use for random number generation (also affects random ordering).') do |seed|
-          unless options[:order]
-            # No period on the end, as it appears to be added somewhere else.
-            RSpec.warning '--seed no longer automatically sets order to random. Use --order rand:SEED to do both'
-          end
           options[:seed] = seed
         end
 
