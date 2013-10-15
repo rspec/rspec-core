@@ -1,9 +1,53 @@
 module RSpec
   module Core
-    if defined?(::Random)
-      Random = ::Random
-    else
+    if !defined?(::Random)
       require 'rspec/core/backport_random'
+    end
+
+    class Random
+      def initialize(seed = 0)
+        @rng = self.class.random.new(seed)
+      end
+
+      def rand(*args)
+        @rng.rand(*args)
+      end
+
+      def seed
+        @rng.seed
+      end
+
+      def self.srand(seed = 0)
+        random.srand seed
+      end
+
+      def self.shuffle(list, seed)
+        rng = RSpec::Core::Random.new(seed)
+
+        if RUBY_VERSION > '1.9.3'
+          shuffled = list.shuffle(:random => rng)
+        else
+          shuffled = list.dup
+          shuffled.size.times do |i|
+            j = i + rng.rand(shuffled.size - i)
+            next if i == j
+            shuffled[i], shuffled[j] = shuffled[j], shuffled[i]
+          end
+        end
+
+        shuffled
+      end
+
+      private
+
+      def self.random
+        @random ||=
+          if defined?(::Random)
+            ::Random
+          else
+            RSpec::Core::Backports::Random
+          end
+      end
     end
 
     # @private
@@ -24,20 +68,7 @@ module RSpec
         end
 
         def order(items)
-          rng = RSpec::Core::Random.new(@configuration.seed)
-
-          if RUBY_VERSION > '1.9.3'
-            ordering = items.shuffle(:random => rng)
-          else
-            ordering = items.dup
-            ordering.size.times do |i|
-              j = i + rng.rand(ordering.size - i)
-              next if i == j
-              ordering[i], ordering[j] = ordering[j], ordering[i]
-            end
-          end
-
-          ordering
+          RSpec::Core::Random.shuffle(items, @configuration.seed)
         end
       end
 
