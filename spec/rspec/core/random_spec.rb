@@ -45,22 +45,19 @@ module RSpec
 
       if !defined?(::Random)
         describe '.srand' do
-          before { allow(Random).to receive(:srand).and_call_original }
-          before { allow(Kernel).to receive(:srand) }
-          before { expect(Kernel).to receive(:srand).once.with(seed) }
-
-          context 'given a seed' do
-            let(:seed) { rand 999 }
-            it 'invokes Kernel.srand with the specified seed' do
-              Random.srand seed
-            end
+          before do
+            allow(Random).to receive(:srand).and_call_original
+            allow(Kernel).to receive(:srand)
           end
 
-          context 'given no seed' do
-            let(:seed) { 0 }
-            it 'invokes Kernel.srand with a seed of 0' do
-              Random.srand
-            end
+          it 'invokes Kernel.srand with the specified seed' do
+            expect(Kernel).to receive(:srand).with(123)
+            Random.srand 123
+          end
+
+          it 'uses a seed of 0 if none is given' do
+            expect(Kernel).to receive(:srand).with(0)
+            Random.srand
           end
         end
       end
