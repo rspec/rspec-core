@@ -15,16 +15,9 @@ module RSpec
       class Random
         def initialize(configuration)
           @configuration = configuration
-          @used = false
-        end
-
-        def used?
-          @used
         end
 
         def order(items)
-          @used = true
-
           rng = RSpec::Core::Random.new(@configuration.seed)
 
           if RUBY_VERSION > '1.9.3'
