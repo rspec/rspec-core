@@ -1,5 +1,11 @@
 module RSpec
   module Core
+    if defined?(::Random)
+      Random = ::Random
+    else
+      require 'rspec/core/backport_random'
+    end
+
     # @private
     module Ordering
       # @private

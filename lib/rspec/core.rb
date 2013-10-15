@@ -11,7 +11,6 @@ end
 require 'set'
 require 'time'
 require 'rbconfig'
-require_rspec['core/random']
 require_rspec['core/caller_filter']
 require_rspec['core/flat_map']
 require_rspec['core/filter_manager']
