@@ -1,4 +1,4 @@
-### 2.14.6 Development
+### 2.14.6 / 2013-10-15
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.5...v2.14.6)
 
 Bug fixes:
