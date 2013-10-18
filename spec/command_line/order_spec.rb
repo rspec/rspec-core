@@ -4,29 +4,6 @@ describe 'command line', :ui do
   let(:stderr) { StringIO.new }
   let(:stdout) { current_sandboxed_output_stream }
 
-  let(:ordered_command) { 'spec/order_spec.rb --order rand:%d -f doc' }
-
-  let(:ordered_seed) do
-    ordered_seed = 123
-    i = 0
-    run_command ordered_command % ordered_seed
-
-    while stdout.string.match(/#{expected_defined_output}/)
-      ordered_seed = rand(999)
-      stdout.string = ''
-      run_command ordered_command % ordered_seed
-
-      break if i > 5
-      i += 1
-    end
-
-    expect(stdout.string).to_not match(/#{expected_defined_output}/),
-      "The examples do not appear to be randomizing."
-    stdout.string = ''
-
-    ordered_seed
-  end
-
   let(:expected_defined_output) do
     expected = 'group 1'
     10.times do |n|
@@ -181,10 +158,11 @@ describe 'command line', :ui do
   end
 
   describe '--order defined with --seed' do
-    let(:command) { "spec/order_spec.rb --order defined --seed #{ordered_seed} -f doc" }
+    let(:seed)    { rand 999 }
+    let(:command) { "spec/order_spec.rb --order defined --seed #{seed} -f doc" }
     before { run_command command }
     it 'uses the defined order' do
-      expect(stdout.string).to match(/Randomized with seed #{ordered_seed}/)
+      expect(stdout.string).to match(/Randomized with seed #{seed}/)
       expect(stdout.string).to match(/#{expected_defined_output}/)
     end
   end
