@@ -1318,40 +1318,37 @@ module RSpec::Core
     end
 
     describe '#lock_seed' do
-      let(:seed)         { rand 999 }
-      let(:ignored_seed) { seed + 1 }
-
-      before do
-        allow(RSpec::Core::Random).to receive :srand
-        expect(RSpec::Core::Random).to receive(:srand).once.with seed
-      end
+      before { allow(RSpec::Core::Random).to receive :srand }
 
       context 'given nil is passed in' do
-        before { config.seed = seed }
+        before { config.seed = 4376 }
 
-        before { config.lock_seed nil }
-
-        it 'uses the default seed' do
-          expect(config.seed).to eq seed
+        it 'uses the default seed and passes it to srand' do
+          expect(RSpec::Core::Random).to receive(:srand).once.with 4376
+          config.lock_seed nil
+          expect(config.seed).to eq 4376
         end
 
         it 'prevents changes to the seed' do
-          config.seed = ignored_seed
-          expect(config.seed).to eq seed
+          config.lock_seed nil
+          config.seed = 837
+          expect(config.seed).to eq 4376
         end
       end
 
       context 'given a seed is passed in' do
-        before { config.seed = ignored_seed }
-        before { config.lock_seed seed }
+        before { config.seed = 837 }
 
-        it 'uses the seed that is passed' do
-          expect(config.seed).to eq seed
+        it 'uses the seed that is passed and passes it to srand' do
+          expect(RSpec::Core::Random).to receive(:srand).once.with 4376
+          config.lock_seed 4376
+          expect(config.seed).to eq 4376
         end
 
         it 'prevents changes to the seed' do
-          config.seed = ignored_seed
-          expect(config.seed).to eq seed
+          config.lock_seed 4376
+          config.seed = 837
+          expect(config.seed).to eq 4376
         end
       end
     end
