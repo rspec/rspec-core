@@ -21,21 +21,24 @@ module RSpec
         random.srand seed
       end
 
-      def self.shuffle(list, seed)
-        rng = RSpec::Core::Random.new(seed)
+      if RUBY_VERSION > '1.9.3'
+        def self.shuffle(list, seed)
+          rng = RSpec::Core::Random.new(seed)
+          list.shuffle(:random => rng)
+        end
+      else
+        def self.shuffle(list, seed)
+          rng = RSpec::Core::Random.new(seed)
 
-        if RUBY_VERSION > '1.9.3'
-          shuffled = list.shuffle(:random => rng)
-        else
           shuffled = list.dup
           shuffled.size.times do |i|
             j = i + rng.rand(shuffled.size - i)
             next if i == j
             shuffled[i], shuffled[j] = shuffled[j], shuffled[i]
           end
-        end
 
-        shuffled
+          shuffled
+        end
       end
 
       private
