@@ -218,14 +218,6 @@ module RSpec
             old
           end
 
-          # This is a subtle, but important implementation detail.
-          # Random.srand updates Kernel.srand in Ruby 1.9,
-          # so this needs to follow suit, but RSpec should limit
-          # calls to very specific places (and ideally only one).
-          def srand(seed = 0)
-            Kernel.srand seed
-          end
-
           def rand(limit = Backports::Undefined)
             case limit
               when Backports::Undefined
