@@ -43,23 +43,15 @@ module RSpec
         end
       end
 
-      if !defined?(::Random)
-        describe '.srand' do
-          before do
-            allow(Random).to receive(:srand).and_call_original
-            allow(RandomNumberGenerator).to receive(:srand).and_call_original
-            allow(Kernel).to receive(:srand)
-          end
+      describe '.srand' do
+        it 'invokes Kernel.srand with the specified seed' do
+          expect(Kernel).to receive(:srand).with(123)
+          Random.srand 123
+        end
 
-          it 'invokes Kernel.srand with the specified seed' do
-            expect(Kernel).to receive(:srand).with(123)
-            Random.srand 123
-          end
-
-          it 'uses a seed of 0 if none is given' do
-            expect(Kernel).to receive(:srand).with(0)
-            Random.srand
-          end
+        it 'uses a seed of 0 if none is given' do
+          expect(Kernel).to receive(:srand).with(0)
+          Random.srand
         end
       end
     end

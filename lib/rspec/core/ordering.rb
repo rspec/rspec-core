@@ -21,7 +21,7 @@ module RSpec
       end
 
       def self.srand(seed = 0)
-        RandomNumberGenerator.srand seed
+        Kernel.srand seed
       end
 
       if RUBY_VERSION > '1.9.3'

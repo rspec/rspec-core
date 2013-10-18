@@ -1318,8 +1318,6 @@ module RSpec::Core
     end
 
     describe '#lock_seed' do
-      before { allow(RSpec::Core::Random).to receive :srand }
-
       context 'given nil is passed in' do
         before { config.seed = 4376 }
 
@@ -1330,6 +1328,7 @@ module RSpec::Core
         end
 
         it 'prevents changes to the seed' do
+          allow(RSpec::Core::Random).to receive :srand
           config.lock_seed nil
           config.seed = 837
           expect(config.seed).to eq 4376
@@ -1346,6 +1345,7 @@ module RSpec::Core
         end
 
         it 'prevents changes to the seed' do
+          allow(RSpec::Core::Random).to receive :srand
           config.lock_seed 4376
           config.seed = 837
           expect(config.seed).to eq 4376
