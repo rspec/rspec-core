@@ -54,10 +54,7 @@ module RSpec::Core
       let(:out) { current_sandboxed_output_stream }
       let(:seed) { RSpec::configuration.seed }
 
-      before do
-        allow(RSpec::Core::Random).to receive :srand
-        expect(RSpec::Core::Random).to receive(:srand).once.with seed
-      end
+      before { allow(RSpec::Core::Random).to receive :srand }
 
       it "tells RSpec to reset" do
         RSpec.configuration.stub(:files_to_run => [])
@@ -116,6 +113,7 @@ module RSpec::Core
         before { expect(seed).to_not eq RSpec::configuration.seed }
 
         it 'uses the seed from the command line to seed randomization' do
+          expect(RSpec::Core::Random).to receive(:srand).once.with seed
           RSpec.configuration.stub(:files_to_run => [])
           RSpec::Core::Runner.run(%W[ --seed #{seed} ], err, out)
         end
