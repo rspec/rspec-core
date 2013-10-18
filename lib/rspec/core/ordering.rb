@@ -1,12 +1,15 @@
 module RSpec
   module Core
-    if !defined?(::Random)
+    if defined?(::Random)
+      RandomNumberGenerator = ::Random
+    else
       require 'rspec/core/backport_random'
+      RandomNumberGenerator = RSpec::Core::Backports::Random
     end
 
     class Random
       def initialize(seed = 0)
-        @rng = self.class.random.new(seed)
+        @rng = RandomNumberGenerator.new(seed)
       end
 
       def rand(*args)
@@ -18,17 +21,17 @@ module RSpec
       end
 
       def self.srand(seed = 0)
-        random.srand seed
+        RandomNumberGenerator.srand seed
       end
 
       if RUBY_VERSION > '1.9.3'
         def self.shuffle(list, seed)
-          rng = RSpec::Core::Random.new(seed)
+          rng = RandomNumberGenerator.new(seed)
           list.shuffle(:random => rng)
         end
       else
         def self.shuffle(list, seed)
-          rng = RSpec::Core::Random.new(seed)
+          rng = RandomNumberGenerator.new(seed)
 
           shuffled = list.dup
           shuffled.size.times do |i|
@@ -39,17 +42,6 @@ module RSpec
 
           shuffled
         end
-      end
-
-      private
-
-      def self.random
-        @random ||=
-          if defined?(::Random)
-            ::Random
-          else
-            RSpec::Core::Backports::Random
-          end
       end
     end
 

@@ -47,6 +47,7 @@ module RSpec
         describe '.srand' do
           before do
             allow(Random).to receive(:srand).and_call_original
+            allow(RandomNumberGenerator).to receive(:srand).and_call_original
             allow(Kernel).to receive(:srand)
           end
 
