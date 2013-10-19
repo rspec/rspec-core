@@ -27,6 +27,7 @@ end
 Spork.prefork do
   require 'rspec/autorun'
   require 'aruba/api'
+  require 'support/invocation_counter'
 
   if RUBY_PLATFORM == 'java'
     # Works around https://jira.codehaus.org/browse/JRUBY-5678
@@ -124,6 +125,10 @@ Spork.prefork do
     c.include Aruba::Api, :example_group => {
       :file_path => /spec\/command_line/
     }
+
+    warn_counter = InvocationCounter.new(:warn)
+    c.before(:suite) { warn_counter.hook!(Object) }
+    c.after(:suite)  { expect(warn_counter.count).to eq(0) }
 
     # Use the doc formatter when running individual files.
     # This is too verbose when running all spec files but
