@@ -4,6 +4,30 @@ describe 'command line', :ui do
   let(:stderr) { StringIO.new }
   let(:stdout) { current_sandboxed_output_stream }
 
+  let(:expected_defined_output) do
+    expected = 'group 1'
+    10.times do |n|
+      expected += "\\s+group 1 example #{n + 1}"
+    end
+
+    expected += "\\s+group 1-1"
+    10.times do |n|
+      expected += "\\s+group 1-1 example #{n + 1}"
+    end
+
+    9.times do |n|
+      expected += "\\s+group 1-#{n + 2}"
+      expected += "\\s+example"
+    end
+
+    9.times do |n|
+      expected += "\\s+group #{n + 2}"
+      expected += "\\s+example"
+    end
+
+    expected
+  end
+
   before :all do
     write_file 'spec/simple_spec.rb', """
       describe 'group 1' do
@@ -39,7 +63,6 @@ describe 'command line', :ui do
         specify('group 1 example 4')  {}
         specify('group 1 example 5')  {}
         specify('group 1 example 6')  {}
-        specify('group 1 example 5')  {}
         specify('group 1 example 7')  {}
         specify('group 1 example 8')  {}
         specify('group 1 example 9')  {}
@@ -84,7 +107,6 @@ describe 'command line', :ui do
   describe '--order rand' do
     it 'runs the examples and groups in a different order each time' do
       run_command 'spec/order_spec.rb --order rand -f doc'
-      RSpec.configuration.seed = srand && srand # reset seed in same process
       run_command 'spec/order_spec.rb --order rand -f doc'
 
       expect(stdout.string).to match(/Randomized with seed \d+/)
@@ -110,17 +132,6 @@ describe 'command line', :ui do
   end
 
   describe '--seed SEED' do
-    it "forces '--order rand' and runs the examples and groups in the same order each time" do
-      2.times { run_command 'spec/order_spec.rb --seed 123 -f doc' }
-
-      expect(stdout.string).to match(/Randomized with seed 123/)
-
-      top_level_groups      {|first_run, second_run| expect(first_run).to eq(second_run)}
-      nested_groups         {|first_run, second_run| expect(first_run).to eq(second_run)}
-      examples('group 1')   {|first_run, second_run| expect(first_run).to eq(second_run)}
-      examples('group 1-1') {|first_run, second_run| expect(first_run).to eq(second_run)}
-    end
-
     it "runs examples in the same order, regardless of the order in which files are given" do
       run_command 'spec/simple_spec.rb spec/simple_spec2.rb --seed 1337 -f doc'
       run_command 'spec/simple_spec2.rb spec/simple_spec.rb --seed 1337 -f doc'
@@ -138,11 +149,21 @@ describe 'command line', :ui do
 
       run_command 'spec/order_spec.rb --order defined -f doc'
 
-      expect(stdout.string).not_to match(/Randomized/)
+      expect(stdout.string).to match(/Randomized with seed \d+/)
 
       expect(stdout.string).to match(
         /group 1.*group 1 example 1.*group 1 example 2.*group 1-1.*group 1-2.*group 2.*/m
       )
+    end
+  end
+
+  describe '--order defined with --seed' do
+    let(:seed)    { rand 999 }
+    let(:command) { "spec/order_spec.rb --order defined --seed #{seed} -f doc" }
+    before { run_command command }
+    it 'uses the defined order' do
+      expect(stdout.string).to match(/Randomized with seed #{seed}/)
+      expect(stdout.string).to match(/#{expected_defined_output}/)
     end
   end
 
@@ -172,6 +193,8 @@ describe 'command line', :ui do
 
     it 'orders the groups and examples by the provided strategy' do
       run_command 'spec/custom_order_spec.rb -f doc'
+
+      expect(stdout.string).to match(/Randomized with seed \d+/)
 
       top_level_groups    { |groups| expect(groups.flatten).to eq(['group A', 'group B']) }
       examples('group B') do |examples|
@@ -203,6 +226,7 @@ describe 'command line', :ui do
   end
 
   def run_command(cmd)
+    allow(RSpec::Core::Random).to receive :srand
     in_current_dir do
       RSpec::Core::Runner.run(cmd.split, stderr, stdout)
     end

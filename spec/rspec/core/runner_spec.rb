@@ -47,12 +47,14 @@ module RSpec::Core
 
         expect(RSpec::Core::Runner.running_in_drb?).to be_falsey
       end
-
     end
 
     describe "#run" do
       let(:err) { StringIO.new }
       let(:out) { current_sandboxed_output_stream }
+      let(:seed) { RSpec::configuration.seed }
+
+      before { allow(RSpec::Core::Random).to receive :srand }
 
       it "tells RSpec to reset" do
         RSpec.configuration.stub(:files_to_run => [])
@@ -61,7 +63,6 @@ module RSpec::Core
       end
 
       context "with --drb or -X" do
-
         before(:each) do
           @options = RSpec::Core::ConfigurationOptions.new(%w[--drb --drb-port 8181 --color])
           RSpec::Core::ConfigurationOptions.stub(:new) { @options }
@@ -103,6 +104,18 @@ module RSpec::Core
 
             run_specs
           end
+        end
+      end
+
+      context 'given a seed is specified on the command line' do
+        let(:seed) { RSpec::configuration.seed + 1 }
+
+        before { expect(seed).to_not eq RSpec::configuration.seed }
+
+        it 'uses the seed from the command line to seed randomization' do
+          expect(RSpec::Core::Random).to receive(:srand).once.with seed
+          RSpec.configuration.stub(:files_to_run => [])
+          RSpec::Core::Runner.run(%W[ --seed #{seed} ], err, out)
         end
       end
     end

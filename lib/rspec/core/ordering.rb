@@ -1,5 +1,50 @@
 module RSpec
   module Core
+    if defined?(::Random)
+      RandomNumberGenerator = ::Random
+    else
+      require 'rspec/core/backport_random'
+      RandomNumberGenerator = RSpec::Core::Backports::Random
+    end
+
+    class Random
+      def initialize(seed = 0)
+        @rng = RandomNumberGenerator.new(seed)
+      end
+
+      def rand(*args)
+        @rng.rand(*args)
+      end
+
+      def seed
+        @rng.seed
+      end
+
+      def self.srand(seed = 0)
+        Kernel.srand seed
+      end
+
+      if RUBY_VERSION > '1.9.3'
+        def self.shuffle(list, seed)
+          rng = RandomNumberGenerator.new(seed)
+          list.shuffle(:random => rng)
+        end
+      else
+        def self.shuffle(list, seed)
+          rng = RandomNumberGenerator.new(seed)
+
+          shuffled = list.dup
+          shuffled.size.times do |i|
+            j = i + rng.rand(shuffled.size - i)
+            next if i == j
+            shuffled[i], shuffled[j] = shuffled[j], shuffled[i]
+          end
+
+          shuffled
+        end
+      end
+    end
+
     # @private
     module Ordering
       # @private
@@ -15,19 +60,10 @@ module RSpec
       class Random
         def initialize(configuration)
           @configuration = configuration
-          @used = false
-        end
-
-        def used?
-          @used
         end
 
         def order(items)
-          @used = true
-          Kernel.srand @configuration.seed
-          ordering = items.shuffle
-          Kernel.srand # reset random generation
-          ordering
+          RSpec::Core::Random.shuffle(items, @configuration.seed)
         end
       end
 
@@ -66,10 +102,6 @@ module RSpec
         def register(sym, strategy)
           @strategies[sym] = strategy
         end
-
-        def used_random_seed?
-          @strategies[:random].used?
-        end
       end
 
       # @private
@@ -82,19 +114,21 @@ module RSpec
 
         def initialize
           @ordering_registry = Registry.new(self)
-          @seed = srand % 0xFFFF
+          @seed = rand(0xFFFF)
           @seed_forced = false
           @order_forced = false
-        end
-
-        def seed_used?
-          ordering_registry.used_random_seed?
+          @seed_locked = false
         end
 
         def seed=(seed)
-          return if @seed_forced
-          register_ordering(:global, ordering_registry.fetch(:random))
+          return if @seed_forced || @seed_locked
           @seed = seed.to_i
+        end
+
+        def lock_seed(new_seed)
+          @seed_locked = true
+          @seed = new_seed || @seed
+          RSpec::Core::Random.srand @seed
         end
 
         def order=(type)

@@ -905,8 +905,13 @@ module RSpec
 
       # @macro delegate_to_ordering_manager
       #
-      # Sets the seed value and sets the default global ordering to random.
+      # Sets the seed value.
       delegate_to_ordering_manager :seed=
+
+      # @macro delegate_to_ordering_manager
+      #
+      # Locks the seed to prevent further changes.
+      delegate_to_ordering_manager :lock_seed
 
       # @macro delegate_to_ordering_manager
       # Seed for random ordering (default: generated randomly each run).
@@ -954,7 +959,7 @@ module RSpec
       delegate_to_ordering_manager :register_ordering
 
       # @private
-      delegate_to_ordering_manager :seed_used?, :ordering_registry
+      delegate_to_ordering_manager :ordering_registry
 
       # Set Ruby warnings on or off
       def warnings= value

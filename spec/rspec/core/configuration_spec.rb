@@ -1266,8 +1266,9 @@ module RSpec::Core
         let(:ordering_strategy) { config.ordering_registry.fetch(:global) }
 
         let(:shuffled) do
-          Kernel.srand(37)
-          list.shuffle
+          shuffle_config = RSpec::Core::Configuration.new
+          shuffle_config.seed = 37
+          RSpec::Core::Ordering::Random.new(shuffle_config).order list
         end
 
         specify "CLI `--order defined` takes precedence over `config.order = rand`" do
@@ -1284,13 +1285,11 @@ module RSpec::Core
           expect(ordering_strategy.order(list)).to eq(shuffled)
         end
 
-        specify "CLI `--seed 37` forces order and seed" do
+        specify "CLI `--seed 37` forces seed and uses default ordering" do
           config.force :seed => 37
-          config.order = "defined"
-          config.seed  = 145
-
-          expect(ordering_strategy.order(list)).to eq(shuffled)
+          config.seed = 145
           expect(config.seed).to eq(37)
+          expect(ordering_strategy.order(list)).to eq list
         end
 
         specify "CLI `--order defined` takes precedence over `config.register_ordering(:global)`" do
@@ -1318,18 +1317,39 @@ module RSpec::Core
       end
     end
 
-    describe "#seed_used?" do
-      def use_seed_on(registry)
-        registry.fetch(:random).order([1, 2])
+    describe '#lock_seed' do
+      context 'given nil is passed in' do
+        before { config.seed = 4376 }
+
+        it 'uses the default seed and passes it to srand' do
+          expect(RSpec::Core::Random).to receive(:srand).once.with 4376
+          config.lock_seed nil
+          expect(config.seed).to eq 4376
+        end
+
+        it 'prevents changes to the seed' do
+          allow(RSpec::Core::Random).to receive :srand
+          config.lock_seed nil
+          config.seed = 837
+          expect(config.seed).to eq 4376
+        end
       end
 
-      it 'returns false if neither ordering registry used the seed' do
-        expect(config.seed_used?).to be false
-      end
+      context 'given a seed is passed in' do
+        before { config.seed = 837 }
 
-      it 'returns true if the ordering registry used the seed' do
-        use_seed_on(config.ordering_registry)
-        expect(config.seed_used?).to be true
+        it 'uses the seed that is passed and passes it to srand' do
+          expect(RSpec::Core::Random).to receive(:srand).once.with 4376
+          config.lock_seed 4376
+          expect(config.seed).to eq 4376
+        end
+
+        it 'prevents changes to the seed' do
+          allow(RSpec::Core::Random).to receive :srand
+          config.lock_seed 4376
+          config.seed = 837
+          expect(config.seed).to eq 4376
+        end
       end
     end
 

@@ -87,7 +87,7 @@ describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :isolat
       ["--failure-exit-code", "37", :failure_exit_code, 37],
       ["--default_path", "behavior", :default_path, "behavior"],
       ["--order", "rand", :order, "rand"],
-      ["--seed", "37", :order, "rand:37"],
+      ["--seed", "37", :seed, 37],
       ["--drb-port", "37", :drb_port, 37]
     ].each do |cli_option, cli_value, config_key, config_value|
       it "forces #{config_key}" do
