@@ -569,7 +569,7 @@ module RSpec
       def reporter
         @reporter ||= begin
                         add_formatter('progress') if formatters.empty?
-                        add_formatter(RSpec::Core::Formatters::DeprecationFormatter, deprecation_stream, output_stream)
+                        add_formatter(RSpec::Core::Formatters::DeprecationFormatter, self)
                         Reporter.new(self, *formatters)
                       end
       end

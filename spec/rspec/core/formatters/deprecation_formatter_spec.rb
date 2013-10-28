@@ -4,9 +4,24 @@ require 'tempfile'
 
 module RSpec::Core::Formatters
   describe DeprecationFormatter do
+    let(:formatter)     { DeprecationFormatter.new(configuration) }
+    let(:configuration) { double :deprecation_stream => deprecation_stream, :output_stream => summary_stream }
+
+    describe 'defaults when configuration has yet to be initialized' do
+      let(:summary_stream)     { nil }
+      let(:deprecation_stream) { nil }
+
+      it 'has a default summary_stream of $stdout' do
+        expect(formatter.summary_stream).to eq $stdout
+      end
+
+      it 'has a default deprecation_stream of $stderr' do
+        expect(formatter.deprecation_stream).to eq $stderr
+      end
+    end
+
     describe "#deprecation" do
-      let(:formatter) { DeprecationFormatter.new(deprecation_stream, summary_stream) }
-      let(:summary_stream)     { StringIO.new }
+      let(:summary_stream) { StringIO.new }
 
       context "with a File deprecation_stream" do
         let(:deprecation_stream) { File.open("#{Dir.tmpdir}/deprecation_summary_example_output", "w+") }
@@ -47,7 +62,6 @@ module RSpec::Core::Formatters
     end
 
     describe "#deprecation_summary" do
-      let(:formatter) { DeprecationFormatter.new(deprecation_stream, summary_stream) }
       let(:summary_stream) { StringIO.new }
 
       context "with a File deprecation_stream" do

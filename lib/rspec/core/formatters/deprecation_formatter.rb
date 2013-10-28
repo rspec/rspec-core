@@ -4,12 +4,19 @@ module RSpec
   module Core
     module Formatters
       class DeprecationFormatter
-        attr_reader :count, :deprecation_stream, :summary_stream
+        attr_reader :count
 
-        def initialize(deprecation_stream, summary_stream)
-          @deprecation_stream = deprecation_stream
-          @summary_stream = summary_stream
+        def initialize(configuration)
+          @configuration = configuration
           @count = 0
+        end
+
+        def deprecation_stream
+          @configuration.deprecation_stream || $stderr
+        end
+
+        def summary_stream
+          @configuration.output_stream || $stdout
         end
 
         def printer
