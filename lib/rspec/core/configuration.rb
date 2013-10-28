@@ -97,6 +97,9 @@ module RSpec
 
       # Default: `$stderr`.
       add_setting :deprecation_stream
+      def deprecation_stream=(filename_or_io)
+        @deprecation_stream = file_or_io_from(filename_or_io)
+      end
 
       # Clean up and exit after the first failure (default: `false`).
       add_setting :fail_fast
@@ -117,6 +120,9 @@ module RSpec
       # Default: `$stdout`.
       # Also known as `output` and `out`
       add_setting :output_stream, :alias_with => [:output, :out]
+      def output_stream=(filename_or_io)
+        @output_stream = file_or_io_from(filename_or_io)
+      end
 
       # Load files matching this pattern (default: `'**/*_spec.rb'`)
       add_setting :pattern, :alias_with => :filename_pattern
@@ -1166,6 +1172,10 @@ MESSAGE
         word.tr!("-", "_")
         word.downcase!
         word
+      end
+
+      def file_or_io_from(output)
+        String === output ? file_at(output) : output
       end
 
       def file_at(path)
