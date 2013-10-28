@@ -26,6 +26,11 @@ module RSpec::Core
         config.deprecation_stream = io
         expect(config.deprecation_stream).to eq io
       end
+
+      it 'will load a file from a filename' do
+        config.deprecation_stream = 'string.rb'
+        expect(config.deprecation_stream).to be_a File
+      end
     end
 
     describe "#setup_load_path_and_require" do
