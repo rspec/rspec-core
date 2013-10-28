@@ -20,9 +20,14 @@ module RSpec
         end
 
         def printer
-          @printer ||= File === deprecation_stream ?
-            FilePrinter.new(deprecation_stream, summary_stream, self) :
+          # to handle situations where we have preloaded early
+          if @configuration.output_stream
+            @printer ||= File === deprecation_stream ?
+              FilePrinter.new(deprecation_stream, summary_stream, self) :
+              IOPrinter.new(deprecation_stream, summary_stream, self)
+          else
             IOPrinter.new(deprecation_stream, summary_stream, self)
+          end
         end
 
         def deprecation(data)
