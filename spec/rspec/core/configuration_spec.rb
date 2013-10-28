@@ -1471,10 +1471,16 @@ module RSpec::Core
     end
 
     describe "#force" do
-      it "forces order" do
+      it "forces order (when given default)" do
         config.force :order => "default"
         config.order = "rand"
         expect(config.order).to eq("default")
+      end
+
+      it "forces order (when given defined)" do
+        config.force :order => "defined"
+        config.order = "rand"
+        expect(config.order).to eq("defined")
       end
 
       it "forces order and seed with :order => 'rand:37'" do
@@ -1486,7 +1492,7 @@ module RSpec::Core
 
       it "forces order and seed with :seed => '37'" do
         config.force :seed => "37"
-        config.order = "default"
+        config.order = "defined"
         expect(config.seed).to eq(37)
         expect(config.order).to eq("rand")
       end
@@ -1560,10 +1566,10 @@ module RSpec::Core
         end
       end
 
-      context 'given "default"' do
+      shared_examples_for "defined order" do |order|
         before do
           config.order = 'rand:123'
-          config.order = 'default'
+          config.order = order
         end
 
         it "sets the order to nil" do
@@ -1580,6 +1586,19 @@ module RSpec::Core
           Kernel.should_not_receive(:rand)
           expect(list.ordered).to eq([1, 2, 3, 4])
         end
+      end
+
+      context "given 'default'" do
+        include_examples "defined order", 'default'
+
+        it 'prints a deprecation notice' do
+          expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /default/)
+          config.order = 'default'
+        end
+      end
+
+      context "given 'defined'" do
+        include_examples "defined order", 'defined'
       end
     end
 

@@ -1325,7 +1325,12 @@ MESSAGE
         if order.to_s.match(/rand/)
           @group_ordering_block = RANDOM_ORDERING
           @example_ordering_block = RANDOM_ORDERING
-        elsif order == 'default'
+        elsif %w[ default defined ].include?(order)
+          if order == 'default'
+            RSpec.deprecate("RSpec::Core::Configuration#order = 'default'",
+                            :replacement => "RSpec::Core::Configuration#order = 'defined'")
+          end
+
           @order, @seed = nil, nil
           @group_ordering_block = DEFAULT_ORDERING
           @example_ordering_block = DEFAULT_ORDERING
