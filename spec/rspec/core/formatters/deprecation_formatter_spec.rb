@@ -40,6 +40,24 @@ module RSpec::Core::Formatters
       end
     end
 
+    describe '#printer' do
+      context 'after configuration' do
+        let(:configuration) { double :deprecation_stream => StringIO.new, :output_stream => StringIO.new }
+
+        it 'will memorize the printer' do
+          expect(formatter.printer).to eq formatter.printer
+        end
+      end
+
+      context 'before configuration' do
+        let(:configuration) { RSpec::Core::Configuration.new }
+
+        it 'will not memorize the printer' do
+          expect(formatter.printer).to_not eq formatter.printer
+        end
+      end
+    end
+
     describe "#deprecation" do
       let(:summary_stream) { StringIO.new }
 
