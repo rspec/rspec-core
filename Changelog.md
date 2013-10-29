@@ -1,6 +1,17 @@
 ### 2.14.7 Development
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.6...v2.14.7)
 
+Bug fixes:
+
+* Fix regression in 2.14.6 that broke the Fivemat formatter.
+  It depended upon either
+  `example.execution_result[:exception].pending_fixed?` (which
+  was removed in 2.14.6 to fix an issue with frozen error objects)
+  or `RSpec::Core::PendingExampleFixedError` (which was renamed
+  to `RSpec::Core::Pending::PendingExampleFixedError` in 2.8.
+  This fix makes a constant alias for the old error name.
+  (Myron Marston)
+
 ### 2.14.6 / 2013-10-15
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.5...v2.14.6)
 
