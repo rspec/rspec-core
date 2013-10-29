@@ -104,5 +104,9 @@ module RSpec
         raise PendingDeclaredInExample.new(message)
       end
     end
+
+    # Alias the error for compatibility with extension gems (e.g. formatters)
+    # that depend on the const name of the error in RSpec <= 2.8.
+    PendingExampleFixedError = Pending::PendingExampleFixedError
   end
 end
