@@ -1,5 +1,5 @@
-### Dev
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.6...2-99-maintenance)
+### 2.99 Development
+[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.7...2-99-maintenance)
 
 Enhancements
 
@@ -29,6 +29,9 @@ Deprecations
   a `after(:all)` hook. (Myron Marston, Jon Rowe)
 * Deprecate built-in `its` usage in favor of `rspec-it` gem due to planned
   removal in RSpec 3 (Peter Alfvin)
+
+### 2.14.7 / 2013-10-29
+[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.6...v2.14.7)
 
 Bug fixes:
 
