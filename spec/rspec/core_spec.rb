@@ -86,4 +86,23 @@ describe RSpec do
       RSpec::NotAConst
     }.to raise_error(NameError, /RSpec::NotAConst/)
   end
+
+  describe "::Core::PendingExampleFixedError" do
+    before { allow_deprecation }
+
+    it 'is an alternate reference to RSpec::Core::Pending::PendingExampleFixedError' do
+      expect(::RSpec::Core::PendingExampleFixedError).to be(::RSpec::Core::Pending::PendingExampleFixedError)
+    end
+
+    it 'prints a deprecation warning' do
+      expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /PendingExampleFixedError/)
+      ::RSpec::Core::PendingExampleFixedError
+    end
+
+    specify 'the const_missing hook allows other undefined consts to raise errors as normal' do
+      expect {
+        ::RSpec::Core::SomeUndefinedConst
+      }.to raise_error(NameError, /uninitialized constant RSpec::Core::SomeUndefinedConst/)
+    end
+  end
 end
