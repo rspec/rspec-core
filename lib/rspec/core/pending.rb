@@ -107,6 +107,11 @@ module RSpec
 
     # Alias the error for compatibility with extension gems (e.g. formatters)
     # that depend on the const name of the error in RSpec <= 2.8.
-    PendingExampleFixedError = Pending::PendingExampleFixedError
+    def self.const_missing(name)
+      return super unless name == :PendingExampleFixedError
+
+      RSpec.deprecate("RSpec::Core::PendingExampleFixedError", :replacement => "RSpec::Core::Pending::PendingExampleFixedError")
+      Pending::PendingExampleFixedError
+    end
   end
 end
