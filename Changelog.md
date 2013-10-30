@@ -1,4 +1,4 @@
-### 2.14.7 Development
+### 2.14.7 / 2013-10-29
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.6...v2.14.7)
 
 Bug fixes:
