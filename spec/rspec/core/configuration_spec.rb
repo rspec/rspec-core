@@ -1638,6 +1638,19 @@ module RSpec::Core
         expect(value_1.description).to eq("works")
         expect(value_2).to be(value_1)
       end
+
+      [:example, :running_example].each do |name|
+        it "silences the deprecation warning for ##{name} when configured to expose via that name" do
+          RSpec.configuration.expose_current_running_example_as name
+          allow(RSpec).to receive(:deprecate)
+
+          ExampleGroup.describe "Group" do
+            specify { __send__(name) }
+          end.run
+
+          expect(RSpec).to_not have_received(:deprecate)
+        end
+      end
     end
 
   end
