@@ -1,10 +1,15 @@
 require 'spec_helper'
+require 'rspec/core/caller_filter'
 
 module RSpec
   describe CallerFilter do
     def ruby_files_in_lib(lib)
       # http://rubular.com/r/HYpUMftlG2
       path = $LOAD_PATH.find { |p| p.match(/\/rspec-#{lib}(-[a-f0-9]+)?\/lib/) }
+
+      unless path
+        pending "Cannot locate rspec-#{lib} files."
+      end
 
       Dir["#{path}/**/*.rb"].sort.tap do |files|
         # Just a sanity check...
