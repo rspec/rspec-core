@@ -214,6 +214,7 @@ module RSpec
 
         @default_path = 'spec'
         @deprecation_stream = $stderr
+        @output_stream = $stdout
         @filter_manager = FilterManager.new
         @preferred_options = {}
         @seed = srand % 0xFFFF
