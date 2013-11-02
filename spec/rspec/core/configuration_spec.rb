@@ -16,6 +16,19 @@ module RSpec::Core
       end
     end
 
+    describe '#output_stream' do
+      it 'is configurable' do
+        io = double 'output io'
+        config.output_stream = io
+        expect(config.output_stream).to eq io
+      end
+
+      it 'will load a file from a filename' do
+        config.output_stream = 'tmp/string.rb'
+        expect(config.output_stream).to be_a File
+      end
+    end
+
     describe '#deprecation_stream' do
       it 'defaults to standard error' do
         expect(config.deprecation_stream).to eq $stderr
@@ -25,6 +38,11 @@ module RSpec::Core
         io = double 'deprecation io'
         config.deprecation_stream = io
         expect(config.deprecation_stream).to eq io
+      end
+
+      it 'will load a file from a filename' do
+        config.deprecation_stream = 'tmp/string.rb'
+        expect(config.deprecation_stream).to be_a File
       end
     end
 
