@@ -81,16 +81,6 @@ module RSpec
           expect(@callback_run).to eq true
         end
 
-        it 'runs the callback on #keep_if' do
-          metadata.keep_if {|k, v| k != :key }
-          expect(@callback_run).to eq true
-        end
-
-        it 'runs the callback on #select!' do
-          metadata.select! {|k, v| k != :key }
-          expect(@callback_run).to eq true
-        end
-
         it 'runs the callback on #reject!' do
           metadata.reject! {|k, v| k == :key }
           expect(@callback_run).to eq true
@@ -114,6 +104,18 @@ module RSpec
         it 'runs the callback on #shift' do
           metadata.shift
           expect(@callback_run).to eq true
+        end
+
+        if RUBY_VERSION.to_f > 1.9
+          it 'runs the callback on #keep_if' do
+            metadata.keep_if {|k, v| k != :key }
+            expect(@callback_run).to eq true
+          end
+
+          it 'runs the callback on #select!' do
+            metadata.select! {|k, v| k != :key }
+            expect(@callback_run).to eq true
+          end
         end
       end
 
