@@ -225,7 +225,7 @@ module RSpec::Core
         expect(examples_run.count).to eq(1)
       end
 
-      it "still runs matching config hooks when metadta is added later" do
+      it "still runs matching config hooks when metadata is added later" do
         examples_run = 0
         RSpec.configuration.before(:all, :type => :run_counter) { examples_run += 1 }
 
