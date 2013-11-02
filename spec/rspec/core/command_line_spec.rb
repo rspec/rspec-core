@@ -13,6 +13,7 @@ module RSpec::Core
     before { config.stub :run_hook }
 
     it "configures streams before command line options" do
+      config.stub(:reporter => double.as_null_object)
       config.stub :load_spec_files
 
       # this is necessary to ensure that color works correctly on windows
