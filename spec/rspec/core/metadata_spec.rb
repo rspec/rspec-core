@@ -70,6 +70,26 @@ module RSpec
           metadata.merge!( :key => :new_value ) { |key, v1, v2| v2 }
           expect(metadata[:key]).to eq :new_value
         end
+
+        it 'runs the callback on #delete' do
+          metadata.delete(:key)
+          expect(@callback_run).to eq true
+        end
+
+        it 'runs the callback on #delete_if' do
+          metadata.delete_if {|k, v| k == :key }
+          expect(@callback_run).to eq true
+        end
+
+        it 'runs the callback on #select!' do
+          metadata.select! {|k, v| k != :key }
+          expect(@callback_run).to eq true
+        end
+
+        it 'runs the callback on #reject!' do
+          metadata.reject! {|k, v| k == :key }
+          expect(@callback_run).to eq true
+        end
       end
 
       describe "#filter_applies?" do

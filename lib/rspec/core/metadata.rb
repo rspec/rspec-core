@@ -55,7 +55,15 @@ module RSpec
         @update_after_change = block
       end
 
-      [:[]=, :store, :merge!].each do |name|
+      [
+        :[]=,
+        :delete,
+        :delete_if,
+        :merge!,
+        :reject!,
+        :select!,
+        :store
+      ].each do |name|
         define_method(name) do |*args|
           super(*args)
           @update_after_change.call if defined?(@update_after_change)
