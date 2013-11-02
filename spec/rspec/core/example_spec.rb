@@ -472,13 +472,14 @@ describe RSpec::Core::Example, :parent_metadata => 'sample' do
 
   %w[example running_example].each do |accessor|
     describe accessor do
+      before { allow_deprecation }
+
       it "is deprecated" do
-        expect(RSpec).to receive(:deprecate)
+        expect_warn_deprecation_with_call_site(__FILE__, __LINE__ + 1, /#{accessor}/)
         send(accessor)
       end
 
       it "returns the current running example" do |ex|
-        allow(RSpec).to receive(:deprecate)
         expect(send(accessor)).to eq ex
       end
     end

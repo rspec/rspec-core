@@ -30,6 +30,20 @@ module RSpecHelpers
     end
   end
 
+  def expect_deprecation_with_no_call_site(deprecated)
+    expect(RSpec.configuration.reporter).to receive(:deprecation) do |options|
+      expect(options).to include(:call_site => nil)
+      expect(options[:deprecated]).to match(deprecated)
+    end
+  end
+
+  def expect_warn_deprecation_with_call_site(file, line, deprecated = //)
+    expect(RSpec.configuration.reporter).to receive(:deprecation) do |options|
+      expect(options[:message]).to include([file, line].join(':'))
+      expect(options[:message]).to match(deprecated)
+    end
+  end
+
   def allow_deprecation
     allow(RSpec.configuration.reporter).to receive(:deprecation)
   end
