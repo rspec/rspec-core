@@ -498,14 +498,36 @@ WARNING
 
       # @deprecated use a block argument
       def example
-        RSpec.deprecate("example", :replacement => "a block argument")
+        warn_deprecation_of_example_accessor :example
         RSpec.current_example
       end
 
       # @deprecated use a block argument
       def running_example
-        RSpec.deprecate("running_example", :replacement => "a block argument")
+        warn_deprecation_of_example_accessor :running_example
         RSpec.current_example
+      end
+
+      def warn_deprecation_of_example_accessor(name)
+        RSpec.warn_deprecation(<<-EOS.gsub(/^\s*\|/, ''))
+          |RSpec::Core::ExampleGroup##{name} is deprecated and will be removed
+          |in RSpec 3. There are a few options for what you can use instead:
+          |
+          |  - rspec-core's DSL methods (`it`, `before`, `after`, `let`, `subject`, etc)
+          |    now yield the example as a block argument, and that is the recommended
+          |    way to access the current example from those contexts.
+          |  - The current example is now exposed via `RSpec.current_example`,
+          |    which is accessible from any context.
+          |  - If you can't update the code at this call site (e.g. because it is in
+          |    an extension gem), you can use this snippet to continue making this
+          |    method available in RSpec 2.99 and RSpec 3:
+          |
+          |      RSpec.configure do |c|
+          |        c.expose_current_running_example_as :#{name}
+          |      end
+          |
+          |(Called from #{CallerFilter.first_non_rspec_line})
+        EOS
       end
 
       # Returns the class or module passed to the `describe` method (or alias).

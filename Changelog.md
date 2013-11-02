@@ -8,6 +8,10 @@ Enhancements
   now yield the example as a block argument (David Chelimsky).
 * Warn when the name of more than one example group is submitted to
   `include_examples` and it's aliases (David Chelimsky)
+* Add `expose_current_running_example_as` config option for
+  use during the upgrade process when external gems use the
+  deprecated `RSpec::Core::ExampleGroup#example` and
+  `RSpec::Core::ExampleGroup#running_example` methods. (Myron Marston).
 
 Bug fixes
 
