@@ -127,10 +127,30 @@ module RSpec
           @output_stream = value
         end
       end
-      alias output output_stream
-      alias out output_stream
-      alias output= output_stream=
-      alias out= output_stream=
+
+      # @deprecated use RSpec::Core::Configuration#output_stream instead.
+      def output
+        RSpec.deprecate("RSpec::Core::Configuration#output", :replacement => "RSpec::Core::Configuration#output_stream")
+        output_stream
+      end
+
+      # @deprecated use RSpec::Core::Configuration#output_stream= instead.
+      def output=(value)
+        RSpec.deprecate("RSpec::Core::Configuration#output=", :replacement => "RSpec::Core::Configuration#output_stream=")
+        self.output_stream = value
+      end
+
+      # @deprecated use RSpec::Core::Configuration#output_stream instead.
+      def out
+        RSpec.deprecate("RSpec::Core::Configuration#out", :replacement => "RSpec::Core::Configuration#output_stream")
+        output_stream
+      end
+
+      # @deprecated use RSpec::Core::Configuration#output_stream= instead.
+      def out=(value)
+        RSpec.deprecate("RSpec::Core::Configuration#out=", :replacement => "RSpec::Core::Configuration#output_stream=")
+        self.output_stream = value
+      end
 
       # Load files matching this pattern (default: `'**/*_spec.rb'`)
       add_setting :pattern, :alias_with => :filename_pattern

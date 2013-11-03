@@ -77,10 +77,30 @@ module RSpec::Core
 
     describe "#output" do
       include_examples "output_stream", :output
+
+      specify 'the reader is deprecated' do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /output/)
+        config.output
+      end
+
+      specify 'the writer is deprecated' do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /output=/)
+        config.output = $stdout
+      end
     end
 
     describe "#out" do
       include_examples "output_stream", :out
+
+      specify 'the reader is deprecated' do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /out/)
+        config.out
+      end
+
+      specify 'the writer is deprecated' do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /out=/)
+        config.out = $stdout
+      end
     end
 
     describe "#setup_load_path_and_require" do
