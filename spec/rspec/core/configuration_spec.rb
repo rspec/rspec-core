@@ -30,12 +30,12 @@ module RSpec::Core
 
     shared_examples_for "output_stream" do |attribute|
       define_method :attribute_value do
-        config.public_send(attribute)
+        config.__send__(attribute)
       end
 
       update_line = __LINE__ + 2
       define_method :update_attribute do |value|
-        config.public_send(:"#{attribute}=", value)
+        config.__send__(:"#{attribute}=", value)
       end
 
       it 'defaults to standard output' do
