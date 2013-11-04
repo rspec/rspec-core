@@ -97,9 +97,6 @@ module RSpec
 
       # Default: `$stderr`.
       add_setting :deprecation_stream
-      def deprecation_stream=(filename_or_io)
-        @deprecation_stream = file_or_io_from(filename_or_io)
-      end
 
       # Clean up and exit after the first failure (default: `false`).
       add_setting :fail_fast
@@ -119,9 +116,40 @@ module RSpec
 
       # Default: `$stdout`.
       # Also known as `output` and `out`
-      add_setting :output_stream, :alias_with => [:output, :out]
-      def output_stream=(filename_or_io)
-        @output_stream = file_or_io_from(filename_or_io)
+      define_reader :output_stream
+      def output_stream=(value)
+        if @reporter && !value.equal?(@output_stream)
+          warn "RSpec's reporter has already been initialized with " +
+            "#{output_stream.inspect} as the output stream, so your change to "+
+            "`output_stream` will be ignored. You should configure it earlier for " +
+            "it to take effect. (Called from #{CallerFilter.first_non_rspec_line})"
+        else
+          @output_stream = value
+        end
+      end
+
+      # @deprecated use RSpec::Core::Configuration#output_stream instead.
+      def output
+        RSpec.deprecate("RSpec::Core::Configuration#output", :replacement => "RSpec::Core::Configuration#output_stream")
+        output_stream
+      end
+
+      # @deprecated use RSpec::Core::Configuration#output_stream= instead.
+      def output=(value)
+        RSpec.deprecate("RSpec::Core::Configuration#output=", :replacement => "RSpec::Core::Configuration#output_stream=")
+        self.output_stream = value
+      end
+
+      # @deprecated use RSpec::Core::Configuration#output_stream instead.
+      def out
+        RSpec.deprecate("RSpec::Core::Configuration#out", :replacement => "RSpec::Core::Configuration#output_stream")
+        output_stream
+      end
+
+      # @deprecated use RSpec::Core::Configuration#output_stream= instead.
+      def out=(value)
+        RSpec.deprecate("RSpec::Core::Configuration#out=", :replacement => "RSpec::Core::Configuration#output_stream=")
+        self.output_stream = value
       end
 
       # Load files matching this pattern (default: `'**/*_spec.rb'`)
@@ -220,6 +248,8 @@ module RSpec
 
         @default_path = 'spec'
         @deprecation_stream = $stderr
+        @output_stream = $stdout
+        @reporter = nil
         @filter_manager = FilterManager.new
         @preferred_options = {}
         @seed = srand % 0xFFFF
@@ -613,7 +643,7 @@ EOM
           custom_formatter(formatter_to_use) ||
           (raise ArgumentError, "Formatter '#{formatter_to_use}' unknown - maybe you meant 'documentation' or 'progress'?.")
 
-        paths << output if paths.empty?
+        paths << output_stream if paths.empty?
         formatters << formatter_class.new(*paths.map {|p| String === p ? file_at(p) : p})
       end
 
@@ -626,7 +656,7 @@ EOM
       def reporter
         @reporter ||= begin
                         add_formatter('progress') if formatters.empty?
-                        add_formatter(RSpec::Core::Formatters::DeprecationFormatter, self)
+                        add_formatter(RSpec::Core::Formatters::DeprecationFormatter, deprecation_stream, output_stream)
                         Reporter.new(*formatters)
                       end
       end
@@ -1205,10 +1235,6 @@ MESSAGE
         word.tr!("-", "_")
         word.downcase!
         word
-      end
-
-      def file_or_io_from(output)
-        String === output ? file_at(output) : output
       end
 
       def file_at(path)

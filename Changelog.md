@@ -35,6 +35,9 @@ Deprecations
   removal in RSpec 3 (Peter Alfvin)
 * Deprecate `RSpec::Core::PendingExampleFixedError` in favor of
   `RSpec::Core::Pending::PendingExampleFixedError` (Myron Marston).
+* Deprecate `RSpec::Core::Configuration#out` and
+  `RSpec::Core::Configuration#output` in favor of
+  `RSpec::Core::Configuration#output_stream` (Myron Marston).
 
 ### 2.14.7 / 2013-10-29
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.6...v2.14.7)

@@ -4,10 +4,9 @@ require 'tempfile'
 
 module RSpec::Core::Formatters
   describe DeprecationFormatter do
-    let(:formatter)     { DeprecationFormatter.new(configuration) }
-    let(:configuration) { double :deprecation_stream => deprecation_stream, :output_stream => summary_stream }
     let(:deprecation_stream) { StringIO.new }
     let(:summary_stream)     { StringIO.new }
+    let(:formatter) { DeprecationFormatter.new(deprecation_stream, summary_stream) }
 
     def with_start_defined_on_kernel
       return yield if ::Kernel.method_defined?(:start)
@@ -27,39 +26,9 @@ module RSpec::Core::Formatters
       end
     end
 
-    describe 'defaults when configuration has yet to be initialized' do
-      let(:summary_stream)     { nil }
-      let(:deprecation_stream) { nil }
-
-      it 'has a default summary_stream of $stdout' do
-        expect(formatter.summary_stream).to eq $stdout
-      end
-
-      it 'has a default deprecation_stream of $stderr' do
-        expect(formatter.deprecation_stream).to eq $stderr
-      end
-    end
-
-    describe '#printer' do
-      context 'after configuration' do
-        let(:configuration) { double :deprecation_stream => StringIO.new, :output_stream => StringIO.new }
-
-        it "will 'memoize' the printer" do
-          expect(formatter.printer).to eq formatter.printer
-        end
-      end
-
-      context 'before configuration' do
-        let(:configuration) { RSpec::Core::Configuration.new }
-
-        it "will not 'memoize' the printer" do
-          expect(formatter.printer).to_not eq formatter.printer
-        end
-      end
-    end
-
     describe "#deprecation" do
-      let(:summary_stream) { StringIO.new }
+      let(:formatter) { DeprecationFormatter.new(deprecation_stream, summary_stream) }
+      let(:summary_stream)     { StringIO.new }
 
       context "with a File deprecation_stream" do
         let(:deprecation_stream) { File.open("#{Dir.tmpdir}/deprecation_summary_example_output", "w+") }
@@ -100,6 +69,7 @@ module RSpec::Core::Formatters
     end
 
     describe "#deprecation_summary" do
+      let(:formatter) { DeprecationFormatter.new(deprecation_stream, summary_stream) }
       let(:summary_stream) { StringIO.new }
 
       context "with a File deprecation_stream" do
