@@ -38,6 +38,18 @@ Deprecations
 * Deprecate `RSpec::Core::Configuration#out` and
   `RSpec::Core::Configuration#output` in favor of
   `RSpec::Core::Configuration#output_stream` (Myron Marston).
+* Deprecate legacy ordering APIs.
+  * You should use `register_ordering(:global)` instead of these:
+    * `RSpec::Core::Configuration#order_examples`
+    * `RSpec::Core::Configuration#order_groups`
+    * `RSpec::Core::Configuration#order_groups_and_examples`
+  * These are deprecated with no replacement because in RSpec 3
+    ordering is a property of individual example groups rather than
+    just a global property of the entire test suite:
+    * `RSpec::Core::Configuration#order`
+    * `RSpec::Core::Configuration#randomize?`
+  * `--order default` is deprecated in favor of `--order defined`
+  (Myron Marston)
 
 ### 2.14.7 / 2013-10-29
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.6...v2.14.7)

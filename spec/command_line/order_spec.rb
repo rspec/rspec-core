@@ -130,11 +130,11 @@ describe 'command line', :ui do
     end
   end
 
-  describe '--order default on CLI with --order rand in .rspec' do
-    it "overrides --order rand with --order default" do
+  describe '--order defined on CLI with --order rand in .rspec' do
+    it "overrides --order rand with --order defined" do
       write_file '.rspec', '--order rand'
 
-      run_command 'tmp/aruba/spec/order_spec.rb --order default -f doc'
+      run_command 'tmp/aruba/spec/order_spec.rb --order defined -f doc'
 
       expect(stdout.string).not_to match(/Randomized/)
 
@@ -148,7 +148,7 @@ describe 'command line', :ui do
     before do
       write_file 'spec/custom_order_spec.rb', """
         RSpec.configure do |config|
-          config.order_groups_and_examples do |list|
+          config.register_ordering(:global) do |list|
             list.sort_by { |item| item.description }
           end
         end

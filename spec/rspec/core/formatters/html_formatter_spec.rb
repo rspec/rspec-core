@@ -24,7 +24,7 @@ module RSpec
 
         let(:generated_html) do
           options = RSpec::Core::ConfigurationOptions.new(
-            %w[spec/rspec/core/resources/formatter_specs.rb --format html --order default]
+            %w[spec/rspec/core/resources/formatter_specs.rb --format html --order defined]
           )
           options.parse_options
 

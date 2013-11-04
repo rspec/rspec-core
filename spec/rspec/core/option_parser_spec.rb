@@ -5,7 +5,6 @@ module RSpec::Core
     let(:output_file){ mock File }
 
     before do
-      RSpec.stub(:deprecate)
       File.stub(:open).with("foo.txt",'w') { (output_file) }
     end
 
@@ -194,6 +193,25 @@ module RSpec::Core
             options = Parser.parse!(['--order', option])
             expect(options[:order]).to eq(option)
           end
+        end
+      end
+
+      context "with default" do
+        it 'defines the order as defined' do
+          options = Parser.parse!(['--order', 'default'])
+          expect(options[:order]).to eq('defined')
+        end
+
+        it 'prints a deprecation warning' do
+          expect_deprecation_with_no_call_site(/default/)
+          Parser.parse!(['--order', 'default'])
+        end
+      end
+
+      context "with defined" do
+        it 'defines the order as defined' do
+          options = Parser.parse!(['--order', 'defined'])
+          expect(options[:order]).to eq('defined')
         end
       end
     end

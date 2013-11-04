@@ -104,10 +104,6 @@ module RSpec
       # The exit code to return if there are any failures (default: 1).
       add_setting :failure_exit_code
 
-      # Determines the order in which examples are run (default: OS standard
-      # load order for files, declaration order for groups and examples).
-      define_reader :order
-
       # Indicates files configured to be required
       define_reader :requires
 
@@ -240,6 +236,7 @@ module RSpec
         @files_to_run = []
         @formatters = []
         @color = false
+        @order = nil
         @pattern = '**/*_spec.rb'
         @failure_exit_code = 1
         @spec_files_loaded = false
@@ -1000,8 +997,28 @@ EOM
         order_and_seed_from_order(type)
       end
 
+      # Determines the order in which examples are run (default: OS standard
+      # load order for files, declaration order for groups and examples).
+      def order
+        RSpec.warn_deprecation(
+          "RSpec::Core::Configuration#order is deprecated with no replacement. " +
+          "In RSpec 3 individal example groups can use a particular ordering, " +
+          "so `order` is no longer a global property of the entire suite. " +
+          "Called from #{CallerFilter.first_non_rspec_line}."
+        )
+
+        value_for(:order, @order)
+      end
+
       def randomize?
-        order.to_s.match(/rand/)
+        RSpec.warn_deprecation(
+          "RSpec::Core::Configuration#randomize? is deprecated with no replacement. " +
+          "In RSpec 3 individal example groups can use a particular ordering, " +
+          "so `randomize?` is no longer a binary property of the entire suite. " +
+          "Called from #{CallerFilter.first_non_rspec_line}."
+        )
+
+        value_for(:order, @order).to_s.match(/rand/)
       end
 
       # @private
@@ -1029,6 +1046,7 @@ EOM
       # @see #order=
       # @see #seed=
       def order_examples(&block)
+        RSpec.deprecate("RSpec::Configuration#order_examples", :replacement => "RSpec::Configuration#register_ordering(:global)")
         @example_ordering_block = block
         @order = "custom" unless built_in_orderer?(block)
       end
@@ -1052,6 +1070,7 @@ EOM
       # @see #order=
       # @see #seed=
       def order_groups(&block)
+        RSpec.deprecate("RSpec::Configuration#order_groups", :replacement => "RSpec::Configuration#register_ordering(:global)")
         @group_ordering_block = block
         @order = "custom" unless built_in_orderer?(block)
       end
@@ -1077,6 +1096,46 @@ EOM
       def order_groups_and_examples(&block)
         order_groups(&block)
         order_examples(&block)
+      end
+
+      # In RSpec 3, this registers a named ordering strategy that can later be
+      # used to order an example group's subgroups by adding
+      # `:order => <name>` metadata to the example group.
+      #
+      # In RSpec 2.99, only `register_ordering(:global)` is supported,
+      # to set the global ordering.
+      #
+      # @param name [Symbol] The name of the ordering.
+      # @yield Block that will order the given examples or example groups
+      # @yieldparam list [Array<RSpec::Core::Example>, Array<RSpec::Core::ExampleGropu>] The examples or groups to order
+      # @yieldreturn [Array<RSpec::Core::Example>, Array<RSpec::Core::ExampleGroup>] The re-ordered examples or groups
+      #
+      # @example
+      #   RSpec.configure do |rspec|
+      #     rspec.register_ordering :reverse do |list|
+      #       list.reverse
+      #     end
+      #   end
+      #
+      #   describe MyClass, :order => :reverse do
+      #     # ...
+      #   end
+      #
+      # @note Pass the symbol `:global` to set the ordering strategy that
+      #   will be used to order the top-level example groups and any example
+      #   groups that do not have declared `:order` metadata.
+      def register_ordering(name, &block)
+        unless name == :global
+          raise ArgumentError,
+            "Ordering name `#{name.inspect}` given, `:global` expected. " +
+            "RSpec 3 will support named orderings (that can be used for " +
+            "individual example groups) but 2.99 only supports using this " +
+            "to set the global order."
+        end
+
+        @group_ordering_block = block
+        @example_ordering_block = block
+        @order = "custom"
       end
 
       # Set Ruby warnings on or off
@@ -1122,6 +1181,10 @@ EOM
       module ExposeCurrentExample; end
 
     private
+
+      def _randomize?
+        value_for(:order, @order).to_s.match(/rand/)
+      end
 
       def get_files_to_run(paths)
         paths.map do |path|
@@ -1243,7 +1306,8 @@ MESSAGE
       end
 
       def order_and_seed_from_seed(value)
-        order_groups_and_examples(&RANDOM_ORDERING)
+        @group_ordering_block = RANDOM_ORDERING
+        @example_ordering_block = RANDOM_ORDERING
         @order, @seed = 'rand', value.to_i
         [@order, @seed]
       end
@@ -1258,11 +1322,18 @@ MESSAGE
         @order = order
         @seed  = seed = seed.to_i if seed
 
-        if randomize?
-          order_groups_and_examples(&RANDOM_ORDERING)
-        elsif order == 'default'
+        if order.to_s.match(/rand/)
+          @group_ordering_block = RANDOM_ORDERING
+          @example_ordering_block = RANDOM_ORDERING
+        elsif %w[ default defined ].include?(order)
+          if order == 'default'
+            RSpec.deprecate("RSpec::Core::Configuration#order = 'default'",
+                            :replacement => "RSpec::Core::Configuration#order = 'defined'")
+          end
+
           @order, @seed = nil, nil
-          order_groups_and_examples(&DEFAULT_ORDERING)
+          @group_ordering_block = DEFAULT_ORDERING
+          @example_ordering_block = DEFAULT_ORDERING
         end
 
         return order, seed
