@@ -238,6 +238,19 @@ module RSpec::Core
         expect(examples_run).to eq(1)
       end
 
+      it "wont runs previously matching config hooks when metadata is removed later" do
+        examples_run = 0
+        RSpec.configuration.before(:all, :type => :run_counter) { examples_run += 1 }
+
+        group = ExampleGroup.describe("parent", :type => :run_counter) do
+          metadata.delete(:type)
+          specify { true }
+        end
+
+        group.run
+        expect(examples_run).to eq(0)
+      end
+
       context "with a failure in the top level group" do
         it "runs its children " do
           examples_run = []
