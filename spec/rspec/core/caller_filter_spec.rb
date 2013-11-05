@@ -44,13 +44,23 @@ module RSpec
         end
       end
 
-      it "does not match other ruby files" do
+      it "does not match spec files" do
         files = %w[
-          /path/to/lib/rspec/some-extension/foo.rb
           /path/to/spec/rspec/core/some_spec.rb
         ]
 
         expect(unmatched_from files).to eq(files)
+      end
+
+      it "matches rspec extensions" do
+        # Since extensions often modify core methods, it is most useful to
+        # exclude them from filtered traces to reveal the actual source line
+        # that is triggering a deprecation or exception.
+        files = %w[
+          /path/to/lib/rspec/some-extension/foo.rb
+        ]
+
+        expect(unmatched_from files).to eq([])
       end
     end
   end
