@@ -5,39 +5,39 @@ Enhancements
 
 * Block-based DSL methods that run in the context of an example
   (`it`, `before(:each)`, `after(:each)`, `let` and `subject`)
-  now yield the example as a block argument (David Chelimsky).
+  now yield the example as a block argument. (David Chelimsky)
 * Warn when the name of more than one example group is submitted to
-  `include_examples` and it's aliases (David Chelimsky)
+  `include_examples` and it's aliases. (David Chelimsky)
 * Add `expose_current_running_example_as` config option for
   use during the upgrade process when external gems use the
   deprecated `RSpec::Core::ExampleGroup#example` and
-  `RSpec::Core::ExampleGroup#running_example` methods. (Myron Marston).
+  `RSpec::Core::ExampleGroup#running_example` methods. (Myron Marston)
 
 Bug fixes
 
-* Limit spamminess of deprecation messages (Bradley Schaefer, Loren Segal)
+* Limit spamminess of deprecation messages. (Bradley Schaefer, Loren Segal)
 
 Deprecations
 
 * Deprecate `RSpec::Core::ExampleGroup#example` and
   `RSpec::Core::ExampleGroup#running_example` methods. If you need
-  access to the example (e.g. to get its metadata), use a block arg
-  instead (David Chelimsky).
-* Deprecate use of `autotest/rspec2` in favour of `rspec-autotest` (Jon Rowe)
+  access to the example (e.g. to get its metadata), use a block argument
+  instead. (David Chelimsky)
+* Deprecate use of `autotest/rspec2` in favour of `rspec-autotest`. (Jon Rowe)
 * Deprecate RSpec's built-in debugger support. Use a CLI option like
   `-rruby-debug` (for the ruby-debug gem) or `-rdebugger` (for the
-  debugger gem) instead (Myron Marston).
+  debugger gem) instead. (Myron Marston)
 * Deprecate `RSpec.configuration.treat_symbols_as_metadata_keys_with_true_values = false`.
-  RSpec 3 will not support having this option set to `false` (Myron Marston).
+  RSpec 3 will not support having this option set to `false`. (Myron Marston)
 * Deprecate accessing a `let` or `subject` declaration in
   a `after(:all)` hook. (Myron Marston, Jon Rowe)
 * Deprecate built-in `its` usage in favor of `rspec-it` gem due to planned
-  removal in RSpec 3 (Peter Alfvin)
+  removal in RSpec 3. (Peter Alfvin)
 * Deprecate `RSpec::Core::PendingExampleFixedError` in favor of
-  `RSpec::Core::Pending::PendingExampleFixedError` (Myron Marston).
+  `RSpec::Core::Pending::PendingExampleFixedError`. (Myron Marston)
 * Deprecate `RSpec::Core::Configuration#out` and
   `RSpec::Core::Configuration#output` in favor of
-  `RSpec::Core::Configuration#output_stream` (Myron Marston).
+  `RSpec::Core::Configuration#output_stream`. (Myron Marston)
 * Deprecate legacy ordering APIs.
   * You should use `register_ordering(:global)` instead of these:
     * `RSpec::Core::Configuration#order_examples`
