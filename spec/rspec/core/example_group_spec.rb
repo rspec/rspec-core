@@ -1056,7 +1056,7 @@ module RSpec::Core
           expect(group.run).to be_truthy
         end
 
-        it "warns when num args submitted doesn't match arity of shared block", :if => RUBY_VERSION.to_f >= 1.9 do
+        it "warns when extra args are submitted to a zero-arity shared block", :if => RUBY_VERSION.to_f >= 1.9 do
           group = ExampleGroup.describe
           group.shared_examples("named this") {}
 
@@ -1077,6 +1077,18 @@ module RSpec::Core
             expect(message).to match(/called from #{__FILE__}:#{__LINE__ + 2}/)
           }
           group.send(name, "named this", "named that")
+        end
+
+        it 'does not warn when the shared example group has a default arg', :if => RUBY_VERSION.to_f >= 1.9 do
+          group = ExampleGroup.describe
+
+          # 1.8.7 can't parse blocks with arg defaults, so we have to eval it
+          # to delay when it is parsed.
+          eval('group.shared_examples("named this") { |opts={}| }')
+
+          expect(group).not_to receive(:warn)
+
+          group.send(name, "named this", :foo => 1)
         end
       end
     end

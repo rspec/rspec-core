@@ -182,7 +182,7 @@ module RSpec
         find_and_eval_shared("examples", name, *args, &block)
       end
 
-      if RUBY_VERSION.to_f >= 1.9
+      if Proc.method_defined?(:parameters) # for >= 1.9
         # Warn when submitting the name of more than one example group to
         # include_examples, it_behaves_like, etc.
         #
@@ -191,7 +191,7 @@ module RSpec
         #
         # See https://github.com/rspec/rspec-core/issues/1066 for background.
         def self.warn_unexpected_args(label, name, args, shared_block)
-          if !args.empty? && shared_block.arity == 0
+          if !args.empty? && shared_block.parameters.count == 0
             if shared_example_groups[args.first]
               warn <<-WARNING
 shared #{label} support#{'s' if /context/ =~ label.to_s} the name of only one example group, received #{[name, *args].inspect}
