@@ -12,6 +12,9 @@ Enhancements
   use during the upgrade process when external gems use the
   deprecated `RSpec::Core::ExampleGroup#example` and
   `RSpec::Core::ExampleGroup#running_example` methods. (Myron Marston)
+* Add `config.raise_errors_for_deprecations!` option, which turns
+  deprecations warnings into errors to surface the full backtrace
+  of the call site. (Myron Marston)
 
 Bug fixes
 
