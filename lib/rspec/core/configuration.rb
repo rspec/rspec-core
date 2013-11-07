@@ -1,7 +1,7 @@
 require 'fileutils'
 require 'rspec/core/backtrace_cleaner'
 require 'rspec/core/ruby_project'
-require 'rspec/core/formatters/deprecation_formatter.rb'
+require 'rspec/core/formatters/deprecation_formatter'
 
 module RSpec
   module Core
