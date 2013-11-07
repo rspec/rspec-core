@@ -31,7 +31,7 @@ Deprecations
   RSpec 3 will not support having this option set to `false`. (Myron Marston)
 * Deprecate accessing a `let` or `subject` declaration in
   a `after(:all)` hook. (Myron Marston, Jon Rowe)
-* Deprecate built-in `its` usage in favor of `rspec-it` gem due to planned
+* Deprecate built-in `its` usage in favor of `rspec-its` gem due to planned
   removal in RSpec 3. (Peter Alfvin)
 * Deprecate `RSpec::Core::PendingExampleFixedError` in favor of
   `RSpec::Core::Pending::PendingExampleFixedError`. (Myron Marston)
