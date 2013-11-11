@@ -81,7 +81,7 @@ module RSpec
         end
 
         if @configuration.run_all_when_everything_filtered? && example_count.zero?
-          reporter.message("#{all_examples_filtered_prefix}; ignoring #{inclusion_filter.description}")
+          reporter.message(all_examples_filtered_message(:ignoring_inclusion_filter))
           filtered_examples.clear
           inclusion_filter.clear
         end
@@ -90,23 +90,19 @@ module RSpec
           if filter_manager.empty?
             reporter.message("No examples found.")
           elsif exclusion_filter.empty_without_conditional_filters?
-            reporter.message(all_examples_filtered_message)
+            reporter.message(all_examples_filtered_message(@configuration.run_all_when_everything_filtered?))
           elsif inclusion_filter.empty?
-            reporter.message(all_examples_filtered_prefix)
+            reporter.message(all_examples_filtered_message)
           end
         end
       end
 
-      def all_examples_filtered_message
-        if @configuration.run_all_when_everything_filtered?
-          "#{all_examples_filtered_prefix}; ignoring #{inclusion_filter.description}"
+      def all_examples_filtered_message(ignoring_inclusion_filter=false)
+        if ignoring_inclusion_filter
+          "\nAll examples were filtered out; ignoring #{inclusion_filter.description}"
         else
-          all_examples_filtered_prefix
+          "\nAll examples were filtered out"
         end
-      end
-
-      def all_examples_filtered_prefix
-        "\nAll examples were filtered out"
       end
 
       def announce_inclusion_filter(announcements)
