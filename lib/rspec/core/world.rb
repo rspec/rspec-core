@@ -87,7 +87,6 @@ module RSpec
         end
 
         if example_count.zero?
-          example_groups.clear
           if filter_manager.empty?
             reporter.message("No examples found.")
           elsif exclusion_filter.empty_without_conditional_filters?
