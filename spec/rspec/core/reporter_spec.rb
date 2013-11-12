@@ -7,6 +7,10 @@ module RSpec::Core
       let(:example)   { double("example") }
       let(:reporter)  { Reporter.new(formatter) }
 
+      before do
+        allow_deprecation
+      end
+
       %w[start_dump dump_pending dump_failures dump_summary close].each do |message|
         it "sends #{message} to the formatter(s) that respond to message" do
           formatter.should_receive(message)
@@ -15,6 +19,28 @@ module RSpec::Core
 
         it "doesnt notify formatters about messages they dont implement" do
           expect { reporter.abort(nil) }.to_not raise_error
+        end
+
+        it 'warns of deprecation' do
+          expect_deprecation_with_call_site(__FILE__, __LINE__ + 1)
+          reporter.abort(nil)
+        end
+      end
+    end
+
+    describe "finish" do
+      let(:formatter) { double("formatter") }
+      let(:example)   { double("example") }
+      let(:reporter)  { Reporter.new(formatter) }
+
+      %w[start_dump dump_pending dump_failures dump_summary close].each do |message|
+        it "sends #{message} to the formatter(s) that respond to message" do
+          formatter.should_receive(message)
+          reporter.finish(nil)
+        end
+
+        it "doesnt notify formatters about messages they dont implement" do
+          expect { reporter.finish(nil) }.to_not raise_error
         end
       end
     end

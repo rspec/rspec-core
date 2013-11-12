@@ -115,7 +115,10 @@ module RSpec::Core
       end
     end
 
-    alias_method :abort, :finish
+    def abort(seed)
+      RSpec.deprecate :abort, :replacement => :finish
+      finish(seed)
+    end
 
     def stop
       @duration = (RSpec::Core::Time.now - @start).to_f if @start
