@@ -116,7 +116,7 @@ module RSpec::Core
     end
 
     def abort(seed)
-      RSpec.deprecate :abort, :replacement => :finish
+      RSpec.deprecate "RSpec::Core::Reporter#abort", :replacement => "RSpec::Core::Reporter#finish"
       finish(seed)
     end
 
