@@ -1,6 +1,13 @@
 ### 2.99.0.beta2 Development
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.beta1...2-99-maintenance)
 
+Enhancements:
+
+* Add `is_expected` for one-liners that read well with the
+  `expect`-based syntax. `is_expected` is simply defined as
+  `expect(subject)` and can be used in an expression like:
+  `it { is_expected.to read_well }`. (Myron Marston)
+
 Bug Fixes:
 
 * Fix failure (undefined method `path`) in end-of-run summary
