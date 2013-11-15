@@ -16,12 +16,19 @@ module RSpec
       # @param [IO] err
       # @param [IO] out
       def run(err, out)
+        setup(err, out)
+        run_specs
+      end
+
+      def setup(err, out)
         @configuration.error_stream = err
         @configuration.output_stream = out if @configuration.output_stream == $stdout
         @options.configure(@configuration)
         @configuration.load_spec_files
         @world.announce_filters
+      end
 
+      def run_specs
         @configuration.reporter.report(@world.example_count) do |reporter|
           begin
             @configuration.hooks.run(:before, :suite)

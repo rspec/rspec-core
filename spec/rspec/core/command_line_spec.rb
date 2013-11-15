@@ -24,7 +24,7 @@ module RSpec::Core
       config.should_receive(:force).at_least(:once).ordered
 
       command_line = build_command_line
-      command_line.run err, stdout
+      command_line.setup err, stdout
     end
 
     it "assigns ConfigurationOptions built from Array of options to @options" do
@@ -40,6 +40,21 @@ module RSpec::Core
     end
 
     describe "#run" do
+      context "delegation" do
+        include_context "spec files"
+
+        it "passes output streams to #setup" do
+          command_line = build_command_line passing_spec_filename
+          expect(command_line).to receive(:setup).with(err, out)
+          command_line.run(err, out)
+        end
+        it "passes the example group list to #run_specs" do
+          command_line = build_command_line passing_spec_filename
+          expect(command_line).to receive(:run_specs).with(no_args)
+          command_line.run(err, out)
+        end
+      end
+
       context "running files" do
         include_context "spec files"
 
