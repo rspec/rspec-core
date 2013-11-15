@@ -50,6 +50,30 @@ module RSpec
         hash
       end
 
+      # @private
+      def on_change &block
+        @update_after_change = block
+      end
+
+      [
+        :[]=,
+        :clear,
+        :delete,
+        :delete_if,
+        :keep_if,
+        :merge!,
+        :reject!,
+        :replace,
+        :select!,
+        :shift,
+        :store
+      ].each do |name|
+        define_method(name) do |*args|
+          super(*args)
+          @update_after_change.call if defined?(@update_after_change)
+        end
+      end
+
       module MetadataHash
 
         # @private

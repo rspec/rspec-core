@@ -43,6 +43,82 @@ module RSpec
         end
       end
 
+      describe '#on_change' do
+        let(:metadata) { Metadata.new }
+
+        before do
+          metadata[:key] = :old_value
+          metadata.on_change { @callback_run = true }
+        end
+
+        it 'runs the callback on #[]=' do
+          metadata[:key] = :value
+          expect(@callback_run).to eq true
+        end
+
+        it 'runs the callback on #store' do
+          metadata.store :key, :value
+          expect(@callback_run).to eq true
+        end
+
+        it 'runs the callback on #merge!' do
+          metadata.merge! :key => :new_value
+          expect(@callback_run).to eq true
+        end
+
+        it 'supports the block on #merge!' do
+          metadata.merge!( :key => :new_value ) { |key, v1, v2| v2 }
+          expect(metadata[:key]).to eq :new_value
+        end
+
+        it 'runs the callback on #delete' do
+          metadata.delete(:key)
+          expect(@callback_run).to eq true
+        end
+
+        it 'runs the callback on #delete_if' do
+          metadata.delete_if {|k, v| k == :key }
+          expect(@callback_run).to eq true
+        end
+
+        it 'runs the callback on #reject!' do
+          metadata.reject! {|k, v| k == :key }
+          expect(@callback_run).to eq true
+        end
+
+        it 'runs the callback on #clear' do
+          metadata.clear
+          expect(@callback_run).to eq true
+        end
+
+        it 'runs the callback on #replace' do
+          metadata.replace(:key => :new)
+          expect(@callback_run).to eq true
+        end
+
+        xit 'runs the callback on #update' do
+          metadata.update(:key => :new)
+          expect(@callback_run).to eq true
+        end
+
+        it 'runs the callback on #shift' do
+          metadata.shift
+          expect(@callback_run).to eq true
+        end
+
+        if RUBY_VERSION.to_f > 1.9
+          it 'runs the callback on #keep_if' do
+            metadata.keep_if {|k, v| k != :key }
+            expect(@callback_run).to eq true
+          end
+
+          it 'runs the callback on #select!' do
+            metadata.select! {|k, v| k != :key }
+            expect(@callback_run).to eq true
+          end
+        end
+      end
+
       describe "#filter_applies?" do
         let(:parent_group_metadata) { Metadata.new.process('parent group', :caller => ["foo_spec.rb:#{__LINE__}"]) }
         let(:group_metadata) { Metadata.new(parent_group_metadata).process('group', :caller => ["foo_spec.rb:#{__LINE__}"]) }

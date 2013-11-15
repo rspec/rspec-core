@@ -307,6 +307,9 @@ module RSpec
         @metadata = RSpec::Core::Metadata.new(superclass_metadata).process(*args)
         @order = nil
         hooks.register_globals(self, RSpec.configuration.hooks)
+        @metadata.on_change do
+          hooks.register_globals(self, RSpec.configuration.hooks)
+        end
         world.configure_group(self)
       end
 
