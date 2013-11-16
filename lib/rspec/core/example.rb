@@ -101,6 +101,7 @@ module RSpec
       # the instance of {ExampleGroup}.
       # @param example_group_instance the instance of an ExampleGroup subclass
       def run(example_group_instance, reporter)
+        set_proc_title if RSpec.configuration.set_proc_title?
         @example_group_instance = example_group_instance
         RSpec.current_example = self
 
@@ -138,6 +139,7 @@ module RSpec
 
         finish(reporter)
       ensure
+        restore_proc_title if RSpec.configuration.set_proc_title?
         RSpec.current_example = nil
       end
 
@@ -306,6 +308,16 @@ An error occurred #{context}
 
       def record(results={})
         execution_result.update(results)
+      end
+
+      def set_proc_title
+        proc_title  = "rspec #{self.location}"
+        proc_title += " # #{self.full_description}" unless RSpec.configuration.set_proc_title == :simple
+        $0 = proc_title
+      end
+
+      def restore_proc_title
+        $0 = RSpec::PROCESS_TITLE
       end
     end
   end

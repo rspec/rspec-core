@@ -1497,5 +1497,16 @@ module RSpec::Core
       end
     end
 
+    describe '#set_proc_title' do
+      it 'defaults to false' do
+        expect(config.set_proc_title).to eq false
+      end
+
+      it 'is configurable' do
+        config.set_proc_title = true
+        expect(config.set_proc_title).to eq true
+      end
+    end
+
   end
 end

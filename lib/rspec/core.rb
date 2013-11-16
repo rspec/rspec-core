@@ -44,6 +44,8 @@ require_rspec['core/example_group']
 module RSpec
   autoload :SharedContext, 'rspec/core/shared_context'
 
+  PROCESS_TITLE = $0.dup
+
   # @private
   def self.wants_to_quit
   # Used internally to determine what to do when a SIGINT is received
