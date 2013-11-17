@@ -427,14 +427,19 @@ module RSpec
         when String, Symbol
           require case framework.to_s
                   when /rspec/i
+                    deprecate_unless_mock_adapter_name_is_exact(framework, :rspec)
                     'rspec/core/mocking/with_rspec'
                   when /mocha/i
+                    deprecate_unless_mock_adapter_name_is_exact(framework, :mocha)
                     'rspec/core/mocking/with_mocha'
                   when /rr/i
+                    deprecate_unless_mock_adapter_name_is_exact(framework, :rr)
                     'rspec/core/mocking/with_rr'
                   when /flexmock/i
+                    deprecate_unless_mock_adapter_name_is_exact(framework, :flexmock)
                     'rspec/core/mocking/with_flexmock'
                   else
+                    deprecate_unless_mock_adapter_name_is_exact(framework, :nothing)
                     'rspec/core/mocking/with_absolutely_nothing'
                   end
           RSpec::Core::MockFrameworkAdapter
@@ -1355,6 +1360,11 @@ MESSAGE
 
       def built_in_orderer?(block)
         [DEFAULT_ORDERING, RANDOM_ORDERING].include?(block)
+      end
+
+      def deprecate_unless_mock_adapter_name_is_exact(name, expected)
+        return if name == expected
+        RSpec.deprecate("`config.mock_with #{name.inspect}`", :replacement => "`config.mock_with :#{expected}`")
       end
 
     end
