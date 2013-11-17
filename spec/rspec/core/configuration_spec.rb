@@ -227,10 +227,39 @@ module RSpec::Core
       it_behaves_like "a configurable framework adapter", :mock_with
 
       [:rspec, :mocha, :rr, :flexmock].each do |framework|
-        context "with #{framework}" do
+        context "with :#{framework}" do
           it "requires the adapter for #{framework}" do
             config.should_receive(:require).with("rspec/core/mocking/with_#{framework}")
             config.mock_with framework
+          end
+
+          it "does not print a deprecation" do
+            expect(RSpec).not_to receive(:deprecate)
+            config.mock_with framework
+          end
+        end
+
+        context "with #{framework.to_s.inspect}" do
+          it "requires the adapter for #{framework}" do
+            config.should_receive(:require).with("rspec/core/mocking/with_#{framework}")
+            config.mock_with framework.to_s
+          end
+
+          it "prints a deprecation warning" do
+            expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /mock_with/)
+            config.mock_with framework.to_s
+          end
+        end
+
+        context "with :the_#{framework}_adapter" do
+          it "requires the adapter for #{framework}" do
+            config.should_receive(:require).with("rspec/core/mocking/with_#{framework}")
+            config.mock_with :"the_#{framework}_adapter"
+          end
+
+          it "prints a deprecation warning" do
+            expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /mock_with/)
+            config.mock_with :"the_#{framework}_adapter"
           end
         end
       end
@@ -253,9 +282,28 @@ module RSpec::Core
         end
       end
 
-      it "uses the null adapter when set to any unknown key" do
-        config.should_receive(:require).with('rspec/core/mocking/with_absolutely_nothing')
-        config.mock_with :crazy_new_mocking_framework_ive_not_yet_heard_of
+      context "with an unknown key" do
+        it "uses the null adapter" do
+          config.should_receive(:require).with('rspec/core/mocking/with_absolutely_nothing')
+          config.mock_with :crazy_new_mocking_framework_ive_not_yet_heard_of
+        end
+
+        it "prints a deprecation warning" do
+          expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /mock_with/)
+          config.mock_with :crazy_new_mocking_framework_ive_not_yet_heard_of
+        end
+      end
+
+      context "with :nothing" do
+        it "uses the null adapter" do
+          config.should_receive(:require).with('rspec/core/mocking/with_absolutely_nothing')
+          config.mock_with :nothing
+        end
+
+        it "does not print a deprecation warning" do
+          expect(RSpec).not_to receive(:deprecate)
+          config.mock_with :nothing
+        end
       end
 
       context 'when there are already some example groups defined' do

@@ -8,6 +8,14 @@ Enhancements:
   `expect(subject)` and can be used in an expression like:
   `it { is_expected.to read_well }`. (Myron Marston)
 
+Deprecations:
+
+* Deprecate inexact `mock_with` config options. RSpec 3 will only support
+  the exact symbols `:rspec`, `:mocha`, `:flexmock`, `:rr` or `:nothing`
+  (or any module that implements the adapter interface). RSpec 2 did
+  fuzzy matching but this will not be supported going forward.
+  (Myron Marston)
+
 Bug Fixes:
 
 * Fix failure (undefined method `path`) in end-of-run summary
