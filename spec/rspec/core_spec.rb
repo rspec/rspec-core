@@ -102,7 +102,7 @@ describe RSpec do
     specify 'the const_missing hook allows other undefined consts to raise errors as normal' do
       expect {
         ::RSpec::Core::SomeUndefinedConst
-      }.to raise_error(NameError, /uninitialized constant RSpec::Core::SomeUndefinedConst/)
+      }.to raise_error(NameError, /RSpec::Core::SomeUndefinedConst/)
     end
   end
 end
