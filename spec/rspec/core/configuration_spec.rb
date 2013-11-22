@@ -1005,21 +1005,45 @@ module RSpec::Core
     end
 
     describe "line_numbers=" do
-      it "sets the line numbers" do
-        config.line_numbers = ['37']
-        expect(config.filter).to eq({:line_numbers => [37]})
-      end
-
-      it "overrides filters" do
+      it "overrides inclusion filters set on config, mapping line numbers to locations" do
         config.filter_run :focused => true
         config.line_numbers = ['37']
-        expect(config.filter).to eq({:line_numbers => [37]})
+        config.files_or_directories_to_run = "path/to/file.rb"
+        expect(config.inclusion_filter.size).to eq(1)
+        expect(config.inclusion_filter[:locations].keys.first).to match(/path\/to\/file\.rb$/)
+        expect(config.inclusion_filter[:locations].values.first).to eq([37])
+      end
+
+      it "overrides inclusion filters set before config" do
+        config.force(:inclusion_filter => {:foo => :bar})
+        config.line_numbers = ['37']
+        config.files_or_directories_to_run = "path/to/file.rb"
+        expect(config.inclusion_filter.size).to eq(1)
+        expect(config.inclusion_filter[:locations].keys.first).to match(/path\/to\/file\.rb$/)
+        expect(config.inclusion_filter[:locations].values.first).to eq([37])
       end
 
       it "prevents subsequent filters" do
         config.line_numbers = ['37']
+        config.files_or_directories_to_run = "path/to/file.rb"
         config.filter_run :focused => true
-        expect(config.filter).to eq({:line_numbers => [37]})
+        expect(config.filter).to eq({:locations => { File.expand_path("./path/to/file.rb") => [37] }})
+      end
+
+      it "clears exclusion filters set on config" do
+        config.exclusion_filter = { :foo => :bar }
+        config.line_numbers = ['37']
+        config.files_or_directories_to_run = "path/to/file.rb"
+        expect(config.exclusion_filter).to be_empty,
+          "expected exclusion filter to be empty:\n#{config.exclusion_filter}"
+      end
+
+      it "clears exclusion filters set before config" do
+        config.force(:exclusion_filter => { :foo => :bar })
+        config.line_numbers = ['37']
+        config.files_or_directories_to_run = "path/to/file.rb"
+        expect(config.exclusion_filter).to be_empty,
+          "expected exclusion filter to be empty:\n#{config.exclusion_filter}"
       end
     end
 
