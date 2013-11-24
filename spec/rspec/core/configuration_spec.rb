@@ -1471,30 +1471,45 @@ module RSpec::Core
     end
 
     describe "#force" do
+      let(:collection) { [1, 2, 3, 4] }
+      let(:ordered)    { config.group_ordering_block.call(collection) }
+
       it "forces order (when given default)" do
         config.force :order => "default"
         config.order = "rand"
+
         expect(config.order).to eq("default")
+        expect(ordered).to eq([1, 2, 3, 4])
       end
 
       it "forces order (when given defined)" do
         config.force :order => "defined"
         config.order = "rand"
+
         expect(config.order).to eq("defined")
+        expect(ordered).to eq([1, 2, 3, 4])
       end
 
       it "forces order and seed with :order => 'rand:37'" do
         config.force :order => "rand:37"
         config.order = "default"
+
         expect(config.order).to eq("rand")
         expect(config.seed).to eq(37)
+
+        allow(Kernel).to receive(:rand).and_return(3, 1, 4, 2)
+        expect(ordered).to_not eq([1, 2, 3, 4])
       end
 
       it "forces order and seed with :seed => '37'" do
         config.force :seed => "37"
         config.order = "defined"
+
         expect(config.seed).to eq(37)
         expect(config.order).to eq("rand")
+
+        allow(Kernel).to receive(:rand).and_return(3, 1, 4, 2)
+        expect(ordered).to eq([2, 4, 1, 3])
       end
 
       it 'can set random ordering' do
