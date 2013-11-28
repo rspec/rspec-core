@@ -66,7 +66,7 @@ module RSpec
     # @see Configuration#filter_run_including
     # @see Configuration#filter_run_excluding
     class FilterManager
-      STANDALONE_FILTERS = [:locations, :line_numbers, :full_description]
+      STANDALONE_FILTERS = [:locations, :full_description]
 
       PROC_HEX_NUMBER = /0x[0-9a-f]+@/
       PROJECT_DIR = File.expand_path('.')

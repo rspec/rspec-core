@@ -228,6 +228,7 @@ module RSpec
         @include_or_extend_modules = []
         @mock_framework = nil
         @files_to_run = []
+        @line_numbers = []
         @formatters = []
         @color = false
         @pattern = '**/*_spec.rb'
@@ -538,12 +539,9 @@ module RSpec
       end
 
       # Run examples defined on `line_numbers` in all files to run.
-      def line_numbers=(line_numbers)
-        filter_run :line_numbers => line_numbers.map{|l| l.to_i}
-      end
-
-      def line_numbers
-        filter.fetch(:line_numbers,[])
+      add_setting :line_numbers
+      def line_numbers=(array)
+        @line_numbers = array.map &:to_i
       end
 
       def full_description=(description)
@@ -1039,13 +1037,15 @@ module RSpec
       def gather_directories(path)
         stripped = "{#{pattern.gsub(/\s*,\s*/, ',')}}"
         files    = pattern =~ /^#{Regexp.escape path}/ ? Dir[stripped] : Dir["#{path}/#{stripped}"]
-        files.sort
+        files.sort.map { |path| extract_location path }
       end
 
       def extract_location(path)
         if path =~ /^(.*?)((?:\:\d+)+)$/
-          path, lines = $1, $2[1..-1].split(":").map{|n| n.to_i}
-          filter_manager.add_location path, lines
+          path, path_lines = $1, $2[1..-1].split(":").map{|n| n.to_i}
+          filter_manager.add_location path, path_lines
+        elsif !line_numbers.empty?
+          filter_manager.add_location path, line_numbers
         end
         path
       end
