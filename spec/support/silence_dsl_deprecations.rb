@@ -9,7 +9,7 @@ module SilenceDSLDeprecations
     end
 
     def respond_to?(*args)
-      @repoter.respond_to?(*args) || super
+      @reporter.respond_to?(*args) || super
     end
 
     def method_missing(*args, &block)
