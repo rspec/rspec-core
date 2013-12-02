@@ -5,6 +5,8 @@ Bug Fixes:
 
 * Fix failure (undefined method `path`) in end-of-run summary
   when `raise_errors_for_deprecations!` is configured. (Myron Marston)
+* Fix issue were overridding spec ordering from the command line wasnt
+  fully recognised interally. (Jon Rowe)
 
 ### 2.99.0.beta1 / 2013-11-07
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.7...v2.99.0.beta1)
