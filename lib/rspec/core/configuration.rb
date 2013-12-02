@@ -250,6 +250,7 @@ module RSpec
         @filter_manager = FilterManager.new
         @preferred_options = {}
         @seed = srand % 0xFFFF
+        @ordering_already_forced = false
         @failure_color = :red
         @success_color = :green
         @pending_color = :yellow
@@ -266,9 +267,9 @@ module RSpec
       # Used to set higher priority option values from the command line.
       def force(hash)
         if hash.has_key?(:seed)
-          hash[:order], hash[:seed] = order_and_seed_from_seed(hash[:seed])
+          hash[:order], hash[:seed] = order_and_seed_from_seed(hash[:seed], true)
         elsif hash.has_key?(:order)
-          set_order_and_seed(hash)
+          set_order_and_seed(hash, true)
         end
         @preferred_options.merge!(hash)
         self.warnings = value_for :warnings, nil
@@ -1324,26 +1325,22 @@ MESSAGE
         File.new(path, 'w')
       end
 
-      def order_and_seed_from_seed(value)
-        @group_ordering_block = RANDOM_ORDERING
-        @example_ordering_block = RANDOM_ORDERING
-        @order, @seed = 'rand', value.to_i
-        [@order, @seed]
+      def order_and_seed_from_seed(value, force = false)
+        order_and_seed_from_order "rand:#{value}", force
       end
 
-      def set_order_and_seed(hash)
-        hash[:order], seed = order_and_seed_from_order(hash[:order])
+      def set_order_and_seed(hash, force = false)
+        hash[:order], seed = order_and_seed_from_order(hash[:order], force)
         hash[:seed] = seed if seed
       end
 
-      def order_and_seed_from_order(type)
+      def order_and_seed_from_order(type, force = false)
         order, seed = type.to_s.split(':')
         @order = order
         @seed  = seed = seed.to_i if seed
 
         if order.to_s.match(/rand/)
-          @group_ordering_block = RANDOM_ORDERING
-          @example_ordering_block = RANDOM_ORDERING
+          ordering = RANDOM_ORDERING
         elsif %w[ default defined ].include?(order)
           if order == 'default'
             RSpec.deprecate("RSpec::Core::Configuration#order = 'default'",
@@ -1351,9 +1348,14 @@ MESSAGE
           end
 
           @order, @seed = nil, nil
-          @group_ordering_block = DEFAULT_ORDERING
-          @example_ordering_block = DEFAULT_ORDERING
+          ordering = DEFAULT_ORDERING
         end
+
+        unless @ordering_already_forced
+          @group_ordering_block = ordering
+          @example_ordering_block = ordering
+        end
+        @ordering_already_forced = true if force
 
         return order, seed
       end
