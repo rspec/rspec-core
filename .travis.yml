@@ -1,6 +1,7 @@
 language: ruby
 script: "script/test_all 2>&1"
-bundler_args: "--standalone --binstubs"
+bundler_args: "--standalone --binstubs --path bundle"
+cache: bundler
 rvm:
   - 1.8.7
   - 1.9.2
@@ -11,6 +12,7 @@ rvm:
   - rbx-2.2.1
   - rbx
   - 2.0.0
+  - 2.1.0-preview2
 matrix:
   allow_failures:
     - rvm: rbx-2.2.1
