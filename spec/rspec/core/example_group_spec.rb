@@ -1069,6 +1069,19 @@ module RSpec::Core
 
         expect(group.top_level_description).to eq("top")
       end
+
+      it "returns always the same description" do
+        group = nil
+        ExampleGroup.describe("top") do
+          context "middle" do
+            group = describe "bottom" do
+            end
+            group.top_level_description.sub!('op', '')
+          end
+        end
+
+        expect(group.top_level_description).to eq("top")
+      end
     end
 
     describe "#run" do

@@ -440,7 +440,7 @@ module RSpec
 
       # @private
       def self.top_level_description
-        parent_groups.last.description
+        parent_groups.last.description.dup
       end
 
       # @private
