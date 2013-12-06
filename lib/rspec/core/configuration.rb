@@ -222,6 +222,10 @@ module RSpec
         RSpec.deprecate("RSpec::Core::Configuration#treat_symbols_as_metadata_keys_with_true_values=")
       end
 
+      # @macro add_setting
+      # Set process title to be the current example location.
+      add_setting :set_proc_title
+
       # @private
       add_setting :tty
       # @private
@@ -267,6 +271,7 @@ module RSpec
         @fixed_color = :blue
         @detail_color = :cyan
         @profile_examples = false
+        @set_proc_title = false
         @requires = []
         @libs = []
       end
