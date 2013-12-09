@@ -205,9 +205,10 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
     end
   end
 
-  describe "--backtrace, -b" do
+  describe "--backtrace, --trace, -b" do
     it "sets full_backtrace on config" do
       expect(parse_options("--backtrace")).to include(:full_backtrace => true)
+      expect(parse_options("--trace")).to include(:full_backtrace => true)
       expect(parse_options("-b")).to include(:full_backtrace => true)
     end
   end

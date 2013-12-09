@@ -130,7 +130,7 @@ module RSpec::Core
           options[:formatters].last << o
         end
 
-        parser.on('-b', '--backtrace', 'Enable full backtrace.') do |o|
+        parser.on('-b', '--trace', '--backtrace', 'Enable full backtrace.') do |o|
           options[:full_backtrace] = true
         end
 

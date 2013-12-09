@@ -74,7 +74,7 @@ RSpec::Core::ConfigurationOptions
     sets :line_number
   --example
     sets :full_description
-  --backtrace, -b
+  --backtrace, --trace, -b
     sets full_backtrace on config
   --debug, -d
     sets :debug => true
