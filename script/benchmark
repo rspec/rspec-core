@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+times = 20.times.map do
+  start_time = Time.now
+  system "bin/rspec >/dev/null 2>&1"
+  end_time = Time.now
+  end_time-start_time
+end
+
+n              = times.count
+sum            = 0.0
+sum_of_squares = 0.0
+
+times.each do |time|
+  sum            += time
+  sum_of_squares += time*time
+end
+
+mean = sum/n
+stdev = Math.sqrt( (sum_of_squares - n * mean * mean)/(n - 1))
+
+benchmark_group = "#{RUBY_VERSION}-#{Dir.pwd.split('/').last}"
+
+current_branch = ENV["TRAVIS_PULL_REQUEST"] || `git rev-parse --abbrev-ref HEAD`.chomp
+p current_branch
+
+if current_branch == "master"
+  system "curl 'http://rspec-benchmarks.herokuapp.com/stats?time=#{mean}&deviation=#{stdev}&app=#{benchmark_group}'"
+else
+  system "curl 'http://rspec-benchmarks.herokuapp.com/stats_pr?time=#{mean}&deviation=#{stdev}&app=#{benchmark_group}&branch=#{current_branch}'"
+end
