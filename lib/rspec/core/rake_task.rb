@@ -98,9 +98,9 @@ module RSpec
           $stderr.puts failure_message if failure_message
         end
         
-        if fail_on_error && !success && verbose
+        if fail_on_error && !success
           report($stderr, "#{command} failed", verbose)
-          exit $?.exitstatus
+          exit($?.exitstatus)
         end
       end
 
