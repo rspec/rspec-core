@@ -92,13 +92,14 @@ module RSpec
         command = spec_command
 
         begin
-          puts command if verbose
+          report($stdout, command, verbose)
           success = system(command)
         rescue
-          puts failure_message if failure_message
+          $stderr.puts failure_message if failure_message
         end
-        if fail_on_error && !success
-          $stderr.puts "#{command} failed"
+        
+        if fail_on_error && !success && verbose
+          report($stderr, "#{command} failed", verbose)
           exit $?.exitstatus
         end
       end
@@ -125,6 +126,10 @@ module RSpec
 
       def blank
         lambda {|s| s.nil? || s == ""}
+      end
+      
+      def report(output, message, verbose)
+        output.puts(message) if verbose
       end
     end
   end
