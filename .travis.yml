@@ -11,6 +11,7 @@ rvm:
   - rbx-2.2.1
   - rbx
   - 2.0.0
+  - 2.1.0-rc1
 matrix:
   allow_failures:
     - rvm: rbx-2.2.1
