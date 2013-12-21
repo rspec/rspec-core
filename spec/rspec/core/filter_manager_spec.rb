@@ -165,7 +165,7 @@ module RSpec::Core
     describe "#inclusions#description" do
       it 'cleans up the description' do
         project_dir = File.expand_path('.')
-        expect(lambda { }.inspect).to include(project_dir) unless defined?(JRUBY_VERSION) && JRUBY_VERSION == '1.7.4'
+        expect(lambda { }.inspect).to include(project_dir) unless defined?(JRUBY_VERSION) && JRUBY_VERSION =~ /\A1\.7/
         expect(lambda { }.inspect).to include(' (lambda)') if RUBY_VERSION > '1.9'
         expect(lambda { }.inspect).to include('0x')
 
@@ -181,7 +181,7 @@ module RSpec::Core
     describe "#exclusions#description" do
       it 'cleans up the description' do
         project_dir = File.expand_path('.')
-        expect(lambda { }.inspect).to include(project_dir) unless defined?(JRUBY_VERSION) && JRUBY_VERSION == '1.7.4'
+        expect(lambda { }.inspect).to include(project_dir) unless defined?(JRUBY_VERSION) && JRUBY_VERSION =~ /\A1\.7/
         expect(lambda { }.inspect).to include(' (lambda)') if RUBY_VERSION > '1.9'
         expect(lambda { }.inspect).to include('0x')
 
