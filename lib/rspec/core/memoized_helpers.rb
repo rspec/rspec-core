@@ -229,7 +229,12 @@ EOS
           # We have to pass the block directly to `define_method` to
           # allow it to use method constructs like `super` and `return`.
           raise "#let or #subject called without a block" if block.nil?
-          MemoizedHelpers.module_for(self).send(:define_method, name, &block)
+          mod = MemoizedHelpers.module_for(self)
+          if mod.instance_methods(false).any? { |imethod_name| imethod_name.to_s == name.to_s }
+            mod.send(:undef_method, name)
+            undef_method(name)
+          end
+          mod.send(:define_method, name, &block)
 
           # Apply the memoization. The method has been defined in an ancestor
           # module so we can use `super` here to get the value.
