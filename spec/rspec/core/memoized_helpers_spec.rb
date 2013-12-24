@@ -53,6 +53,18 @@ module RSpec::Core
         expect(outer_subject_value).to eq([:parent_group])
         expect(inner_subject_value).to eq([:parent_group, :child_group])
       end
+
+      it "can be overriden without warnings in the same group" do
+        subject_value = nil
+
+        ExampleGroup.describe do
+          subject { :original }
+          subject { :overridden }
+          example { subject_value = subject }
+        end.run
+
+        expect(subject_value).to eq :overridden
+      end
     end
 
     describe "explicit subject" do
