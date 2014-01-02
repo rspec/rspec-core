@@ -204,8 +204,7 @@ module RSpec
           file_path, line_number = matching_line.match(/(.+?):(\d+)(|:\d+)/)[1..2]
 
           if File.exist?(file_path)
-            lines = defined?(Encoding) ? File.readlines(file_path, :encoding => 'BINARY')
-                                       : File.readlines(file_path)
+            lines = defined?(Encoding) ? File.readlines(file_path, :encoding => 'BINARY') : File.readlines(file_path)
             lines[line_number.to_i - 1] ||
               "Unable to find matching line in #{file_path}"
           else
