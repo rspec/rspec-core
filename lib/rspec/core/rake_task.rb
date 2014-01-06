@@ -84,7 +84,7 @@ module RSpec
         @ruby_opts, @rspec_opts = nil, nil, nil
         @verbose, @fail_on_error = true, true
 
-        @rspec_path = 'rspec'
+        @rspec_path = File.exists?('bin/rspec') ? 'bin/rspec' : 'rspec'
         @pattern    = './spec{,/*/**}/*_spec.rb'
       end
 
