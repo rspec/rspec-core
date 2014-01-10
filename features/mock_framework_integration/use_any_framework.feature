@@ -33,6 +33,14 @@ Feature: mock with an alternative framework
           def verify_expectors
             expectors.each {|d| d.verify}
           end
+
+          def setup!
+            @setup_done = true
+          end
+
+          def setup?
+            !!@setup_done
+          end
         end
 
         def initialize
@@ -65,7 +73,7 @@ Feature: mock with an alternative framework
 
         module RSpecAdapter
           def setup_mocks_for_rspec
-            # no setup necessary
+            Expector.setup!
           end
 
           def verify_mocks_for_rspec
@@ -88,6 +96,11 @@ Feature: mock with an alternative framework
       end
 
       describe Expector do
+        around do |example|
+          expect(Expector).to be_setup
+          example.run
+        end
+
         it "passes when message is received" do
           expector = Expector.new
           expector.expect(:foo)
