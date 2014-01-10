@@ -237,6 +237,7 @@ An error occurred #{context}
     private
 
       def with_around_each_hooks(&block)
+        @example_group_instance.setup_mocks_for_rspec
         if around_each_hooks.empty?
           yield
         else
@@ -277,7 +278,6 @@ An error occurred #{context}
       end
 
       def run_before_each
-        @example_group_instance.setup_mocks_for_rspec
         @example_group_class.hooks.run(:before, :each, self)
       end
 
