@@ -85,7 +85,7 @@ module RSpec
         @verbose, @fail_on_error = true, true
 
         @rspec_path = 'rspec'
-        @pattern    = './spec{,/*/**}/*_spec.rb'
+        @pattern    = './spec/**/*/*_spec.rb'
       end
 
       def run_task(verbose)
