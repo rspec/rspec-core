@@ -24,6 +24,11 @@ Breaking Changes for 3.0.0:
 * Remove support for deprecated `--configure` CLI option. (Myron Marston)
 * Remove support for deprecated `RSpec::Core::RakeTask#spec_opts=`.
   (Myron Marston)
+* An example group level `pending` block or `:pending` metadata now behaves the
+  same as a `pending` block inside an example: it will be executed and cause
+  a failure if it passes, otherwise it will be pending if it fails. The old
+  "never run" behaviour is still used when prefixing example/it/specify with an
+  `x`, or via a new `skip` method or `:skip` metadata option. (Xavier Shay)
 
 Enhancements:
 
@@ -41,6 +46,8 @@ Enhancements:
   pending. (Myron Marston)
 * Add `fdescribe` and `fcontext` as shortcuts to focus an example group.
   (Myron Marston)
+* Add `skip` method to not run any more of an example. (This behaviour is
+  identical to the old `pending` behaviour from RSpec 2.) (Xavier Shay)
 
 Bug Fixes:
 
