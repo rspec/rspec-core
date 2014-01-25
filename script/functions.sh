@@ -1,10 +1,10 @@
-# This file was generated on 2014-01-24T19:39:30-08:00 from the rspec-dev repo.
+# This file was generated on 2014-01-25T09:02:05-08:00 from the rspec-dev repo.
 # DO NOT modify it by hand as your changes will get lost the next time it is generated.
 
 # idea taken from: http://blog.headius.com/2010/03/jruby-startup-time-tips.html
 export JRUBY_OPTS='-X-C' # disable JIT since these processes are so short lived
 SPECS_HAVE_RUN_FILE=specs.out
-MAINTENENCE_BRANCH=`cat maintenence-branch`
+MAINTENANCE_BRANCH=`cat maintenance-branch`
 BUNDLE_INSTALL_FLAGS=`cat .travis.yml | grep bundler_args | tr -d '"' | grep -o " .*"`
 
 # Taken from:
@@ -59,7 +59,15 @@ function clone_repo {
 }
 
 function run_specs_and_record_done {
-  bin/rspec spec --backtrace --format progress --profile --format progress --out $SPECS_HAVE_RUN_FILE
+  local rspec_bin=bin/rspec
+
+  # rspec-core needs to run with a special script that loads simplecov first,
+  # so that it can instrument rspec-core's code before rspec-core has been loaded.
+  if [ -f script/rspec_with_simplecov ]; then
+    rspec_bin=script/rspec_with_simplecov
+  fi;
+
+  $rspec_bin spec --backtrace --format progress --profile --format progress --out $SPECS_HAVE_RUN_FILE
 }
 
 function run_cukes {
@@ -104,4 +112,3 @@ function run_spec_suite_for {
     popd
   fi;
 }
-
