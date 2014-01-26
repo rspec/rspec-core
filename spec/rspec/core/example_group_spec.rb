@@ -693,27 +693,49 @@ module RSpec::Core
       end
     end
 
-    %w[pending xit xspecify xexample].each do |method_name|
-      describe "::#{method_name}" do
-        before do
-          @group = ExampleGroup.describe
-          @group.send(method_name, "is pending") { }
-        end
+    %w[pending skip].each do |method_name|
+      describe ".#{method_name}" do
+        let(:group) { ExampleGroup.describe.tap {|x|
+          x.send(method_name, "is pending") { }
+        }}
 
         it "generates a pending example" do
-          @group.run
-          expect(@group.examples.first).to be_pending
+          group.run
+          expect(group.examples.first).to be_pending
         end
 
-        it "sets the pending message", :if => method_name == 'pending' do
-          @group.run
-          expect(@group.examples.first.metadata[:execution_result][:pending_message]).to eq(RSpec::Core::Pending::NO_REASON_GIVEN)
+        it "sets the pending message" do
+          group.run
+          expect(group.examples.first.metadata[:execution_result][:pending_message]).to eq(RSpec::Core::Pending::NO_REASON_GIVEN)
+        end
+      end
+    end
+
+    %w[xit xspecify xexample].each do |method_name|
+      describe ".#{method_name}" do
+        let(:group) { ExampleGroup.describe.tap {|x|
+          x.send(method_name, "is pending") { }
+        }}
+
+        it "generates a pending example" do
+          group.run
+          expect(group.examples.first).to be_pending
         end
 
-        it "sets the pending message", :unless => method_name == 'pending' do
-          @group.run
-          expect(@group.examples.first.metadata[:execution_result][:pending_message]).to eq("Temporarily disabled with #{method_name}")
+        it "sets the pending message" do
+          group.run
+          expect(group.examples.first.metadata[:execution_result][:pending_message]).to eq("Temporarily disabled with #{method_name}")
         end
+      end
+    end
+
+    describe '::pending' do
+      it 'shows upgrade warning' do
+        expect_warn_deprecation_with_call_site(
+          "example_group_spec.rb", __LINE__ + 3
+        )
+        group = ExampleGroup.describe
+        group.send(:pending, "is pending") { }
       end
     end
 

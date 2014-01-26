@@ -62,6 +62,22 @@ module RSpec
         def self.define_example_method(name, extra_options={})
           module_eval(<<-END_RUBY, __FILE__, __LINE__)
             def #{name}(desc=nil, *args, &block)
+              if #{name.inspect} == :pending
+                RSpec.warn_deprecation(<<-EOS.gsub(/^\s+\|/, ''))
+                  |The semantics of `RSpec::Core::ExampleGroup#pending` are changing in RSpec 3.
+                  |In RSpec 2.x, it caused the example to be skipped. In RSpec 3, the example will
+                  |still be run but is expected to fail, and will be marked as a failure (rather
+                  |than as pending) if the example passes, just like how `pending` with a block
+                  |from within an example already works.
+                  |
+                  |To keep the same skip semantics, change `pending` to `skip`.  Otherwise, if you
+                  |want the new RSpec 3 behavior, you can safely ignore this warning and continue
+                  |to upgrade to RSpec 3 without addressing it.
+                  |
+                  |Called from \#{CallerFilter.first_non_rspec_line}.
+                  |
+                EOS
+              end
               options = build_metadata_hash_from(args)
               options.update(:pending => RSpec::Core::Pending::NOT_YET_IMPLEMENTED) unless block
               options.update(#{extra_options.inspect})
@@ -108,6 +124,10 @@ module RSpec
         # Shortcut to define an example with :pending => true
         # @see example
         define_example_method :pending,  :pending => true
+        # Shortcut to define an example with :pending => true
+        # Backported from RSpec 3 to aid migration.
+        # @see example
+        define_example_method :skip,     :pending => true
         # Shortcut to define an example with :pending => 'Temporarily disabled with xexample'
         # @see example
         define_example_method :xexample, :pending => 'Temporarily disabled with xexample'
