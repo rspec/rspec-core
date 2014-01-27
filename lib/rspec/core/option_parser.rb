@@ -81,7 +81,7 @@ module RSpec::Core
         end
 
         parser.on('-d', '--debugger', 'Enable debugging.') do |o|
-          options[:debug] = true
+          options[:debug] = :cli
         end
 
         parser.on('--fail-fast', 'Abort the run on first failure.') do |o|
