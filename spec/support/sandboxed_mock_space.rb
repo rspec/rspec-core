@@ -1,6 +1,22 @@
 require 'rspec/mocks'
 
 module RSpec
+  module Mocks
+    Space.class_eval do
+      undef print_out_of_example_deprecation
+      def print_out_of_example_deprecation
+        # The simple "are you outside of an example" detection in rspec-mocks
+        # does not properly handle our dog fooding here in rspec core, where we define
+        # example groups and examples from within an example and run them.
+        # As a result, we get `SystemStackError` in a few specs that are mocking
+        # `RSpec.deprecate` and creating nested examples, but we don't care about
+        # this warning here in rspec-core.
+        #
+        # This redefintion silences it.
+      end
+    end
+  end
+
   module Core
     # Because rspec-core dog-foods itself, rspec-core's spec suite has
     # examples that define example groups and examples and run them. The
