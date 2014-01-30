@@ -6,16 +6,13 @@ module RSpec
     module Formatters
       class HtmlFormatter < BaseFormatter
 
-        def initialize(output)
-          super(output)
+        def initialize(handler, output)
+          super
+          handler.register *%w[start example_group_started start_dump example_started example_passed example_failed example_pending dump_summary]
           @example_group_number = 0
           @example_number = 0
           @header_red = nil
           @printer = HtmlPrinter.new(output)
-        end
-
-        def notifications
-          super + %w[start example_group_started start_dump example_started example_passed example_failed example_pending dump_summary]
         end
 
         def start(notification)

@@ -56,6 +56,28 @@ module RSpec::Core::Formatters
 
   # @api private
   #
+  class Handler
+    def initialize
+      @notifications = []
+    end
+    attr_reader :notifications
+
+    def register *notifications
+      @notifications += notifications
+    end
+
+    def legacy_formatter?
+      @notifications.empty? || inherited?
+    end
+
+    def inherited?
+      #stuck here
+      false
+    end
+  end
+
+  # @api private
+  #
   # `RSpec::Core::Formatters::Loader` is an internal class for
   # managing formatters used by a particular configuration. It is
   # not expected to be used directly, but only through the configuration
@@ -85,14 +107,21 @@ module RSpec::Core::Formatters
         built_in_formatter(formatter_to_use) ||
         custom_formatter(formatter_to_use) ||
         (raise ArgumentError, "Formatter '#{formatter_to_use}' unknown - maybe you meant 'documentation' or 'progress'?.")
-      formatter = formatter_class.new(*paths.map {|p| String === p ? file_at(p) : p})
 
-      if LegacyFormatter.can_detect?(formatter)
-        RSpec.warn_deprecation "The #{formatter.class} formatter uses the deprecated formatter interface.\n Formatter added at: #{::RSpec::CallerFilter.first_non_rspec_line}"
-        formatter = LegacyFormatter.new(formatter)
+      handler = Handler.new
+
+      if formatter_class.instance_method(:initialize).arity != 0
+        formatter = formatter_class.new(handler, *paths.map {|p| String === p ? file_at(p) : p})
+      else
+        formatter = formatter_class.new
       end
 
-      @reporter.register_listener formatter, *formatter.notifications
+      if handler.legacy_formatter?
+        RSpec.warn_deprecation "The #{formatter.class} formatter uses the deprecated formatter interface.\n Formatter added at: #{::RSpec::CallerFilter.first_non_rspec_line}"
+        formatter = LegacyFormatter.new(handler, formatter)
+      end
+
+      @reporter.register_listener formatter, *handler.notifications
       @formatters << formatter unless duplicate_formatter_exists?(formatter)
     end
 
