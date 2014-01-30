@@ -9,13 +9,10 @@ module RSpec
 
         attr_reader :output_hash
 
-        def initialize(output)
+        def initialize(handler, output)
           super
+          handler.register *%w[message dump_summary stop close dump_profile]
           @output_hash = {}
-        end
-
-        def notifications
-          super + %w[message dump_summary stop close dump_profile]
         end
 
         def message(notification)

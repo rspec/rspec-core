@@ -7,17 +7,14 @@ module RSpec
       class DeprecationFormatter
         attr_reader :count, :deprecation_stream, :summary_stream
 
-        def initialize(deprecation_stream, summary_stream)
+        def initialize(handler, deprecation_stream, summary_stream)
+          handler.register :deprecation, :deprecation_summary
           @deprecation_stream = deprecation_stream
           @summary_stream = summary_stream
           @seen_deprecations = Set.new
           @count = 0
         end
         alias :output :deprecation_stream
-
-        def notifications
-          %w[deprecation deprecation_summary]
-        end
 
         def printer
           @printer ||= case deprecation_stream

@@ -4,8 +4,9 @@ module RSpec
     module Formatters
       class ProgressFormatter < BaseTextFormatter
 
-        def notifications
-          super + %W[example_passed example_pending example_failed start_dump]
+        def initialize(handler, output)
+          super
+          handler.register *%W[example_passed example_pending example_failed start_dump]
         end
 
         def example_passed(notification)

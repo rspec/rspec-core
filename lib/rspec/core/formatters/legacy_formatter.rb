@@ -57,7 +57,6 @@ module RSpec
             super SeedNotification.new(seed, true) if defined?(super)
           end
 
-
           def start_dump
             super(NullNotification.instance) if defined?(super)
           end
@@ -83,32 +82,17 @@ module RSpec
           end
         end
 
-        # @api private
-        def self.can_detect?(formatter)
-          return true unless formatter.respond_to? :notifications
-          return true if formatter.respond_to?(:summary) && formatter.method(:summary).arity != 1
-          formatter.method(:notifications).owner != formatter.class
-        end
-
         # @api public
         #
         # @param formatter
-        def initialize(oldstyle_formatter)
+        def initialize(handler, oldstyle_formatter)
           @formatter = oldstyle_formatter
-          if @formatter.respond_to?(:notifications)
+          if handler.inherited?
             @formatter.class.class_eval do
               include LegacyInterface
             end
           end
-        end
-
-        # @api public
-        #
-        # This method is invoked during the setup phase to register
-        # a formatters with the reporter
-        #
-        def notifications
-          @notifications ||= NOTIFICATIONS.select { |m| @formatter.respond_to? m }
+          handler.register *NOTIFICATIONS.select { |m| @formatter.respond_to? m }
         end
 
         # @api public
