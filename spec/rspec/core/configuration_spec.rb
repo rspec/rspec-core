@@ -969,6 +969,12 @@ module RSpec::Core
         expect(lambda { config.add_formatter :progresss }).to raise_error(ArgumentError)
       end
 
+      it 'warns of deprecation for old document aliases' do
+        expect_deprecation_with_call_site __FILE__, __LINE__ + 1, 's'
+        config.add_formatter 's'
+        expect(config.formatters.first).to be_an_instance_of Formatters::DocumentationFormatter
+      end
+
       context "with a 2nd arg defining the output" do
         it "creates a file at that path and sets it as the output" do
           path = File.join(Dir.tmpdir, 'output.txt')
