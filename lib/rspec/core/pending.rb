@@ -1,7 +1,7 @@
 module RSpec
   module Core
     module Pending
-      class PendingDeclaredInExample < StandardError; end
+      class SkipDeclaredInExample < StandardError; end
 
       # If Test::Unit is loaed, we'll use its error as baseclass, so that Test::Unit
       # will report unmet RSpec expectations as failures rather than errors.
@@ -71,29 +71,30 @@ module RSpec
       #       it "does something", :pending => "something else getting finished" do
       #         # ...
       #       end
-      def pending(*args)
+      def pending(*args, &block)
         current_example = RSpec.current_example
 
         return self.class.before(:each) { pending(*args) } unless current_example
 
         options = args.last.is_a?(Hash) ? args.pop : {}
-        message = args.first || NO_REASON_GIVEN
 
         if options[:unless] || (options.has_key?(:if) && !options[:if])
           return block_given? ? yield : nil
         end
 
+        set_message! current_example, args
+
         current_example.metadata[:pending] = true
-        current_example.metadata[:execution_result][:pending_message] = message
-        current_example.execution_result[:pending_fixed] = false
+
         if block_given?
           begin
             no_failure = false
-            yield
+            block.call
             no_failure = true
             current_example.metadata[:pending] = false
           rescue Exception => e
             current_example.execution_result[:exception] = e
+            raise
           end
 
           if no_failure
@@ -101,7 +102,25 @@ module RSpec
             raise PendingExampleFixedError.new
           end
         end
-        raise PendingDeclaredInExample.new(message)
+      end
+
+      def skip(*args)
+        current_example = RSpec.current_example
+
+        return self.class.before(:each) { skip(*args) } unless current_example
+
+        set_message! current_example, args
+
+        current_example.metadata[:skip] = true
+
+        raise SkipDeclaredInExample
+      end
+
+      def set_message!(example, args)
+        message = args.first || NO_REASON_GIVEN
+
+        example.metadata[:execution_result][:pending_message] = message
+        example.execution_result[:pending_fixed] = false
       end
     end
   end

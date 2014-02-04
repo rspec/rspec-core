@@ -1456,6 +1456,5 @@ module RSpec::Core
         expect(value_2).to be(value_1)
       end
     end
-
   end
 end

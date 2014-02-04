@@ -119,7 +119,7 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
         end
 
         it "uses the file and line number of the example if no matcher ran" do
-          example = example_group.example { pending; expect(4).to eq(5) }
+          example = example_group.example { pending; fail }
           example_group.run
           expect(example.description).to match(/example at #{relative_path(__FILE__)}:#{__LINE__ - 2}/)
         end
@@ -487,6 +487,68 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
         end
         group.run
         expect(group.examples.first).to be_pending
+      end
+    end
+  end
+
+  describe "#skip" do
+    context "in the example" do
+      it "sets the example to skipped" do
+        group = RSpec::Core::ExampleGroup.describe do
+          example { skip }
+        end
+        group.run
+        expect(group.examples.first).to be_skipped
+      end
+
+      it "allows post-example processing in around hooks (see https://github.com/rspec/rspec-core/issues/322)" do
+        blah = nil
+        group = RSpec::Core::ExampleGroup.describe do
+          around do |example|
+            example.run
+            blah = :success
+          end
+          example { skip }
+        end
+        group.run
+        expect(blah).to be(:success)
+      end
+    end
+
+    context "in before(:each)" do
+      it "sets each example to skipped" do
+        group = RSpec::Core::ExampleGroup.describe do
+          before(:each) { skip }
+          example {}
+          example {}
+        end
+        group.run
+        expect(group.examples.first).to be_skipped
+        expect(group.examples.last).to be_skipped
+      end
+    end
+
+    context "in before(:all)" do
+      it "sets each example to pending" do
+        group = RSpec::Core::ExampleGroup.describe do
+          before(:all) { skip }
+          example {}
+          example {}
+        end
+        group.run
+        expect(group.examples.first).to be_skipped
+        expect(group.examples.last).to be_skipped
+      end
+    end
+
+    context "in around(:each)" do
+      it "sets the example to skipped" do
+        group = RSpec::Core::ExampleGroup.describe do
+          around(:each) { skip }
+          example {}
+        end
+        group.run
+        expect(group.examples.first).to be_skipped
       end
     end
   end
