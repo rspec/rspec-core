@@ -105,7 +105,7 @@ describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :isolat
     it "sets debug directly" do
       opts = config_options_object("--debug")
       config = RSpec::Core::Configuration.new
-      config.should_receive(:debug=).with(true)
+      config.should_receive(:debug=).with(:cli)
       opts.configure(config)
     end
 
@@ -224,8 +224,8 @@ describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :isolat
 
   describe "--debug, -d" do
     it "sets :debug => true" do
-      expect(parse_options("--debug")).to include(:debug => true)
-      expect(parse_options("-d")).to include(:debug => true)
+      expect(parse_options("--debug")).to include(:debug => :cli)
+      expect(parse_options("-d")).to include(:debug => :cli)
     end
   end
 

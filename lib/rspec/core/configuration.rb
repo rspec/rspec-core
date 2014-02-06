@@ -573,10 +573,13 @@ module RSpec
       end
 
       def debug=(bool)
-        if bool
-          # Usually this is called automatically by the --debug CLI option, so the
-          # deprecation message doesn't mention `RSpec::Core::Configuration#debug=`
+        if bool == :cli
           RSpec.deprecate("RSpec's built-in debugger support",
+                          :replacement => "a CLI option like `-rruby-debug` or `-rdebugger`",
+                          :call_site => nil)
+          bool = true
+        elsif bool
+          RSpec.deprecate("RSpec::Core::Configuration#debug=",
                           :replacement => "a CLI option like `-rruby-debug` or `-rdebugger`")
         else
           # ...but the only way to call this with a false value is to
