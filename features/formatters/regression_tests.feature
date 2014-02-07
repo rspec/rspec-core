@@ -51,6 +51,22 @@ Feature: Regression tests for legacy custom formatters
      And the output should contain "The RSpec::Instafail formatter uses the deprecated formatter interface"
      But the output should not contain any error backtraces
 
+  Scenario: Use rspec-extra-formatters JUnit formatter
+    When I run `rspec --require rspec-extra-formatters --format JUnitFormatter`
+    Then the output should contain:
+      """
+      <testsuite errors="0" failures="3" skipped="1" tests="6"
+      """
+     And the output should contain "The JUnitFormatter formatter uses the deprecated formatter interface"
+     But the output should not contain any error backtraces
+
+  @wip @announce
+  Scenario: Use rspec-extra-formatters Tap formatter
+    When I run `rspec --require rspec-extra-formatters --format TapFormatter`
+    Then the output should contain "TAP version 13"
+     And the output should contain "The TapFormatter formatter uses the deprecated formatter interface"
+     But the output should not contain any error backtraces
+
   @wip @announce
   Scenario: Use rspec-spinner formatter
     When I run `rspec --require rspec_spinner --format RspecSpinner::Spinner`
