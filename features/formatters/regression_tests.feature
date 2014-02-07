@@ -44,6 +44,12 @@ Feature: Regression tests for legacy custom formatters
      And the output should contain "6 examples, 3 failures, 1 pending"
      But the output should not contain any error backtraces
 
+  Scenario: Use rspec-instafail formatter
+    When I run `rspec --format RSpec::Instafail`
+    Then the output should contain "6 examples, 3 failures, 1 pending"
+     And the output should contain "The RSpec::Instafail formatter uses the deprecated formatter interface"
+     But the output should not contain any error backtraces
+
   @wip @announce
   Scenario: Use nyancat formatter
     When I run `rspec --format NyanCatFormatter`
