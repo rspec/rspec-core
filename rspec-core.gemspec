@@ -54,4 +54,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "fuubar",             "1.3.2"
   s.add_development_dependency "nyan-cat-formatter", "0.5.2"
   s.add_development_dependency "rspec-instafail",    "0.2.4"
+  s.add_development_dependency "rspec_spinner",      "2.0.0"
 end

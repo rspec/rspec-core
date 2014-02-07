@@ -52,6 +52,11 @@ Feature: Regression tests for legacy custom formatters
      But the output should not contain any error backtraces
 
   @wip @announce
+  Scenario: Use rspec-spinner formatter
+    When I run `rspec --require rspec_spinner --format RspecSpinner::Spinner`
+    Then the output should contain "TBD"
+
+  @wip @announce
   Scenario: Use nyancat formatter
     When I run `rspec --format NyanCatFormatter`
     Then the output should contain "TBD"
