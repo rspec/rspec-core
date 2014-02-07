@@ -79,13 +79,14 @@ module RSpec::Core::Formatters
     # @api private
     def initialize(reporter)
       @formatters = []
+      @formatter_added = false
       @reporter = reporter
     end
     attr_reader :formatters, :reporter
 
     # @api private
     def setup_default(output_stream, deprecation_stream)
-      if @formatters.empty?
+      unless @formatter_added
         add 'progress', output_stream
       end
       unless @formatters.any? { |formatter| DeprecationFormatter === formatter }
@@ -95,6 +96,7 @@ module RSpec::Core::Formatters
 
     # @api private
     def add(formatter_to_use, *paths)
+      @formatter_added = true
       formatter_class = find_formatter(formatter_to_use)
       formatter = formatter_class.new(*paths.map {|p| String === p ? file_at(p) : p})
 
