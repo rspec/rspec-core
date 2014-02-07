@@ -91,13 +91,13 @@ module RSpec
         # @api public
         #
         # @param formatter
-        def initialize(oldstyle_formatter)
-          @formatter = oldstyle_formatter
-          if @formatter.class.ancestors.include?(BaseFormatter)
-            @formatter.class.class_eval do
+        def initialize(formatter_class, *args)
+          if formatter_class.ancestors.include?(BaseFormatter)
+            formatter_class.class_eval do
               include LegacyInterface
             end
           end
+          @formatter = formatter_class.new(*args)
         end
 
         # @api public
