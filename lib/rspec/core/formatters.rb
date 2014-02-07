@@ -1,5 +1,3 @@
-require 'rspec/core/formatters/legacy_formatter'
-
 # ## Built-in Formatters
 #
 # * progress (default) - prints dots for passing examples, `F` for failures, `*` for pending
@@ -55,6 +53,7 @@ require 'rspec/core/formatters/legacy_formatter'
 module RSpec::Core::Formatters
   autoload :DocumentationFormatter, 'rspec/core/formatters/documentation_formatter'
   autoload :HtmlFormatter,          'rspec/core/formatters/html_formatter'
+  autoload :LegacyFormatter,        'rspec/core/formatters/legacy_formatter'
   autoload :ProgressFormatter,      'rspec/core/formatters/progress_formatter'
   autoload :JsonFormatter,          'rspec/core/formatters/json_formatter'
 
