@@ -45,11 +45,6 @@ Feature: Regression tests for legacy custom formatters
      But the output should not contain any error backtraces
 
   @wip @announce
-  Scenario: Use fivemat formatter
-    When I run `rspec --format Fivemat`
-    Then the output should contain "TBD"
-
-  @wip @announce
   Scenario: Use nyancat formatter
     When I run `rspec --format NyanCatFormatter`
     Then the output should contain "TBD"
