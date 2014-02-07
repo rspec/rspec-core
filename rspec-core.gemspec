@@ -53,4 +53,5 @@ Gem::Specification.new do |s|
   # For legacy custom formatter regression tests
   s.add_development_dependency "fuubar",             "1.3.2"
   s.add_development_dependency "nyan-cat-formatter", "0.5.2"
+  s.add_development_dependency "rspec-instafail",    "0.2.4"
 end
