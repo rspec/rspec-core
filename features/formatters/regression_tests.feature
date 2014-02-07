@@ -42,6 +42,7 @@ Feature: Regression tests for legacy custom formatters
     When I run `rspec --format Fuubar`
     Then the output should contain "Progress: |============"
      And the output should contain "6 examples, 3 failures, 1 pending"
+     And the output should contain "The Fuubar formatter uses the deprecated formatter interface"
      But the output should not contain any error backtraces
 
   Scenario: Use rspec-instafail formatter
