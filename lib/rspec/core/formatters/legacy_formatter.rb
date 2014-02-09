@@ -17,6 +17,35 @@ module RSpec
                            dump_failures dump_summary seed close stop deprecation deprecation_summary]
 
         module LegacyInterface
+          OUR_FORMATTERS = [ BaseFormatter, BaseTextFormatter, DeprecationFormatter,
+                DocumentationFormatter, HtmlFormatter, JsonFormatter, ProgressFormatter ]
+
+          def self.append_features(other)
+            # stash the methods from the legacy formatter that conflict
+            clashing_methods = (self.instance_methods & other.instance_methods).
+                map    { |name| [name,other.instance_method(name)] }.
+                reject { |name, meth| OUR_FORMATTERS.include? meth.owner }
+            clashing_methods.each do |name, _|
+              other.__send__ :undef_method, name
+            end
+
+            # implement all of our methods
+            super
+
+            # restore the clashing methods on top of ours
+            override_module = Module.new do
+              class << self
+                attr_accessor :__clashing_methods
+              end
+              def self.included(other)
+                __clashing_methods.each do |(name, meth)|
+                  other.send :define_method, name, meth
+                end
+              end
+            end
+            override_module.__clashing_methods = clashing_methods
+            other.send :include, override_module
+          end
 
           def start(count)
             super Notifications::CountNotification.new(count)
