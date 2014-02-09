@@ -1,4 +1,5 @@
 require 'rspec/core/formatters/helpers'
+require 'rspec/core/formatters/base_formatter'
 require 'stringio'
 
 module RSpec
@@ -16,6 +17,44 @@ module RSpec
                            dump_failures dump_summary seed close stop deprecation deprecation_summary]
 
         module LegacyInterface
+          def self.our_formatters
+            formatters = []
+            formatters << BaseFormatter          if defined?(BaseFormatter)
+            formatters << BaseTextFormatter      if defined?(BaseTextFormatter)
+            formatters << DeprecationFormatter   if defined?(DeprecationFormatter)
+            formatters << DocumentationFormatter if defined?(DocumentationFormatter)
+            formatters << HtmlFormatter          if defined?(HtmlFormatter)
+            formatters << JsonFormatter          if defined?(JsonFormatter)
+            formatters << ProgressFormatter      if defined?(ProgressFormatter)
+            formatters
+          end
+
+          def self.append_features(other)
+            # stash the methods from the legacy formatter that conflict
+            clashing_methods = (self.instance_methods & other.instance_methods).
+                map    { |name| [name,other.instance_method(name)] }.
+                reject { |name, meth| our_formatters.include? meth.owner }
+            clashing_methods.each do |name, meth|
+              meth.owner.__send__ :remove_method, name
+            end
+
+            # implement all of our methods
+            super
+
+            # restore the clashing methods on top of ours
+            override_module = Module.new do
+              class << self
+                attr_accessor :__clashing_methods
+              end
+              def self.included(other)
+                __clashing_methods.each do |(name, meth)|
+                  other.send :define_method, name, meth
+                end
+              end
+            end
+            override_module.__clashing_methods = clashing_methods
+            other.send :include, override_module
+          end
 
           def start(count)
             super Notifications::CountNotification.new(count)
@@ -86,18 +125,35 @@ module RSpec
           def stop
             super(Notifications::NullNotification) if defined?(super)
           end
+
+          def summary_line(example_count, failure_count, pending_count)
+            summary = pluralize(example_count, "example")
+            summary << ", " << pluralize(failure_count, "failure")
+            summary << ", #{pending_count} pending" if pending_count > 0
+            summary
+          end
+
+          def colorise_summary(summary)
+            if failure_count > 0
+              color(summary, RSpec.configuration.failure_color)
+            elsif pending_count > 0
+              color(summary, RSpec.configuration.pending_color)
+            else
+              color(summary, RSpec.configuration.success_color)
+            end
+          end
         end
 
         # @api public
         #
         # @param formatter
-        def initialize(oldstyle_formatter)
-          @formatter = oldstyle_formatter
-          if @formatter.class.ancestors.include?(BaseFormatter)
-            @formatter.class.class_eval do
+        def initialize(formatter_class, *args)
+          if formatter_class.ancestors.include?(BaseFormatter)
+            formatter_class.class_eval do
               include LegacyInterface
             end
           end
+          @formatter = formatter_class.new(*args)
         end
 
         # @api public
