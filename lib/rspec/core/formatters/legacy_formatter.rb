@@ -34,8 +34,8 @@ module RSpec
             clashing_methods = (self.instance_methods & other.instance_methods).
                 map    { |name| [name,other.instance_method(name)] }.
                 reject { |name, meth| our_formatters.include? meth.owner }
-            clashing_methods.each do |name, _|
-              other.__send__ :undef_method, name
+            clashing_methods.each do |name, meth|
+              meth.owner.__send__ :remove_method, name
             end
 
             # implement all of our methods
