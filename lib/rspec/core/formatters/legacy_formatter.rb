@@ -87,6 +87,23 @@ module RSpec
           def stop
             super(Notifications::NullNotification) if defined?(super)
           end
+
+          def summary_line(example_count, failure_count, pending_count)
+            summary = pluralize(example_count, "example")
+            summary << ", " << pluralize(failure_count, "failure")
+            summary << ", #{pending_count} pending" if pending_count > 0
+            summary
+          end
+
+          def colorise_summary(summary)
+            if failure_count > 0
+              color(summary, RSpec.configuration.failure_color)
+            elsif pending_count > 0
+              color(summary, RSpec.configuration.pending_color)
+            else
+              color(summary, RSpec.configuration.success_color)
+            end
+          end
         end
 
         # @api private
