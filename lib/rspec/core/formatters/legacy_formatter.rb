@@ -17,14 +17,23 @@ module RSpec
                            dump_failures dump_summary seed close stop deprecation deprecation_summary]
 
         module LegacyInterface
-          OUR_FORMATTERS = [ BaseFormatter, BaseTextFormatter, DeprecationFormatter,
-                DocumentationFormatter, HtmlFormatter, JsonFormatter, ProgressFormatter ]
+          def self.our_formatters
+            formatters = []
+            formatters << BaseFormatter          if defined?(BaseFormatter)
+            formatters << BaseTextFormatter      if defined?(BaseTextFormatter)
+            formatters << DeprecationFormatter   if defined?(DeprecationFormatter)
+            formatters << DocumentationFormatter if defined?(DocumentationFormatter)
+            formatters << HtmlFormatter          if defined?(HtmlFormatter)
+            formatters << JsonFormatter          if defined?(JsonFormatter)
+            formatters << ProgressFormatter      if defined?(ProgressFormatter)
+            formatters
+          end
 
           def self.append_features(other)
             # stash the methods from the legacy formatter that conflict
             clashing_methods = (self.instance_methods & other.instance_methods).
                 map    { |name| [name,other.instance_method(name)] }.
-                reject { |name, meth| OUR_FORMATTERS.include? meth.owner }
+                reject { |name, meth| our_formatters.include? meth.owner }
             clashing_methods.each do |name, _|
               other.__send__ :undef_method, name
             end
