@@ -1859,5 +1859,28 @@ module RSpec::Core
       end
     end
 
+    describe '#show_failures_in_pending_blocks' do
+      specify 'reader is deprecated' do
+        expect_warn_deprecation_with_call_site(__FILE__, __LINE__ + 3,
+          /show_failures_in_pending_blocks/)
+
+        config.show_failures_in_pending_blocks
+      end
+
+      specify 'predicate is deprecated' do
+        expect_warn_deprecation_with_call_site(__FILE__, __LINE__ + 3,
+          /show_failures_in_pending_blocks/)
+
+        config.show_failures_in_pending_blocks?
+      end
+
+      specify 'writer is deprecated' do
+        expect_warn_deprecation_with_call_site(__FILE__, __LINE__ + 3,
+          /show_failures_in_pending_blocks/)
+
+        config.show_failures_in_pending_blocks = true
+      end
+    end
+
   end
 end

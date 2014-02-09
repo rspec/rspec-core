@@ -202,7 +202,7 @@ describe RSpec::Core::Formatters::BaseTextFormatter do
     end
 
     context "with show_failures_in_pending_blocks setting enabled" do
-      before { RSpec.configuration.stub(:show_failures_in_pending_blocks?) { true } }
+      before { RSpec.configuration.instance_variable_set(:@show_failures_in_pending_blocks, true) }
 
       it "preserves formatting" do
         group.example("example name") { pending { expect("this").to eq("that") } }
