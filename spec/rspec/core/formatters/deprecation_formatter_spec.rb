@@ -169,6 +169,31 @@ module RSpec::Core::Formatters
           expect(deprecation_stream.string).to eq expected.chomp
         end
 
+        it "limits deprecations warnings by optional type" do
+          5.times {|i|
+            formatter.deprecation(
+              :deprecated => "i_am_deprecated #{i}",
+              :call_site => "foo.rb:#{i + 1}",
+              :type => 'i_am_deprecated'
+            )
+          }
+          formatter.deprecation_summary
+
+          expected = <<-EOS.gsub(/^\s+\|/, '')
+            |
+            |Deprecation Warnings:
+            |
+            |i_am_deprecated 0 is deprecated. Called from foo.rb:1.
+            |i_am_deprecated 1 is deprecated. Called from foo.rb:2.
+            |i_am_deprecated 2 is deprecated. Called from foo.rb:3.
+            |Too many uses of deprecated 'i_am_deprecated'. Set config.deprecation_stream to a File for full output.
+            |
+            |#{DeprecationFormatter::RAISE_ERROR_CONFIG_NOTICE}
+          EOS
+          expect(deprecation_stream.string).to eq expected.chomp
+        end
+
+
         it "limits :message deprecation warnings with different callsites after 3 calls" do
           5.times do |n|
             message = "This is a long string with some callsite info: /path/#{n}/to/some/file.rb:2#{n}3.  And some more stuff can come after."

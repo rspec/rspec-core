@@ -83,7 +83,7 @@ module RSpec
         GeneratedDeprecationMessage = Struct.new(:type) do
           def initialize(data)
             @data = data
-            super data[:deprecated]
+            super data.fetch(:type, data[:deprecated])
           end
 
           def to_s
