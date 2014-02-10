@@ -190,7 +190,27 @@ module RSpec
 
       # When a block passed to pending fails (as expected), display the failure
       # without reporting it as a failure (default: false).
-      add_setting :show_failures_in_pending_blocks
+      def show_failures_in_pending_blocks=(value)
+        RSpec.warn_deprecation(<<-EOS.gsub(/^\s+\|/, ''))
+          |RSpec.configuration.show_failures_in_pending_blocks is being removed
+          |with no replacement. Called from #{CallerFilter.first_non_rspec_line}.
+        EOS
+
+        @show_failures_in_pending_blocks = value
+      end
+
+      def show_failures_in_pending_blocks
+        RSpec.warn_deprecation(<<-EOS.gsub(/^\s+\|/, ''))
+          |RSpec.configuration.show_failures_in_pending_blocks is being removed
+          |with no replacement. Called from #{CallerFilter.first_non_rspec_line}.
+        EOS
+
+        @show_failures_in_pending_blocks
+      end
+
+      def show_failures_in_pending_blocks?
+        !!show_failures_in_pending_blocks
+      end
 
       # Convert symbols to hashes with the symbol as a key with a value of
       # `true` (default: false).

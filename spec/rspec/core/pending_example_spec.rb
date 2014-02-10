@@ -55,6 +55,19 @@ describe "an example" do
       example.run(group.new, double.as_null_object)
       expect(example).to be_pending_with(RSpec::Core::Pending::NO_REASON_GIVEN)
     end
+
+    it 'shows upgrade warning' do
+      expect_warn_deprecation_with_call_site(
+        "pending_example_spec.rb", __LINE__ + 4
+      )
+      group = RSpec::Core::ExampleGroup.describe('group') do
+        it "does something" do
+          pending
+        end
+      end
+      example = group.examples.first
+      example.run(group.new, double.as_null_object)
+    end
   end
 
   context "with no docstring" do
@@ -114,6 +127,19 @@ describe "an example" do
       example = group.examples.first
       example.run(group.new, double.as_null_object)
       example
+    end
+
+    it 'shows upgrade warning' do
+      expect_warn_deprecation_with_call_site(
+        "pending_example_spec.rb", __LINE__ + 4
+      )
+      group = RSpec::Core::ExampleGroup.describe('group') do
+        it "does something" do
+          pending {}
+        end
+      end
+      example = group.examples.first
+      example.run(group.new, double.as_null_object)
     end
 
     context "that fails" do

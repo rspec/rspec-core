@@ -71,7 +71,32 @@ module RSpec
       #       it "does something", :pending => "something else getting finished" do
       #         # ...
       #       end
-      def pending(*args)
+      def pending(*args, &block)
+        RSpec.warn_deprecation(<<-EOS.gsub(/^\s+\|/, ''))
+          |The semantics of `RSpec::Core::Pending#pending` are changing in
+          |RSpec 3.  In RSpec 2.x, it caused the example to be skipped. In
+          |RSpec 3, the rest of the example will still be run but is expected
+          |to fail, and will be marked as a failure (rather than as pending)
+          |if the example passes.
+          |
+          |Any passed block will no longer be executed. This feature is being
+          |removed since it was semantically inconsistent, and the behaviour it
+          |offered is being made available with the other ways of marking an
+          |example pending.
+          |
+          |To keep the same skip semantics, change `pending` to `skip`.
+          |Otherwise, if you want the new RSpec 3 behavior, you can safely
+          |ignore this warning and continue to upgrade to RSpec 3 without
+          |addressing it.
+          |
+          |Called from #{CallerFilter.first_non_rspec_line}.
+          |
+        EOS
+
+        pending_no_warning(*args, &block)
+      end
+
+      def pending_no_warning(*args)
         return self.class.before(:each) { pending(*args) } unless RSpec.current_example
 
         options = args.last.is_a?(Hash) ? args.pop : {}
@@ -103,6 +128,9 @@ module RSpec
         end
         raise PendingDeclaredInExample.new(message)
       end
+
+      # Backport from RSpec 3 to aid in upgrading.
+      alias_method :skip, :pending_no_warning
     end
 
     # Alias the error for compatibility with extension gems (e.g. formatters)

@@ -144,8 +144,10 @@ module RSpec
               output.puts pending_color("  #{pending_example.full_description}")
               output.puts detail_color("    # #{pending_example.execution_result[:pending_message]}")
               output.puts detail_color("    # #{format_caller(pending_example.location)}")
+              # instance_variable_get is a hack to avoid a deprecation warning,
+              # it's only for 2.99.
               if pending_example.execution_result[:exception] \
-                && RSpec.configuration.show_failures_in_pending_blocks?
+                && RSpec.configuration.instance_variable_get(:@show_failures_in_pending_blocks)
                 dump_failure_info(pending_example)
                 dump_backtrace(pending_example)
               end
