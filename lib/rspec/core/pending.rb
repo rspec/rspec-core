@@ -62,6 +62,14 @@ module RSpec
           Pending.mark_pending! current_example, args.first
         else
           self.class.before(:each) { pending(*args) }
+
+          # Since there is no current example, we are in an :all callback. In
+          # the case of failure of that callback, each example is "fake"
+          # executed (see Example#fail_with_exception) and failed. We need to
+          # be able to hook into that call to mark the example as pending.
+          internal_hooks_for_group_callbacks << lambda do |example|
+            Pending.mark_pending! example, args.first
+          end
         end
       end
 

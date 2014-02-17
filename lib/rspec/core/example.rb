@@ -241,8 +241,9 @@ module RSpec
       #
       # Used internally to set an exception and fail without actually executing
       # the example when an exception is raised in before(:all).
-      def fail_with_exception(reporter, exception)
+      def fail_with_exception(reporter, exception, before)
         start(reporter)
+        before.each {|x| x.call(self) }
         set_exception(exception)
         finish(reporter)
       end

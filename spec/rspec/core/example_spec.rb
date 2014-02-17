@@ -485,8 +485,6 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
       end
 
       it 'sets example to pending when failure occurs in before(:all)' do
-        pending("Unimplemented")
-
         group = RSpec::Core::ExampleGroup.describe do
           before(:all) { pending; fail }
           example {}
