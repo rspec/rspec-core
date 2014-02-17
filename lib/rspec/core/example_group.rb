@@ -20,6 +20,13 @@ module RSpec
       extend SharedExampleGroup
 
       # @private
+      attr_reader :internal_hooks_for_group_callbacks
+
+      def initialize
+        @internal_hooks_for_group_callbacks = []
+      end
+
+      # @private
       def self.world
         RSpec.world
       end
@@ -427,13 +434,14 @@ module RSpec
         reporter.example_group_started(self)
 
         begin
-          run_before_all_hooks(new)
+          context = new
+          run_before_all_hooks(context)
           result_for_this_group = run_examples(reporter)
           results_for_descendants = ordering_strategy.order(children).map { |child| child.run(reporter) }.all?
           result_for_this_group && results_for_descendants
         rescue Exception => ex
           RSpec.wants_to_quit = true if fail_fast?
-          fail_filtered_examples(ex, reporter)
+          fail_filtered_examples(ex, reporter, context.internal_hooks_for_group_callbacks)
         ensure
           run_after_all_hooks(new)
           before_all_ivars.clear
@@ -470,12 +478,14 @@ module RSpec
       end
 
       # @private
-      def self.fail_filtered_examples(exception, reporter)
-        filtered_examples.each { |example| example.fail_with_exception(reporter, exception) }
+      def self.fail_filtered_examples(exception, reporter, before)
+        filtered_examples.each do |example|
+          example.fail_with_exception(reporter, exception, before)
+        end
 
         children.each do |child|
           reporter.example_group_started(child)
-          child.fail_filtered_examples(exception, reporter)
+          child.fail_filtered_examples(exception, reporter, before)
           reporter.example_group_finished(child)
         end
         false
