@@ -78,11 +78,12 @@ module RSpec
             store(:line_number, line_number)
           when :execution_result
             store(:execution_result, {})
-          when :describes, :described_class
+          when :describes, :described_class, :described_module
             klass = described_class
             store(:described_class, klass)
             # TODO (2011-11-07 DC) deprecate :describes as a key
             store(:describes, klass)
+            store(:described_module, klass)
           when :full_description
             store(:full_description, full_description)
           when :description
@@ -142,7 +143,7 @@ module RSpec
 
         def described_class
           container_stack.each do |g|
-            [:described_class, :describes].each do |key|
+            [:described_class, :described_module, :describes].each do |key|
               if g.has_key?(key)
                 value = g[key]
                 return value unless value.nil?

@@ -260,7 +260,7 @@ module RSpec
         end
       end
 
-      [:described_class, :describes].each do |key|
+      [:described_class, :described_module, :describes].each do |key|
         describe key do
           context "with a String" do
             it "returns nil" do

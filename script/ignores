@@ -15,6 +15,7 @@ lib/rspec/core/configuration.rb:      alias_method :filter, :inclusion_filter
 lib/rspec/core/example.rb:      alias_method :pending?, :pending
 lib/rspec/core/example_group.rb:        alias_method :display_name, :description
 lib/rspec/core/example_group.rb:        alias_method :describes, :described_class
+lib/rspec/core/example_group.rb:        alias_method :described_module, :described_class
 lib/rspec/core/example_group.rb:        # Works like `alias_method :name, :example` with the added benefit of
 lib/rspec/core/example_group.rb:        # Works like `alias_method :name, :it_behaves_like` with the added
 lib/rspec/core/example_group.rb:        alias_method :context, :describe

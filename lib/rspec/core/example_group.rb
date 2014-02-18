@@ -48,6 +48,7 @@ module RSpec
         alias_method :display_name, :description
         # @private
         alias_method :describes, :described_class
+        alias_method :described_module, :described_class
 
         # @private
         # @macro [attach] define_example_method
