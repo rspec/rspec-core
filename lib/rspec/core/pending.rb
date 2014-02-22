@@ -1,7 +1,14 @@
 module RSpec
   module Core
     module Pending
-      class PendingDeclaredInExample < StandardError; end
+      class SkipDeclaredInExample < StandardError
+        attr_reader :argument
+
+        def initialize(argument)
+          super(argument.to_s)
+          @argument = argument
+        end
+      end
 
       # If Test::Unit is loaed, we'll use its error as baseclass, so that Test::Unit
       # will report unmet RSpec expectations as failures rather than errors.
@@ -126,11 +133,20 @@ module RSpec
             raise PendingExampleFixedError.new
           end
         end
-        raise PendingDeclaredInExample.new(message)
+        raise SkipDeclaredInExample.new(message)
       end
 
       # Backport from RSpec 3 to aid in upgrading.
       alias_method :skip, :pending_no_warning
+
+      def self.const_missing(name)
+        return super unless name == :PendingDeclaredInExample
+
+        RSpec.deprecate("RSpec::Core::PendingDeclaredInExample",
+          :replacement => "RSpec::Core::Pending::SkipDeclaredInExample")
+
+        SkipDeclaredInExample
+      end
     end
 
     # Alias the error for compatibility with extension gems (e.g. formatters)
@@ -138,7 +154,9 @@ module RSpec
     def self.const_missing(name)
       return super unless name == :PendingExampleFixedError
 
-      RSpec.deprecate("RSpec::Core::PendingExampleFixedError", :replacement => "RSpec::Core::Pending::PendingExampleFixedError")
+      RSpec.deprecate("RSpec::Core::PendingExampleFixedError",
+        :replacement => "RSpec::Core::Pending::PendingExampleFixedError")
+
       Pending::PendingExampleFixedError
     end
   end
