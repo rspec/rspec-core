@@ -112,7 +112,7 @@ module RSpec
               begin
                 run_before_each
                 @example_group_instance.instance_eval_with_args(self, &@example_block)
-              rescue Pending::PendingDeclaredInExample => e
+              rescue Pending::SkipDeclaredInExample => e
                 @pending_declared_in_example = e.message
               rescue Exception => e
                 set_exception(e)
