@@ -20,6 +20,12 @@ module RSpec
       #   'spec/**/*_spec.rb'
       attr_accessor :pattern
 
+      # Tags to include or exclude.
+      #
+      # default:
+      #   []
+      attr_accessor :tags
+
       # Whether or not to fail Rake when an error occurs (typically when examples fail).
       #
       # default:
@@ -74,6 +80,7 @@ module RSpec
 
         @rspec_path = 'rspec'
         @pattern    = './spec{,/*/**}/*_spec.rb'
+        @tags       = []
       end
 
       def run_task(verbose)
@@ -101,11 +108,16 @@ module RSpec
         end
       end
 
+      def tags
+        @tags.each.map { |tag| "--tag #{tag}" }
+      end
+
       def spec_command
         cmd_parts = []
         cmd_parts << RUBY
         cmd_parts << ruby_opts
         cmd_parts << "-S" << rspec_path
+        cmd_parts << tags unless tags.empty?
         cmd_parts << files_to_run
         cmd_parts << rspec_opts
         cmd_parts.flatten.reject(&blank).join(" ")

@@ -46,6 +46,21 @@ module RSpec::Core
       end
     end
 
+    describe "tags" do
+      context "without tags" do
+        it "does not render --tag option", focus: true do
+          expect(spec_command).to_not match(/--tag/)
+        end
+      end
+
+      context "with two tags" do
+        it "renders --tag options", focus: true do
+          task.tags = %w[tag1 tag2]
+          expect(spec_command).to match(/^#{ruby} -S rspec --tag tag1 --tag tag2/)
+        end
+      end
+    end
+
     context "with rspec_opts" do
       it "adds the rspec_opts" do
         task.rspec_opts = "-Ifoo"
