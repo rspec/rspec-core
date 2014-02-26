@@ -72,6 +72,7 @@ module RSpec
 
             expect(actual_doc.inner_html).to eq(expected_doc.inner_html)
 
+            expect(backtrace_lines).to_not be_empty
             backtrace_lines.each do |backtrace_line|
               expect(backtrace_line['href']).to include("txmt://open?url=")
             end
