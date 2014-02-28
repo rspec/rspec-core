@@ -1,5 +1,5 @@
-### 2.14.8 Development
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.14.7...master)
+### 2.14.8 / 2014-02-27
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.14.7...v2.14.8)
 
 Bug fixes:
 
