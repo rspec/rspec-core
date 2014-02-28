@@ -45,7 +45,7 @@ Feature: read command line configuration options from files
       """ruby
       describe "formatter set in custom options file" do
         it "sets formatter" do
-          RSpec.configuration.formatters.first.
+          RSpec.configuration.formatters[1].
             should be_a(RSpec::Core::Formatters::DocumentationFormatter)
         end
       end
@@ -82,7 +82,7 @@ Feature: read command line configuration options from files
       """ruby
       describe "formatter" do
         it "is set to documentation" do
-          RSpec.configuration.formatters.first.should be_an(RSpec::Core::Formatters::DocumentationFormatter)
+          RSpec.configuration.formatters[1].should be_an(RSpec::Core::Formatters::DocumentationFormatter)
         end
       end
       """

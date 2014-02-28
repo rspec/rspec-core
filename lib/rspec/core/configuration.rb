@@ -670,7 +670,7 @@ EOM
           (raise ArgumentError, "Formatter '#{formatter_to_use}' unknown - maybe you meant 'documentation' or 'progress'?.")
 
         paths << output_stream if paths.empty?
-        formatters << formatter_class.new(*paths.map {|p| String === p ? file_at(p) : p})
+        formatters << formatter_class.new(*files_or_strings_from(*paths))
       end
 
       alias_method :formatter=, :add_formatter
@@ -682,7 +682,7 @@ EOM
       def reporter
         @reporter ||= begin
                         add_formatter('progress') if formatters.empty?
-                        add_formatter(RSpec::Core::Formatters::DeprecationFormatter, deprecation_stream, output_stream)
+                        @formatters.unshift RSpec::Core::Formatters::DeprecationFormatter.new(*files_or_strings_from(deprecation_stream, output_stream))
                         Reporter.new(*formatters)
                       end
       end
@@ -1351,6 +1351,10 @@ MESSAGE
       def file_at(path)
         FileUtils.mkdir_p(File.dirname(path))
         File.new(path, 'w')
+      end
+
+      def files_or_strings_from(*paths)
+        paths.map {|p| String === p ? file_at(p) : p}
       end
 
       def order_and_seed_from_seed(value, force = false)
