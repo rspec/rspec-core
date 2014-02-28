@@ -91,23 +91,15 @@ module RSpec::Core::Formatters
         add default_formatter, output_stream
       end
       unless @formatters.any? { |formatter| DeprecationFormatter === formatter }
-        add DeprecationFormatter, deprecation_stream, output_stream
+        formatter = setup(DeprecationFormatter, deprecation_stream, output_stream)
+        @formatters.unshift formatter unless duplicate_formatter_exists?(formatter)
       end
     end
 
     # @api private
     def add(formatter_to_use, *paths)
       formatter_class = find_formatter(formatter_to_use)
-
-      args = paths.map { |p| String === p ? file_at(p) : p }
-
-      if !Loader.formatters[formatter_class].nil?
-        formatter = formatter_class.new(*args)
-        @reporter.register_listener formatter, *notifications_for(formatter_class)
-      else
-        formatter = LegacyFormatter.new(formatter_class, *args)
-        @reporter.register_listener formatter, *formatter.notifications
-      end
+      formatter = setup(formatter_class, *paths)
 
       @formatters << formatter unless duplicate_formatter_exists?(formatter)
       if formatter.is_a?(LegacyFormatter)
@@ -118,6 +110,20 @@ module RSpec::Core::Formatters
     end
 
   private
+
+    def setup(formatter_class, *paths)
+      args = paths.map { |p| String === p ? file_at(p) : p }
+
+      if !Loader.formatters[formatter_class].nil?
+        formatter = formatter_class.new(*args)
+        @reporter.register_listener formatter, *notifications_for(formatter_class)
+      else
+        formatter = LegacyFormatter.new(formatter_class, *args)
+        @reporter.register_listener formatter, *formatter.notifications
+      end
+
+      formatter
+    end
 
     def find_formatter(formatter_to_use)
       built_in_formatter(formatter_to_use) ||
