@@ -102,7 +102,7 @@ Deprecations
 ### 2.14.8 / 2014-02-27
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.14.7...v2.14.8)
 
-bug fixes:
+Bug fixes:
 
 * fix regression with the `textmateformatter` that prevented backtrace links
   from being clickable. (Stefan Daschek)
