@@ -104,7 +104,7 @@ Deprecations
 
 Bug fixes:
 
-* fix regression with the `textmateformatter` that prevented backtrace links
+* Fix regression with the `textmateformatter` that prevented backtrace links
   from being clickable. (Stefan Daschek)
 
 ### 2.14.7 / 2013-10-29
