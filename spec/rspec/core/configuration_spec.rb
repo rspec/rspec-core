@@ -835,21 +835,31 @@ module RSpec::Core
       end
 
       context 'when another formatter has been set' do
-        it 'does not get used' do
+        before do
           config.default_formatter = 'doc'
           config.add_formatter 'progress'
+        end
 
+        it 'does not get used' do
           expect(used_formatters).to include(an_instance_of Formatters::ProgressFormatter)
           expect(used_formatters).not_to include(an_instance_of Formatters::DocumentationFormatter)
+        end
+
+        it 'still puts the deprecation formatter first' do
+          expect(used_formatters.first).to be_an_instance_of Formatters::DeprecationFormatter
         end
       end
 
       context 'when no other formatter has been set' do
-        it 'gets used' do
-          config.default_formatter = 'doc'
+        before { config.default_formatter = 'doc' }
 
+        it 'gets used' do
           expect(used_formatters).not_to include(an_instance_of Formatters::ProgressFormatter)
           expect(used_formatters).to include(an_instance_of Formatters::DocumentationFormatter)
+        end
+
+        it 'still puts the deprecation formatter first' do
+          expect(used_formatters.first).to be_an_instance_of Formatters::DeprecationFormatter
         end
       end
 
