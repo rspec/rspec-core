@@ -33,8 +33,7 @@ module RSpec
         #
         # Colorizes the output red for failure, yellow for
         # pending, and green otherwise.
-        #
-        # @param [String] string
+        # @param [SummaryNotification] summary
         def colorise_summary(summary)
           if summary.failure_count > 0
             color(summary.summary_line, RSpec.configuration.failure_color)
@@ -76,7 +75,7 @@ module RSpec
           dump_profile_slowest_example_groups
         end
 
-        # @api private
+        # @private
         def dump_profile_slowest_examples
           sorted_examples = slowest_examples
 
@@ -91,7 +90,7 @@ module RSpec
           end
         end
 
-        # @api private
+        # @private
         def dump_profile_slowest_example_groups
 
           sorted_groups = slowest_groups
@@ -107,6 +106,7 @@ module RSpec
           end
         end
 
+        # @private
         def dump_pending(notification)
           unless pending_examples.empty?
             output.puts
@@ -119,6 +119,7 @@ module RSpec
           end
         end
 
+        # @private
         def seed(notification)
           return unless notification.seed_used?
           output.puts
@@ -130,6 +131,7 @@ module RSpec
           output.close if IO === output && output != $stdout
         end
 
+        # @private
         VT100_COLORS = {
           :black => 30,
           :red => 31,
@@ -141,8 +143,10 @@ module RSpec
           :white => 37
         }
 
+        # @private
         VT100_COLOR_CODES = VT100_COLORS.values.to_set
 
+        # @private
         def color_code_for(code_or_symbol)
           if VT100_COLOR_CODES.include?(code_or_symbol)
             code_or_symbol
@@ -153,6 +157,7 @@ module RSpec
           end
         end
 
+        # @private
         def colorize(text, code_or_symbol)
           "\e[#{color_code_for(code_or_symbol)}m#{text}\e[0m"
         end
