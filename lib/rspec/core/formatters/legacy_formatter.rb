@@ -5,6 +5,7 @@ module RSpec
   module Core
     module Formatters
 
+      # @private
       # The `LegacyFormatter` is used to wrap older RSpec 2.x style formatters
       # for the new 3.x implementation. It takes care of registering all the
       # old notifications and translating them to the older formatter.
@@ -15,6 +16,7 @@ module RSpec
                            example_passed example_failed example_pending start_dump dump_pending
                            dump_failures dump_summary seed close stop deprecation deprecation_summary]
 
+        # @private
         module LegacyInterface
 
           def start(count)
