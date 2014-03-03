@@ -1,12 +1,16 @@
 module RSpec
   module Core
     module SharedExampleGroup
+      # @api private
+      #
+      # Shared example groups collection
       class Collection
 
         def initialize(sources, examples)
           @sources, @examples = sources, examples
         end
 
+        # @private
         def [](key)
           fetch_examples(key)
         end
