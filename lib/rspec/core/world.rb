@@ -140,7 +140,7 @@ module RSpec
         end
       end
 
-      # @api private
+      # @private
       #
       # @return [String] A message displayed when all examples where filtered out
       def everything_filtered_message
