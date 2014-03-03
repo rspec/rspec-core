@@ -1,5 +1,6 @@
 module RSpec
   module Core
+    # Rspec runner
     class Runner
 
       # Register an at_exit hook that runs the suite.
@@ -24,22 +25,30 @@ module RSpec
         end
         @installed_at_exit = true
       end
+
+      # @api private
+      #
+      # At exit backtrace
       AT_EXIT_HOOK_BACKTRACE_LINE = "#{__FILE__}:#{__LINE__ - 2}:in `autorun'"
 
+      # Invoke the Rspec runner
       def self.invoke
         disable_autorun!
         status = run(ARGV, $stderr, $stdout).to_i
         exit(status) if status != 0
       end
 
+      # @private
       def self.disable_autorun!
         @autorun_disabled = true
       end
 
+      # @private
       def self.autorun_disabled?
         @autorun_disabled ||= false
       end
 
+      # @private
       def self.installed_at_exit?
         @installed_at_exit ||= false
       end
@@ -60,6 +69,7 @@ module RSpec
         end
       end
 
+      # @private
       def self.trap_interrupt
         trap('INT') do
           exit!(1) if RSpec.wants_to_quit
