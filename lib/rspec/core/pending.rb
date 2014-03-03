@@ -1,6 +1,8 @@
 module RSpec
   module Core
+    # Pending and skipped examples
     module Pending
+      # @private
       class SkipDeclaredInExample < StandardError
         attr_reader :argument
 
@@ -17,7 +19,10 @@ module RSpec
         class PendingExampleFixedError < StandardError; end
       end
 
+      # @private
       NO_REASON_GIVEN = 'No reason given'
+
+      # @private
       NOT_YET_IMPLEMENTED = 'Not yet implemented'
 
       # @overload pending()
@@ -115,11 +120,17 @@ module RSpec
         raise SkipDeclaredInExample.new(args.first)
       end
 
+      # @api private
+      #
+      # Mark example as skipped
       def self.mark_skipped!(example, message_or_bool)
         Pending.mark_pending! example, message_or_bool
         example.metadata[:skip] = true
       end
 
+      # @api private
+      #
+      # Mark example as pending
       def self.mark_pending!(example, message_or_bool)
         message = if !message_or_bool || !(String === message_or_bool)
           NO_REASON_GIVEN
@@ -132,6 +143,9 @@ module RSpec
         example.execution_result[:pending_fixed] = false
       end
 
+      # @api private
+      #
+      # Mark example as fixed
       def self.mark_fixed!(example)
         example.metadata[:pending] = false
         example.metadata[:execution_result][:pending_fixed] = true
