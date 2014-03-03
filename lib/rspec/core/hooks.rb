@@ -1,5 +1,6 @@
 module RSpec
   module Core
+    # Hooks
     module Hooks
       # @api public
       # @overload before(&block)
