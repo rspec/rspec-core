@@ -1,7 +1,8 @@
 module RSpec
   module Core
-    # Current version string
+    # Version namespace
     module Version
+      # Current version string
       STRING = '3.0.0.beta2'
     end
   end
