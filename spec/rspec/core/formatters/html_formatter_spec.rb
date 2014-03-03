@@ -6,7 +6,7 @@ require 'nokogiri'
 module RSpec
   module Core
     module Formatters
-      describe HtmlFormatter, :if => RUBY_VERSION =~ /^(1.8.7|1.9.2|1.9.3|2.0.0)$/ do
+      describe HtmlFormatter, :if => RUBY_VERSION =~ /^(1.8.7|1.9.2|1.9.3|2.0.0|2.1.0|2.1.1)$/ do
 
         let(:root) { File.expand_path("#{File.dirname(__FILE__)}/../../../..") }
         let(:expected_file) do

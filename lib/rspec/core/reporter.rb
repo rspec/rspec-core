@@ -107,8 +107,8 @@ module RSpec::Core
         notify :start_dump
         notify :dump_pending
         notify :dump_failures
-        notify :dump_summary, @duration, @example_count, @failure_count, @pending_count
         notify :deprecation_summary
+        notify :dump_summary, @duration, @example_count, @failure_count, @pending_count
         notify :seed, seed if seed
       ensure
         notify :close
