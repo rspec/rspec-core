@@ -39,7 +39,7 @@ module RSpec
         SharedExampleGroup.registry.clear
       end
 
-      # @api private
+      # @private
       #
       # @return [RSpec::Core::FilterManager]
       def filter_manager
@@ -54,21 +54,21 @@ module RSpec
         example_group
       end
 
-      # @api private
+      # @private
       #
       # @return [RSpec::Core::FilterManager::InclusionFilterHash] if none has been set, returns an empty hash.
       def inclusion_filter
         @configuration.inclusion_filter
       end
 
-      # @api private
+      # @private
       #
       # @return [RSpec::Core::FilterManager::ExclusionFilterHash] if none has been set, returns an empty hash.
       def exclusion_filter
         @configuration.exclusion_filter
       end
 
-      # @api private
+      # @private
       #
       # Set the current config on a group
       def configure_group(group)
@@ -92,7 +92,7 @@ module RSpec
         end
       end
 
-      # @api private
+      # @private
       #
       # @return [RSpec::Core::Reporter]
       #
