@@ -48,7 +48,7 @@ module RSpec
         attr_accessor :top_level
       end
 
-      # Add's the describe method to Module and the top level binding
+      # Adds the describe method to Module and the top level binding
       def self.expose_globally!
         return if exposed_globally?
 
@@ -59,6 +59,7 @@ module RSpec
         @exposed_globally = true
       end
 
+      # Removes the describe method to Module and the top level binding
       def self.remove_globally!
         return unless exposed_globally?
 
