@@ -1,5 +1,6 @@
 module RSpec
   module Core
+    # @private
     # Manages the filtering of examples and groups by matching tags declared on
     # the command line or options files, or filters declared via
     # `RSpec.configure`, with hash key/values submitted within example group
@@ -71,16 +72,19 @@ module RSpec
       PROC_HEX_NUMBER = /0x[0-9a-f]+@/
       PROJECT_DIR = File.expand_path('.')
 
+      # @private
       def self.inspect_filter_hash(hash)
         hash.inspect.gsub(PROC_HEX_NUMBER, '').gsub(PROJECT_DIR, '.').gsub(' (lambda)','')
       end
 
+      # @private
       class InclusionFilterHash < Hash
         def description
           FilterManager.inspect_filter_hash self
         end
       end
 
+      # @private
       class ExclusionFilterHash < Hash
         CONDITIONAL_FILTERS = {
           :if     => lambda { |value| !value },
@@ -122,6 +126,10 @@ module RSpec
         @inclusions = InclusionFilterHash.new
       end
 
+      # @api private
+      #
+      # @param [String] file_path
+      # @param [Array] line_numbers
       def add_location(file_path, line_numbers)
         # locations is a hash of expanded paths to arrays of line
         # numbers to match against. e.g.
