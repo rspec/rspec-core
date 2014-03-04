@@ -127,6 +127,28 @@ module RSpec
         include MetadataHash
 
         def described_class
+          value_for_rspec_2 = described_class_for_rspec_2
+          value_for_rspec_3 = described_class_for_rspec_3
+
+          if value_for_rspec_2 != value_for_rspec_3
+            RSpec.warn_deprecation(<<-EOS.gsub(/^\s+\|/, ''))
+              |The semantics of `described_class` in a nested `describe <SomeClass>`
+              |example group are changing in RSpec 3. In RSpec 2.x, `described_class`
+              |would return the outermost described class (#{value_for_rspec_2.inspect}).
+              |In RSpec 3, it will return the innermost described class (#{value_for_rspec_3.inspect}).
+              |In general, we recommend not describing multiple classes or objects in a
+              |nested manner as it creates confusion.
+              |
+              |To make your code compatible with RSpec 3, change from `described_class` to a reference
+              |to `#{value_for_rspec_3.inspect}`, or change the arg of the |inner `describe` to a string.
+              |(Called from #{CallerFilter.first_non_rspec_line})
+            EOS
+          end
+
+          value_for_rspec_2
+        end
+
+        def described_class_for_rspec_2
           container_stack.each do |g|
             [:described_class, :describes].each do |key|
               if g.has_key?(key)
@@ -137,6 +159,22 @@ module RSpec
           end
 
           container_stack.reverse.each do |g|
+            candidate = g[:description_args].first
+            return candidate unless String === candidate || Symbol === candidate
+          end
+
+          nil
+        end
+
+        def described_class_for_rspec_3
+          container_stack.each do |g|
+            [:described_class, :describes].each do |key|
+              if g.has_key?(key)
+                value = g[key]
+                return value unless value.nil?
+              end
+            end
+
             candidate = g[:description_args].first
             return candidate unless String === candidate || Symbol === candidate
           end

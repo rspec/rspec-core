@@ -332,6 +332,48 @@ module RSpec::Core
 
           expect(group.run).to be_truthy, "expected examples in group to pass"
         end
+
+        def capture_deprecation_options
+          warn_opts = nil
+          allow(RSpec.configuration.reporter).to receive(:deprecation) do |opts|
+            warn_opts = opts
+          end
+
+          yield
+
+          warn_opts
+        end
+
+        it "prints a deprecation warning since the semantics are changing in RSpec 3" do
+          warn_opts = capture_deprecation_options do
+            ExampleGroup.describe(String) do
+              describe Array do
+                example { described_class }
+              end
+            end.run
+          end
+
+          expect(warn_opts[:message]).to include("#{__FILE__}:#{__LINE__ - 5}")
+          expect(warn_opts[:message]).to include("described_class")
+        end
+
+        it "prints a deprecation even when `described_class` has already been referenced in the outer group" do
+          warn_opts = capture_deprecation_options do
+            outer_dc = inner_dc = nil
+            ExampleGroup.describe(String) do
+              outer_dc = described_class
+              describe Array do
+                example { inner_dc = described_class }
+              end
+            end.run
+
+            expect(outer_dc).to eq(String)
+            expect(inner_dc).to eq(String)
+          end
+
+          expect(warn_opts[:message]).to include("#{__FILE__}:#{__LINE__ - 8}")
+          expect(warn_opts[:message]).to include("described_class")
+        end
       end
 
       context "for `describe(SomeClass)` within a `describe 'some string' group" do
