@@ -140,7 +140,7 @@ module RSpec
               |nested manner as it creates confusion.
               |
               |To make your code compatible with RSpec 3, change from `described_class` to a reference
-              |to `#{value_for_rspec_3.inspect}`, or change the arg of the |inner `describe` to a string.
+              |to `#{value_for_rspec_3.inspect}`, or change the arg of the inner `describe` to a string.
               |(Called from #{CallerFilter.first_non_rspec_line})
             EOS
           end
