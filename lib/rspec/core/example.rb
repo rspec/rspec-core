@@ -191,7 +191,7 @@ module RSpec
           @proc = block
         end
 
-        # @api private
+        # @private
         def wrap(&block)
           self.class.new(metadata, &block)
         end
