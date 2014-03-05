@@ -33,6 +33,7 @@ module RSpec
         @exposed_globally ||= false
       end
 
+      # @private
       def self.expose_example_group_alias(name)
         example_group_aliases << name
 
@@ -70,12 +71,14 @@ module RSpec
         @exposed_globally = false
       end
 
+      # @private
       def self.expose_example_group_alias_globally(method_name)
         change_global_dsl do
           define_method(method_name) { |*a, &b| ::RSpec.__send__(method_name, *a, &b) }
         end
       end
 
+      # @private
       def self.change_global_dsl(&changes)
         (class << top_level; self; end).class_exec(&changes)
         Module.class_exec(&changes)
