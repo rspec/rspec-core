@@ -40,8 +40,6 @@ module RSpec
       end
 
       # @private
-      #
-      # @return [RSpec::Core::FilterManager]
       def filter_manager
         @configuration.filter_manager
       end
@@ -55,22 +53,16 @@ module RSpec
       end
 
       # @private
-      #
-      # @return [RSpec::Core::FilterManager::InclusionFilterHash] if none has been set, returns an empty hash.
       def inclusion_filter
         @configuration.inclusion_filter
       end
 
       # @private
-      #
-      # @return [RSpec::Core::FilterManager::ExclusionFilterHash] if none has been set, returns an empty hash.
       def exclusion_filter
         @configuration.exclusion_filter
       end
 
       # @private
-      #
-      # Set the current config on a group
       def configure_group(group)
         @configuration.configure_group(group)
       end
@@ -93,10 +85,6 @@ module RSpec
       end
 
       # @private
-      #
-      # @return [RSpec::Core::Reporter]
-      #
-      # Get the configured reporter
       def reporter
         @configuration.reporter
       end
@@ -141,8 +129,6 @@ module RSpec
       end
 
       # @private
-      #
-      # @return [String] A message displayed when all examples where filtered out
       def everything_filtered_message
         "\nAll examples were filtered out"
       end

@@ -1,6 +1,8 @@
 module RSpec
   module Core
-    # Rspec runner
+    # @api private
+    #
+    # RSpec test suite runner
     class Runner
 
       # Register an at_exit hook that runs the suite.

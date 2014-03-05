@@ -1,8 +1,8 @@
 module RSpec
   module Core
-    # Version namespace
+    # Version information for RSpec Core.
     module Version
-      # Current version string
+      # Version of RSpec Core currently in use in SemVer format.
       STRING = '3.0.0.beta2'
     end
   end

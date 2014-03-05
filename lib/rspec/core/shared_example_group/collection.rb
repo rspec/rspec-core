@@ -1,9 +1,7 @@
 module RSpec
   module Core
     module SharedExampleGroup
-      # @api private
-      #
-      # Shared example groups collection
+      # @private
       class Collection
 
         def initialize(sources, examples)

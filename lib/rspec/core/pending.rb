@@ -2,7 +2,7 @@ module RSpec
   module Core
     # Pending and skipped examples
     module Pending
-      # @private
+      # Raised in the middle of an example to indicate that it should be marked as skipped.
       class SkipDeclaredInExample < StandardError
         attr_reader :argument
 
