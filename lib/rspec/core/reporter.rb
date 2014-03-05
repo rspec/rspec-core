@@ -10,8 +10,8 @@ module RSpec::Core
     end
 
     # @api
-    # @param [Object] An obect that wishes to be notified of reporter events
-    # @param [Array] Array of symbols represents the events a listener wishes to subscribe too
+    # @param [Object] listener An obect that wishes to be notified of reporter events
+    # @param [Array] notifications Array of symbols represents the events a listener wishes to subscribe too
     #
     # Registers a listener to a list of notifications. The reporter will send notification of
     # events to all registered listeners
@@ -30,7 +30,7 @@ module RSpec::Core
     # @api
     # @overload report(count, &block)
     # @overload report(count, &block)
-    # @param [Integer] count the number of examples being run
+    # @param [Integer] expected_example_count the number of examples being run
     # @param [Block] block yields itself for further reporting.
     #
     # Initializes the report run and yields itself for further reporting. The

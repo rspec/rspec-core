@@ -154,7 +154,7 @@ module RSpec
       define_reader :output_stream
 
       # Set the output stream for reporter
-      # @default $stdout
+      # Default $stdout
       def output_stream=(value)
         if @reporter && !value.equal?(@output_stream)
           warn "RSpec's reporter has already been initialized with " +

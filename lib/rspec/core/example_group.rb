@@ -112,7 +112,6 @@ module RSpec
         #   end
         define_example_method :example
         # Defines an example within a group.
-        # @example
         define_example_method :it
         # Defines an example within a group.
         # This is here primarily for backward compatibility with early versions

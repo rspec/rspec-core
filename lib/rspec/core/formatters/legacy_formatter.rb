@@ -95,7 +95,7 @@ module RSpec
 
         # @api public
         #
-        # @param formatter
+        # @param [Class] formatter_class
         def initialize(formatter_class, *args)
           if formatter_class.ancestors.include?(BaseFormatter)
             formatter_class.class_eval do
@@ -116,109 +116,112 @@ module RSpec
 
         # @api public
         #
-        # @param example_count
+        # @param notification
         def start(notification)
           @formatter.start notification.count
         end
 
         # @api public
         #
-        # @param example_group
+        # @param notification
         def example_group_started(notification)
           @formatter.example_group_started notification.group
         end
 
         # @api public
         #
-        # @param example_group
+        # @param notification
         def example_group_finished(notification)
           @formatter.example_group_finished notification.group
         end
 
         # @api public
         #
-        # @param example
+        # @param notification
         def example_started(notification)
           @formatter.example_started notification.example
         end
 
         # @api public
         #
-        # @param example
+        # @param notification
         def example_passed(notification)
           @formatter.example_passed notification.example
         end
 
         # @api public
         #
-        # @param example
+        # @param notification
         def example_pending(notification)
           @formatter.example_pending notification.example
         end
 
         # @api public
         #
-        # @param example
+        # @param notification
         def example_failed(notification)
           @formatter.example_failed notification.example
         end
 
         # @api public
         #
-        # @param message
+        # @param notification
         def message(notification)
           @formatter.message notification.message
         end
 
         # @api public
         #
+        # @param notification
         def stop(notification)
           @formatter.stop
         end
 
         # @api public
         #
+        # @param notification
         def start_dump(notification)
           @formatter.start_dump
         end
 
         # @api public
         #
+        # @param notification
         def dump_failures(notification)
           @formatter.dump_failures
         end
 
         # @api public
         #
-        # @param duration
-        # @param example_count
-        # @param failure_count
-        # @param pending_count
+        # @param [Notifications::SummaryNotification] summary
         def dump_summary(summary)
           @formatter.dump_summary summary.duration, summary.example_count, summary.failure_count, summary.pending_count
         end
 
         # @api public
         #
+        # @param notification
         def dump_pending(notification)
           @formatter.dump_pending
         end
 
         # @api public
         #
+        # @param notification
         def dump_profile(notification)
           @formatter.dump_profile
         end
 
         # @api public
         #
-        # @param seed
+        # @param notification
         def seed(notification)
           @formatter.seed notification.seed
         end
 
         # @api public
         #
+        # @param notification
         def close(notification)
           @formatter.close
         end

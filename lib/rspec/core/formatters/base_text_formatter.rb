@@ -33,8 +33,7 @@ module RSpec
         #
         # Colorizes the output red for failure, yellow for
         # pending, and green otherwise.
-        #
-        # @param [String] string
+        # @param [String] summary
         def colorise_summary(summary)
           if summary.failure_count > 0
             color(summary.summary_line, RSpec.configuration.failure_color)
