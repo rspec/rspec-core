@@ -33,7 +33,7 @@ module RSpec
       # executed, and if it passes the example will fail to indicate that the
       # pending can be removed.
       #
-      # @param [String] message optional message to add to the summary report.
+      # @option [String] message optional message to add to the summary report.
       #
       # @example
       #
@@ -87,8 +87,8 @@ module RSpec
       # for RSpec 2's pending-with-block feature, and is not recommended for
       # new code. Use simple conditionals instead.
       #
-      # @param [String] message optional message to add to the summary report.
-      # @block [Block] block optional block to be skipped
+      # @option [String] message optional message to add to the summary report.
+      # @yield [Block] block optional block to be skipped
       #
       # @example
       #
