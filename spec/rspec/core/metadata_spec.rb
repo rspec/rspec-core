@@ -27,7 +27,7 @@ module RSpec
       end
 
       context "when created" do
-        Metadata::RESERVED_KEYS.each do |key|
+        MetadataOld::RESERVED_KEYS.each do |key|
           it "prohibits :#{key} as a hash key" do
             expect do
               RSpec.describe("group", key => {})
