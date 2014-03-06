@@ -247,7 +247,7 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
 
         group.run
 
-        expect(example.metadata[:execution_result][:exception].message).to eq("FOO")
+        expect(example.metadata[:rspec].execution_result.exception.message).to eq("FOO")
       end
     end
 
@@ -360,7 +360,7 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
         end
         group.run
 
-        actual = group.examples.first.metadata[:execution_result][:exception]
+        actual = group.examples.first.metadata[:rspec].execution_result.exception
         expect(actual.__id__).to eq(exception.__id__)
       end
     end
@@ -408,8 +408,8 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
   describe "#pending" do
     def expect_pending_result(example)
       expect(example).to be_pending
-      expect(example.metadata[:execution_result][:status]).to eq("pending")
-      expect(example.metadata[:execution_result][:pending_message]).to be
+      expect(example.metadata[:rspec].execution_result.status).to eq("pending")
+      expect(example.metadata[:rspec].execution_result.pending_message).to be
     end
 
     context "in the example" do
@@ -601,7 +601,7 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
       example.__send__ :start, reporter
       allow(Time).to receive_messages(:now => Time.utc(2012, 10, 1))
       example.__send__ :finish, reporter
-      expect(example.metadata[:execution_result][:run_time]).to be < 0.2
+      expect(example.metadata[:rspec].execution_result.run_time).to be < 0.2
     end
   end
 

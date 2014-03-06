@@ -118,9 +118,10 @@ Spork.prefork do
     c.alias_it_behaves_like_to 'it_has_behavior'
     c.around {|example| Sandboxing.sandboxed { example.run }}
     c.include(RSpecHelpers)
-    c.include Aruba::Api, :example_group => {
-      :file_path => /spec\/command_line/
-    }
+    # TODO: figure out nested filters involving :rspec keys
+    #c.include Aruba::Api, :example_group => {
+      #:file_path => /spec\/command_line/
+    #}
 
     c.expect_with :rspec do |expectations|
       expectations.syntax = :expect

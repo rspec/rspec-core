@@ -255,7 +255,7 @@ module RSpec
           example_groups = {}
 
           examples.each do |example|
-            location = example.example_group.parent_groups.last.metadata[:example_group][:location]
+            location = example.example_group.parent_groups.last.metadata[:rspec].location
 
             example_groups[location] ||= Hash.new(0)
             example_groups[location][:total_time]  += example.execution_result[:run_time]

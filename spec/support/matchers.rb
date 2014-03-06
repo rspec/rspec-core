@@ -30,11 +30,11 @@ RSpec::Matchers.define :fail_with do |exception_klass|
   end
 
   def failure_reason(example, exception_klass)
-    result = example.metadata[:execution_result]
+    result = example.metadata[:rspec].execution_result
     case
       when example.metadata[:pending] then "was pending"
-      when result[:status] != 'failed' then result[:status]
-      when !result[:exception].is_a?(exception_klass) then "failed with a #{result[:exception].class}"
+      when result.status != 'failed' then result[:status]
+      when !result.exception.is_a?(exception_klass) then "failed with a #{result.exception.class}"
       else nil
     end
   end
@@ -50,10 +50,10 @@ RSpec::Matchers.define :pass do
   end
 
   def failure_reason(example)
-    result = example.metadata[:execution_result]
+    result = example.metadata[:rspec].execution_result
     case
       when example.metadata[:pending] then "was pending"
-      when result[:status] != 'passed' then result[:status]
+      when result.status != 'passed' then result[:status]
       else nil
     end
   end
@@ -66,20 +66,20 @@ end
 
 RSpec::Matchers.define :be_pending_with do |message|
   match do |example|
-    example.pending? && example.metadata[:execution_result][:pending_message] == message
+    example.pending? && example.metadata[:rspec].execution_result.pending_message == message
   end
 
   failure_message_for_should do |example|
-    "expected: example pending with #{message.inspect}\n     got: #{example.metadata[:execution_result][:pending_message].inspect}"
+    "expected: example pending with #{message.inspect}\n     got: #{example.metadata[:rspec].execution_result.pending_message.inspect}"
   end
 end
 
 RSpec::Matchers.define :be_skipped_with do |message|
   match do |example|
-    example.skipped? && example.metadata[:execution_result][:pending_message] == message
+    example.skipped? && example.metadata[:rspec].execution_result.pending_message == message
   end
 
   failure_message_for_should do |example|
-    "expected: example skipped with #{message.inspect}\n     got: #{example.metadata[:execution_result][:pending_message].inspect}"
+    "expected: example skipped with #{message.inspect}\n     got: #{example.metadata[:rspec].execution_result.pending_message.inspect}"
   end
 end

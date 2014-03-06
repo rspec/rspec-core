@@ -3,7 +3,6 @@ require 'spec_helper'
 module RSpec
   module Core
     RSpec.describe Metadata do
-
       describe '.relative_path' do
         let(:here) { File.expand_path(".") }
         it "transforms absolute paths to relative paths" do
@@ -29,6 +28,7 @@ module RSpec
       context "when created" do
         MetadataOld::RESERVED_KEYS.each do |key|
           it "prohibits :#{key} as a hash key" do
+            skip "No longer necessary"
             expect do
               RSpec.describe("group", key => {})
             end.to raise_error(/:#{key} is not allowed/)
@@ -42,7 +42,7 @@ module RSpec
             m = metadata
           end
 
-          expect(m[:example_group][:location]).to eq("example_file:42")
+          expect(m[:rspec].location).to eq("example_file:42")
         end
       end
 
@@ -52,9 +52,9 @@ module RSpec
         def create_metadatas
           container = self
 
-          RSpec.describe "parent group", :caller => ["foo_spec.rb:#{__LINE__}"] do; container.parent_group_metadata = metadata
-            describe "group", :caller => ["foo_spec.rb:#{__LINE__}"] do; container.group_metadata = metadata
-              container.example_metadata = it("example", :caller => ["foo_spec.rb:#{__LINE__}"], :if => true).metadata
+          RSpec.describe "parent group", :caller => ["foo_spec.rb:#{__LINE__}"] do; container.parent_group_metadata = metadata[:rspec]
+            describe "group", :caller => ["foo_spec.rb:#{__LINE__}"] do; container.group_metadata = metadata[:rspec]
+              container.example_metadata = it("example", :caller => ["foo_spec.rb:#{__LINE__}"], :if => true).metadata[:rspec]
             end
           end
         end
@@ -68,12 +68,13 @@ module RSpec
 
         shared_examples_for "matching by line number" do
           let(:preceeding_declaration_lines) {{
-            parent_group_metadata[:example_group][:line_number] => parent_group_metadata[:example_group][:line_number],
-            group_metadata[:example_group][:line_number] => group_metadata[:example_group][:line_number],
-            example_metadata[:line_number] => example_metadata[:line_number],
-            (example_metadata[:line_number] + 1) => example_metadata[:line_number],
-            (example_metadata[:line_number] + 2) => example_metadata[:line_number] + 2,
+            parent_group_metadata.line_number => parent_group_metadata.line_number,
+            group_metadata.line_number => group_metadata.line_number,
+            example_metadata.line_number => example_metadata.line_number,
+            (example_metadata.line_number + 1) => example_metadata.line_number,
+            (example_metadata.line_number + 2) => example_metadata.line_number + 2,
           }}
+
           before do
             expect(world).to receive(:preceding_declaration_line).at_least(:once) do |v|
               preceeding_declaration_lines[v]
@@ -109,22 +110,22 @@ module RSpec
 
         context "with a single line number" do
           let(:condition_key){ :line_numbers }
-          let(:parent_group_condition) { [parent_group_metadata[:example_group][:line_number]] }
-          let(:group_condition) { [group_metadata[:example_group][:line_number]] }
-          let(:example_condition) { [example_metadata[:line_number]] }
-          let(:between_examples_condition) { [group_metadata[:example_group][:line_number] + 1] }
-          let(:next_example_condition) { [example_metadata[:line_number] + 2] }
+          let(:parent_group_condition) { [parent_group_metadata.line_number] }
+          let(:group_condition) { [group_metadata.line_number] }
+          let(:example_condition) { [example_metadata.line_number] }
+          let(:between_examples_condition) { [group_metadata.line_number + 1] }
+          let(:next_example_condition) { [example_metadata.line_number + 2] }
 
           it_has_behavior "matching by line number"
         end
 
         context "with multiple line numbers" do
           let(:condition_key){ :line_numbers }
-          let(:parent_group_condition) { [-1, parent_group_metadata[:example_group][:line_number]] }
-          let(:group_condition) { [-1, group_metadata[:example_group][:line_number]] }
-          let(:example_condition) { [-1, example_metadata[:line_number]] }
-          let(:between_examples_condition) { [-1, group_metadata[:example_group][:line_number] + 1] }
-          let(:next_example_condition) { [-1, example_metadata[:line_number] + 2] }
+          let(:parent_group_condition) { [-1, parent_group_metadata.line_number] }
+          let(:group_condition) { [-1, group_metadata.line_number] }
+          let(:example_condition) { [-1, example_metadata.line_number] }
+          let(:between_examples_condition) { [-1, group_metadata.line_number + 1] }
+          let(:next_example_condition) { [-1, example_metadata.line_number + 2] }
 
           it_has_behavior "matching by line number"
         end
@@ -132,19 +133,19 @@ module RSpec
         context "with locations" do
           let(:condition_key){ :locations }
           let(:parent_group_condition) do
-            {File.expand_path(parent_group_metadata[:example_group][:file_path]) => [parent_group_metadata[:example_group][:line_number]]}
+            {File.expand_path(parent_group_metadata.file_path) => [parent_group_metadata.line_number]}
           end
           let(:group_condition) do
-            {File.expand_path(group_metadata[:example_group][:file_path]) => [group_metadata[:example_group][:line_number]]}
+            {File.expand_path(group_metadata.file_path) => [group_metadata.line_number]}
           end
           let(:example_condition) do
-            {File.expand_path(example_metadata[:file_path]) => [example_metadata[:line_number]]}
+            {File.expand_path(example_metadata.file_path) => [example_metadata.line_number]}
           end
           let(:between_examples_condition) do
-            {File.expand_path(group_metadata[:example_group][:file_path]) => [group_metadata[:example_group][:line_number] + 1]}
+            {File.expand_path(group_metadata.file_path) => [group_metadata.line_number + 1]}
           end
           let(:next_example_condition) do
-            {File.expand_path(example_metadata[:file_path]) => [example_metadata[:line_number] + 2]}
+            {File.expand_path(example_metadata.file_path) => [example_metadata.line_number + 2]}
           end
 
           it_has_behavior "matching by line number"
@@ -167,8 +168,9 @@ module RSpec
         end
 
         it "matches a proc with an arity of 2" do
-          example_metadata[:foo] = nil
-          expect(example_metadata.filter_applies?(:foo, lambda { |v, m| m == example_metadata })).to be_truthy
+          example_metadata.user_metadata[:foo] = nil
+          # TODO: should it yield the rspec metadata object or the user metadata object?
+          expect(example_metadata.filter_applies?(:foo, lambda { |v, m| m == example_metadata.user_metadata })).to be_truthy
         end
 
         it "raises an error when the proc has an incorrect arity" do
@@ -183,7 +185,7 @@ module RSpec
             RSpec.describe("group") do
               meta = example('example_with_array', :tag => [:one, 2, 'three', /four/]).metadata
             end
-            meta
+            meta[:rspec]
           end
 
           it "matches a symbol" do
@@ -229,69 +231,73 @@ module RSpec
         end
         alias example_metadata metadata_for
 
+        def rspec_metadata_for(*args)
+          metadata_for(*args)[:rspec]
+        end
+        alias rspec_example_metadata rspec_metadata_for
+
         RSpec::Matchers.define :have_value do |value|
           chain(:for) { |key| @key = key }
 
           match do |metadata|
-            expect(metadata.fetch(@key)).to eq(value)
-            expect(metadata[@key]).to eq(value)
+            metadata.__send__(@key) == value
           end
         end
 
         it "stores the description args" do
-          expect(metadata_for "example description").to have_value(["example description"]).for(:description_args)
+          expect(rspec_metadata_for("example description").description_args).to eq(["example description"])
         end
 
         it "ignores nil description args" do
-          expect(example_metadata).to have_value([]).for(:description_args)
+          expect(rspec_example_metadata.description_args).to eq([])
         end
 
         it "stores the full_description (group description + example description)" do
-          expect(metadata_for "example description").to have_value("group description example description").for(:full_description)
+          expect(rspec_metadata_for("example description").full_description).to eq("group description example description")
         end
 
         it "creates an empty execution result" do
-          expect(example_metadata).to have_value({}).for(:execution_result)
+          expect(rspec_example_metadata.execution_result).to be_a(ExecutionResult)
         end
 
         it "extracts file path from caller" do
-          expect(example_metadata).to have_value(relative_path(__FILE__)).for(:file_path)
+          expect(rspec_example_metadata.file_path).to eq(relative_path(__FILE__))
         end
 
         it "extracts line number from caller" do
-          expect(example_metadata).to have_value(line_number).for(:line_number)
+          expect(rspec_example_metadata.line_number).to eq(line_number)
         end
 
         it "extracts location from caller" do
-          expect(example_metadata).to have_value("#{relative_path(__FILE__)}:#{line_number}").for(:location)
+          expect(rspec_example_metadata.location).to eq("#{relative_path(__FILE__)}:#{line_number}")
         end
 
         it "uses :caller if passed as an option" do
-          example_metadata = metadata_for('example description', :caller => ['example_file:42'])
-          expect(example_metadata).to have_value("example_file:42").for(:location)
+          example_metadata = rspec_metadata_for('example description', :caller => ['example_file:42'])
+          expect(example_metadata.location).to eq("example_file:42")
         end
 
         it "merges arbitrary options" do
-          expect(metadata_for("desc", :arbitrary => :options)).to have_value(:options).for(:arbitrary)
+          expect(metadata_for("desc", :arbitrary => :options)).to include(:arbitrary => :options)
         end
 
-        it "points :example_group to the same hash object" do
+        it "points example_group to the same hash object" do
           a = b = nil
 
           RSpec.describe "group" do
-            a = example("foo").metadata[:example_group]
-            b = example("bar").metadata[:example_group]
+            a = example("foo").metadata[:rspec].example_group_rspec_meta
+            b = example("bar").metadata[:rspec].example_group_rspec_meta
           end
 
-          a[:description] = "new description"
-          expect(b[:description]).to eq("new description")
+          a.description = "new description"
+          expect(b.description).to eq("new description")
         end
       end
 
       [:described_class, :describes].each do |key|
         describe key do
           extract_key_from = lambda do |group|
-            group.metadata[:example_group][key]
+            group.metadata[:rspec].__send__(key)
           end
 
           context "in an outer group" do
@@ -350,7 +356,7 @@ module RSpec
                 parent_value = extract_key_from[self]
 
                 describe "sub context" do
-                  metadata[:example_group][key] = Hash
+                  metadata[:rspec].described_class = Hash
                   child_value = extract_key_from[self]
 
                   describe "sub context" do
@@ -373,7 +379,7 @@ module RSpec
             value = nil
 
             RSpec.describe "group" do
-              value = example("example").metadata[:description]
+              value = example("example").metadata[:rspec].description
             end
 
             expect(value).to eq("example")
@@ -385,7 +391,7 @@ module RSpec
             value = nil
 
             RSpec.describe(*args) do
-              value = metadata[:example_group][:description]
+              value = metadata[:rspec].description
             end
 
             value
@@ -423,7 +429,7 @@ module RSpec
             value = nil
 
             RSpec.describe "group" do
-              value = example("example").metadata[:full_description]
+              value = example("example").metadata[:rspec].full_description
             end
 
             expect(value).to eq("group example")
@@ -435,8 +441,8 @@ module RSpec
 
           RSpec.describe "parent" do
             describe "child" do
-              group_value = metadata[:example_group][:full_description]
-              example_value = example("example").metadata[:full_description]
+              group_value = metadata[:rspec].full_description
+              example_value = example("example").metadata[:rspec].full_description
             end
           end
 
@@ -448,12 +454,12 @@ module RSpec
           grandparent_value = parent_value = child_value = example_value = nil
 
           RSpec.describe "grandparent" do
-            grandparent_value = metadata[:example_group][:full_description]
+            grandparent_value = metadata[:rspec].full_description
             describe "parent" do
-              parent_value = metadata[:example_group][:full_description]
+              parent_value = metadata[:rspec].full_description
               describe "child" do
-                child_value = metadata[:example_group][:full_description]
-                example_value = example("example").metadata[:full_description]
+                child_value   = metadata[:rspec].full_description
+                example_value = example("example").metadata[:rspec].full_description
               end
             end
           end
@@ -470,7 +476,7 @@ module RSpec
               value = nil
 
               RSpec.describe Array, "#{char}method" do
-                value = metadata[:example_group][:full_description]
+                value = metadata[:rspec].full_description
               end
 
               expect(value).to eq("Array#{char}method")
@@ -483,7 +489,7 @@ module RSpec
 
               RSpec.describe Object do
                 describe "#{char}method" do
-                  value = metadata[:example_group][:full_description]
+                  value = metadata[:rspec].full_description
                 end
               end
 
@@ -498,7 +504,7 @@ module RSpec
               RSpec.describe(Array) do
                 context "with 2 items" do
                   describe "#{char}method" do
-                    value = metadata[:example_group][:full_description]
+                    value = metadata[:rspec].full_description
                   end
                 end
               end
@@ -514,7 +520,7 @@ module RSpec
           value = nil
 
           RSpec.describe(:caller => ["./lib/rspec/core/foo.rb", "#{__FILE__}:#{__LINE__}"]) do
-            value = metadata[:example_group][:file_path]
+            value = metadata[:rspec].file_path
           end
 
           expect(value).to eq(relative_path(__FILE__))
@@ -527,7 +533,7 @@ module RSpec
 
           @describe_line = __LINE__ + 1
           RSpec.describe(*args) do
-            value = metadata[:example_group][:line_number]
+            value = metadata[:rspec].line_number
           end
 
           value
@@ -555,7 +561,7 @@ module RSpec
             describe { child = metadata }
           end
 
-          expect(child[:example_group][:example_group]).to eq(parent[:example_group])
+          expect(child[:rspec].parent_group_metadata).to eq(parent)
         end
       end
     end

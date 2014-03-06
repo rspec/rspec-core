@@ -37,12 +37,16 @@ module RSpec
       # @private
       #
       # Used to define methods that delegate to this example's metadata
+      def self.delegate_to_rspec_metadata(*keys)
+        keys.each { |key| define_method(key) { @metadata[:rspec].__send__(key) } }
+      end
+
       def self.delegate_to_metadata(*keys)
         keys.each { |key| define_method(key) { @metadata[key] } }
       end
 
-      delegate_to_metadata :execution_result, :file_path, :full_description,
-                           :location, :pending, :skip
+      delegate_to_rspec_metadata :execution_result, :file_path, :full_description, :location
+      delegate_to_metadata :pending, :skip
 
       # Returns the string submitted to `example` or its aliases (e.g.
       # `specify`, `it`, etc).  If no string is submitted (e.g. `it { is_expected.to
@@ -50,9 +54,8 @@ module RSpec
       # there is one, otherwise returns a message including the location of the
       # example.
       def description
-        description = metadata[:description].to_s.empty? ?
-          "example at #{location}" :
-          metadata[:description]
+        description = metadata[:rspec].description.to_s
+        description = "example at #{location}" if description.empty?
         RSpec.configuration.format_docstrings_block.call(description)
       end
 
@@ -85,7 +88,7 @@ module RSpec
       # @param example_block the block of code that represents the example
       def initialize(example_group_class, description, metadata, example_block=nil)
         @example_group_class, @options, @example_block = example_group_class, metadata, example_block
-        @metadata  = @example_group_class.metadata.for_example(description, metadata)
+        @metadata  = @example_group_class.metadata[:rspec].metadata_for_example(self, description, metadata)
         @example_group_instance = @exception = nil
         @clock = RSpec::Core::Time
       end
@@ -128,7 +131,7 @@ module RSpec
 
                   raise Pending::PendingExampleFixedError,
                     'Expected example to fail since it is pending, but it passed.',
-                    metadata[:caller]
+                    metadata[:rspec].caller
                 end
               rescue Pending::SkipDeclaredInExample
                 # no-op, required metadata has already been set by the `skip`
@@ -199,12 +202,12 @@ module RSpec
 
       # @private
       def any_apply?(filters)
-        metadata.any_apply?(filters)
+        metadata[:rspec].any_apply?(filters)
       end
 
       # @private
       def all_apply?(filters)
-        @metadata.all_apply?(filters) || @example_group_class.all_apply?(filters)
+        @metadata[:rspec].all_apply?(filters) || @example_group_class.all_apply?(filters)
       end
 
       # @private
@@ -218,7 +221,7 @@ module RSpec
       # captures the exception but doesn't raise it.
       def set_exception(exception, context=nil)
         if pending?
-          metadata[:execution_result][:pending_exception] = exception
+          metadata[:rspec].execution_result.pending_exception = exception
         else
           if @exception && context != :dont_print
             # An error has already been set; we don't want to override it,
@@ -285,7 +288,7 @@ module RSpec
       end
 
       def finish(reporter)
-        pending_message = metadata[:execution_result][:pending_message]
+        pending_message = execution_result.pending_message
 
         if @exception
           record_finished 'failed', :exception => @exception
@@ -307,7 +310,7 @@ module RSpec
         record results.merge(
           :status      => status,
           :finished_at => finished_at,
-          :run_time    => (finished_at - execution_result[:started_at]).to_f
+          :run_time    => (finished_at - execution_result.started_at).to_f
         )
       end
 
@@ -328,9 +331,9 @@ module RSpec
       def verify_mocks
         @example_group_instance.verify_mocks_for_rspec
       rescue Exception => e
-        if metadata[:execution_result][:pending_message]
-          metadata[:execution_result][:pending_fixed] = false
-          metadata[:pending] = true
+        if metadata[:rspec].execution_result.pending_message
+          metadata[:rspec].execution_result.pending_fixed = false
+          metadata[:pending] = true # TODO: store in rspec?
           @exception = nil
         else
           set_exception(e, :dont_print)
@@ -340,8 +343,8 @@ module RSpec
       def assign_generated_description
         return unless RSpec.configuration.expecting_with_rspec?
 
-        if metadata[:description_args].empty?
-          metadata[:description_args] << RSpec::Matchers.generated_description
+        if metadata[:rspec].description_args.empty?
+          metadata[:rspec].description_args << RSpec::Matchers.generated_description
         end
 
         RSpec::Matchers.clear_generated_description

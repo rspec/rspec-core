@@ -108,7 +108,7 @@ module RSpec::Core
       def filterable_object_with(*args)
         meta = nil
         RSpec.describe("group", *args) { meta = metadata }
-        meta
+        meta[:rspec]
       end
 
       it "includes objects with tags matching inclusions" do

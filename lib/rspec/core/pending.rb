@@ -128,13 +128,15 @@ module RSpec
         end
 
         example.metadata[:pending] = true
-        example.metadata[:execution_result][:pending_message] = message
-        example.execution_result[:pending_fixed] = false
+        example.metadata[:rspec].execution_result.pending_message = message
+        example.execution_result.pending_fixed = false
       end
 
       def self.mark_fixed!(example)
+        # TODO: set `pending` on execution result to false rather than on metadata.
+        # If the user tagged the example as pending we don't want to overwrite that, I don't think.
         example.metadata[:pending] = false
-        example.metadata[:execution_result][:pending_fixed] = true
+        example.metadata[:rspec].execution_result.pending_fixed = true
       end
     end
   end

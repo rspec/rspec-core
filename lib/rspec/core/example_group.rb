@@ -34,13 +34,13 @@ module RSpec
         def self.delegate_to_metadata(*names)
           names.each do |name|
             define_method name do
-              metadata[:example_group][name]
+              metadata[:rspec].__send__(name)
             end
           end
         end
 
         def description
-          description = metadata[:example_group][:description]
+          description = metadata[:rspec].description #[:example_group][:description]
           RSpec.configuration.format_docstrings_block.call(description)
         end
 
@@ -374,8 +374,8 @@ module RSpec
         symbol_description = args.shift if args.first.is_a?(Symbol)
         args << Metadata.build_hash_from(args)
         args.unshift(symbol_description) if symbol_description
-        @metadata = RSpec::Core::MetadataOld.new(superclass_metadata).process(*args)
-        @order = nil
+        # @metadata = RSpec::Core::MetadataOld.new(superclass_metadata).process(*args)
+        @metadata = RSpec::Core::GroupMetadata.metadata_hash_from(superclass_metadata, *args)
         hooks.register_globals(self, RSpec.configuration.hooks)
         world.configure_group(self)
       end
@@ -452,7 +452,7 @@ module RSpec
           warn <<-WARNING.gsub(/^ +\|/, '')
             |WARNING: Ignoring unknown ordering specified using `:order => #{order.inspect}` metadata.
             |         Falling back to configured global ordering.
-            |         Unrecognized ordering specified at: #{metadata[:example_group][:location]}
+            |         Unrecognized ordering specified at: #{metadata[:rspec].location}
           WARNING
 
           registry.fetch(:global)
@@ -490,18 +490,18 @@ module RSpec
 
       # @private
       def self.any_apply?(filters)
-        metadata.any_apply?(filters)
+        metadata[:rspec].any_apply?(filters)
       end
 
       # @private
       def self.all_apply?(filters)
-        metadata.all_apply?(filters)
+        metadata[:rspec].all_apply?(filters)
       end
 
       # @private
       def self.declaration_line_numbers
-        @declaration_line_numbers ||= [metadata[:example_group][:line_number]] +
-          examples.collect {|e| e.metadata[:line_number]} +
+        @declaration_line_numbers ||= [metadata[:rspec].line_number] +
+          examples.collect {|e| e.metadata[:rspec].line_number} +
           children.inject([]) {|l,c| l + c.declaration_line_numbers}
       end
 
