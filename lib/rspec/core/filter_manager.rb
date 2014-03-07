@@ -70,10 +70,10 @@ module RSpec
         def const_missing(name)
           case name
           when :DEFAULT_EXCLUSIONS
-            RSpec.deprecate("FilterManager::DEFAULT_EXCLUSIONS is deprecated")
+            RSpec.deprecate("RSpec::Core::FilterManager::DEFAULT_EXCLUSIONS is deprecated")
             default_exclusions
           when :STANDALONE_FILTERS
-            RSpec.deprecate("FilterManager::STANDALONE_FILTERS is deprecated")
+            RSpec.deprecate("RSpec::Core::FilterManager::STANDALONE_FILTERS is deprecated")
             standalone_filters
           else
             super
