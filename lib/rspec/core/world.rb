@@ -86,7 +86,7 @@ module RSpec
           example_groups.clear
           if filter_manager.empty?
             reporter.message("No examples found.")
-          elsif exclusion_filter.empty_without_conditional_filters?
+          elsif exclusion_filter.rules_empty?
             message = everything_filtered_message
             if @configuration.run_all_when_everything_filtered?
               message << "; ignoring #{inclusion_filter.description}"
@@ -109,7 +109,7 @@ module RSpec
       end
 
       def announce_exclusion_filter(announcements)
-        unless exclusion_filter.empty_without_conditional_filters?
+        unless exclusion_filter.rules_empty?
           announcements << "exclude #{exclusion_filter.description}"
         end
       end
