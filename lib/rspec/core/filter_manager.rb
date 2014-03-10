@@ -66,23 +66,51 @@ module RSpec
     # @see Configuration#filter_run_including
     # @see Configuration#filter_run_excluding
     class FilterManager
-      DEFAULT_EXCLUSIONS = {
-        :if     => lambda { |value| !value },
-        :unless => lambda { |value| value }
-      }
+      class << self
+        def const_missing(name)
+          case name
+          when :DEFAULT_EXCLUSIONS
+            RSpec.deprecate("RSpec::Core::FilterManager::DEFAULT_EXCLUSIONS is deprecated")
+            default_exclusions
+          when :STANDALONE_FILTERS
+            RSpec.deprecate("RSpec::Core::FilterManager::STANDALONE_FILTERS is deprecated")
+            standalone_filters
+          else
+            super
+          end
+        end
 
-      STANDALONE_FILTERS = [:locations, :line_numbers, :full_description]
+        # @private
+        def default_exclusions
+          @default_exclusions ||= {
+            :if     => lambda { |value| !value },
+            :unless => lambda { |value| value }
+          }
+        end
+
+        # @private
+        def standalone_filters
+          @standalone_filters ||= [:locations, :line_numbers, :full_description]
+        end
+      end
 
       module Describable
         PROC_HEX_NUMBER = /0x[0-9a-f]+\s?@/
         PROJECT_DIR = File.expand_path('.')
 
         def description
-          reject { |k, v| RSpec::Core::FilterManager::DEFAULT_EXCLUSIONS[k] == v }.inspect.gsub(PROC_HEX_NUMBER, '').gsub(PROJECT_DIR, '.').gsub(' (lambda)','').gsub('__is_lambda__=true','')
+          reject { |k, v| RSpec::Core::FilterManager.default_exclusions[k] == v }.inspect.
+            gsub(PROC_HEX_NUMBER, '').gsub(PROJECT_DIR, '.').gsub(' (lambda)','').gsub('__is_lambda__=true','')
         end
 
         def empty_without_conditional_filters?
-          reject { |k, v| RSpec::Core::FilterManager::DEFAULT_EXCLUSIONS[k] == v }.empty?
+          RSpec.deprecate("(inclusion_filter | exclusion_filter)#empty_without_conditional_filters? is deprecated")
+          rules_empty?
+        end
+
+        # @private
+        def rules_empty?
+          reject { |k, v| RSpec::Core::FilterManager.default_exclusions[k] == v }.empty?
         end
       end
 
@@ -115,7 +143,7 @@ module RSpec
       attr_reader :exclusions, :inclusions
 
       def initialize
-        @exclusions = DEFAULT_EXCLUSIONS.dup.extend(Describable)
+        @exclusions = self.class.default_exclusions.dup.extend(Describable)
         @inclusions = {}.extend(Describable)
         extend(BackwardCompatibility)
       end
@@ -131,7 +159,7 @@ module RSpec
       end
 
       def empty?
-        inclusions.empty? && exclusions.empty_without_conditional_filters?
+        inclusions.empty? && exclusions.rules_empty?
       end
 
       def prune(examples)
@@ -143,6 +171,11 @@ module RSpec
       end
 
       def exclude!(*args)
+        RSpec.deprecate("FilterManager#exclude! is deprecated. Use FilterManager#exclude_only")
+        exclude_only(*args)
+      end
+
+      def exclude_only(*args)
         replace(@exclusions, @inclusions, *args)
       end
 
@@ -159,6 +192,11 @@ module RSpec
       end
 
       def include!(*args)
+        RSpec.deprecate("FilterManager#include! is deprecated. Use FilterManager#include_only")
+        include_only(*args)
+      end
+
+      def include_only(*args)
         unless_standalone(*args) { replace(@inclusions, @exclusions, *args) }
       end
 
@@ -196,7 +234,7 @@ module RSpec
       end
 
       def is_standalone_filter?(filter)
-        STANDALONE_FILTERS.any? {|key| filter.has_key?(key)}
+        self.class.standalone_filters.any? {|key| filter.has_key?(key)}
       end
     end
   end
