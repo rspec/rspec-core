@@ -9,6 +9,9 @@ Deprecations:
   a nested `describe <SomeClass>` example group, since `described_class`
   will return the innermost described class in RSpec 3 rather than the
   outermost described class, as it behaved in RSpec 2. (Myron Marston)
+* Deprecate `RSpec::Core::FilterManager::DEFAULT_EXCLUSIONS`,
+  `RSpec::Core::FilterManager::STANDALONE_FILTERS` and use of
+  `#empty_without_conditional_filters?` on those filters. (Sergey Pchelincev)
 
 ### 2.99.0.beta2 / 2014-02-17
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.beta1...v2.99.0.beta2)
