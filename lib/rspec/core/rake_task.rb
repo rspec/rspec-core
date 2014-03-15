@@ -108,13 +108,16 @@ module RSpec
         end
       end
 
+      def cmd_parts
+        parts = []
+        parts << RUBY
+        parts << ruby_opts
+        parts << "-S" << rspec_path
+        parts << files_to_run
+        parts << rspec_opts
+      end
+
       def spec_command
-        cmd_parts = []
-        cmd_parts << RUBY
-        cmd_parts << ruby_opts
-        cmd_parts << "-S" << rspec_path
-        cmd_parts << files_to_run
-        cmd_parts << rspec_opts
         cmd_parts.flatten.reject(&blank).join(" ")
       end
 
