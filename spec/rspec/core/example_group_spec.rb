@@ -719,6 +719,7 @@ module RSpec::Core
       it "has access to example options within before(:each)" do
         group = ExampleGroup.describe
         option = nil
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /options/)
         group.before(:each) {|ex| option = ex.options[:data] }
         group.example("no-op", :data => :sample) { }
         group.run
@@ -728,6 +729,7 @@ module RSpec::Core
       it "has access to example options within after(:each)" do
         group = ExampleGroup.describe
         option = nil
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /options/)
         group.after(:each) {|ex| option = ex.options[:data] }
         group.example("no-op", :data => :sample) { }
         group.run

@@ -85,6 +85,8 @@ module RSpec
 
       # @deprecated access options via metadata instead
       def options
+        RSpec.deprecate("`RSpec::Core::Example#options`",
+                        :replacement => "`RSpec::Core::Example#metadata`")
         @options
       end
 

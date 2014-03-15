@@ -12,6 +12,8 @@ Deprecations:
 * Deprecate `RSpec::Core::FilterManager::DEFAULT_EXCLUSIONS`,
   `RSpec::Core::FilterManager::STANDALONE_FILTERS` and use of
   `#empty_without_conditional_filters?` on those filters. (Sergey Pchelincev)
+* Deprecate `RSpec::Core::Example#options` in favor of
+  `RSpec::Core::Example#metadata`. (Myron Marston)
 
 ### 2.99.0.beta2 / 2014-02-17
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.beta1...v2.99.0.beta2)
