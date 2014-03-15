@@ -35,3 +35,12 @@ module InSubProcess
   end
 end
 
+module PreCompiler
+  extend InSubProcess
+
+  def self.force_compilation(file)
+    in_sub_process do
+      require file
+    end
+  end
+end

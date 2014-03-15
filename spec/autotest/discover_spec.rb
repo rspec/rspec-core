@@ -1,6 +1,12 @@
 require "spec_helper"
+require "support/in_sub_process"
+
+if defined?(RUBY_ENGINE) && RUBY_ENGINE == 'rbx'
+  PreCompiler.force_compilation File.expand_path("../../../lib/autotest/discover.rb", __FILE__)
+end
 
 describe "autotest/discover.rb" do
+
   context "with ./.rspec present" do
     it "adds 'rspec2' to the list of discoveries" do
       File.stub(:exist?).with("./.rspec") { true }
