@@ -45,6 +45,11 @@ Deprecations:
   formatter. (Jon Rowe)
 * Deprecate `RSpec::Core::Reporter#abort` in favor of
   `RSpec::Core::Reporter#finish`. (Jon Rowe)
+* Deprecate `RSpec::Core::BaseTextFormatter::VT100_COLORS` and
+  `RSpec::Core::BaseTextFormatter::VT100_COLOR_CODES` in favour
+  of `RSpec::Core::BaseTextFormatter::ConsoleCodes::VT100_CODES` and
+  `RSpec::Core::BaseTextFormatter::ConsoleCodes::VT100_CODE_VALUES`.
+  (Jon Rowe)
 
 Bug Fixes:
 
