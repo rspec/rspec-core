@@ -1,5 +1,5 @@
 require 'rspec/core/formatters/base_formatter'
-require 'set'
+require 'rspec/core/formatters/console_codes'
 
 module RSpec
   module Core
@@ -68,12 +68,12 @@ module RSpec
         # @api public
         #
         # Outputs the slowest examples and example groups in a report when using `--profile COUNT` (default 10).
-        # 
+        #
         def dump_profile
           dump_profile_slowest_examples
           dump_profile_slowest_example_groups
         end
-        
+
         def dump_profile_slowest_examples
           number_of_examples = RSpec.configuration.profile_examples
           sorted_examples = examples.sort_by {|example|
@@ -95,7 +95,7 @@ module RSpec
 
         def dump_profile_slowest_example_groups
           number_of_examples = RSpec.configuration.profile_examples
-          example_groups = {} 
+          example_groups = {}
 
           examples.each do |example|
             location = example.example_group.parent_groups.last.metadata[:example_group][:location]
@@ -108,15 +108,15 @@ module RSpec
 
           # stop if we've only one example group
           return if example_groups.keys.length <= 1
-          
+
           example_groups.each do |loc, hash|
             hash[:average] = hash[:total_time].to_f / hash[:count]
           end
-          
+
           sorted_groups = example_groups.sort_by {|_, hash| -hash[:average]}.first(number_of_examples)
 
           output.puts "\nTop #{sorted_groups.size} slowest example groups:"
-          sorted_groups.each do |loc, hash| 
+          sorted_groups.each do |loc, hash|
             average = "#{failure_color(format_seconds(hash[:average]))} #{failure_color("seconds")} average"
             total   = "#{format_seconds(hash[:total_time])} seconds"
             count   = pluralize(hash[:count], "example")
@@ -165,41 +165,37 @@ module RSpec
           output.close if IO === output && output != $stdout
         end
 
-        VT100_COLORS = {
-          :black => 30,
-          :red => 31,
-          :green => 32,
-          :yellow => 33,
-          :blue => 34,
-          :magenta => 35,
-          :cyan => 36,
-          :white => 37
-        }
-
-        VT100_COLOR_CODES = VT100_COLORS.values.to_set
-
-        def color_code_for(code_or_symbol)
-          if VT100_COLOR_CODES.include?(code_or_symbol)
-            code_or_symbol
+        def self.const_missing(name)
+          base = "RSpec::Core::Formatters::"
+          case name
+            when :VT100_COLORS then
+              RSpec.deprecate("#{base}#{name}", :replacement => "#{base}ConsoleCodes::VT100_CODES")
+              RSpec::Core::Formatters::ConsoleCodes::VT100_CODES
+            when :VT100_COLOR_CODES then
+              RSpec.deprecate("#{base}#{name}", :replacement => "#{base}ConsoleCodes::VT100_CODE_VALUES")
+              require 'set'
+              RSpec::Core::Formatters::ConsoleCodes::VT100_CODES.to_set
           else
-            VT100_COLORS.fetch(code_or_symbol) do
-              color_code_for(:white)
-            end
+            super
           end
         end
 
+        def color_code_for(code_or_symbol)
+          ConsoleCodes.console_code_for(code_or_symbol)
+        end
+
         def colorize(text, code_or_symbol)
-          "\e[#{color_code_for(code_or_symbol)}m#{text}\e[0m"
+          ConsoleCodes.wrap(text, code_or_symbol)
         end
 
       protected
 
         def bold(text)
-          color_enabled? ? "\e[1m#{text}\e[0m" : text
+          ConsoleCodes.wrap(text, :bold)
         end
 
         def color(text, color_code)
-          color_enabled? ? colorize(text, color_code) : text
+          ConsoleCodes.wrap(text, color_code)
         end
 
         def failure_color(text)

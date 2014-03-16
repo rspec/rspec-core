@@ -456,6 +456,10 @@ describe RSpec::Core::Formatters::BaseTextFormatter do
   end
 
   describe "#colorize" do
+    before do
+      allow(RSpec.configuration).to receive(:color_enabled?) { true }
+    end
+
     it "accepts a VT100 integer code and formats the text with it" do
        expect(formatter.colorize('abc', 32)).to eq "\e[32mabc\e[0m"
     end
@@ -469,8 +473,25 @@ describe RSpec::Core::Formatters::BaseTextFormatter do
     end
   end
 
-  described_class::VT100_COLORS.each do |name, number|
-    next if name == :black
+  describe "#const_missing name" do
+
+    it "warns of deprecation for VT100_COLORS" do
+      expect_deprecation_with_call_site __FILE__, __LINE__ + 1
+      expect(described_class::VT100_COLORS).to eq RSpec::Core::Formatters::ConsoleCodes::VT100_CODES
+    end
+
+    it "warns of deprecation for VT100_COLOR_CODES" do
+      expect_deprecation_with_call_site __FILE__, __LINE__ + 1
+      expect(described_class::VT100_COLOR_CODES).to eq RSpec::Core::Formatters::ConsoleCodes::VT100_CODES.to_set
+    end
+
+    it "behaves normally for other constants" do
+      expect { described_class::NoSuchConst }.to raise_error(NameError)
+    end
+  end
+
+  RSpec::Core::Formatters::ConsoleCodes::VT100_CODES.each do |name, number|
+    next if name == :black || name == :bold
 
     describe "##{name}" do
       before do
@@ -490,5 +511,4 @@ describe RSpec::Core::Formatters::BaseTextFormatter do
       end
     end
   end
-
 end
