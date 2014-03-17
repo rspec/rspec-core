@@ -14,6 +14,11 @@ Deprecations:
   `#empty_without_conditional_filters?` on those filters. (Sergey Pchelincev)
 * Deprecate `RSpec::Core::Example#options` in favor of
   `RSpec::Core::Example#metadata`. (Myron Marston)
+* Issue warning when passing a symbol or hash to `describe` or `context`
+  as the first argument. In RSpec 2.x this would be treated as metadata
+  but in RSpec 3 it'll be treated as the described object. To continue
+  having it treated as metadata, pass a description before the symbol or
+  hash. (Myron Marston)
 
 ### 2.99.0.beta2 / 2014-02-17
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.beta1...v2.99.0.beta2)

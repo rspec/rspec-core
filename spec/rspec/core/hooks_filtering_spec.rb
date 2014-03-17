@@ -35,7 +35,7 @@ module RSpec::Core
             c.before(:match => true) { filters << "before each in config"}
             c.after(:match => true)  { filters << "after each in config"}
           end
-          group = ExampleGroup.describe(:match => true)
+          group = ExampleGroup.describe("group", :match => true)
           group.example("example") {}
           group.run
           expect(filters).to eq([
@@ -55,7 +55,7 @@ module RSpec::Core
           c.after(:each,  :match => true) { filters << "after each in config"}
           c.after(:all,   :match => true) { filters << "after all in config"}
         end
-        group = ExampleGroup.describe(:match => true)
+        group = ExampleGroup.describe("group", :match => true)
         group.example("example") {}
         group.run
         expect(filters).to eq([
@@ -125,7 +125,7 @@ module RSpec::Core
           c.after(:each,  :match => false) { filters << "after each in config"}
           c.after(:all,   :match => false) { filters << "after all in config"}
         end
-        group = ExampleGroup.describe(:match => true)
+        group = ExampleGroup.describe("group", :match => true)
         group.example("example") {}
         group.run
         expect(filters).to eq([])
@@ -196,7 +196,7 @@ module RSpec::Core
           c.after(:each,  :one => 1, :two => 2, :three => 3) { filters << "after each in config"}
           c.after(:all,   :one => 1, :three => 3)            { filters << "after all in config"}
         end
-        group = ExampleGroup.describe(:one => 1, :two => 2, :three => 3)
+        group = ExampleGroup.describe("group", :one => 1, :two => 2, :three => 3)
         group.example("example") {}
         group.run
         expect(filters).to eq([
@@ -217,7 +217,7 @@ module RSpec::Core
           c.after(:each,  :one => 1, :two => 2, :three => 3, :four => 4) { filters << "after each in config"}
           c.after(:all,   :one => 1, :three => 3, :four => 4)            { filters << "after all in config"}
         end
-        group = ExampleGroup.describe(:one => 1, :two => 2, :three => 3)
+        group = ExampleGroup.describe("group", :one => 1, :two => 2, :three => 3)
         group.example("example") {}
         group.run
         expect(filters).to eq([])

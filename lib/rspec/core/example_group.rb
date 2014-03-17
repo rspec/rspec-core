@@ -296,8 +296,18 @@ WARNING
       def self.describe(*args, &example_group_block)
         @_subclass_count ||= 0
         @_subclass_count += 1
+
+        if Symbol === args.first || Hash === args.first
+          description_arg_behavior_changing_in_rspec_3 = DescriptionBehaviorChange.new(
+            args.first, CallerFilter.first_non_rspec_line
+          )
+        end
+
         args << {} unless args.last.is_a?(Hash)
-        args.last.update(:example_group_block => example_group_block)
+        args.last.update(
+          :example_group_block => example_group_block,
+          :description_arg_behavior_changing_in_rspec_3 => description_arg_behavior_changing_in_rspec_3
+        )
 
         # TODO 2010-05-05: Because we don't know if const_set is thread-safe
         child = const_set(
@@ -307,6 +317,8 @@ WARNING
         children << child
         child
       end
+
+      DescriptionBehaviorChange = Struct.new(:arg, :call_site)
 
       class << self
         alias_method :context, :describe

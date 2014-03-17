@@ -127,6 +127,8 @@ module RSpec
         include MetadataHash
 
         def described_class
+          warn_about_first_description_arg_behavioral_change_in_rspec_3
+
           value_for_rspec_2 = described_class_for_rspec_2
           value_for_rspec_3 = described_class_for_rspec_3
 
@@ -182,6 +184,22 @@ module RSpec
           nil
         end
 
+        def warn_about_first_description_arg_behavioral_change_in_rspec_3
+          return unless behavior_change = self[:description_arg_behavior_changing_in_rspec_3]
+
+          RSpec.warn_deprecation(<<-EOS.gsub(/^\s+\|/, ''))
+            |The semantics of `describe <a #{behavior_change.arg.class.name}>` are changing in RSpec 3. In RSpec 2,
+            |this would be treated as metadata, but as the first `describe` argument,
+            |this will be treated as the described object in RSpec 3. If you want this
+            |to be treated as metadata, pass a description as the first argument.
+            |(Example group defined at #{behavior_change.call_site})
+          EOS
+        end
+
+        def first_description_arg
+          self[:description_args].first
+        end
+
         def full_description
           build_description_from(*container_stack.reverse.map {|a| a[:description_args]}.flatten)
         end
@@ -216,6 +234,7 @@ module RSpec
 
         self[:example_group].store(:description_args, args)
         self[:example_group].store(:caller, user_metadata.delete(:caller) || caller)
+        self[:example_group][:description_arg_behavior_changing_in_rspec_3] = user_metadata.delete(:description_arg_behavior_changing_in_rspec_3)
 
         update(user_metadata)
       end
