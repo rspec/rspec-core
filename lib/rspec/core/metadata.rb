@@ -176,7 +176,7 @@ module RSpec
             end
 
             candidate = g[:description_args].first
-            return candidate unless String === candidate || Symbol === candidate
+            return candidate unless NilClass === candidate || String === candidate || Symbol === candidate
           end
 
           nil

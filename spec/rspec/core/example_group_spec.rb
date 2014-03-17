@@ -374,6 +374,21 @@ module RSpec::Core
           expect(warn_opts[:message]).to include("#{__FILE__}:#{__LINE__ - 8}")
           expect(warn_opts[:message]).to include("described_class")
         end
+
+        it "does not print a deprecation warning when the inner example group has no description args" do
+          dc = :unset
+          deprecations = []
+          allow(RSpec).to receive(:warn_deprecation) { |msg| deprecations << msg }
+
+          ExampleGroup.describe(String) do
+            describe do
+              example { dc = described_class }
+            end
+          end.run
+
+          expect(dc).to be(String)
+          expect(deprecations).to eq([])
+        end
       end
 
       context "for `describe(SomeClass)` within a `describe 'some string' group" do
