@@ -37,6 +37,44 @@ module RSpec::Core
         end
       end
 
+      describe "with a symbol" do
+        it "returns the string form and issues a deprecation warning" do
+          the_subject = :unset
+          deprecations = []
+          allow(RSpec).to receive(:warn_deprecation) { |msg| deprecations << msg }
+
+          line = __LINE__ + 1
+          ExampleGroup.describe :symbol do
+            example { the_subject = subject }
+          end.run
+
+          expect(the_subject).to eq("symbol")
+          expect(deprecations.size).to eq(1)
+          deprecation = deprecations.first
+          expect(deprecation).to match(/describe <a Symbol>/)
+          expect(deprecation).to include("#{__FILE__}:#{line}")
+        end
+      end
+
+      describe "with a hash" do
+        it "returns a blank string and issues a deprecation warning" do
+          the_subject = :unset
+          deprecations = []
+          allow(RSpec).to receive(:warn_deprecation) { |msg| deprecations << msg }
+
+          line = __LINE__ + 1
+          ExampleGroup.describe :foo => 3 do
+            example { the_subject = subject }
+          end.run
+
+          expect(the_subject).to eq("")
+          expect(deprecations.size).to eq(1)
+          deprecation = deprecations.first
+          expect(deprecation).to match(/describe <a Hash>/)
+          expect(deprecation).to include("#{__FILE__}:#{line}")
+        end
+      end
+
       it "can be overriden and super'd to from a nested group" do
         outer_subject_value = inner_subject_value = nil
 

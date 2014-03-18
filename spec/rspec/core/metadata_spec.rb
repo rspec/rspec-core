@@ -261,7 +261,7 @@ module RSpec
       end
 
       [:described_class, :describes].each do |key|
-        describe key do
+        describe key.inspect do
           context "with a String" do
             it "returns nil" do
               m = Metadata.new

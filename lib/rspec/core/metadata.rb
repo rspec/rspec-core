@@ -127,6 +127,8 @@ module RSpec
         include MetadataHash
 
         def described_class
+          warn_about_first_description_arg_behavioral_change_in_rspec_3
+
           value_for_rspec_2 = described_class_for_rspec_2
           value_for_rspec_3 = described_class_for_rspec_3
 
@@ -176,10 +178,19 @@ module RSpec
             end
 
             candidate = g[:description_args].first
-            return candidate unless String === candidate || Symbol === candidate
+            return candidate unless NilClass === candidate || String === candidate || Symbol === candidate
           end
 
           nil
+        end
+
+        def warn_about_first_description_arg_behavioral_change_in_rspec_3
+          return unless behavior_change = self[:description_arg_behavior_changing_in_rspec_3]
+          RSpec.warn_deprecation(behavior_change.warning)
+        end
+
+        def first_description_arg
+          self[:description_args].first
         end
 
         def full_description
@@ -216,6 +227,7 @@ module RSpec
 
         self[:example_group].store(:description_args, args)
         self[:example_group].store(:caller, user_metadata.delete(:caller) || caller)
+        self[:example_group][:description_arg_behavior_changing_in_rspec_3] = user_metadata.delete(:description_arg_behavior_changing_in_rspec_3)
 
         update(user_metadata)
       end

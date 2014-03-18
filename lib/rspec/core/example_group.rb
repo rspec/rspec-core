@@ -296,8 +296,18 @@ WARNING
       def self.describe(*args, &example_group_block)
         @_subclass_count ||= 0
         @_subclass_count += 1
+
+        if Symbol === args.first || Hash === args.first
+          description_arg_behavior_changing_in_rspec_3 = DescriptionBehaviorChange.new(
+            args.first, CallerFilter.first_non_rspec_line
+          )
+        end
+
         args << {} unless args.last.is_a?(Hash)
-        args.last.update(:example_group_block => example_group_block)
+        args.last.update(
+          :example_group_block => example_group_block,
+          :description_arg_behavior_changing_in_rspec_3 => description_arg_behavior_changing_in_rspec_3
+        )
 
         # TODO 2010-05-05: Because we don't know if const_set is thread-safe
         child = const_set(
@@ -306,6 +316,18 @@ WARNING
         )
         children << child
         child
+      end
+
+      DescriptionBehaviorChange = Struct.new(:arg, :call_site) do
+        def warning
+          <<-EOS.gsub(/^\s+\|/, '')
+            |The semantics of `describe <a #{arg.class.name}>` are changing in RSpec 3. In RSpec 2,
+            |this would be treated as metadata, but as the first `describe` argument,
+            |this will be treated as the described object in RSpec 3. If you want this
+            |to be treated as metadata, pass a description as the first argument.
+            |(Example group defined at #{call_site})
+          EOS
+        end
       end
 
       class << self

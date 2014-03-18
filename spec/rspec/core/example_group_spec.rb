@@ -292,7 +292,7 @@ module RSpec::Core
         context "and a string in an inner group" do
           it "is the top level constant" do
             group = ExampleGroup.describe(String) do
-              describe :symbol do
+              describe "some string" do
                 example "described_class is String" do
                   expect(described_class).to eq(String)
                 end
@@ -308,7 +308,7 @@ module RSpec::Core
             group = ExampleGroup.describe(String) do
               described_class
               metadata[:example_group][:described_class] = Object
-              describe :symbol do
+              describe "inner" do
                 example "described_class is Object" do
                   expect(described_class).to eq(Object)
                 end
@@ -373,6 +373,21 @@ module RSpec::Core
 
           expect(warn_opts[:message]).to include("#{__FILE__}:#{__LINE__ - 8}")
           expect(warn_opts[:message]).to include("described_class")
+        end
+
+        it "does not print a deprecation warning when the inner example group has no description args" do
+          dc = :unset
+          deprecations = []
+          allow(RSpec).to receive(:warn_deprecation) { |msg| deprecations << msg }
+
+          ExampleGroup.describe(String) do
+            describe do
+              example { dc = described_class }
+            end
+          end.run
+
+          expect(dc).to be(String)
+          expect(deprecations).to eq([])
         end
       end
 
