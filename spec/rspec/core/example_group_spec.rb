@@ -1282,5 +1282,17 @@ module RSpec::Core
         end.to raise_error(ArgumentError,%q|Could not find shared examples "shared stuff"|)
       end
     end
+
+    describe "deprecated methods" do
+      specify ".describes is deprecated" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /describes/)
+        expect(self.class.describes).to eq(self.class.described_class)
+      end
+
+      specify ".display_name is deprecated" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /display_name/)
+        expect(self.class.display_name).to eq(self.class.description)
+      end
+    end
   end
 end
