@@ -49,9 +49,20 @@ module RSpec
         end
 
         delegate_to_metadata :described_class, :file_path
-        alias_method :display_name, :description
+
         # @private
-        alias_method :describes, :described_class
+        def display_name
+          RSpec.deprecate('`RSpec::Core::ExampleGroup.display_name`',
+                          :replacement => "`RSpec::Core::ExampleGroup.description`")
+          description
+        end
+
+        # @private
+        def describes
+          RSpec.deprecate('`RSpec::Core::ExampleGroup.describes`',
+                          :replacement => "`RSpec::Core::ExampleGroup.described_class`")
+          described_class
+        end
 
         # @private
         # @macro [attach] define_example_method

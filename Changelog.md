@@ -19,6 +19,10 @@ Deprecations:
   but in RSpec 3 it'll be treated as the described object. To continue
   having it treated as metadata, pass a description before the symbol or
   hash. (Myron Marston)
+* Deprecate `RSpec::Core::ExampleGroup.display_name` in favor of
+  `RSpec::Core::ExampleGroup.description`. (Myron Marston)
+* Deprecate `RSpec::Core::ExampleGroup.describes` in favor of
+  `RSpec::Core::ExampleGroup.described_class`. (Myron Marston)
 
 ### 2.99.0.beta2 / 2014-02-17
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.beta1...v2.99.0.beta2)
