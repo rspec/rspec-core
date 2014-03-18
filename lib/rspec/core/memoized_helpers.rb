@@ -490,10 +490,8 @@ EOS
         #   end
         def its(attribute, &block)
           RSpec.deprecate("Use of rspec-core's `its` method", :replacement => 'the rspec-its gem')
-          description = attribute
-          description = description.to_s if Symbol === description
 
-          describe(description) do
+          describe(attribute.to_s) do
             if Array === attribute
               let(:__its_subject) { subject[*attribute] }
             else

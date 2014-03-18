@@ -186,14 +186,7 @@ module RSpec
 
         def warn_about_first_description_arg_behavioral_change_in_rspec_3
           return unless behavior_change = self[:description_arg_behavior_changing_in_rspec_3]
-
-          RSpec.warn_deprecation(<<-EOS.gsub(/^\s+\|/, ''))
-            |The semantics of `describe <a #{behavior_change.arg.class.name}>` are changing in RSpec 3. In RSpec 2,
-            |this would be treated as metadata, but as the first `describe` argument,
-            |this will be treated as the described object in RSpec 3. If you want this
-            |to be treated as metadata, pass a description as the first argument.
-            |(Example group defined at #{behavior_change.call_site})
-          EOS
+          RSpec.warn_deprecation(behavior_change.warning)
         end
 
         def first_description_arg

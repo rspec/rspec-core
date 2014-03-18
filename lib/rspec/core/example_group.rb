@@ -318,7 +318,17 @@ WARNING
         child
       end
 
-      DescriptionBehaviorChange = Struct.new(:arg, :call_site)
+      DescriptionBehaviorChange = Struct.new(:arg, :call_site) do
+        def warning
+          <<-EOS.gsub(/^\s+\|/, '')
+            |The semantics of `describe <a #{arg.class.name}>` are changing in RSpec 3. In RSpec 2,
+            |this would be treated as metadata, but as the first `describe` argument,
+            |this will be treated as the described object in RSpec 3. If you want this
+            |to be treated as metadata, pass a description as the first argument.
+            |(Example group defined at #{call_site})
+          EOS
+        end
+      end
 
       class << self
         alias_method :context, :describe
