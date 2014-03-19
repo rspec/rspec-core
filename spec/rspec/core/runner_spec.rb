@@ -102,6 +102,15 @@ module RSpec::Core
         RSpec::Core::Runner.run([], err, out)
       end
 
+      context "with a LoadError" do
+        it "exits with status 1" do
+          allow(CommandLine).to receive(:new).and_raise(LoadError)
+          expect(RSpec).to receive(:reset)
+          status = RSpec::Core::Runner.run([], err, out)
+          expect(status).to eq(1)
+        end
+      end
+
       context "with --drb or -X" do
         before(:each) do
           @options = RSpec::Core::ConfigurationOptions.new(%w[--drb --drb-port 8181 --color])

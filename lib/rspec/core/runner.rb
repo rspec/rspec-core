@@ -109,8 +109,10 @@ module RSpec
         else
           CommandLine.new(options).run(err, out)
         end
-      ensure
         RSpec.reset
+      rescue Exception
+        RSpec.reset
+        return 1
       end
     end
   end
