@@ -32,6 +32,11 @@ Deprecations:
   `RSpec::Core::Configuration#alias_example_to`. (Myron Marston)
 * Deprecate `RSpec::Core::ExampleGroup.alias_it_behaves_like_to` in favor
   of `RSpec::Core::Configuration#alias_it_behaves_like_to`. (Myron Marston)
+* Deprecate `RSpec::Core::ExampleGroup.focused` in favor of
+  `RSpec::Core::ExampleGroup.focus`. (Myron Marston)
+* Add deprecation warning for `config.filter_run :focused` since
+  example aliases `fit` and `focus` will no longer include
+  `:focused` metadata but will continue to include `:focus`. (Myron Marston)
 
 ### 2.99.0.beta2 / 2014-02-17
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.beta1...v2.99.0.beta2)

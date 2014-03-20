@@ -793,10 +793,12 @@ EOM
       #     # with treat_symbols_as_metadata_keys_with_true_values = true
       #     filter_run_including :foo # same as filter_run_including :foo => true
       def filter_run_including(*args)
-        filter_manager.include_with_low_priority build_metadata_hash_from(args)
+        __filter_run(__method__, *args)
       end
 
-      alias_method :filter_run, :filter_run_including
+      def filter_run(*args)
+        __filter_run(__method__, *args)
+      end
 
       # Clears and reassigns the `inclusion_filter`. Set to `nil` if you don't
       # want any inclusion filter at all.
@@ -1396,6 +1398,24 @@ MESSAGE
       def deprecate_unless_mock_adapter_name_is_exact(name, expected)
         return if name == expected
         RSpec.deprecate("`config.mock_with #{name.inspect}`", :replacement => "`config.mock_with :#{expected}`")
+      end
+
+      def __filter_run(method_name, *args)
+        metadata_hash = build_metadata_hash_from(args)
+
+        if metadata_hash[:focused]
+          RSpec.warn_deprecation(<<-EOS.gsub(/^\s*\|/, ''))
+            |In RSpec 2.x, `config.#{method_name} :focused => true` filters
+            |examples defined using `focus` or `fit` since those example aliases
+            |have attached `:focus => true, :focused => true` metadata. In RSpec 3,
+            |the metadata for those example aliases will only have `:focus => true`,
+            |so if you want to continue filtering examples defined with those example
+            |aliases you should update to `config.#{method_name} :focus => true`.
+            |(Called from #{CallerFilter.first_non_rspec_line}).
+          EOS
+        end
+
+        filter_manager.include_with_low_priority metadata_hash
       end
 
     end

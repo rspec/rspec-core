@@ -1011,6 +1011,18 @@ module RSpec::Core
         expect(config.inclusion_filter[:foo]).to be(true)
         expect(config.inclusion_filter[:bar]).to be(false)
       end
+
+      context "given `:focused => true`" do
+        it "issues a deprecation warning" do
+          expect_warn_deprecation_with_call_site(__FILE__, __LINE__ + 1, /filter_run_including :focused/)
+          config.filter_run_including :focused => true
+        end
+
+        it "issues a deprecation warning when using `filter_run`" do
+          expect_warn_deprecation_with_call_site(__FILE__, __LINE__ + 1, /filter_run :focused/)
+          config.filter_run :focused => true
+        end
+      end
     end
 
     describe "#filter_run_excluding" do

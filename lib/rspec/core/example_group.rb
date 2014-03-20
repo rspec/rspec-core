@@ -128,9 +128,6 @@ module RSpec
       define_example_method :focus,   :focused => true, :focus => true
       # Shortcut to define an example with `:focus` => true
       # @see example
-      define_example_method :focused, :focused => true, :focus => true
-      # Shortcut to define an example with `:focus` => true
-      # @see example
       define_example_method :fit,     :focused => true, :focus => true
 
       # Shortcut to define an example with :pending => true
@@ -149,6 +146,19 @@ module RSpec
       # Shortcut to define an example with :pending => 'Temporarily disabled with xspecify'
       # @see example
       define_example_method :xspecify, :pending => 'Temporarily disabled with xspecify'
+
+      # Shortcut to define an example with `:focus` => true
+      # @see example
+      def self.focused(desc=nil, *args, &block)
+        RSpec.deprecate("`RSpec::Core::ExampleGroup.focused`",
+                        :replacement => "`RSpec::Core::ExampleGroup.focus`")
+
+        metadata = Hash === args.last ? args.pop : {}
+        metadata.merge!(:focus => true, :focused => true)
+        args << metadata
+
+        example(desc, *args, &block)
+      end
 
       # Works like `alias_method :name, :example` with the added benefit of
       # assigning default metadata to the generated example.

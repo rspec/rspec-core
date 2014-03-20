@@ -1307,6 +1307,13 @@ module RSpec::Core
           ExampleGroup.alias_example_to(:an_example)
         }.to change { ExampleGroup.respond_to?(:an_example) }.from(false).to(true)
       end
+
+      specify ".focused is deprecated" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 2, /focused/)
+        ExampleGroup.describe("group") do
+          focused("example") { }
+        end
+      end
     end
   end
 end
