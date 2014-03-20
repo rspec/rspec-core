@@ -19,6 +19,11 @@ Deprecations:
   but in RSpec 3 it'll be treated as the described object. To continue
   having it treated as metadata, pass a description before the symbol or
   hash. (Myron Marston)
+* Deprecate `RSpec::Core::BaseTextFormatter::VT100_COLORS` and
+  `RSpec::Core::BaseTextFormatter::VT100_COLOR_CODES` in favour
+  of `RSpec::Core::BaseTextFormatter::ConsoleCodes::VT100_CODES` and
+  `RSpec::Core::BaseTextFormatter::ConsoleCodes::VT100_CODE_VALUES`.
+  (Jon Rowe)
 * Deprecate `RSpec::Core::ExampleGroup.display_name` in favor of
   `RSpec::Core::ExampleGroup.description`. (Myron Marston)
 * Deprecate `RSpec::Core::ExampleGroup.describes` in favor of
@@ -60,11 +65,6 @@ Deprecations:
   formatter. (Jon Rowe)
 * Deprecate `RSpec::Core::Reporter#abort` in favor of
   `RSpec::Core::Reporter#finish`. (Jon Rowe)
-* Deprecate `RSpec::Core::BaseTextFormatter::VT100_COLORS` and
-  `RSpec::Core::BaseTextFormatter::VT100_COLOR_CODES` in favour
-  of `RSpec::Core::BaseTextFormatter::ConsoleCodes::VT100_CODES` and
-  `RSpec::Core::BaseTextFormatter::ConsoleCodes::VT100_CODE_VALUES`.
-  (Jon Rowe)
 
 Bug Fixes:
 
