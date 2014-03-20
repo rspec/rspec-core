@@ -280,6 +280,7 @@ module RSpec
         @profile_examples = false
         @requires = []
         @libs = []
+        @show_failures_in_pending_blocks = false
       end
 
       # @private
