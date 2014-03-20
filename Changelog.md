@@ -19,6 +19,11 @@ Deprecations:
   but in RSpec 3 it'll be treated as the described object. To continue
   having it treated as metadata, pass a description before the symbol or
   hash. (Myron Marston)
+* Deprecate `RSpec::Core::BaseTextFormatter::VT100_COLORS` and
+  `RSpec::Core::BaseTextFormatter::VT100_COLOR_CODES` in favour
+  of `RSpec::Core::BaseTextFormatter::ConsoleCodes::VT100_CODES` and
+  `RSpec::Core::BaseTextFormatter::ConsoleCodes::VT100_CODE_VALUES`.
+  (Jon Rowe)
 * Deprecate `RSpec::Core::ExampleGroup.display_name` in favor of
   `RSpec::Core::ExampleGroup.description`. (Myron Marston)
 * Deprecate `RSpec::Core::ExampleGroup.describes` in favor of
@@ -27,6 +32,11 @@ Deprecations:
   `RSpec::Core::Configuration#alias_example_to`. (Myron Marston)
 * Deprecate `RSpec::Core::ExampleGroup.alias_it_behaves_like_to` in favor
   of `RSpec::Core::Configuration#alias_it_behaves_like_to`. (Myron Marston)
+* Deprecate `RSpec::Core::ExampleGroup.focused` in favor of
+  `RSpec::Core::ExampleGroup.focus`. (Myron Marston)
+* Add deprecation warning for `config.filter_run :focused` since
+  example aliases `fit` and `focus` will no longer include
+  `:focused` metadata but will continue to include `:focus`. (Myron Marston)
 
 ### 2.99.0.beta2 / 2014-02-17
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.beta1...v2.99.0.beta2)
@@ -60,11 +70,6 @@ Deprecations:
   formatter. (Jon Rowe)
 * Deprecate `RSpec::Core::Reporter#abort` in favor of
   `RSpec::Core::Reporter#finish`. (Jon Rowe)
-* Deprecate `RSpec::Core::BaseTextFormatter::VT100_COLORS` and
-  `RSpec::Core::BaseTextFormatter::VT100_COLOR_CODES` in favour
-  of `RSpec::Core::BaseTextFormatter::ConsoleCodes::VT100_CODES` and
-  `RSpec::Core::BaseTextFormatter::ConsoleCodes::VT100_CODE_VALUES`.
-  (Jon Rowe)
 
 Bug Fixes:
 
