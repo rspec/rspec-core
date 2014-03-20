@@ -23,6 +23,10 @@ Deprecations:
   `RSpec::Core::ExampleGroup.description`. (Myron Marston)
 * Deprecate `RSpec::Core::ExampleGroup.describes` in favor of
   `RSpec::Core::ExampleGroup.described_class`. (Myron Marston)
+* Deprecate `RSpec::Core::ExampleGroup.alias_example_to` in favor of
+  `RSpec::Core::Configuration#alias_example_to`. (Myron Marston)
+* Deprecate `RSpec::Core::ExampleGroup.alias_it_behaves_like_to` in favor
+  of `RSpec::Core::Configuration#alias_it_behaves_like_to`. (Myron Marston)
 
 ### 2.99.0.beta2 / 2014-02-17
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.beta1...v2.99.0.beta2)

@@ -1293,6 +1293,20 @@ module RSpec::Core
         expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /display_name/)
         expect(self.class.display_name).to eq(self.class.description)
       end
+
+      specify ".alias_it_behaves_like_to is deprecated" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 2, /alias_it_behaves_like_to/)
+        expect {
+          ExampleGroup.alias_it_behaves_like_to(:it_does_something, "it does something")
+        }.to change { ExampleGroup.respond_to?(:it_does_something) }.from(false).to(true)
+      end
+
+      specify ".alias_example_to is deprecated" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 2, /alias_example_to/)
+        expect {
+          ExampleGroup.alias_example_to(:an_example)
+        }.to change { ExampleGroup.respond_to?(:an_example) }.from(false).to(true)
+      end
     end
   end
 end

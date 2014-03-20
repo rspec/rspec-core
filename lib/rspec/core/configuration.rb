@@ -280,6 +280,7 @@ module RSpec
         @profile_examples = false
         @requires = []
         @libs = []
+        @show_failures_in_pending_blocks = false
       end
 
       # @private
@@ -730,7 +731,7 @@ EOM
       #     end
       def alias_example_to(new_name, *args)
         extra_options = build_metadata_hash_from(args)
-        RSpec::Core::ExampleGroup.alias_example_to(new_name, extra_options)
+        RSpec::Core::ExampleGroup.define_example_method(new_name, extra_options)
       end
 
       # Define an alias for it_should_behave_like that allows different
@@ -755,7 +756,7 @@ EOM
       #       has behavior: sortability
       #         # sortability examples here
       def alias_it_behaves_like_to(new_name, report_label = '')
-        RSpec::Core::ExampleGroup.alias_it_behaves_like_to(new_name, report_label)
+        RSpec::Core::ExampleGroup.define_nested_shared_group_method(new_name, report_label)
       end
 
       alias_method :alias_it_should_behave_like_to, :alias_it_behaves_like_to
