@@ -27,17 +27,13 @@ Feature: --line_number option
 
       end
       """
-    When I run `rspec example_spec.rb --line_number 5 --format doc`
+    When I run `rspec example_spec.rb --line_number 5`
     Then the examples should all pass
-    And the output should contain "should be > 8"
-    But the output should not contain "should be < 10"
-    And the output should not contain "should be 3*3"
+    And the output should contain "1 example"
 
-    When I run `rspec example_spec.rb --line_number 5 --line_number 9 --format doc`
+    When I run `rspec example_spec.rb --line_number 5 --line_number 9`
     Then the examples should all pass
-    And the output should contain "should be > 8"
-    And the output should contain "should be < 10"
-    But the output should not contain "should be 3*3"
+    And the output should contain "2 examples"
 
   Scenario: one liner
     Given a file named "example_spec.rb" with:
@@ -52,7 +48,6 @@ Feature: --line_number option
 
       end
       """
-    When I run `rspec example_spec.rb --line_number 5 --format doc`
+    When I run `rspec example_spec.rb --line_number 5`
     Then the examples should all pass
-    Then the output should contain "should be > 8"
-    But the output should not contain "should be < 10"
+    And the output should contain "1 example"

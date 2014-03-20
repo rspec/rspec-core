@@ -184,6 +184,10 @@ FILTERING
 
         parser.on('-l', '--line-number LINE', 'Specify line number of an example or group (may be',
                                               '  used more than once).') do |o|
+          Metadata.line_number_filter_deprecation_issued = true
+          RSpec.deprecate("The `--line-number`/`-l` CLI option",
+                          :replacement => "the `path/to/file.rb:num` form",
+                          :call_site => nil)
           (options[:line_numbers] ||= []) << o
         end
 

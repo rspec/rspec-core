@@ -25,6 +25,9 @@ module RSpec
     # @see Configuration#filter_run_including
     # @see Configuration#filter_run_excluding
     class Metadata < Hash
+      class << self
+        attr_accessor :line_number_filter_deprecation_issued
+      end
 
       def self.relative_path(line)
         line = line.sub(File.expand_path("."), ".")
@@ -250,7 +253,16 @@ module RSpec
       # @private
       def filter_applies?(key, value, metadata=self)
         return metadata.filter_applies_to_any_value?(key, value) if Array === metadata[key] && !(Proc === value)
-        return metadata.line_number_filter_applies?(value)       if key == :line_numbers
+
+        if key == :line_numbers
+          unless Metadata.line_number_filter_deprecation_issued
+            RSpec.deprecate("Filtering by `:line_numbers`",
+                            :replacement => "filtering by `:locations`")
+          end
+
+          return metadata.line_number_filter_applies?(value)
+        end
+
         return metadata.location_filter_applies?(value)          if key == :locations
         return metadata.filters_apply?(key, value)               if Hash === value
 

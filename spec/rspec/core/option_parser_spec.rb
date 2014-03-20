@@ -65,6 +65,11 @@ module RSpec::Core
           options = Parser.parse!([option, "3"])
           expect(options[:line_numbers]).to eq ["3"]
         end
+
+        it "is deprecated" do
+          expect_deprecation_with_no_call_site(%r{`--line-number`/`-l`})
+          Parser.parse!([option, "3"])
+        end
       end
     end
 

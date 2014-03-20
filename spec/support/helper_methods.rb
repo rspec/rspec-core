@@ -44,6 +44,10 @@ module RSpecHelpers
     end
   end
 
+  def expect_no_deprecation
+    expect(RSpec.configuration.reporter).not_to receive(:deprecation)
+  end
+
   def allow_deprecation
     allow(RSpec.configuration.reporter).to receive(:deprecation)
   end
