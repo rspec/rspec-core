@@ -115,6 +115,29 @@ module RSpec
           it_has_behavior "matching by line number"
         end
 
+        context "with a :line_numbers filter" do
+          before(:each)  { Metadata.line_number_filter_deprecation_issued = false }
+          after(:all)    { Metadata.line_number_filter_deprecation_issued = false }
+          let(:metadata) { Metadata.new.process("group") }
+
+          context "when a line number filter is applied manually (e.g. not from the command line)" do
+            it 'issues a deprecation warning' do
+              expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /:line_numbers/)
+              metadata.filter_applies?(:line_numbers, [2])
+            end
+          end
+
+          context "when a line number filter is applied from the command line" do
+            it "does not issue an additional deprecation" do
+              allow_deprecation
+              Parser.parse!(["--line-number", "3"])
+
+              expect_no_deprecation
+              metadata.filter_applies?(:line_numbers, [2])
+            end
+          end
+        end
+
         context "with locations" do
           let(:condition_key){ :locations }
           let(:parent_group_condition) do
