@@ -63,136 +63,140 @@ module RSpec
                           :replacement => "`RSpec::Core::ExampleGroup.described_class`")
           described_class
         end
+      end
 
-        # @private
-        # @macro [attach] define_example_method
-        #   @param [String] name
-        #   @param [Hash] extra_options
-        #   @param [Block] implementation
-        #   @yield [Example] the example object
-        def self.define_example_method(name, extra_options={})
-          module_eval(<<-END_RUBY, __FILE__, __LINE__)
-            def #{name}(desc=nil, *args, &block)
-              if #{name.inspect} == :pending
-                RSpec.warn_deprecation(<<-EOS.gsub(/^\s+\\|/, ''))
-                  |The semantics of `RSpec::Core::ExampleGroup#pending` are changing in RSpec 3.
-                  |In RSpec 2.x, it caused the example to be skipped. In RSpec 3, the example will
-                  |still be run but is expected to fail, and will be marked as a failure (rather
-                  |than as pending) if the example passes, just like how `pending` with a block
-                  |from within an example already works.
-                  |
-                  |To keep the same skip semantics, change `pending` to `skip`.  Otherwise, if you
-                  |want the new RSpec 3 behavior, you can safely ignore this warning and continue
-                  |to upgrade to RSpec 3 without addressing it.
-                  |
-                  |Called from \#{CallerFilter.first_non_rspec_line}.
-                  |
-                EOS
-              end
-              options = build_metadata_hash_from(args)
-              options.update(:pending => RSpec::Core::Pending::NOT_YET_IMPLEMENTED) unless block
-              options.update(#{extra_options.inspect})
-              examples << RSpec::Core::Example.new(self, desc, options, block)
-              examples.last
+      # @private
+      # @macro [attach] define_example_method
+      #   @param [String] name
+      #   @param [Hash] extra_options
+      #   @param [Block] implementation
+      #   @yield [Example] the example object
+      def self.define_example_method(name, extra_options={})
+        module_eval(<<-END_RUBY, __FILE__, __LINE__)
+          def self.#{name}(desc=nil, *args, &block)
+            if #{name.inspect} == :pending
+              RSpec.warn_deprecation(<<-EOS.gsub(/^\s+\\|/, ''))
+                |The semantics of `RSpec::Core::ExampleGroup#pending` are changing in RSpec 3.
+                |In RSpec 2.x, it caused the example to be skipped. In RSpec 3, the example will
+                |still be run but is expected to fail, and will be marked as a failure (rather
+                |than as pending) if the example passes, just like how `pending` with a block
+                |from within an example already works.
+                |
+                |To keep the same skip semantics, change `pending` to `skip`.  Otherwise, if you
+                |want the new RSpec 3 behavior, you can safely ignore this warning and continue
+                |to upgrade to RSpec 3 without addressing it.
+                |
+                |Called from \#{CallerFilter.first_non_rspec_line}.
+                |
+              EOS
             end
-          END_RUBY
-        end
+            options = build_metadata_hash_from(args)
+            options.update(:pending => RSpec::Core::Pending::NOT_YET_IMPLEMENTED) unless block
+            options.update(#{extra_options.inspect})
+            examples << RSpec::Core::Example.new(self, desc, options, block)
+            examples.last
+          end
+        END_RUBY
+      end
 
-        # Defines an example within a group.
-        # @example
-        #   example do
-        #   end
-        #
-        #   example "does something" do
-        #   end
-        #
-        #   example "does something", :with => 'additional metadata' do
-        #   end
-        #
-        #   example "does something" do |ex|
-        #     # ex is the Example object that evals this block
-        #   end
-        define_example_method :example
-        # Defines an example within a group.
-        # @example
-        define_example_method :it
-        # Defines an example within a group.
-        # This is here primarily for backward compatibility with early versions
-        # of RSpec which used `context` and `specify` instead of `describe` and
-        # `it`.
-        define_example_method :specify
+      # Defines an example within a group.
+      # @example
+      #   example do
+      #   end
+      #
+      #   example "does something" do
+      #   end
+      #
+      #   example "does something", :with => 'additional metadata' do
+      #   end
+      #
+      #   example "does something" do |ex|
+      #     # ex is the Example object that evals this block
+      #   end
+      define_example_method :example
+      # Defines an example within a group.
+      # @example
+      define_example_method :it
+      # Defines an example within a group.
+      # This is here primarily for backward compatibility with early versions
+      # of RSpec which used `context` and `specify` instead of `describe` and
+      # `it`.
+      define_example_method :specify
 
-        # Shortcut to define an example with `:focus` => true
-        # @see example
-        define_example_method :focus,   :focused => true, :focus => true
-        # Shortcut to define an example with `:focus` => true
-        # @see example
-        define_example_method :focused, :focused => true, :focus => true
-        # Shortcut to define an example with `:focus` => true
-        # @see example
-        define_example_method :fit,     :focused => true, :focus => true
+      # Shortcut to define an example with `:focus` => true
+      # @see example
+      define_example_method :focus,   :focused => true, :focus => true
+      # Shortcut to define an example with `:focus` => true
+      # @see example
+      define_example_method :focused, :focused => true, :focus => true
+      # Shortcut to define an example with `:focus` => true
+      # @see example
+      define_example_method :fit,     :focused => true, :focus => true
 
-        # Shortcut to define an example with :pending => true
-        # @see example
-        define_example_method :pending,  :pending => true
-        # Shortcut to define an example with :pending => true
-        # Backported from RSpec 3 to aid migration.
-        # @see example
-        define_example_method :skip,     :pending => true
-        # Shortcut to define an example with :pending => 'Temporarily disabled with xexample'
-        # @see example
-        define_example_method :xexample, :pending => 'Temporarily disabled with xexample'
-        # Shortcut to define an example with :pending => 'Temporarily disabled with xit'
-        # @see example
-        define_example_method :xit,      :pending => 'Temporarily disabled with xit'
-        # Shortcut to define an example with :pending => 'Temporarily disabled with xspecify'
-        # @see example
-        define_example_method :xspecify, :pending => 'Temporarily disabled with xspecify'
+      # Shortcut to define an example with :pending => true
+      # @see example
+      define_example_method :pending,  :pending => true
+      # Shortcut to define an example with :pending => true
+      # Backported from RSpec 3 to aid migration.
+      # @see example
+      define_example_method :skip,     :pending => true
+      # Shortcut to define an example with :pending => 'Temporarily disabled with xexample'
+      # @see example
+      define_example_method :xexample, :pending => 'Temporarily disabled with xexample'
+      # Shortcut to define an example with :pending => 'Temporarily disabled with xit'
+      # @see example
+      define_example_method :xit,      :pending => 'Temporarily disabled with xit'
+      # Shortcut to define an example with :pending => 'Temporarily disabled with xspecify'
+      # @see example
+      define_example_method :xspecify, :pending => 'Temporarily disabled with xspecify'
 
-        # Works like `alias_method :name, :example` with the added benefit of
-        # assigning default metadata to the generated example.
-        #
-        # @note Use with caution. This extends the language used in your
-        #   specs, but does not add any additional documentation.  We use this
-        #   in rspec to define methods like `focus` and `xit`, but we also add
-        #   docs for those methods.
-        def alias_example_to name, extra={}
-          (class << self; self; end).define_example_method name, extra
-        end
+      # Works like `alias_method :name, :example` with the added benefit of
+      # assigning default metadata to the generated example.
+      #
+      # @note Use with caution. This extends the language used in your
+      #   specs, but does not add any additional documentation.  We use this
+      #   in rspec to define methods like `focus` and `xit`, but we also add
+      #   docs for those methods.
+      def self.alias_example_to name, extra={}
+        RSpec.deprecate("`RSpec::Core::ExampleGroup.alias_example_to`",
+                        :replacement => "`RSpec::Core::Configuration#alias_example_to`")
+        define_example_method name, extra
+      end
 
-        # @private
-        # @macro [attach] define_nested_shared_group_method
-        #
-        #   @see SharedExampleGroup
-        def self.define_nested_shared_group_method(new_name, report_label=nil)
-          module_eval(<<-END_RUBY, __FILE__, __LINE__)
-            def #{new_name}(name, *args, &customization_block)
-              group = describe("#{report_label || "it should behave like"} \#{name}") do
-                find_and_eval_shared("examples", name, *args, &customization_block)
-              end
-              group.metadata[:shared_group_name] = name
-              group
+      # @private
+      # @macro [attach] define_nested_shared_group_method
+      #
+      #   @see SharedExampleGroup
+      def self.define_nested_shared_group_method(new_name, report_label=nil)
+        module_eval(<<-END_RUBY, __FILE__, __LINE__)
+          def self.#{new_name}(name, *args, &customization_block)
+            group = describe("#{report_label || "it should behave like"} \#{name}") do
+              find_and_eval_shared("examples", name, *args, &customization_block)
             end
-          END_RUBY
-        end
+            group.metadata[:shared_group_name] = name
+            group
+          end
+        END_RUBY
+      end
 
-        # Generates a nested example group and includes the shared content
-        # mapped to `name` in the nested group.
-        define_nested_shared_group_method :it_behaves_like, "behaves like"
-        # Generates a nested example group and includes the shared content
-        # mapped to `name` in the nested group.
-        define_nested_shared_group_method :it_should_behave_like
+      # Generates a nested example group and includes the shared content
+      # mapped to `name` in the nested group.
+      define_nested_shared_group_method :it_behaves_like, "behaves like"
+      # Generates a nested example group and includes the shared content
+      # mapped to `name` in the nested group.
+      define_nested_shared_group_method :it_should_behave_like
 
-        # Works like `alias_method :name, :it_behaves_like` with the added
-        # benefit of assigning default metadata to the generated example.
-        #
-        # @note Use with caution. This extends the language used in your
-        #   specs, but does not add any additional documentation.  We use this
-        #   in rspec to define `it_should_behave_like` (for backward
-        #   compatibility), but we also add docs for that method.
-        def alias_it_behaves_like_to name, *args, &block
-          (class << self; self; end).define_nested_shared_group_method name, *args, &block
-        end
+      # Works like `alias_method :name, :it_behaves_like` with the added
+      # benefit of assigning default metadata to the generated example.
+      #
+      # @note Use with caution. This extends the language used in your
+      #   specs, but does not add any additional documentation.  We use this
+      #   in rspec to define `it_should_behave_like` (for backward
+      #   compatibility), but we also add docs for that method.
+      def self.alias_it_behaves_like_to name, *args, &block
+        RSpec.deprecate("`RSpec::Core::ExampleGroup.alias_it_behaves_like_to`",
+                        :replacement => "`RSpec::Core::Configuration#alias_it_behaves_like_to`")
+        define_nested_shared_group_method name, *args, &block
       end
 
       # Includes shared content mapped to `name` directly in the group in which
