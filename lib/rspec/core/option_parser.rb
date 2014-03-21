@@ -30,9 +30,10 @@ module RSpec::Core
       args.map! { |arg|
         case arg
         when "--formatter"
-          RSpec.deprecate("the --formatter option", :replacement => "-f or --format")
+          RSpec.deprecate("The `--formatter` option", :replacement => "-f or --format", :call_site => nil)
           "--format"
         when "--default_path"
+          RSpec.deprecate("The `--default_path` option", :replacement => "--default-path", :call_site => nil)
           "--default-path"
         when "--line_number"
           "--line-number"

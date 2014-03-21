@@ -27,7 +27,7 @@ module RSpec::Core
 
     describe "--formatter" do
       it "is deprecated" do
-        RSpec.should_receive(:deprecate)
+        expect_deprecation_with_no_call_site(%r{`--formatter`})
         Parser.parse!(%w[--formatter doc])
       end
 
@@ -38,6 +38,11 @@ module RSpec::Core
     end
 
     describe "--default_path" do
+      it "is deprecated" do
+        expect_deprecation_with_no_call_site(%r{`--default_path`})
+        Parser.parse!(%w[--default_path foo])
+      end
+
       it "gets converted to --default-path" do
         options = Parser.parse!(%w[--default_path foo])
         expect(options[:default_path]).to eq "foo"
@@ -45,6 +50,11 @@ module RSpec::Core
     end
 
     describe "--line_number" do
+      it "is deprecated" do
+        expect_deprecation_with_no_call_site(%r{`--line-number`/`-l`})
+        Parser.parse!(%w[--line_number 3])
+      end
+
       it "gets converted to --line-number" do
         options = Parser.parse!(%w[--line_number 3])
         expect(options[:line_numbers]).to eq ["3"]
