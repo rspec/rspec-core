@@ -106,9 +106,17 @@ module RSpec::Core::Formatters
 
       args = paths.map { |p| String === p ? file_at(p) : p }
 
-      if !Loader.formatters[formatter_class].nil?
-        formatter = formatter_class.new(*args)
-        @reporter.register_listener formatter, *notifications_for(formatter_class)
+      # We need to try instantiating the class to know the actual class, since
+      # `new` may have been overriden as a factory method and return an
+      # instance of a different class.
+      #
+      # The rescue is needed because legacy formatters may be trying to access
+      # methods that are no longer defined on their base class (which are
+      # handled by the LegacyFormatter class we wrap it in later.)
+      formatter = formatter_class.new(*args) rescue nil
+
+      if formatter && Loader.formatters[formatter.class]
+        @reporter.register_listener formatter, *notifications_for(formatter.class)
       else
         formatter = LegacyFormatter.new(formatter_class, *args)
         @reporter.register_listener formatter, *formatter.notifications

@@ -44,6 +44,19 @@ module RSpec::Core::Formatters
         expect(loader.formatters.first).to be_an_instance_of(RSpec::Core::Formatters::LegacyFormatter)
       end
 
+      it "finds formatter by actual class of an instance" do
+        # This factory technique was observed in the Fivemat formatter.
+        stub_const("CustomFormatter", Class.new(BaseFormatter))
+        stub_const("FormatterFactory", Class.new do
+          def self.new(*args)
+            CustomFormatter.new(args)
+          end
+        end)
+        Loader.formatters[CustomFormatter] = []
+        loader.add "FormatterFactory", output
+        expect(loader.formatters.first).to be_an_instance_of(CustomFormatter)
+      end
+
       context "when a legacy formatter is added" do
         formatter_class = Struct.new(:output)
 
