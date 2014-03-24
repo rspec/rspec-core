@@ -80,9 +80,8 @@ Feature: --example option
     When I run `rspec . --example 'third group'`
     Then the examples should all pass
 
-  Scenario: Object#method
+  Scenario: Match using described class name
     When I run `rspec . --example 'Array#length'`
-    Then the examples should all pass
 
   Scenario: Multiple applications of example name option
     When I run `rspec . --example 'first group' --example 'second group' --format d`
