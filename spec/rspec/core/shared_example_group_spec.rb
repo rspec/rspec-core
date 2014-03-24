@@ -32,6 +32,24 @@ module RSpec::Core
 
     %w[share_examples_for shared_examples_for shared_examples shared_context].each do |shared_method_name|
       describe shared_method_name do
+        if shared_method_name == "share_examples_for"
+          before { allow_deprecation }
+
+          it 'is deprecated when called from within an example group' do
+            expect_deprecation_with_call_site(__FILE__, __LINE__ + 2, /share_examples_for/)
+            ExampleGroup.describe("example group") do
+              send(shared_method_name, "group") { }
+            end
+          end
+
+          it 'is deprecated when called from the top level' do
+            expect_deprecation_with_call_site(__FILE__, __LINE__ + 2, /share_examples_for/)
+            Module.new do
+              send(shared_method_name, "group") { }
+            end
+          end
+        end
+
         it "is exposed to the global namespace" do
           expect(Kernel).to respond_to(shared_method_name)
         end

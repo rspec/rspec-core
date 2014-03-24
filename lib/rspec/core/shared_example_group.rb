@@ -33,8 +33,12 @@ module RSpec
       end
 
       alias_method :shared_context,      :shared_examples
-      alias_method :share_examples_for,  :shared_examples
       alias_method :shared_examples_for, :shared_examples
+
+      def share_examples_for(*args, &block)
+        RSpec.deprecate("`share_examples_for`", :replacement => "`shared_examples` or `shared_examples_for`")
+        shared_examples(*args, &block)
+      end
 
       # @deprecated
       def share_as(name, &block)
@@ -53,8 +57,12 @@ module RSpec
         end
 
         alias_method :shared_context,      :shared_examples
-        alias_method :share_examples_for,  :shared_examples
         alias_method :shared_examples_for, :shared_examples
+
+        def share_examples_for(*args, &block)
+          RSpec.deprecate("`share_examples_for`", :replacement => "`shared_examples` or `shared_examples_for`")
+          shared_examples(*args, &block)
+        end
 
         def share_as(name, &block)
           RSpec.deprecate("Rspec::Core::SharedExampleGroup#share_as",
