@@ -40,6 +40,8 @@ Deprecations:
 * Deprecate filtering by `:line_number` (e.g. `--line-number` from the
   CLI). Use location filtering instead. (Myron Marston)
 * Deprecate `--default_path` as an alternative to `--default-path`. (Jon Rowe)
+* Deprecate `RSpec::Core::Configuration#warnings` in favor of
+  `RSpec::Core::Configuration#warnings?`. (Myron Marston)
 
 ### 2.99.0.beta2 / 2014-02-17
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.beta1...v2.99.0.beta2)
