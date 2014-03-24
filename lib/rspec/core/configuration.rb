@@ -1175,8 +1175,14 @@ EOM
         $VERBOSE = !!value
       end
 
-      def warnings
+      def warnings?
         $VERBOSE
+      end
+
+      def warnings
+        RSpec.deprecate("`RSpec::Core::Configuration#warnings`",
+                        :replacement => "`RSpec::Core::Configuration#warnings?`")
+        warnings?
       end
 
       # Exposes the current running example via the named

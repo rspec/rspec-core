@@ -1813,7 +1813,12 @@ module RSpec::Core
         expect($VERBOSE).to eq false
       end
 
-      it 'returns the verbosity setting' do
+      it 'returns the verbosity setting as a predicate' do
+        expect(config.warnings?).to eq $VERBOSE
+      end
+
+      it 'warns when using the deprecated `warnings` reader' do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /warnings/)
         expect(config.warnings).to eq $VERBOSE
       end
 
