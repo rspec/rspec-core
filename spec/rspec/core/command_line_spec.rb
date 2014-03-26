@@ -3,7 +3,7 @@ require "stringio"
 require 'tmpdir'
 
 module RSpec::Core
-  describe CommandLine do
+  describe Runner do
 
     let(:out)    { StringIO.new         }
     let(:err)    { StringIO.new         }
@@ -21,20 +21,14 @@ module RSpec::Core
       config.should_receive(:output_stream=).ordered
       config.should_receive(:force).at_least(:once).ordered
 
-      command_line = build_command_line
-      command_line.run err, out
-    end
-
-    it "assigns ConfigurationOptions built from Array of options to @options" do
-      config_options = ConfigurationOptions.new(%w[--color])
-      command_line   = CommandLine.new(%w[--color])
-      expect(command_line.instance_eval { @options.options }).to eq(config_options.parse_options)
+      runner = build_runner
+      runner.run err, out
     end
 
     it "assigns submitted ConfigurationOptions to @options" do
       config_options = ConfigurationOptions.new(%w[--color])
-      command_line   = CommandLine.new(config_options)
-      expect(command_line.instance_eval { @options }).to be(config_options)
+      runner   = Runner.new(config_options)
+      expect(runner.instance_eval { @options }).to be(config_options)
     end
 
     describe "#run" do
@@ -42,18 +36,18 @@ module RSpec::Core
         include_context "spec files"
 
         it "returns 0 if spec passes" do
-          command_line = build_command_line passing_spec_filename
-          expect(command_line.run(err, out)).to eq 0
+          runner = build_runner passing_spec_filename
+          expect(runner.run(err, out)).to eq 0
         end
 
         it "returns 1 if spec fails" do
-          command_line = build_command_line failing_spec_filename
-          expect(command_line.run(err, out)).to eq 1
+          runner = build_runner failing_spec_filename
+          expect(runner.run(err, out)).to eq 1
         end
 
         it "returns 2 if spec fails and --failure-exit-code is 2" do
-          command_line = build_command_line failing_spec_filename, "--failure-exit-code", "2"
-          expect(command_line.run(err, out)).to eq 2
+          runner = build_runner failing_spec_filename, "--failure-exit-code", "2"
+          expect(runner.run(err, out)).to eq 2
         end
       end
 
@@ -62,22 +56,22 @@ module RSpec::Core
 
         it "runs before suite hooks" do
           config.should_receive(:run_hook).with(:before, :suite)
-          command_line = build_command_line
-          command_line.run err, out
+          runner = build_runner
+          runner.run err, out
         end
 
         it "runs after suite hooks" do
           config.should_receive(:run_hook).with(:after, :suite)
-          command_line = build_command_line
-          command_line.run err, out
+          runner = build_runner
+          runner.run err, out
         end
 
         it "runs after suite hooks even after an error" do
           config.should_receive(:run_hook).with(:before, :suite).and_raise "this error"
           config.should_receive(:run_hook).with(:after , :suite)
           expect do
-            command_line = build_command_line
-            command_line.run err, out
+            runner = build_runner
+            runner.run err, out
           end.to raise_error
         end
       end
@@ -86,24 +80,48 @@ module RSpec::Core
     describe "#run with custom output" do
       before { config.stub :files_to_run => [] }
 
-      let(:output_file) { File.new("#{Dir.tmpdir}/command_line_spec_output.txt", 'w') }
+      let(:output_file) { File.new("#{Dir.tmpdir}/runner_spec_output.txt", 'w') }
 
       it "doesn't override output_stream" do
         config.output_stream = output_file
-        command_line = build_command_line
-        command_line.run err, out
-        expect(command_line.instance_eval { @configuration.output_stream }).to eq output_file
+        runner = build_runner
+        runner.run err, out
+        expect(runner.instance_eval { @configuration.output_stream }).to eq output_file
       end
     end
 
-    def build_command_line *args
-      CommandLine.new build_config_options(*args)
+    def build_runner *args
+      Runner.new build_config_options(*args)
     end
 
     def build_config_options *args
       options = ConfigurationOptions.new args
       options.parse_options
       options
+    end
+  end
+
+  describe CommandLine do
+    it 'is a subclass of `Runner` so that it inherits the same behavior' do
+      expect(CommandLine.superclass).to be(Runner)
+    end
+
+    it 'prints a deprecation when instantiated' do
+      expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /RSpec::Core::CommandLine/)
+      CommandLine.new(ConfigurationOptions.new([]))
+    end
+
+    context "when given an array as the first arg" do
+      it 'parses it into configuration options' do
+        cl = CommandLine.new(%w[ --require foo ])
+        options = cl.instance_eval { @options }
+        expect(options.options).to include(:requires => ['foo'])
+      end
+
+      it 'issues a deprecation about the array arg' do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /array/)
+        CommandLine.new(%w[ --require foo ])
+      end
     end
   end
 end

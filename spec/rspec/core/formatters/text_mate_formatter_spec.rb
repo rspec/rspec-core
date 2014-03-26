@@ -23,14 +23,14 @@ module RSpec
           err.set_encoding("utf-8") if err.respond_to?(:set_encoding)
           out.set_encoding("utf-8") if out.respond_to?(:set_encoding)
 
-          command_line = RSpec::Core::CommandLine.new(options)
-          configuration = command_line.instance_variable_get(:@configuration)
+          runner = RSpec::Core::Runner.new(options)
+          configuration = runner.instance_variable_get(:@configuration)
 
           configuration.backtrace_cleaner.inclusion_patterns = []
           configuration.output_stream = out
           configuration.deprecation_stream = err
 
-          command_line.run(err, out)
+          runner.run(err, out)
           html = out.string.gsub(/\d+\.\d+(s| seconds)/, "n.nnnn\\1")
 
           actual_doc = Nokogiri::HTML(html)

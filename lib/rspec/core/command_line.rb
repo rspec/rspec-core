@@ -1,11 +1,7 @@
 module RSpec
   module Core
-    class CommandLine
+    class Runner
       def initialize(options, configuration=RSpec::configuration, world=RSpec::world)
-        if Array === options
-          options = ConfigurationOptions.new(options)
-          options.parse_options
-        end
         @options       = options
         @configuration = configuration
         @world         = world
@@ -30,6 +26,21 @@ module RSpec
             @configuration.run_hook(:after, :suite)
           end
         end
+      end
+    end
+
+    class CommandLine < Runner
+      def initialize(options, configuration=RSpec.configuration, world=RSpec.world)
+        if Array === options
+          RSpec.deprecate("Instantiating a `RSpec::Core::CommandLine` with an array of options",
+                          :replacement => "Instantiate a `RSpec::Core::Runner` with a `RSpec::Core::ConfigurationOptions` instance")
+          options = ConfigurationOptions.new(options)
+          options.parse_options
+        else
+          RSpec.deprecate("`RSpec::Core::CommandLine`", :replacement => "`RSpec::Core::Runner`")
+        end
+
+        super
       end
     end
   end
