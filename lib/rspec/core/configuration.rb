@@ -96,7 +96,18 @@ module RSpec
       add_setting :error_stream
 
       # Default: `$stderr`.
-      add_setting :deprecation_stream
+      define_reader :deprecation_stream
+      def deprecation_stream=(value)
+        if @reporter && !value.equal?(@deprecation_stream)
+          warn "RSpec's reporter has already been initialized with " +
+            "#{deprecation_stream.inspect} as the deprecation stream, so your change to "+
+            "`deprecation_stream` will be ignored. You should configure it earlier for " +
+            "it to take effect, or use the `--deprecation-out` CLI option. " +
+            "(Called from #{CallerFilter.first_non_rspec_line})"
+        else
+          @deprecation_stream = value
+        end
+      end
 
       # Clean up and exit after the first failure (default: `false`).
       add_setting :fail_fast
