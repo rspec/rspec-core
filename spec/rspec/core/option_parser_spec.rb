@@ -61,7 +61,6 @@ module RSpec::Core
       end
     end
 
-
     describe "--default-path" do
       it "sets the default path where RSpec looks for examples" do
         options = Parser.parse!(%w[--default-path foo])
@@ -89,6 +88,29 @@ module RSpec::Core
           options = Parser.parse!([option, 'doc'])
           expect(options[:formatters].first).to eq(["doc"])
         end
+      end
+    end
+
+    describe "--deprecation-out" do
+      it 'configures the deprecation stream' do
+        expect {
+          Parser.parse!(['--deprecation-out', 'path/to/file.log'])
+        }.to change { RSpec.configuration.deprecation_stream }.to('path/to/file.log')
+      end
+
+      it 'sets the deprecation stream before processing other options that issue deprecations' do
+        expect(RSpec).to receive(:deprecate) do
+          expect(RSpec.configuration.deprecation_stream).to eq('path/to/file.log')
+        end
+
+        Parser.parse!(['--line-number', '3', '--deprecation-out', 'path/to/file.log'])
+      end
+
+      it 'issues an appropriate error when no file arg is provided' do
+        out_error = Parser.parse!(['--out']) rescue $!
+        expect {
+          Parser.parse!(['--deprecation-out'])
+        }.to raise_error(out_error.class, out_error.message.gsub('--out', '--deprecation-out'))
       end
     end
 

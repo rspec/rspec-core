@@ -1,6 +1,11 @@
 ### 2.99.0.rc1 Development
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.beta2...2-99-maintenance)
 
+Enhancements:
+
+* Add `--deprecation-out` CLI option which directs deprecation warnings
+  to the named file. (Myron Marston)
+
 Deprecations:
 
 * Deprecate `RSpec::Core::Pending::PendingDeclaredInExample`, use
