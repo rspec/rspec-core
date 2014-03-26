@@ -40,7 +40,10 @@ module RSpec::Core::Formatters
         end
 
         it "surrounds multiline messages in fenceposts" do
-          multiline_message = "line one\nline two"
+          multiline_message = <<-EOS.gsub(/^\s+\|/, '')
+            |line one
+            |line two
+          EOS
           formatter.deprecation(:message => multiline_message)
           deprecation_stream.rewind
 
