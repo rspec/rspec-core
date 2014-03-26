@@ -83,10 +83,10 @@ module RSpec
             DRbCommandLine.new(options).run(err, out)
           rescue DRb::DRbConnError
             err.puts "No DRb server is running. Running in local process instead ..."
-            CommandLine.new(options).run(err, out)
+            new(options).run(err, out)
           end
         else
-          CommandLine.new(options).run(err, out)
+          new(options).run(err, out)
         end
       ensure
         RSpec.reset

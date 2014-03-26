@@ -67,11 +67,11 @@ module RSpec::Core
             run_specs
           end
 
-          it "builds a CommandLine and runs the specs" do
-            process_proxy = double(RSpec::Core::CommandLine, :run => 0)
+          it "builds a Runner and runs the specs" do
+            process_proxy = double(RSpec::Core::Runner, :run => 0)
             process_proxy.should_receive(:run).with(err, out)
 
-            RSpec::Core::CommandLine.should_receive(:new).and_return(process_proxy)
+            RSpec::Core::Runner.should_receive(:new).and_return(process_proxy)
 
             run_specs
           end
