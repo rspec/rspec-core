@@ -598,8 +598,20 @@ module RSpec::Core
       end
     end
 
+    specify "#filename_pattern is deprecated" do
+      expect_deprecation_with_call_site __FILE__, __LINE__ + 1
+      config.filename_pattern
+    end
+
+    specify "#filename_pattern= is deprecated" do
+      expect_deprecation_with_call_site __FILE__, __LINE__ + 1
+      config.filename_pattern = "/whatever"
+    end
+
     %w[pattern= filename_pattern=].each do |setter|
       describe "##{setter}" do
+        before { allow_deprecation } if setter == "filename_pattern="
+
         context "with single pattern" do
           before { config.send(setter, "**/*_foo.rb") }
           it "loads files following pattern" do
@@ -815,8 +827,53 @@ module RSpec::Core
       end
     end
 
+    specify '#color? is deprecated' do
+      expect_deprecation_with_call_site __FILE__, __LINE__+1
+      config.color?
+    end
+
+    specify "#color_enabled? is not deprecated" do
+      expect_no_deprecation
+      config.color_enabled?
+      config.color_enabled? double("output")
+    end
+
+    specify '#color with no argument is not deprecated' do
+      expect_no_deprecation
+      config.color
+    end
+
+    specify '#color with a non tty output and color = true is deprecated' do
+      allow(config.output_stream).to receive(:tty?).and_return(false)
+      config.color = true
+      expect_warn_deprecation_with_call_site __FILE__, __LINE__+1
+      expect(config.color).to be_falsey
+    end
+
+    specify '#color with an argument is deprecated' do
+      expect_deprecation_with_call_site __FILE__, __LINE__+1
+      config.color config.output_stream
+    end
+
+    specify '#color_enabled with no argument is deprecated' do
+      expect_deprecation_with_call_site __FILE__, __LINE__+1
+      config.color_enabled
+    end
+
+    specify '#color_enabled with an argument is deprecated in favour of #color_enabled?' do
+      expect_deprecation_with_call_site __FILE__, __LINE__+1
+      config.color_enabled config.output_stream
+    end
+
     %w[color color_enabled].each do |color_option|
       describe "##{color_option}=" do
+        before { allow_deprecation } if color_option == 'color_enabled'
+
+        specify "color_enabled is deprecated" do
+          expect_deprecation_with_call_site __FILE__, __LINE__+1
+          config.color_enabled = true
+        end
+
         context "given true" do
           before { config.send "#{color_option}=", true }
 
@@ -1206,7 +1263,7 @@ module RSpec::Core
         RSpec.stub(:deprecate)
         config = Configuration.new
         config.backtrace_clean_patterns = [/.*/]
-        expect(config.backtrace_cleaner.exclude? "this").to be_truthy
+        expect(config.backtrace_formatter.exclude? "this").to be_truthy
       end
     end
 
@@ -1233,33 +1290,40 @@ module RSpec::Core
       it "can be appended to" do
         config = Configuration.new
         config.backtrace_clean_patterns << /.*/
-        expect(config.backtrace_cleaner.exclude? "this").to be_truthy
+        expect(config.backtrace_formatter.exclude? "this").to be_truthy
       end
     end
 
-    describe ".backtrace_cleaner#exclude? defaults" do
+    specify "#backtrace_cleaner is deprecated" do
+      expect_deprecation_with_call_site __FILE__, __LINE__ + 1
+      config.backtrace_cleaner
+    end
+
+    describe ".backtrace_formatter#exclude? defaults" do
+      before { allow_deprecation }
+
       it "returns true for rspec files" do
-        expect(config.backtrace_cleaner.exclude?("lib/rspec/core.rb")).to be_truthy
+        expect(config.backtrace_formatter.exclude?("lib/rspec/core.rb")).to be_truthy
       end
 
       it "returns true for spec_helper" do
-        expect(config.backtrace_cleaner.exclude?("spec/spec_helper.rb")).to be_truthy
+        expect(config.backtrace_formatter.exclude?("spec/spec_helper.rb")).to be_truthy
       end
 
       it "returns true for java files (for JRuby)" do
-        expect(config.backtrace_cleaner.exclude?("org/jruby/RubyArray.java:2336")).to be_truthy
+        expect(config.backtrace_formatter.exclude?("org/jruby/RubyArray.java:2336")).to be_truthy
       end
 
       it "returns true for files within installed gems" do
-        expect(config.backtrace_cleaner.exclude?('ruby-1.8.7-p334/gems/mygem-2.3.0/lib/mygem.rb')).to be_truthy
+        expect(config.backtrace_formatter.exclude?('ruby-1.8.7-p334/gems/mygem-2.3.0/lib/mygem.rb')).to be_truthy
       end
 
       it "returns false for files in projects containing 'gems' in the name" do
-        expect(config.backtrace_cleaner.exclude?('code/my-gems-plugin/lib/plugin.rb')).to be_falsey
+        expect(config.backtrace_formatter.exclude?('code/my-gems-plugin/lib/plugin.rb')).to be_falsey
       end
 
       it "returns false for something in the current working directory" do
-        expect(config.backtrace_cleaner.exclude?("#{Dir.getwd}/arbitrary")).to be_falsey
+        expect(config.backtrace_formatter.exclude?("#{Dir.getwd}/arbitrary")).to be_falsey
       end
     end
 

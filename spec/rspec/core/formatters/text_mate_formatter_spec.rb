@@ -26,7 +26,7 @@ module RSpec
           runner = RSpec::Core::Runner.new(options)
           configuration = runner.instance_variable_get(:@configuration)
 
-          configuration.backtrace_cleaner.inclusion_patterns = []
+          configuration.backtrace_formatter.inclusion_patterns = []
           configuration.output_stream = out
           configuration.deprecation_stream = err
 

@@ -160,7 +160,13 @@ module RSpec
       end
 
       # Load files matching this pattern (default: `'**/*_spec.rb'`)
-      add_setting :pattern, :alias_with => :filename_pattern
+      add_setting :pattern
+
+      def filename_pattern
+        RSpec.deprecate "`RSpec::Core::Configuration#filename_pattern`",
+                        :replacement => "`RSpec::Core::Configuration#pattern`"
+        pattern
+      end
 
       def pattern= value
         if @spec_files_loaded
@@ -168,7 +174,13 @@ module RSpec
         end
         @pattern = value
       end
-      alias :filename_pattern= :pattern=
+
+      def filename_pattern=(value)
+        RSpec.deprecate "`RSpec::Core::Configuration#filename_pattern=`",
+                        :replacement => "`RSpec::Core::Configuration#pattern=`"
+        self.pattern = value
+      end
+
 
       # Report the times for the slowest examples (default: `false`).
       # Use this to specify the number of examples to include in the profile.
@@ -258,7 +270,13 @@ module RSpec
       # @private
       attr_accessor :filter_manager
 
-      attr_reader :backtrace_cleaner
+      attr_reader :backtrace_formatter
+
+      def backtrace_cleaner
+        RSpec.deprecate "`RSpec::Core::Configuration#backtrace_cleaner`",
+                        :replacement => "`RSpec::Core::Configuration#backtrace_formatter`"
+        @backtrace_formatter
+      end
 
       def initialize
         @expectation_frameworks = []
@@ -272,7 +290,7 @@ module RSpec
         @failure_exit_code = 1
         @spec_files_loaded = false
 
-        @backtrace_cleaner = BacktraceCleaner.new
+        @backtrace_formatter = BacktraceCleaner.new
 
         @default_path = 'spec'
         @deprecation_stream = $stderr
@@ -382,13 +400,13 @@ module RSpec
       def backtrace_clean_patterns
         RSpec.deprecate("RSpec::Core::Configuration#backtrace_clean_patterns",
                         :replacement => "RSpec::Core::Configuration#backtrace_exclusion_patterns")
-        @backtrace_cleaner.exclusion_patterns
+        @backtrace_formatter.exclusion_patterns
       end
 
       def backtrace_clean_patterns=(patterns)
         RSpec.deprecate("RSpec::Core::Configuration#backtrace_clean_patterns",
                         :replacement => "RSpec::Core::Configuration#backtrace_exclusion_patterns")
-        @backtrace_cleaner.exclusion_patterns = patterns
+        @backtrace_formatter.exclusion_patterns = patterns
       end
 
       # The patterns to always include to backtraces.
@@ -399,11 +417,11 @@ module RSpec
       # One can replace the list by using the setter or modify it through the
       # getter
       def backtrace_inclusion_patterns
-        @backtrace_cleaner.inclusion_patterns
+        @backtrace_formatter.inclusion_patterns
       end
 
       def backtrace_inclusion_patterns=(patterns)
-        @backtrace_cleaner.inclusion_patterns = patterns
+        @backtrace_formatter.inclusion_patterns = patterns
       end
 
       # The patterns to discard from backtraces.
@@ -417,11 +435,11 @@ module RSpec
       # `--backtrace`on the command line, in a `.rspec` file, or in the
       # `rspec_options` attribute of RSpec's rake task.
       def backtrace_exclusion_patterns
-        @backtrace_cleaner.exclusion_patterns
+        @backtrace_formatter.exclusion_patterns
       end
 
       def backtrace_exclusion_patterns=(patterns)
-        @backtrace_cleaner.exclusion_patterns = patterns
+        @backtrace_formatter.exclusion_patterns = patterns
       end
 
       # Sets the mock framework adapter module.
@@ -558,19 +576,33 @@ module RSpec
       end
 
       def full_backtrace?
-        @backtrace_cleaner.full_backtrace?
+        @backtrace_formatter.full_backtrace?
       end
 
       def full_backtrace=(true_or_false)
-        @backtrace_cleaner.full_backtrace = true_or_false
+        @backtrace_formatter.full_backtrace = true_or_false
       end
 
-      def color(output=output_stream)
-        # rspec's built-in formatters all call this with the output argument,
-        # but defaulting to output_stream for backward compatibility with
-        # formatters in extension libs
-        return false unless output_to_tty?(output)
-        value_for(:color, @color)
+      NoArgument = "No such argument"
+      def color(output = NoArgument)
+        if output == NoArgument
+          output = output_stream
+          if !output_to_tty?(output) && value_for(:color, @color)
+            RSpec.warn_deprecation <<-MSG.gsub(/\s+|/,'')
+              | Calling `RSpec::Core::Configuration#color` in RSpec 3 will
+              | return the value of the configuration setting, in RSpec 2
+              | this value is `false` as your output doesn't support color.
+              | Use `RSpec::Core::Configuration#color_enabled?` if you depend
+              | on this behavior.
+              | Called from #{CallerFilter.first_non_rspec_line}.
+            MSG
+          end
+        else
+          RSpec.deprecate '`RSpec::Core::Configuration#color(output)`',
+                          :replacement => '`RSpec::Core::Configuration#color_enabled?(output)`'
+        end
+
+        color_enabled? output
       end
 
       def color=(bool)
@@ -584,11 +616,31 @@ module RSpec
         end
       end
 
-      # TODO - deprecate color_enabled - probably not until the last 2.x
-      # release before 3.0
-      alias_method :color_enabled, :color
-      alias_method :color_enabled=, :color=
-      define_predicate_for :color_enabled, :color
+      def color_enabled?(output=output_stream)
+        output_to_tty?(output) && value_for(:color, @color)
+      end
+
+      def color_enabled(output=output_stream)
+        RSpec.deprecate "`RSpec::Core::Configuration#color_enabled`",
+          :replacement =>
+            "`RSpec::Core::Configuration#color` if you want the configuration " +
+            "value, or `RSpec::Core::Configuration#color_enabled?(output)` if " +
+            " you want to know if color output is supported."
+
+        color_enabled? output
+      end
+
+      def color_enabled=(bool)
+        RSpec.deprecate "RSpec::Core::Configuration#color_enabled=",
+                        :replacement => "RSpec::Core::Configuration#color="
+        self.color = bool
+      end
+
+      def color?(output=output_stream)
+        RSpec.deprecate "RSpec::Core::Configuration#color?",
+                        :replacement => "RSpec::Core::Configuration#color_enabled?"
+        color_enabled? output_stream
+      end
 
       def libs=(libs)
         libs.map do |lib|
