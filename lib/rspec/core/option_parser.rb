@@ -14,6 +14,7 @@ module RSpec::Core
     def parse!(args)
       return {} if args.empty?
 
+      pre_parse(args)
       convert_deprecated_args(args)
 
       options = args.delete('--tty') ? {:tty => true} : {}
@@ -133,6 +134,11 @@ module RSpec::Core
           options[:formatters].last << o
         end
 
+        parser.on('--deprecation-out FILE', 'Write deprecation warnings to a file instead of $stdout.') do |file|
+          # Handled in `pre_parse` so we can set the deprecation stream as early as
+          # possible in case any other options cause deprecations to be issued.
+        end
+
         parser.on('-b', '--backtrace', 'Enable full backtrace.') do |o|
           options[:full_backtrace] = true
         end
@@ -223,6 +229,14 @@ FILTERING
           exit
         end
 
+      end
+    end
+
+    def pre_parse(args)
+      args.each_cons(2) do |arg, value|
+        if arg == "--deprecation-out"
+          RSpec.configuration.deprecation_stream = value
+        end
       end
     end
   end
