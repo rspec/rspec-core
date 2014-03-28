@@ -2,14 +2,15 @@ Feature: --example option
 
   Use the --example (or -e) option to filter examples by name.
 
-  The argument is matched against the full description of the example,
-  which is the concatenation of descriptions of the group (including
-  any nested groups) and the example.
+  The argument is matched against the full description of the example, which is
+  the concatenation of descriptions of the group (including any nested groups)
+  and the example.
 
   This allows you to run a single uniquely named example, all examples with
   similar names, all the examples in a uniquely named group, etc, etc.
 
-  You can also use the option more than once to specify multiple example matches.
+  You can also use the option more than once to specify multiple example
+  matches.
 
   Background:
     Given a file named "first_spec.rb" with:
@@ -47,41 +48,40 @@ Feature: --example option
       end
       """
 
-  Scenario: no matches
+  Scenario: No matches
     When I run `rspec . --example nothing_like_this`
     Then the process should succeed even though no examples were run
 
-  Scenario: match on one word
+  Scenario: Match on one word
     When I run `rspec . --example example`
     Then the examples should all pass
 
-  Scenario: one match in each context
+  Scenario: One match in each context
     When I run `rspec . --example 'first example'`
     Then the examples should all pass
 
-  Scenario: one match in one file using just the example name
+  Scenario: One match in one file using just the example name
     When I run `rspec . --example 'first example in first group'`
     Then the examples should all pass
 
-  Scenario: one match in one file using the example name and the group name
+  Scenario: One match in one file using the example name and the group name
     When I run `rspec . --example 'first group first example in first group'`
     Then the examples should all pass
 
-  Scenario: all examples in one group
+  Scenario: All examples in one group
     When I run `rspec . --example 'first group'`
     Then the examples should all pass
 
-  Scenario: one match in one file with group name
+  Scenario: One match in one file with group name
     When I run `rspec . --example 'second group first example'`
     Then the examples should all pass
 
-  Scenario: all examples in one group including examples in nested groups
+  Scenario: All examples in one group including examples in nested groups
     When I run `rspec . --example 'third group'`
     Then the examples should all pass
 
-  Scenario: Object#method
+  Scenario: Match using described class name
     When I run `rspec . --example 'Array#length'`
-    Then the examples should all pass
 
   Scenario: Multiple applications of example name option
     When I run `rspec . --example 'first group' --example 'second group' --format d`
