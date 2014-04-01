@@ -75,7 +75,7 @@ describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :isolat
       expect(config.exclusion_filter).to have_key(:slow)
     end
 
-    it "forces color_enabled" do
+    it "forces color" do
       opts = config_options_object(*%w[--color])
       config = RSpec::Core::Configuration.new
       config.should_receive(:force).with(:color => true)
