@@ -76,7 +76,7 @@ module RSpec
           def self.#{name}(desc=nil, *args, &block)
             if #{name.inspect} == :pending
               RSpec.warn_deprecation(<<-EOS.gsub(/^\s+\\|/, ''))
-                |The semantics of `RSpec::Core::ExampleGroup#pending` are changing in RSpec 3.
+                |The semantics of `RSpec::Core::ExampleGroup.pending` are changing in RSpec 3.
                 |In RSpec 2.x, it caused the example to be skipped. In RSpec 3, the example will
                 |still be run but is expected to fail, and will be marked as a failure (rather
                 |than as pending) if the example passes, just like how `pending` with a block
