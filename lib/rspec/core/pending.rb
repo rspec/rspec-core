@@ -137,7 +137,11 @@ module RSpec
       end
 
       # Backport from RSpec 3 to aid in upgrading.
-      alias_method :skip, :pending_no_warning
+      #
+      # Not using alias method because we explictly want to discard any block.
+      def skip(*args)
+        pending_no_warning(*args)
+      end
 
       def self.const_missing(name)
         return super unless name == :PendingDeclaredInExample
