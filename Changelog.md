@@ -5,6 +5,8 @@ Enhancements:
 
 * Add `--deprecation-out` CLI option which directs deprecation warnings
   to the named file. (Myron Marston)
+* Backport support for `skip` in metadata to skip execution of an example.
+  (Xavier Shay, #1472)
 
 Deprecations:
 

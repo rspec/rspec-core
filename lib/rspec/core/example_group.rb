@@ -92,6 +92,8 @@ module RSpec
             end
             options = build_metadata_hash_from(args)
             options.update(:pending => RSpec::Core::Pending::NOT_YET_IMPLEMENTED) unless block
+            # Backport from RSpec 3 to assist with upgrading
+            options.update(:pending => options[:skip]) if options[:skip]
             options.update(#{extra_options.inspect})
             examples << RSpec::Core::Example.new(self, desc, options, block)
             examples.last
