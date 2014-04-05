@@ -9,13 +9,13 @@ describe "filtering by location", :type => :aruba do
       write_file 'spec/simple_spec.rb', """
         require File.join(File.dirname(__FILE__), 'shared_example.rb')
 
-        describe 'top level' do
+        RSpec.describe 'top level' do
           it_behaves_like 'a shared example'
         end
       """
 
       write_file 'spec/shared_example.rb', """
-        shared_examples_for 'a shared example' do
+        RSpec.shared_examples_for 'a shared example' do
           it 'succeeds' do
           end
 
