@@ -124,6 +124,7 @@ Spork.prefork do
     c.around {|example| Sandboxing.sandboxed { example.run }}
     c.include(RSpecHelpers)
     c.include Aruba::Api, :file_path => /spec\/command_line/
+    c.include Aruba::Api, :type => :aruba
 
     c.expect_with :rspec do |expectations|
       expectations.syntax = :expect
