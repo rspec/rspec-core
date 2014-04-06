@@ -5,6 +5,8 @@ Enhancements:
 
 * Add `--deprecation-out` CLI option which directs deprecation warnings
   to the named file. (Myron Marston)
+* Backport support for `skip` in metadata to skip execution of an example.
+  (Xavier Shay, #1472)
 
 Deprecations:
 
@@ -60,6 +62,7 @@ Bug Fixes:
 
 * Issue a warning when you set `config.deprecation_stream` too late for
   it to take effect because the reporter has already been setup. (Myron Marston)
+* `skip` with a block should not execute the block. (Xavier Shay, #1472)
 
 ### 2.99.0.beta2 / 2014-02-17
 [full changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.beta1...v2.99.0.beta2)

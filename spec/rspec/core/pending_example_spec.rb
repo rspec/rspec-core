@@ -117,6 +117,20 @@ describe "an example" do
     end
   end
 
+  context "skip with a block" do
+    it "does not execute the block" do
+      called = false
+      group = RSpec::Core::ExampleGroup.describe('group') do
+        it "does something" do
+          skip { called = true }
+        end
+      end
+      example = group.examples.first
+      example.run(group.new, double.as_null_object)
+      expect(called).to eq(false)
+    end
+  end
+
   context "with a block" do
     def run_example(*pending_args, &block)
       group = RSpec::Core::ExampleGroup.describe('group') do

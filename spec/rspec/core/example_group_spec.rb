@@ -752,19 +752,37 @@ module RSpec::Core
       end
     end
 
+    context 'skip in metadata' do
+      let(:group) { ExampleGroup.describe do
+          it 'is skipped', :skip => 'skip this' do
+          end
+        end
+      }
+
+      before { group.run }
+
+      it 'generates a pending example' do
+        expect(group.examples.first).to be_pending
+      end
+
+      it 'sets the pending message' do
+        expect(group.examples.first.metadata[:execution_result][:pending_message]).to eq('skip this')
+      end
+    end
+
     %w[pending skip].each do |method_name|
       describe ".#{method_name}" do
         let(:group) { ExampleGroup.describe.tap {|x|
           x.send(method_name, "is pending") { }
         }}
 
+        before { group.run } 
+
         it "generates a pending example" do
-          group.run
           expect(group.examples.first).to be_pending
         end
 
         it "sets the pending message" do
-          group.run
           expect(group.examples.first.metadata[:execution_result][:pending_message]).to eq(RSpec::Core::Pending::NO_REASON_GIVEN)
         end
       end
@@ -776,13 +794,13 @@ module RSpec::Core
           x.send(method_name, "is pending") { }
         }}
 
+        before { group.run } 
+
         it "generates a pending example" do
-          group.run
           expect(group.examples.first).to be_pending
         end
 
         it "sets the pending message" do
-          group.run
           expect(group.examples.first.metadata[:execution_result][:pending_message]).to eq("Temporarily disabled with #{method_name}")
         end
       end
