@@ -246,6 +246,10 @@ module RSpec
       #                       :blue, :magenta, :cyan]`
       add_setting :detail_color
 
+      # @macro add_setting
+      # Do not load files within these directories
+      add_setting :exclude_dirs
+
       # Deprecated. This config option was added in RSpec 2 to pave the way
       # for this being the default behavior in RSpec 3. Now this option is
       # a no-op.
@@ -1216,7 +1220,13 @@ module RSpec
       def gather_directories(path)
         stripped = "{#{pattern.gsub(/\s*,\s*/, ',')}}"
         files    = pattern =~ /^#{Regexp.escape path}/ ? Dir[stripped] : Dir["#{path}/#{stripped}"]
-        files.sort
+        files.reject(&matching_exclude_dirs).sort
+      end
+
+      def matching_exclude_dirs
+        lambda do |path|
+          exclude_dirs.detect{|glob| File.fnmatch(glob, path)} if exclude_dirs
+        end
       end
 
       def extract_location(path)

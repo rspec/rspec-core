@@ -194,6 +194,11 @@ FILTERING
           exit
         end
 
+        parser.on('--exclude-dir DIR', 'Specify directories to exclude from being loaded.') do |dir|
+          options[:exclude_dirs] ||= []
+          options[:exclude_dirs] << dir
+        end
+
         # these options would otherwise be confusing to users, so we forcibly prevent them from executing
         # --I is too similar to -I
         # -d was a shorthand for --debugger, which is removed, but now would trigger --default-path
