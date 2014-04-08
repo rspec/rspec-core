@@ -513,6 +513,32 @@ module RSpec::Core
       end
     end
 
+    describe "#exclude_dirs" do
+      context "with no directories excluded" do
+        it "should include all files" do
+          dir = File.expand_path(File.dirname(__FILE__) + "/resources")
+          assign_files_or_directories_to_run dir
+          expect(config.files_to_run).to include("#{dir}/a_spec.rb")
+        end
+      end
+
+      context "with directory excluded" do
+        it "should not include files in directory" do
+          config.exclude_dirs = ["**/resources/*"]
+          dir = File.expand_path(File.dirname(__FILE__) + "/resources")
+          assign_files_or_directories_to_run dir
+          expect(config.files_to_run).to_not include("#{dir}/a_spec.rb")
+        end
+
+        it "should include files outside directory" do
+          config.exclude_dirs = ["**/foobarred/**/*"]
+          dir = File.expand_path(File.dirname(__FILE__) + "/resources")
+          assign_files_or_directories_to_run dir
+          expect(config.files_to_run).to include("#{dir}/a_spec.rb")
+        end
+      end
+    end
+
     describe "#pattern" do
       context "with single pattern" do
         before { config.pattern = "**/*_foo.rb" }

@@ -266,5 +266,18 @@ module RSpec::Core
       end
     end
 
+    describe '--exclude-dir' do
+      it "adds a value to the exclude_dirs array" do
+        options = Parser.parse(%w[--exclude-dir foo])
+        expect(options[:exclude_dirs]).to eq ['foo']
+      end
+
+      it "can be specified multiple times to add multiple values to the exclude_dirs array" do
+        options = Parser.parse(%w[--exclude-dir foo --exclude-dir bar])
+        expect(options[:exclude_dirs]).to eq ['foo', 'bar']
+      end
+    end
+
+
   end
 end
