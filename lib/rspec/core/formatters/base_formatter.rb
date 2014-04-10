@@ -11,6 +11,10 @@ module RSpec
       # @see RSpec::Core::Formatters::BaseTextFormatter
       # @see RSpec::Core::Reporter
       class BaseFormatter
+
+        # all formatters inheriting from this formatter will receive these notifications
+        Formatters.register self, :start, :example_group_started, :example_started,
+                                  :example_pending, :example_failed, :close
         include Helpers
         attr_accessor :example_group
         attr_reader :duration, :examples, :output

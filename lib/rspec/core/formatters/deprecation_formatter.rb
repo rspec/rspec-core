@@ -5,6 +5,8 @@ module RSpec
   module Core
     module Formatters
       class DeprecationFormatter
+        Formatters.register self, :deprecation, :deprecation_summary
+
         attr_reader :count, :deprecation_stream, :summary_stream
 
         def initialize(deprecation_stream, summary_stream)

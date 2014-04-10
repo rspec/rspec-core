@@ -5,6 +5,9 @@ module RSpec
   module Core
     module Formatters
       class HtmlFormatter < BaseTextFormatter
+        Formatters.register self, :start, :example_group_started, :start_dump,
+                                  :example_started, :example_passed, :example_failed,
+                                  :example_pending, :dump_summary
 
         def initialize(output)
           super(output)
