@@ -1032,7 +1032,7 @@ module RSpec::Core
       end
 
       it "requires a formatter file based on its fully qualified name" do
-        config.should_receive(:require).with('rspec/custom_formatter') do
+        config.formatter_loader.should_receive(:require).with('rspec/custom_formatter') do
           stub_const("RSpec::CustomFormatter", Class.new(Formatters::BaseFormatter))
         end
         config.add_formatter "RSpec::CustomFormatter"
@@ -1040,7 +1040,7 @@ module RSpec::Core
       end
 
       it "raises NameError if class is unresolvable" do
-        config.should_receive(:require).with('rspec/custom_formatter3')
+        config.formatter_loader.should_receive(:require).with('rspec/custom_formatter3')
         expect(lambda { config.add_formatter "RSpec::CustomFormatter3" }).to raise_error(NameError)
       end
 
@@ -1053,6 +1053,7 @@ module RSpec::Core
         config.add_formatter 's'
         expect(config.formatters.first).to be_an_instance_of Formatters::DocumentationFormatter
       end
+
 
       context "with a 2nd arg defining the output" do
         it "creates a file at that path and sets it as the output" do
