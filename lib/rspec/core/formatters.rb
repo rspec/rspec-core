@@ -152,6 +152,13 @@ module RSpec::Core::Formatters
       when 'j', 'json'
         JsonFormatter
       when 't', 'textmate'
+        if defined?(::RSpec::Mate::Formatters::TextMateFormatter)
+          RSpec.deprecate "Using the text`#{key.to_s}` as a shortcut for the TextMateFormatter",
+          :replacement => "`::RSpec::Mate::Formatters::TextMateFormatter`"
+        else
+          RSpec.deprecate "Using inbuilt TextMateFormatter",
+          :replacement => "the `rspec-tmbundle` gem and it's `::RSpec::Mate::Formatters::TextMateFormatter`"
+        end
         TextMateFormatter
       end
     end
