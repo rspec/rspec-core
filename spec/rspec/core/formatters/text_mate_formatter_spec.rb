@@ -14,6 +14,7 @@ module RSpec
         end
 
         let(:generated_html) do
+          allow(RSpec).to receive(:deprecate)
           options = RSpec::Core::ConfigurationOptions.new(
             %w[spec/rspec/core/resources/formatter_specs.rb --format textmate --order defined]
           )

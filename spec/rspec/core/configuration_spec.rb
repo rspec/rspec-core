@@ -1054,6 +1054,16 @@ module RSpec::Core
         expect(config.formatters.first).to be_an_instance_of Formatters::DocumentationFormatter
       end
 
+      it 'warns of deprecation of the text mate formatter' do
+        expect_deprecation_with_call_site __FILE__, __LINE__ + 1, /inbuilt/
+        config.add_formatter 't'
+      end
+
+      it 'warns of deprecation of the shortcut for the text mate formatter' do
+        stub_const("::RSpec::Mate::Formatters::TextMateFormatter", double)
+        expect_deprecation_with_call_site __FILE__, __LINE__ + 1, /shortcut/
+        config.add_formatter 't'
+      end
 
       context "with a 2nd arg defining the output" do
         it "creates a file at that path and sets it as the output" do
