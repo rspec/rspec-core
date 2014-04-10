@@ -4,6 +4,9 @@ module RSpec
   module Core
     module Formatters
       class DocumentationFormatter < BaseTextFormatter
+        Formatters.register self, :example_group_started, :example_group_finished,
+                                  :example_passed, :example_pending, :example_failed
+
         def initialize(output)
           super(output)
           @group_level = 0

@@ -11,6 +11,9 @@ module RSpec
       # @see RSpec::Core::Formatters::BaseFormatter
       # @see RSpec::Core::Reporter
       class BaseTextFormatter < BaseFormatter
+        Formatters.register self, :message, :dump_summary, :dump_failures,
+                                  :dump_pending, :seed
+
         def message(message)
           output.puts message
         end

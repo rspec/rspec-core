@@ -6,6 +6,7 @@ module RSpec
     module Formatters
 
       class JsonFormatter < BaseFormatter
+        Formatters.register self, :message, :dump_summary, :stop, :close
 
         attr_reader :output_hash
 

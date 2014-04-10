@@ -329,7 +329,7 @@ module RSpec
       def reset
         @spec_files_loaded = false
         @reporter = nil
-        @formatters.clear
+        @formatter_loader = nil
       end
 
       # @overload add_setting(name)
@@ -728,27 +728,27 @@ EOM
       # and paths to use for output streams, but you should consider that a
       # private api that may change at any time without notice.
       def add_formatter(formatter_to_use, *paths)
-        formatter_class =
-          built_in_formatter(formatter_to_use) ||
-          custom_formatter(formatter_to_use) ||
-          (raise ArgumentError, "Formatter '#{formatter_to_use}' unknown - maybe you meant 'documentation' or 'progress'?.")
-
         paths << output_stream if paths.empty?
-        formatters << formatter_class.new(*paths.map {|p| String === p ? file_at(p) : p})
+        formatter_loader.add formatter_to_use, *paths
       end
-
       alias_method :formatter=, :add_formatter
 
       def formatters
-        @formatters ||= []
+        formatter_loader.formatters
       end
 
+      # @private
+      def formatter_loader
+        @formatter_loader ||= Formatters::Loader.new(Reporter.new)
+      end
+
+      # @private
       def reporter
-        @reporter ||= begin
-                        add_formatter('progress') if formatters.empty?
-                        add_formatter(RSpec::Core::Formatters::DeprecationFormatter, deprecation_stream, output_stream)
-                        Reporter.new(*formatters)
-                      end
+        @reporter ||=
+          begin
+            formatter_loader.setup_default output_stream, deprecation_stream
+            formatter_loader.reporter
+          end
       end
 
       # @api private
@@ -1357,72 +1357,6 @@ MESSAGE
 
       def output_to_tty?(output=output_stream)
         tty? || (output.respond_to?(:tty?) && output.tty?)
-      end
-
-      def built_in_formatter(key)
-        case key.to_s
-        when 'd', 'doc', 'documentation'
-          require 'rspec/core/formatters/documentation_formatter'
-          RSpec::Core::Formatters::DocumentationFormatter
-        when 's', 'n', 'spec', 'nested'
-          RSpec.deprecate "Using `#{key.to_s}` as a shortcut for the DocumentationFormatter",
-            :replacement => "`d`, `doc`, or `documentation`"
-          require 'rspec/core/formatters/documentation_formatter'
-          RSpec::Core::Formatters::DocumentationFormatter
-        when 'h', 'html'
-          require 'rspec/core/formatters/html_formatter'
-          RSpec::Core::Formatters::HtmlFormatter
-        when 't', 'textmate'
-          require 'rspec/core/formatters/text_mate_formatter'
-          RSpec::Core::Formatters::TextMateFormatter
-        when 'p', 'progress'
-          require 'rspec/core/formatters/progress_formatter'
-          RSpec::Core::Formatters::ProgressFormatter
-        when 'j', 'json'
-          require 'rspec/core/formatters/json_formatter'
-          RSpec::Core::Formatters::JsonFormatter
-        end
-      end
-
-      def custom_formatter(formatter_ref)
-        if Class === formatter_ref
-          formatter_ref
-        elsif string_const?(formatter_ref)
-          begin
-            eval(formatter_ref)
-          rescue NameError
-            require path_for(formatter_ref)
-            eval(formatter_ref)
-          end
-        end
-      end
-
-      def string_const?(str)
-        str.is_a?(String) && /\A[A-Z][a-zA-Z0-9_:]*\z/ =~ str
-      end
-
-      def path_for(const_ref)
-        underscore_with_fix_for_non_standard_rspec_naming(const_ref)
-      end
-
-      def underscore_with_fix_for_non_standard_rspec_naming(string)
-        underscore(string).sub(%r{(^|/)r_spec($|/)}, '\\1rspec\\2')
-      end
-
-      # activesupport/lib/active_support/inflector/methods.rb, line 48
-      def underscore(camel_cased_word)
-        word = camel_cased_word.to_s.dup
-        word.gsub!(/::/, '/')
-        word.gsub!(/([A-Z]+)([A-Z][a-z])/,'\1_\2')
-        word.gsub!(/([a-z\d])([A-Z])/,'\1_\2')
-        word.tr!("-", "_")
-        word.downcase!
-        word
-      end
-
-      def file_at(path)
-        FileUtils.mkdir_p(File.dirname(path))
-        File.new(path, 'w')
       end
 
       def order_and_seed_from_seed(value, force = false)

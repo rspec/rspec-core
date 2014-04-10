@@ -6,6 +6,10 @@ module RSpec
     module Formatters
       # Formats backtraces so they're clickable by TextMate
       class TextMateFormatter < HtmlFormatter
+        Formatters.register self, :start, :example_group_started, :start_dump,
+                                  :example_started, :example_passed, :example_failed,
+                                  :example_pending, :dump_summary
+
         def backtrace_line(line, skip_textmate_conversion=false)
           if skip_textmate_conversion
             super(line)

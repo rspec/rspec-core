@@ -1032,7 +1032,7 @@ module RSpec::Core
       end
 
       it "requires a formatter file based on its fully qualified name" do
-        config.should_receive(:require).with('rspec/custom_formatter') do
+        config.formatter_loader.should_receive(:require).with('rspec/custom_formatter') do
           stub_const("RSpec::CustomFormatter", Class.new(Formatters::BaseFormatter))
         end
         config.add_formatter "RSpec::CustomFormatter"
@@ -1040,7 +1040,7 @@ module RSpec::Core
       end
 
       it "raises NameError if class is unresolvable" do
-        config.should_receive(:require).with('rspec/custom_formatter3')
+        config.formatter_loader.should_receive(:require).with('rspec/custom_formatter3')
         expect(lambda { config.add_formatter "RSpec::CustomFormatter3" }).to raise_error(NameError)
       end
 
@@ -1052,6 +1052,28 @@ module RSpec::Core
         expect_deprecation_with_call_site __FILE__, __LINE__ + 1, 's'
         config.add_formatter 's'
         expect(config.formatters.first).to be_an_instance_of Formatters::DocumentationFormatter
+      end
+
+      it 'warns of deprecation of the text mate formatter' do
+        expect_deprecation_with_call_site __FILE__, __LINE__ + 1, /inbuilt/
+        config.add_formatter 't'
+      end
+
+      it 'warns of deprecation of the shortcut for the text mate formatter' do
+        stub_const("::RSpec::Mate::Formatters::TextMateFormatter", double)
+        expect_deprecation_with_call_site __FILE__, __LINE__ + 1, /shortcut/
+        config.add_formatter 't'
+      end
+
+      it 'warns of deprecation of the legacy formatter interface' do
+        expect_warn_deprecation_with_call_site __FILE__, __LINE__ + 1
+        config.add_formatter Class.new(Formatters::BaseFormatter)
+      end
+
+      it 'supresses legacy formatter deprecation when legacy formatters gem is loaded' do
+        stub_const("::RSpec::LegacyFormatters", double)
+        expect_no_deprecation
+        config.add_formatter Class.new(Formatters::BaseFormatter)
       end
 
       context "with a 2nd arg defining the output" do

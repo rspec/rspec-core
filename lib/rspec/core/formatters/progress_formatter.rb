@@ -4,6 +4,7 @@ module RSpec
     module Formatters
 
       class ProgressFormatter < BaseTextFormatter
+        Formatters.register self, :example_passed, :example_pending, :example_failed, :start_dump
 
         def example_passed(example)
           super(example)
