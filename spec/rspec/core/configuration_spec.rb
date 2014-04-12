@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'tmpdir'
+require 'pathname'
 
 module RSpec::Core
 
@@ -1066,11 +1067,19 @@ module RSpec::Core
       end
 
       context "with a 2nd arg defining the output" do
+        let(:path) { File.join(Dir.tmpdir, 'output.txt') }
+
         it "creates a file at that path and sets it as the output" do
-          path = File.join(Dir.tmpdir, 'output.txt')
           config.add_formatter('doc', path)
           expect(config.formatters.first.output).to be_a(File)
           expect(config.formatters.first.output.path).to eq(path)
+        end
+
+        it "accepts Pathname objects for file paths" do
+           pathname = Pathname.new(path)
+           config.add_formatter('doc', pathname)
+           expect(config.formatters.first.output).to be_a(File)
+           expect(config.formatters.first.output.path).to eq(path)
         end
       end
     end

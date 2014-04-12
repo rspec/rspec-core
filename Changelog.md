@@ -7,6 +7,7 @@ Enhancements:
   to the named file. (Myron Marston)
 * Backport support for `skip` in metadata to skip execution of an example.
   (Xavier Shay, #1472)
+* Add `Pathname` support for setting all output streams. (Aaron Kromer)
 
 Deprecations:
 
