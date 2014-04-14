@@ -1,6 +1,7 @@
 require 'fileutils'
 require 'rspec/core/backtrace_cleaner'
 require 'rspec/core/ruby_project'
+require 'rspec/core/deprecated_mutable_array_proxy'
 require 'rspec/core/formatters/deprecation_formatter'
 
 module RSpec
@@ -733,7 +734,7 @@ EOM
       alias_method :formatter=, :add_formatter
 
       def formatters
-        formatter_loader.formatters
+        DeprecatedMutableArrayProxy.new(formatter_loader.formatters)
       end
 
       # @private

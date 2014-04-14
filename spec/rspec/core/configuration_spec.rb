@@ -1084,6 +1084,13 @@ module RSpec::Core
       end
     end
 
+    describe "#formatters" do
+      it "is deprecated to mutate the array" do
+        expect_deprecation_with_call_site __FILE__, __LINE__ + 1
+        config.formatters.clear
+      end
+    end
+
     describe "#filter_run_including" do
       it_behaves_like "metadata hash builder" do
         def metadata_hash(*args)

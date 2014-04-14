@@ -58,6 +58,7 @@ Deprecations:
   `#color`, `#color=` and `#color_enabled? output`. (Jon Rowe)
 * Deprecate `#filename_pattern` in favour of `#pattern`. (Jon Rowe)
 * Deprecate `#backtrace_cleaner` in favour of `#backtrace_formatter`. (Jon Rowe)
+* Deprecate mutating `RSpec::Configuration#formatters`. (Jon Rowe)
 
 Bug Fixes:
 
