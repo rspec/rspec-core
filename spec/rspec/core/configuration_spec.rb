@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'tmpdir'
+require 'pathname'
 
 module RSpec::Core
 
@@ -1032,7 +1033,7 @@ module RSpec::Core
       end
 
       it "requires a formatter file based on its fully qualified name" do
-        config.should_receive(:require).with('rspec/custom_formatter') do
+        config.formatter_loader.should_receive(:require).with('rspec/custom_formatter') do
           stub_const("RSpec::CustomFormatter", Class.new(Formatters::BaseFormatter))
         end
         config.add_formatter "RSpec::CustomFormatter"
@@ -1040,7 +1041,7 @@ module RSpec::Core
       end
 
       it "raises NameError if class is unresolvable" do
-        config.should_receive(:require).with('rspec/custom_formatter3')
+        config.formatter_loader.should_receive(:require).with('rspec/custom_formatter3')
         expect(lambda { config.add_formatter "RSpec::CustomFormatter3" }).to raise_error(NameError)
       end
 
@@ -1054,13 +1055,39 @@ module RSpec::Core
         expect(config.formatters.first).to be_an_instance_of Formatters::DocumentationFormatter
       end
 
+      it 'warns of deprecation of the text mate formatter' do
+        expect_deprecation_with_call_site __FILE__, __LINE__ + 1, /rspec-core/
+        config.add_formatter 't'
+      end
+
+      it 'warns of deprecation of the shortcut for the text mate formatter' do
+        stub_const("::RSpec::Mate::Formatters::TextMateFormatter", double)
+        expect_deprecation_with_call_site __FILE__, __LINE__ + 1, /shortcut/
+        config.add_formatter 't'
+      end
+
       context "with a 2nd arg defining the output" do
+        let(:path) { File.join(Dir.tmpdir, 'output.txt') }
+
         it "creates a file at that path and sets it as the output" do
-          path = File.join(Dir.tmpdir, 'output.txt')
           config.add_formatter('doc', path)
           expect(config.formatters.first.output).to be_a(File)
           expect(config.formatters.first.output.path).to eq(path)
         end
+
+        it "accepts Pathname objects for file paths" do
+           pathname = Pathname.new(path)
+           config.add_formatter('doc', pathname)
+           expect(config.formatters.first.output).to be_a(File)
+           expect(config.formatters.first.output.path).to eq(path)
+        end
+      end
+    end
+
+    describe "#formatters" do
+      it "is deprecated to mutate the array" do
+        expect_deprecation_with_call_site __FILE__, __LINE__ + 1
+        config.formatters.clear
       end
     end
 
