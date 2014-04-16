@@ -51,19 +51,11 @@ module RSpec::Core
           options[:order] = "rand:#{seed}"
         end
 
-        parser.on('--fail-fast', 'Abort the run on first failure.') do |o|
+        parser.on('--fail-fast', '--fast-fail', 'Abort the run on first failure.') do |o|
           options[:fail_fast] = true
         end
 
-        parser.on('--fast-fail', 'Abort the run on first failure.') do |o|
-          options[:fail_fast] = true
-        end
-
-        parser.on('--no-fail-fast', 'Do not abort the run on first failure.') do |o|
-          options[:fail_fast] = false
-        end
-
-        parser.on('--no-fast-fail', 'Do not abort the run on first failure.') do |o|
+        parser.on('--no-fail-fast', '--no-fast-fail', 'Do not abort the run on first failure.') do |o|
           options[:fail_fast] = false
         end
 
