@@ -263,6 +263,16 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
     end
   end
 
+  describe "--fast-fail" do
+    it "sets fail_fast on config" do
+      expect(parse_options("--fast-fail")[:fail_fast]).to be_truthy
+    end
+
+    it "sets fail_fast on config" do
+      expect(parse_options("--no-fast-fail")[:fail_fast]).to be_falsey
+    end
+  end
+
   describe "--failure-exit-code" do
     it "sets :failure_exit_code" do
       expect(parse_options('--failure-exit-code', '0')).to include(:failure_exit_code => 0)
