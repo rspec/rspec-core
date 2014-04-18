@@ -19,7 +19,7 @@ group :documentation do
   gem 'github-markup', '0.7.2'
 end
 
-platforms :ruby_18, :jruby do
+platforms :ruby, :jruby do
   gem 'json'
 end
 
