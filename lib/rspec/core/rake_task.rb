@@ -66,7 +66,7 @@ module RSpec
         @rspec_opts    = nil
         @verbose       = true
         @fail_on_error = true
-        @rspec_path    = Gem.bin_path('rspec-core','rspec',Version::STRING)
+        @rspec_path    = File.expand_path('../../../../exe/rspec',__FILE__)
         @pattern       = './spec{,/*/**}/*_spec.rb'
 
         define(args, &task_block)
