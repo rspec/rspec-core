@@ -1,4 +1,5 @@
 require 'rspec/support'
+require 'rspec/core/version'
 RSpec::Support.require_rspec_support "warnings"
 
 require 'rake'
@@ -65,7 +66,7 @@ module RSpec
         @rspec_opts    = nil
         @verbose       = true
         @fail_on_error = true
-        @rspec_path    = 'rspec'
+        @rspec_path    = Gem.bin_path('rspec-core','rspec',Version::STRING)
         @pattern       = './spec{,/*/**}/*_spec.rb'
 
         define(args, &task_block)
