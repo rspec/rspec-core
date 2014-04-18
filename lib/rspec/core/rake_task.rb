@@ -14,6 +14,12 @@ module RSpec
     class RakeTask < ::Rake::TaskLib
       include ::Rake::DSL if defined?(::Rake::DSL)
 
+      # Default path to the rspec executable
+      DEFAULT_RSPEC_PATH = File.expand_path('../../../../exe/rspec',__FILE__)
+
+      # Default pattern for spec files.
+      DEFAULT_PATTERN = './spec{,/*/**}/*_spec.rb'
+
       # Name of task.
       #
       # default:
@@ -66,8 +72,8 @@ module RSpec
         @rspec_opts    = nil
         @verbose       = true
         @fail_on_error = true
-        @rspec_path    = File.expand_path('../../../../exe/rspec',__FILE__)
-        @pattern       = './spec{,/*/**}/*_spec.rb'
+        @rspec_path    = DEFAULT_RSPEC_PATH
+        @pattern       = DEFAULT_PATTERN
 
         define(args, &task_block)
       end
