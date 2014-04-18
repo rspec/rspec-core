@@ -1,4 +1,5 @@
 require 'rspec/support'
+require 'rspec/core/version'
 RSpec::Support.require_rspec_support "warnings"
 
 require 'rake'
@@ -113,7 +114,7 @@ module RSpec
         cmd_parts = []
         cmd_parts << RUBY
         cmd_parts << ruby_opts
-        cmd_parts << "-S" << rspec_path
+        cmd_parts << "-S" << rspec_path << "_#{Version::STRING}_"
         cmd_parts << files_to_run
         cmd_parts << rspec_opts
         cmd_parts.flatten.reject(&blank).join(" ")
