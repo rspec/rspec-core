@@ -20,7 +20,10 @@ Feature: rake task
       end
       """
     When I run `rake`
-    Then the output should match /(ruby|rbx) -S [\/\S]+\/exe\/rspec/
+    Then the output should match:
+      """
+      (ruby|rbx) -S [\/\S]+\/exe\/rspec
+      """
     Then the exit status should be 0
 
   Scenario: Default options with failing spec (exit status is 1)
