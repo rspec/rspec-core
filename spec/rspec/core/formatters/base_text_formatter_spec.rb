@@ -31,6 +31,26 @@ describe RSpec::Core::Formatters::BaseTextFormatter do
     end
   end
 
+  describe "#dump_command_to_rerun_all_failed_examples" do
+    it "includes a single command to re-run all failed examples" do
+      group = RSpec::Core::ExampleGroup.describe("example group") do
+        it("fails") { fail }
+        it("fails too") { fail }
+      end
+      line1 = __LINE__ - 3
+      line2 = __LINE__ - 3
+      group.run(formatter)
+      formatter.dump_command_to_rerun_all_failed_examples
+
+      line = output.string.lines.find { |line| line =~ /^rspec/ } || ""
+
+      expect(line).to include("rspec")
+      expect(line).to include("#{RSpec::Core::Metadata::relative_path("#{__FILE__}:#{line1}")}")
+      expect(line).to include("#{RSpec::Core::Metadata::relative_path("#{__FILE__}:#{line2}")}")
+    end
+  end
+
+
   describe "#dump_failures" do
     let(:group) { RSpec::Core::ExampleGroup.describe("group name") }
 
@@ -381,12 +401,12 @@ describe RSpec::Core::Formatters::BaseTextFormatter do
   end
 
   describe "#dump_profile_slowest_example_groups" do
-    let(:group) do 
+    let(:group) do
       RSpec::Core::ExampleGroup.describe("slow group") do
         # Use a sleep so there is some measurable time, to ensure
         # the reported percent is 100%, not 0%.
         example("example") { sleep 0.01 }
-      end 
+      end
     end
     let(:rpt) { double('reporter').as_null_object }
 
@@ -433,9 +453,9 @@ describe RSpec::Core::Formatters::BaseTextFormatter do
 
     it "depends on parent_groups to get the top level example group" do
       ex = ""
-      group.describe("group 2") do 
+      group.describe("group 2") do
         describe "group 3" do
-          ex = example("nested example 1") 
+          ex = example("nested example 1")
         end
       end
 
