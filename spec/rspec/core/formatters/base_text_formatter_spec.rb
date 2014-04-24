@@ -33,6 +33,26 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
     end
   end
 
+  describe "#dump_command_to_rerun_all_failed_examples" do
+    it "includes a single command to re-run all failed examples" do
+      group = RSpec::Core::ExampleGroup.describe("example group") do
+        it("fails") { fail }
+        it("fails too") { fail }
+      end
+      line1 = __LINE__ - 3
+      line2 = __LINE__ - 3
+      group.run(reporter)
+      formatter.dump_command_to_rerun_all_failed_examples
+
+      line = output.string.lines.find { |line| line =~ /^rspec/ } || ""
+
+      expect(line).to include("rspec")
+      expect(line).to include("#{RSpec::Core::Metadata::relative_path("#{__FILE__}:#{line1}")}")
+      expect(line).to include("#{RSpec::Core::Metadata::relative_path("#{__FILE__}:#{line2}")}")
+    end
+  end
+
+
   describe "#dump_failures" do
     let(:group) { RSpec::Core::ExampleGroup.describe("group name") }
 
