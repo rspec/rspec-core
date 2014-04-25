@@ -8,6 +8,7 @@ Enhancements:
 * Backport support for `skip` in metadata to skip execution of an example.
   (Xavier Shay, #1472)
 * Add `Pathname` support for setting all output streams. (Aaron Kromer)
+* Add `test_unit` and `minitest` expectation frameworks. (Aaron Kromer)
 
 Deprecations:
 
@@ -59,6 +60,8 @@ Deprecations:
 * Deprecate `#filename_pattern` in favour of `#pattern`. (Jon Rowe)
 * Deprecate `#backtrace_cleaner` in favour of `#backtrace_formatter`. (Jon Rowe)
 * Deprecate mutating `RSpec::Configuration#formatters`. (Jon Rowe)
+* Deprecate `stdlib` as an available expectation framework in favour of
+  `test_unit` and `minitest`. (Aaron Kromer)
 
 Bug Fixes:
 
