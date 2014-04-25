@@ -76,14 +76,15 @@ module RSpec
         command = spec_command
 
         begin
-          puts command if verbose
+          $stdout.puts(command}) if verbose
           success = system(command)
         rescue
-          puts failure_message if failure_message
+          $stderr.puts failure_message if failure_message
         end
+        
         if fail_on_error && !success
-          $stderr.puts "#{command} failed"
-          exit $?.exitstatus
+          $stderr.puts("#{command} failed") if verbose
+          exit($?.exitstatus)
         end
       end
 
