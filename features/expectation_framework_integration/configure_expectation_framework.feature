@@ -4,16 +4,16 @@ Feature: configure expectation framework
   desired outcomes. You can also configure RSpec to use:
 
   * rspec/expectations (explicitly)
-  * stdlib assertions
-    * test/unit assertions in ruby 1.8
-    * minitest assertions in ruby 1.9
-  * rspec/expectations _and_ stlib assertions
+  * stdlib assertions **DEPRECATED: Use test/unit or minitest explicitly**
+  * test/unit assertions
+  * minitest assertions
+  * any combination of the above libraries
 
-  Note that when you do not use rspec-expectations, you must explicitly
-  provide a description to every example.  You cannot rely on the generated
-  descriptions provided by rspec-expectations.
+  Note that when you do not use rspec-expectations, you must explicitly provide
+  a description to every example.  You cannot rely on the generated descriptions
+  provided by rspec-expectations.
 
-  Scenario: rspec-expectations can be used by default if nothing is configured
+  Scenario: Default configuration uses rspec-expectations
     Given a file named "example_spec.rb" with:
       """ruby
       RSpec::Matchers.define :be_a_multiple_of do |factor|
@@ -29,7 +29,7 @@ Feature: configure expectation framework
     When I run `rspec example_spec.rb`
     Then the examples should all pass
 
-  Scenario: configure rspec-expectations (explicitly)
+  Scenario: Configure rspec-expectations (explicitly)
     Given a file named "example_spec.rb" with:
       """ruby
       RSpec.configure do |config|
@@ -45,7 +45,8 @@ Feature: configure expectation framework
     When I run `rspec example_spec.rb`
     Then the examples should all pass
 
-  Scenario: configure test/unit assertions (passing examples)
+  @deprecated
+  Scenario: Configure 'stdlib' assertions
     Given a file named "example_spec.rb" with:
       """ruby
       RSpec.configure do |config|
@@ -58,44 +59,138 @@ Feature: configure expectation framework
         end
 
         specify { assert 5 < 6 }
-      end
-      """
-    When I run `rspec example_spec.rb`
-    Then the output should contain "2 examples, 0 failures"
 
-  Scenario: configure test/unit assertions (failing examples)
-    Given a file named "example_spec.rb" with:
-      """ruby
-      RSpec.configure do |config|
-        config.expect_with :stdlib
-      end
-
-      describe 5 do
         it "is greater than 6 (no it isn't!)" do
           assert 5 > 6, "errantly expected 5 to be greater than 5"
         end
-
-        specify { assert 5 > 6 }
       end
       """
     When I run `rspec example_spec.rb`
-    Then the output should contain "2 examples, 2 failures"
+    Then the output should match:
+      """
+           (Test::Unit::AssertionFailedError|Mini(T|t)est::Assertion):
+             errantly expected 5 to be greater than 5
+      """
+    And  the output should contain "3 examples, 1 failure"
+    And  the output should contain ":stdlib is deprecated. Use :test_unit or :minitest instead"
 
-  Scenario: configure rspec/expecations AND test/unit assertions
+  Scenario: Configure test/unit assertions
     Given a file named "example_spec.rb" with:
       """ruby
       RSpec.configure do |config|
-        config.expect_with :rspec, :stdlib
+        config.expect_with :test_unit
       end
 
-      describe 5 do
-        it "is greater than 4" do
-          assert 5 > 4, "expected 5 to be greater than 4"
+      RSpec.describe [1] do
+        it "is equal to [1]" do
+          assert_equal [1], [1], "expected [1] to equal [1]"
         end
 
-        it "is less than 6" do
-          5.should be < 6
+        specify { assert_not_equal [1], [] }
+
+        it "is equal to [2] (intentional failure)" do
+          assert [1] == [2], "errantly expected [2] to equal [1]"
         end
+      end
+      """
+    When I run `rspec example_spec.rb`
+    Then the output should match:
+      """
+           (Test::Unit::AssertionFailedError|Mini(T|t)est::Assertion):
+             errantly expected \[2\] to equal \[1\]
+      """
+    And  the output should contain "3 examples, 1 failure"
+
+  Scenario: Configure minitest assertions
+    Given a file named "example_spec.rb" with:
+      """ruby
+      RSpec.configure do |config|
+        config.expect_with :minitest
+      end
+
+      RSpec.describe "Object identity" do
+        it "the an object is the same as itself" do
+          x = [1]
+          assert_same x, x, "expected x to be the same x"
+        end
+
+        specify { refute_same [1], [1] }
+
+        it "is empty (intentional failure)" do
+          assert_empty [1], "errantly expected [1] to be empty"
+        end
+      end
+      """
+    When I run `rspec -b example_spec.rb`
+    Then the output should match:
+      """
+           MiniT|test::Assertion:
+             errantly expected \[1\] to be empty
+      """
+    And  the output should contain "3 examples, 1 failure"
+    And  the output should not contain "Warning: you should require 'minitest/autorun' instead."
+
+  Scenario: Configure rspec/expectations AND test/unit assertions
+    Given a file named "example_spec.rb" with:
+      """ruby
+      RSpec.configure do |config|
+        config.expect_with :rspec, :test_unit
+      end
+
+      RSpec.describe [1] do
+        it "is equal to [1]" do
+          assert_equal [1], [1], "expected [1] to equal [1]"
+        end
+
+        it "matches array [1]" do
+          is_expected.to match_array([1])
+        end
+      end
+      """
+    When I run `rspec example_spec.rb`
+    Then the examples should all pass
+
+  Scenario: Configure rspec/expecations AND minitest assertions
+    Given a file named "example_spec.rb" with:
+      """ruby
+      RSpec.configure do |config|
+        config.expect_with :rspec, :minitest
+      end
+
+      RSpec.describe "Object identity" do
+        it "two arrays are not the same object" do
+          refute_same [1], [1]
+        end
+
+        it "an array is itself" do
+          array = [1]
+          expect(array).to be array
+        end
+      end
+      """
+    When I run `rspec example_spec.rb`
+    Then the examples should all pass
+
+  Scenario: Configure test/unit and minitest assertions
+    Given a file named "example_spec.rb" with:
+      """ruby
+      RSpec.configure do |config|
+        config.expect_with :test_unit, :minitest
+      end
+
+      RSpec.describe [1] do
+        it "is equal to [1]" do
+          assert_equal [1], [1], "expected [1] to equal [1]"
+        end
+
+        specify { assert_not_equal [1], [] }
+
+        it "the an object is the same as itself" do
+          x = [1]
+          assert_same x, x, "expected x to be the same x"
+        end
+
+        specify { refute_same [1], [1] }
       end
       """
     When I run `rspec example_spec.rb`

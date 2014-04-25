@@ -526,16 +526,17 @@ module RSpec
       # Sets the expectation framework module(s) to be included in each example
       # group.
       #
-      # `frameworks` can be `:rspec`, `:stdlib`, a custom module, or any
-      # combination thereof:
+      # `frameworks` can be `:rspec`, `:test_unit`, `:minitest`, a custom
+      # module, or any combination thereof:
       #
       #     config.expect_with :rspec
-      #     config.expect_with :stdlib
-      #     config.expect_with :rspec, :stdlib
+      #     config.expect_with :test_unit
+      #     config.expect_with :minitest
+      #     config.expect_with :rspec, :minitest
       #     config.expect_with OtherExpectationFramework
       #
-      # RSpec will translate `:rspec` and `:stdlib` into the appropriate
-      # modules.
+      # RSpec will translate `:rspec`, `:minitest`, and `:test_unit` into the
+      # appropriate modules.
       #
       # ## Configuration
       #
@@ -555,8 +556,15 @@ module RSpec
             self.expecting_with_rspec = true
             ::RSpec::Matchers
           when :stdlib
+            RSpec.deprecate ':stdlib', :replacement => ":test_unit or :minitest"
             require 'test/unit/assertions'
             ::Test::Unit::Assertions
+          when :test_unit
+            require 'rspec/core/test_unit_assertions_adapter'
+            ::RSpec::Core::TestUnitAssertionsAdapter
+          when :minitest
+            require 'rspec/core/minitest_assertions_adapter'
+            ::RSpec::Core::MinitestAssertionsAdapter
           else
             raise ArgumentError, "#{framework.inspect} is not supported"
           end
