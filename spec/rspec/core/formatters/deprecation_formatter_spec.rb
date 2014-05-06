@@ -39,6 +39,23 @@ module RSpec::Core::Formatters
           expect(deprecation_stream.read).to eq "this message\n"
         end
 
+        it "surrounds multiline messages in fenceposts" do
+          multiline_message = <<-EOS.gsub(/^\s+\|/, '')
+            |line one
+            |line two
+          EOS
+          formatter.deprecation(:message => multiline_message)
+          deprecation_stream.rewind
+
+          expected = <<-EOS.gsub(/^\s+\|/, '')
+            |--------------------------------------------------------------------------------
+            |line one
+            |line two
+            |--------------------------------------------------------------------------------
+          EOS
+          expect(deprecation_stream.read).to eq expected
+        end
+
         it "includes the method" do
           formatter.deprecation(:deprecated => "i_am_deprecated")
           deprecation_stream.rewind
