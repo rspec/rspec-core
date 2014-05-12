@@ -67,6 +67,7 @@ module RSpec
         trap_interrupt
         options = ConfigurationOptions.new(args)
         options.parse_options
+        run_local = !options.options[:drb]
 
         if options.options[:drb]
           require 'rspec/core/drb_command_line'
@@ -74,10 +75,13 @@ module RSpec
             DRbCommandLine.new(options).run(err, out)
           rescue DRb::DRbConnError
             err.puts "No DRb server is running. Running in local process instead ..."
-            CommandLine.new(options).run(err, out)
+            run_local = true
           end
-        else
-          CommandLine.new(options).run(err, out)
+        end
+
+        if run_local
+          num_threads = options.options[:parallel_test] || 1
+          CommandLine.new(options).run(err, out, num_threads)
         end
       ensure
         RSpec.reset

@@ -48,12 +48,12 @@ module RSpec
 
       NON_FORCED_OPTIONS = [
         :debug, :requires, :profile, :drb, :libs, :files_or_directories_to_run,
-        :line_numbers, :full_description, :full_backtrace, :tty
+        :line_numbers, :full_description, :full_backtrace, :tty, :parallel_test
       ].to_set
 
       MERGED_OPTIONS = [:requires, :libs].to_set
 
-      UNPROCESSABLE_OPTIONS = [:libs, :formatters, :requires].to_set
+      UNPROCESSABLE_OPTIONS = [:libs, :formatters, :requires, :parallel_test].to_set
 
       def force?(key)
         !NON_FORCED_OPTIONS.include?(key)

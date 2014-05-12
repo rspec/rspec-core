@@ -208,6 +208,23 @@ FILTERING
           exit
         end
 
+        parser.on('--parallel-test NUMBER', 'Run the tests with the specified number of parallel threads') do |n|
+          is_valid = true
+          if (n.nil?)
+            is_valid = false
+          else
+            if (n.match(/\A[0-9]+\Z/))
+              options[:parallel_test] = n.to_i
+            else
+              is_valid = false
+            end
+          end
+          if !is_valid
+            puts parser.to_s.gsub(/^\s+(#{invalid_options.join('|')})\s*$\n/,'')
+            exit
+          end
+        end
+
         parser.on_tail('-h', '--help', "You're looking at it.") do
           puts parser
           exit
