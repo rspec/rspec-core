@@ -57,17 +57,21 @@ module RSpec
       def self.run(args, err=$stderr, out=$stdout)
         trap_interrupt
         options = ConfigurationOptions.new(args)
+        run_local = !options.options[:drb]
 
-        if options.options[:drb]
+        if !run_local
           require 'rspec/core/drb'
           begin
             DRbRunner.new(options).run(err, out)
           rescue DRb::DRbConnError
             err.puts "No DRb server is running. Running in local process instead ..."
-            new(options).run(err, out)
+            run_local = true
           end
-        else
-          new(options).run(err, out)
+        end
+
+        if run_local
+          num_threads = options.options[:parallel_test] || 1
+          new(options).run(err, out, num_threads)
         end
       end
 
@@ -81,9 +85,10 @@ module RSpec
       #
       # @param err [IO] error stream
       # @param out [IO] output stream
-      def run(err, out)
+      # @param num_threads [int] maximum number of parallel threads to use
+      def run(err, out, num_threads=1)
         setup(err, out)
-        run_specs(@world.ordered_example_groups)
+        run_specs(@world.ordered_example_groups, num_threads)
       end
 
       # Wires together the various configuration objects and state holders.
@@ -104,12 +109,28 @@ module RSpec
       # @return [Fixnum] exit status code. 0 if all specs passed,
       #   or the configured failure exit code (1 by default) if specs
       #   failed.
-      def run_specs(example_groups)
+      def run_specs(example_groups, num_threads=1)
         @configuration.reporter.report(@world.example_count(example_groups)) do |reporter|
           begin
             hook_context = SuiteHookContext.new
             @configuration.hooks.run(:before, :suite, hook_context)
-            example_groups.map { |g| g.run(reporter) }.all? ? 0 : @configuration.failure_exit_code
+            # example_groups.map { |g| g.run(reporter) }.all? ? 0 : @configuration.failure_exit_code
+            group_threads = RSpec::Core::ExampleGroupThreadRunner.new
+            example_groups.map {|g| 
+              group_threads.run(g, reporter, num_threads)
+            }
+
+            # wait for example_groups to complete
+            group_threads.wait_for_completion
+
+            # get results of testing now that we're done
+            example_groups.map { |g| 
+              reporter.example_group_started(g)
+              result_for_this_group = g.succeeded?
+              results_for_descendants = g.ordering_strategy.order(g.children).map {|child| child.succeeded? }.all?
+              reporter.example_group_finished(g)
+              result_for_this_group && results_for_descendants
+            }.all? ? 0 : @configuration.failure_exit_code
           ensure
             @configuration.hooks.run(:after, :suite, hook_context)
           end
