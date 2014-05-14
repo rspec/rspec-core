@@ -79,16 +79,6 @@ module RSpec
         RSpec.configuration.format_docstrings_block.call(description)
       end
 
-      # @attr_accessor
-      #
-      # Holds the completion status of the example (nil if not completed)
-      attr_accessor :succeeded
-
-      # Convenience method for getting success status of example
-      def succeeded?
-        @succeeded
-      end
-
       # @attr_reader
       #
       # Returns the first exception raised in the context of running this
@@ -156,7 +146,6 @@ module RSpec
               begin
                 run_before_example
                 @example_group_instance.instance_exec(self, &@example_block)
-                @succeeded = true # this will not be set to true if a failure occurs
 
                 if pending?
                   Pending.mark_fixed! self

@@ -445,7 +445,7 @@ module RSpec
       end
 
       # Runs all the examples in this group
-      def self.run(reporter, num_threads=1)
+      def self.run(reporter, num_threads = 1)
         if RSpec.world.wants_to_quit
           RSpec.world.clear_remaining_example_groups if top_level?
           return
@@ -456,15 +456,15 @@ module RSpec
           run_before_context_hooks(new)
           example_threads = RSpec::Core::ExampleThreadRunner.new(num_threads)
           run_examples(reporter, example_threads)
-          ordering_strategy.order(children).map {|child| child.run(reporter, num_threads)}
+          ordering_strategy.order(children).map { |child| child.run(reporter, num_threads) }
           # ensure all examples in the group are done before running 'after :all'
           # this does NOT prevent utilization of other available threads
           example_threads.wait_for_completion
         rescue Pending::SkipDeclaredInExample => ex
-          for_filtered_examples(reporter) {|example| example.skip_with_exception(reporter, ex) }
+          for_filtered_examples(reporter) { |example| example.skip_with_exception(reporter, ex) }
         rescue Exception => ex
           RSpec.world.wants_to_quit = true if fail_fast?
-          for_filtered_examples(reporter) {|example| example.fail_with_exception(reporter, ex) }
+          for_filtered_examples(reporter) { |example| example.fail_with_exception(reporter, ex) }
         ensure
           run_after_context_hooks(new)
           before_context_ivars.clear
@@ -475,9 +475,7 @@ module RSpec
       # Method will report the success / failure status of this ExampleGroup
       # based on the success / failure status of its contained Examples
       def self.succeeded?
-        filtered_examples.map do |example|
-          example.succeeded?
-        end.all?
+        filtered_examples.all? { |example| example.metadata[:execution_result] == :passed }
       end
 
       # @private

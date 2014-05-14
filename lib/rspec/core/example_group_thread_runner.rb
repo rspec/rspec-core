@@ -5,13 +5,17 @@ module RSpec
 
       def initialize
         @thread_array = []
+        $mutex = $mutex || Mutex.new
       end
 
-      def run(examplegroup, reporter, num_threads=1)
+      # Method will run an [ExampleGroup] inside a [Thread] to prevent blocking
+      # execution.  The new [Thread] is added to an array for tracking and
+      # will automatically remove itself when done
+      def run(examplegroup, reporter, num_threads = 1)
         @thread_array.push Thread.start {
-          # puts "Starting examplegroup '#{examplegroup.description}'..."
-          examplegroup.run(reporter, num_threads)
-          # puts "Examplegroup '#{examplegroup.description}' completed."
+          $mutex.synchronize {
+            examplegroup.run(reporter, num_threads)
+          }
           @thread_array.delete Thread.current # remove from local scope
         }
       end
@@ -20,10 +24,8 @@ module RSpec
       # remove themselves from the @thread_array so an empty array means they
       # completed
       def wait_for_completion
-        # wait for threads to complete
         while @thread_array.length > 0
-          # puts "Waiting for #{@thread_array.length} group threads to complete."
-          sleep 1 #0.1
+          sleep 1
         end
       end
     end
