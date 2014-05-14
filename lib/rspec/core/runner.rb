@@ -70,8 +70,7 @@ module RSpec
         end
 
         if run_local
-          num_threads = options.options[:parallel_test] || 1
-          new(options).run(err, out, num_threads)
+          new(options).run(err, out)
         end
       end
 
@@ -85,10 +84,9 @@ module RSpec
       #
       # @param err [IO] error stream
       # @param out [IO] output stream
-      # @param num_threads [Integer] maximum number of parallel threads to use
-      def run(err, out, num_threads = 1)
+      def run(err, out)
         setup(err, out)
-        run_specs(@world.ordered_example_groups, num_threads)
+        run_specs(@world.ordered_example_groups)
       end
 
       # Wires together the various configuration objects and state holders.
@@ -109,14 +107,14 @@ module RSpec
       # @return [Fixnum] exit status code. 0 if all specs passed,
       #   or the configured failure exit code (1 by default) if specs
       #   failed.
-      def run_specs(example_groups, num_threads = 1)
+      def run_specs(example_groups)
         @configuration.reporter.report(@world.example_count(example_groups)) do |reporter|
           begin
             hook_context = SuiteHookContext.new
             @configuration.hooks.run(:before, :suite, hook_context)
             
             group_threads = RSpec::Core::ExampleGroupThreadRunner.new
-            example_groups.each { |g| group_threads.run(g, reporter, num_threads) }
+            example_groups.each { |g| group_threads.run(g, reporter, @configuration.thread_maximum) }
             group_threads.wait_for_completion
 
             # get results of testing now that we're done

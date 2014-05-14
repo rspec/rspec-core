@@ -138,7 +138,7 @@ module RSpec::Core
         end
 
         parser.on('--parallel-test NUMBER', 'Run the tests with the specified number of parallel threads') do |n|
-          options[:parallel_test] = if !n.nil?
+          options[:thread_maximum] = if !n.nil?
                                       begin
                                         Integer(n)
                                       rescue ArgumentError

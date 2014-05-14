@@ -267,7 +267,7 @@ module RSpec
       # @private
       add_setting :expecting_with_rspec
       # @private
-      attr_accessor :filter_manager
+      attr_accessor :filter_manager, :thread_maximum
       # @private
       attr_reader :backtrace_formatter, :ordering_manager
 
@@ -302,6 +302,7 @@ module RSpec
         @requires = []
         @libs = []
         @derived_metadata_blocks = []
+        @thread_maximum = 1
       end
 
       # @private
