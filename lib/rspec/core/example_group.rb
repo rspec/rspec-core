@@ -500,7 +500,9 @@ module RSpec
           next if RSpec.world.wants_to_quit
           instance = new
           set_ivars(instance, before_context_ivars)
-          threads.run(example, instance, reporter)
+          $mutex.synchronize {
+            threads.run(example, instance, reporter)
+          }
         end
       end
 

@@ -5,7 +5,6 @@ module RSpec
 
       def initialize
         @thread_array = []
-        $mutex = $mutex || Mutex.new
       end
 
       # Method will run an [ExampleGroup] inside a [Thread] to prevent blocking
@@ -13,9 +12,7 @@ module RSpec
       # will automatically remove itself when done
       def run(examplegroup, reporter, num_threads = 1)
         @thread_array.push Thread.start {
-          $mutex.synchronize {
-            examplegroup.run(reporter, num_threads)
-          }
+          examplegroup.run(reporter, num_threads)
           @thread_array.delete Thread.current # remove from local scope
         }
       end

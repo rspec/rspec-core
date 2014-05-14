@@ -108,6 +108,7 @@ module RSpec
       #   or the configured failure exit code (1 by default) if specs
       #   failed.
       def run_specs(example_groups)
+        $mutex = Mutex.new
         @configuration.reporter.report(@world.example_count(example_groups)) do |reporter|
           begin
             hook_context = SuiteHookContext.new
