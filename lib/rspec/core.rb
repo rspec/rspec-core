@@ -1,6 +1,4 @@
 $_rspec_core_load_started_at = Time.now
-require 'thread'
-
 require 'rbconfig'
 
 require "rspec/support"

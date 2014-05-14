@@ -137,7 +137,7 @@ module RSpec::Core
           $VERBOSE = true
         end
 
-        parser.on('--parallel-test NUMBER', 'Run the tests with the specified number of parallel threads') do |n|
+        parser.on('--parallel-test NUMBER', 'Run the tests with the specified number of parallel threads (default: 1).') do |n|
           options[:thread_maximum] = if !n.nil?
                                       begin
                                         Integer(n)

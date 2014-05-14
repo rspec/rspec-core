@@ -86,7 +86,12 @@ module RSpec
       # @param out [IO] output stream
       def run(err, out)
         setup(err, out)
-        run_specs(@world.ordered_example_groups)
+        if @options.options[:thread_maximum].nil?
+          run_specs(@world.ordered_example_groups)
+        else
+          require 'thread'
+          run_specs_parallel(@world.ordered_example_groups)
+        end
       end
 
       # Wires together the various configuration objects and state holders.
@@ -108,6 +113,24 @@ module RSpec
       #   or the configured failure exit code (1 by default) if specs
       #   failed.
       def run_specs(example_groups)
+        @configuration.reporter.report(@world.example_count(example_groups)) do |reporter|
+          begin
+            hook_context = SuiteHookContext.new
+            @configuration.hooks.run(:before, :suite, hook_context)
+            example_groups.map { |g| g.run(reporter) }.all? ? 0 : @configuration.failure_exit_code
+          ensure
+            @configuration.hooks.run(:after, :suite, hook_context)
+          end
+        end
+      end
+
+      # Runs the provided example groups in parallel.
+      #
+      # @param example_groups [Array<RSpec::Core::ExampleGroup>] groups to run
+      # @return [Fixnum] exit status code. 0 if all specs passed,
+      #   or the configured failure exit code (1 by default) if specs
+      #   failed.
+      def run_specs_parallel(example_groups)
         $mutex = Mutex.new
         @configuration.reporter.report(@world.example_count(example_groups)) do |reporter|
           begin
