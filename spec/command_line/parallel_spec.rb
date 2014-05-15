@@ -54,8 +54,8 @@ RSpec.describe 'command line', :ui, :slow do
       output_str = @out.string
       validate_output(output_str)
       seconds = get_seconds(output_str).to_i
-      expect(seconds).to be >= 3
-      expect(seconds).to be < 6
+      expect(seconds).to be >= 2
+      expect(seconds).to be < 7
     end
 
     it '6 threads' do
@@ -63,8 +63,8 @@ RSpec.describe 'command line', :ui, :slow do
       output_str = @out.string
       validate_output(output_str)
       seconds = get_seconds(output_str).to_i
-      expect(seconds).to be >= 1
-      expect(seconds).to be < 3
+      expect(seconds).to be >= 0
+      expect(seconds).to be < 4
     end
   end
 
