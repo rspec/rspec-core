@@ -15,15 +15,15 @@ Feature: `--parallel-test` option
         before(:example) { puts "before example" }
 
         it "thread 0 example" do
-          fail
+          expect(true).to be(false)
         end
 
         it "thread 1 example" do
-          pass
+          expect(true).to be(true)
         end
 
         it "thread 2 example" do
-          pass
+          expect(true).to be(true)
         end
 
         after(:example) { puts "after example" }

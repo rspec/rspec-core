@@ -470,7 +470,7 @@ module RSpec
       end
 
       # Runs all the examples in this group
-      def self.run_parallel(reporter, num_threads = 1, mutex, used_threads)
+      def self.run_parallel(reporter, num_threads, mutex, used_threads)
         if RSpec.world.wants_to_quit
           RSpec.world.clear_remaining_example_groups if top_level?
           return
