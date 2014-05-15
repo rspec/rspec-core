@@ -1,19 +1,21 @@
 module RSpec
   module Core
     class ExampleGroupThreadRunner
-      attr_accessor :thread_array
+      attr_accessor :thread_array, :max_threads, :mutex
 
-      def initialize
+      def initialize(max_threads = 1, mutex = Mutex.new)
+        @max_threads = max_threads
+        @mutex = mutex
         @thread_array = []
       end
 
       # Method will run an [ExampleGroup] inside a [Thread] to prevent blocking
       # execution.  The new [Thread] is added to an array for tracking and
       # will automatically remove itself when done
-      def run(examplegroup, reporter, num_threads = 1)
+      def run(examplegroup, reporter)
         @thread_array.push Thread.start {
-          examplegroup.run_parallel(reporter, num_threads)
-          @thread_array.delete Thread.current # remove from local scope
+          examplegroup.run_parallel(reporter, @max_threads, @mutex)
+          @thread_array.delete Thread.current
         }
       end
 

@@ -470,7 +470,7 @@ module RSpec
       end
 
       # Runs all the examples in this group
-      def self.run_parallel(reporter, num_threads = 1)
+      def self.run_parallel(reporter, num_threads = 1, mutex)
         if RSpec.world.wants_to_quit
           RSpec.world.clear_remaining_example_groups if top_level?
           return
@@ -480,8 +480,8 @@ module RSpec
         begin
           run_before_context_hooks(new)
           example_threads = RSpec::Core::ExampleThreadRunner.new(num_threads)
-          run_examples_parallel(reporter, example_threads)
-          ordering_strategy.order(children).map { |child| child.run_parallel(reporter, num_threads) }
+          run_examples_parallel(reporter, example_threads, mutex)
+          ordering_strategy.order(children).map { |child| child.run_parallel(reporter, num_threads, mutex) }
           # ensure all examples in the group are done before running 'after :all'
           # this does NOT prevent utilization of other available threads
           example_threads.wait_for_completion
@@ -495,12 +495,6 @@ module RSpec
           before_context_ivars.clear
           reporter.example_group_finished(self)
         end
-      end
-
-      # Method will report the success / failure status of this ExampleGroup
-      # based on the success / failure status of its contained Examples
-      def self.succeeded?
-        filtered_examples.all? { |example| example.metadata[:execution_result] == :passed }
       end
 
       # @private
@@ -521,7 +515,6 @@ module RSpec
 
       # @private
       def self.run_examples(reporter)
-        
         ordering_strategy.order(filtered_examples).map do |example|
           next if RSpec.world.wants_to_quit
           instance = new
@@ -533,14 +526,14 @@ module RSpec
       end
 
       # @private
-      def self.run_examples_parallel(reporter, threads)
+      def self.run_examples_parallel(reporter, threads, mutex)
         ordering_strategy.order(filtered_examples).map do |example|
           next if RSpec.world.wants_to_quit
           instance = new
           set_ivars(instance, before_context_ivars)
-          $mutex.synchronize {
+          mutex.synchronize do
             threads.run(example, instance, reporter)
-          }
+          end
         end
       end
 

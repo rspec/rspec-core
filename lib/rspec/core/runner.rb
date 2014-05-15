@@ -57,19 +57,16 @@ module RSpec
       def self.run(args, err=$stderr, out=$stdout)
         trap_interrupt
         options = ConfigurationOptions.new(args)
-        run_local = !options.options[:drb]
 
-        unless run_local
+        if options.options[:drb]
           require 'rspec/core/drb'
           begin
             DRbRunner.new(options).run(err, out)
           rescue DRb::DRbConnError
             err.puts "No DRb server is running. Running in local process instead ..."
-            run_local = true
+            new(options).run(err, out)
           end
-        end
-
-        if run_local
+        else
           new(options).run(err, out)
         end
       end
@@ -131,20 +128,18 @@ module RSpec
       #   or the configured failure exit code (1 by default) if specs
       #   failed.
       def run_specs_parallel(example_groups)
-        $mutex = Mutex.new
         @configuration.reporter.report(@world.example_count(example_groups)) do |reporter|
           begin
             hook_context = SuiteHookContext.new
             @configuration.hooks.run(:before, :suite, hook_context)
             
-            group_threads = RSpec::Core::ExampleGroupThreadRunner.new
-            example_groups.each { |g| group_threads.run(g, reporter, @configuration.thread_maximum) }
+            group_threads = RSpec::Core::ExampleGroupThreadRunner.new(@configuration.thread_maximum)
+            example_groups.each { |g| group_threads.run(g, reporter) }
             group_threads.wait_for_completion
 
-            # get results of testing now that we're done
             example_groups.all? do |g| 
-              result_for_this_group = g.succeeded?
-              results_for_descendants = g.children.all? { |child| child.succeeded? }
+              result_for_this_group = g.filtered_examples.all? { |example| example.metadata[:execution_result].exception.nil? }
+              results_for_descendants = g.children.all? { |child| child.filtered_examples.all? { |example| example.metadata[:execution_result].exception.nil? } }
               result_for_this_group && results_for_descendants
             end ? 0 : @configuration.failure_exit_code
           ensure

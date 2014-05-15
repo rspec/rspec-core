@@ -4,15 +4,14 @@ module RSpec
       attr_accessor :num_threads, :thread_array
 
       def initialize(num_threads)
-        @num_threads = num_threads # used to track the local usage of threads
+        @num_threads = num_threads
         @thread_array = []
-        $used_threads = $used_threads || 0 # used to track the global usage of threads
+        $used_threads = $used_threads || 0
       end
 
       # Method will check global utilization of threads and if that number is
       # at or over the allocated maximum it will wait until a thread is available
       def wait_for_available_thread
-        # wait for available thread if we've reached our global limit
         while $used_threads.to_i >= @num_threads.to_i
           sleep 1
         end
@@ -25,9 +24,9 @@ module RSpec
         @thread_array.push Thread.start {
           example.run(instance, reporter)
           @thread_array.delete Thread.current # remove from local scope
-          $used_threads -= 1 # remove from global scope
+          $used_threads -= 1
         }
-        $used_threads += 1 # add to global scope
+        $used_threads += 1
       end
 
       # Method will wait for all threads to complete.  On completion threads
