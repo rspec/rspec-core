@@ -1,11 +1,12 @@
 module RSpec
   module Core
     class ExampleGroupThreadRunner
-      attr_accessor :thread_array, :max_threads, :mutex
+      attr_accessor :thread_array, :max_threads, :mutex, :used_threads
 
-      def initialize(max_threads = 1, mutex = Mutex.new)
+      def initialize(max_threads = 1, mutex = Mutex.new, used_threads = 0)
         @max_threads = max_threads
         @mutex = mutex
+        @used_threads = used_threads
         @thread_array = []
       end
 
@@ -14,7 +15,7 @@ module RSpec
       # will automatically remove itself when done
       def run(examplegroup, reporter)
         @thread_array.push Thread.start {
-          examplegroup.run_parallel(reporter, @max_threads, @mutex)
+          examplegroup.run_parallel(reporter, @max_threads, @mutex, @used_threads)
           @thread_array.delete Thread.current
         }
       end

@@ -470,7 +470,7 @@ module RSpec
       end
 
       # Runs all the examples in this group
-      def self.run_parallel(reporter, num_threads = 1, mutex)
+      def self.run_parallel(reporter, num_threads = 1, mutex, used_threads)
         if RSpec.world.wants_to_quit
           RSpec.world.clear_remaining_example_groups if top_level?
           return
@@ -479,9 +479,9 @@ module RSpec
 
         begin
           run_before_context_hooks(new)
-          example_threads = RSpec::Core::ExampleThreadRunner.new(num_threads)
+          example_threads = RSpec::Core::ExampleThreadRunner.new(num_threads, used_threads)
           run_examples_parallel(reporter, example_threads, mutex)
-          ordering_strategy.order(children).map { |child| child.run_parallel(reporter, num_threads, mutex) }
+          ordering_strategy.order(children).map { |child| child.run_parallel(reporter, num_threads, mutex, used_threads) }
           # ensure all examples in the group are done before running 'after :all'
           # this does NOT prevent utilization of other available threads
           example_threads.wait_for_completion
