@@ -80,6 +80,6 @@ RSpec.describe 'command line', :ui, :slow do
   end
 
   def get_seconds(output_str)
-    return output_str[/Finished in (?<match>.*) second/, "match"]
+    return output_str[/Finished in (.*) second/, 1]
   end
 end
