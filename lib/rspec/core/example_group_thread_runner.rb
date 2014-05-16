@@ -26,12 +26,12 @@ module RSpec
       # Method will run an [ExampleGroup] inside a [Thread] to prevent blocking
       # execution.  The new [Thread] is added to an array for tracking and
       # will automatically remove itself when done
-      # @param examplegroup [ExampleGroup] the group to be run inside a [Thread]
+      # @param example_group [ExampleGroup] the group to be run inside a [Thread]
       # @param reporter [Reporter] the passed in reporting class used for 
       # tracking
-      def run(examplegroup, reporter)
+      def run(example_group, reporter)
         @thread_array.push Thread.start {
-          examplegroup.run_parallel(reporter, @max_threads, @mutex, @used_threads)
+          example_group.run_parallel(reporter, @max_threads, @mutex, @used_threads)
           @thread_array.delete Thread.current
         }
       end
@@ -40,8 +40,8 @@ module RSpec
       # remove themselves from the @thread_array so an empty array means they
       # completed
       def wait_for_completion
-        while @thread_array.length > 0
-          sleep 1
+        @thread_array.each do |t|
+          t.join
         end
       end
     end

@@ -1,38 +1,36 @@
 require 'spec_helper'
 
-
-
 RSpec.describe 'command line', :ui, :slow do
   before :each do
     @out = StringIO.new
     write_file 'spec/parallel_spec.rb', """
-      RSpec.describe \"parallel run\" do
-        it \"thread 0 example\" do
+      RSpec.describe 'parallel run' do
+        it 'thread 0 example' do
           sleep 1
           fail
         end
 
-        it \"thread 1 example\" do
+        it 'thread 1 example' do
           sleep 1
           pass
         end
 
-        it \"thread 2 example\" do
+        it 'thread 2 example' do
           sleep 1
           pass
         end
 
-        it \"thread 3 example\" do
+        it 'thread 3 example' do
           sleep 1
           fail
         end
 
-        it \"thread 4 example\" do
+        it 'thread 4 example' do
           sleep 1
           pass
         end
 
-        it \"thread 5 example\" do
+        it 'thread 5 example' do
           sleep 1
           pass
         end

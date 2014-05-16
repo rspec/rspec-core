@@ -22,7 +22,7 @@ module RSpec
       # at or over the allocated maximum it will wait until a thread is available
       def wait_for_available_thread
         while @used_threads.to_i >= @num_threads.to_i
-          sleep 1
+          sleep 0.1
         end
       end
 
@@ -46,8 +46,8 @@ module RSpec
       # remove themselves from the @thread_array so an empty array means they
       # completed
       def wait_for_completion
-        while @thread_array.length > 0
-          sleep 1
+        @thread_array.each do |t|
+          t.join
         end
       end
     end
