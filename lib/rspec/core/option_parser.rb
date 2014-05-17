@@ -137,6 +137,20 @@ module RSpec::Core
           $VERBOSE = true
         end
 
+        parser.on('--parallel-test NUMBER', 'Run the tests with the specified number of parallel threads (default: 1).') do |n|
+          options[:thread_maximum] = if !n.nil?
+                                      begin
+                                        Integer(n)
+                                      rescue ArgumentError
+                                        RSpec.warning "Non integer specified as number of parallel threads, seperate " +
+                                                       "your path from options with a space e.g. " +
+                                                       "`rspec --parallel-test #{n}`",
+                                                       :call_site => nil
+                                        1
+                                      end
+                                    end
+        end
+
         parser.separator <<-FILTERING
 
   **** Filtering/tags ****
