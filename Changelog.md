@@ -1,5 +1,5 @@
-### 2.99.0.rc1 Development
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.beta2...2-99-maintenance)
+### 2.99.0.rc1 / 2014-05-18
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.beta2...v2.99.0.rc1)
 
 Enhancements:
 
@@ -67,10 +67,10 @@ Bug Fixes:
 
 * Issue a warning when you set `config.deprecation_stream` too late for
   it to take effect because the reporter has already been setup. (Myron Marston)
-* `skip` with a block should not execute the block. (Xavier Shay, #1472)
+* `skip` with a block should not execute the block. (Xavier Shay)
 
 ### 2.99.0.beta2 / 2014-02-17
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.beta1...v2.99.0.beta2)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.beta1...v2.99.0.beta2)
 
 Enhancements:
 
@@ -110,7 +110,7 @@ Bug Fixes:
   fully recognised interally. (Jon Rowe)
 
 ### 2.99.0.beta1 / 2013-11-07
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.7...v2.99.0.beta1)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.14.7...v2.99.0.beta1)
 
 Enhancements
 
@@ -163,7 +163,7 @@ Deprecations
   (Myron Marston)
 
 ### 2.14.8 / 2014-02-27
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.7...v2.14.8)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.14.7...v2.14.8)
 
 Bug fixes:
 
@@ -171,7 +171,7 @@ Bug fixes:
   from being clickable. (Stefan Daschek)
 
 ### 2.14.7 / 2013-10-29
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.6...v2.14.7)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.14.6...v2.14.7)
 
 Bug fixes:
 
@@ -185,7 +185,7 @@ Bug fixes:
   (Myron Marston)
 
 ### 2.14.6 / 2013-10-15
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.5...v2.14.6)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.14.5...v2.14.6)
 
 Bug fixes:
 
@@ -195,7 +195,7 @@ Bug fixes:
   Gierth)
 
 ### 2.14.5 / 2013-08-13
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.4...v2.14.5)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.14.4...v2.14.5)
 
 Bug fixes:
 
@@ -210,7 +210,7 @@ Bug fixes:
 * JsonFormatter no longer dies if `dump_profile` isn't defined (Alex / @MasterLambaster, Jon Rowe)
 
 ### 2.14.4 / 2013-07-21
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.3...v2.14.4)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.14.3...v2.14.4)
 
 Bug fixes
 
@@ -233,7 +233,7 @@ Bug fixes
   examples to be printed. (Jon Rowe)
 
 ### 2.14.3 / 2013-07-13
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.2...v2.14.3)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.14.2...v2.14.3)
 
 Bug fixes
 
@@ -242,7 +242,7 @@ Bug fixes
   (This was a regression in 2.14) (Jon Rowe)
 
 ### 2.14.2 / 2013-07-09
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.1...v2.14.2)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.14.1...v2.14.2)
 
 Bug fixes
 
@@ -254,7 +254,7 @@ Bug fixes
   (Jon Rowe)
 
 ### 2.14.1 / 2013-07-08
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.0...v2.14.1)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.14.0...v2.14.1)
 
 Bug fixes
 
@@ -264,7 +264,7 @@ Bug fixes
   comes from `Kernel` (Alex Portnov, Jon Rowe).
 
 ### 2.14.0 / 2013-07-06
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.14.0.rc1...v2.14.0)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.14.0.rc1...v2.14.0)
 
 Enhancements
 
@@ -278,7 +278,7 @@ Bug fix
   (Jon Rowe, Andy Lindeman and Myron Marston)
 
 ### 2.14.0.rc1 / 2013-05-27
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.13.1...v2.14.0.rc1)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.13.1...v2.14.0.rc1)
 
 Enhancements
 
@@ -358,7 +358,7 @@ Deprecations
   (Jon Rowe)
 
 ### 2.13.1 / 2013-03-12
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.13.0...v2.13.1)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.13.0...v2.13.1)
 
 Bug fixes
 
@@ -388,7 +388,7 @@ Deprecations
   in an example group (Myron Marston).
 
 ### 2.13.0 / 2013-02-23
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.12.2...v2.13.0)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.12.2...v2.13.0)
 
 Enhancements
 
@@ -421,7 +421,7 @@ Bug fixes
   parent group's subject. (Olek Janiszewski)
 
 ### 2.12.2 / 2012-12-13
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.12.1...v2.12.2)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.12.1...v2.12.2)
 
 Bug fixes
 
@@ -432,7 +432,7 @@ Bug fixes
   for backwards compatibility (Patrick Van Stee)
 
 ### 2.12.1 / 2012-12-01
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.12.0...v2.12.1)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.12.0...v2.12.1)
 
 Bug fixes
 
@@ -447,7 +447,7 @@ Bug fixes
   (Myron Marston).
 
 ### 2.12.0 / 2012-11-12
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.11.1...v2.12.0)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.11.1...v2.12.0)
 
 Enhancements
 
@@ -506,7 +506,7 @@ Deprecations
 
 
 ### 2.11.1 / 2012-07-18
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.11.0...v2.11.1)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.11.0...v2.11.1)
 
 Bug fixes
 
@@ -521,7 +521,7 @@ Bug fixes
   (Myron Marston).
 
 ### 2.11.0 / 2012-07-07
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.10.1...v2.11.0)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.10.1...v2.11.0)
 
 Enhancements
 
@@ -554,7 +554,7 @@ Bug fixes
 * Delegate to mocha methods instead of aliasing them in mocha adapter.
 
 ### 2.10.1 / 2012-05-19
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.10.0...v2.10.1)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.10.0...v2.10.1)
 
 Bug fixes
 
@@ -563,7 +563,7 @@ Bug fixes
   Strings (slyphon)
 
 ### 2.10.0 / 2012-05-03
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.9.0...v2.10.0)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.9.0...v2.10.0)
 
 Enhancements
 
@@ -583,7 +583,7 @@ Bug fixes
 * Do not modify example ancestry when dumping errors (Michael Grosser)
 
 ### 2.9.0 / 2012-03-17
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.8.0...v2.9.0)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.8.0...v2.9.0)
 
 Enhancements
 
@@ -607,7 +607,7 @@ Bug fixes
 
 ### 2.8.0 / 2012-01-04
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.8.0.rc2...v2.8.0)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.8.0.rc2...v2.8.0)
 
 Bug fixes
 
@@ -620,7 +620,7 @@ Bug fixes
 
 ### 2.8.0.rc2 / 2011-12-19
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.8.0.rc1...v2.8.0.rc2)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.8.0.rc1...v2.8.0.rc2)
 
 Enhancments
 
@@ -638,7 +638,7 @@ Enhancments
 
 ### 2.8.0.rc1 / 2011-11-06
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.7.1...v2.8.0.rc1)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.7.1...v2.8.0.rc1)
 
 Enhancements
 
@@ -681,7 +681,7 @@ Bug fixes
 
 ### 2.7.1 / 2011-10-20
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.7.0...v2.7.1)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.7.0...v2.7.1)
 
 Bug fixes
 
@@ -689,7 +689,7 @@ Bug fixes
 
 ### 2.7.0 / 2011-10-16
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.6.4...v2.7.0)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.6.4...v2.7.0)
 
 NOTE: RSpec's release policy dictates that there should not be any backward
 incompatible changes in minor releases, but we're making an exception to
@@ -732,7 +732,7 @@ Bug fixes
 
 ### 2.6.4 / 2011-06-06
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.6.3...v2.6.4)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.6.3...v2.6.4)
 
 NOTE: RSpec's release policy dictates that there should not be new
 functionality in patch releases, but this minor enhancement slipped in by
@@ -752,7 +752,7 @@ Bug fixes
 
 ### 2.6.3 / 2011-05-24
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.6.2...v2.6.3)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.6.2...v2.6.3)
 
 Bug fixes
 
@@ -763,7 +763,7 @@ Bug fixes
 
 ### 2.6.2 / 2011-05-21
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.6.1...v2.6.2)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.6.1...v2.6.2)
 
 Bug fixes
 
@@ -772,7 +772,7 @@ Bug fixes
 
 ### 2.6.1 / 2011-05-19
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.6.0...v2.6.1)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.6.0...v2.6.1)
 
 Bug fixes
 
@@ -781,7 +781,7 @@ Bug fixes
 
 ### 2.6.0 / 2011-05-12
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.5.1...v2.6.0)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.5.1...v2.6.0)
 
 Enhancements
 
@@ -827,7 +827,7 @@ Bug fixes
 
 ### 2.5.1 / 2011-02-06
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.5.0...v2.5.1)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.5.0...v2.5.1)
 
 NOTE: this release breaks compatibility with rspec/autotest/bundler
 integration, but does so in order to greatly simplify it.
@@ -844,7 +844,7 @@ If you don't want 'bundle exec', there is nothing you have to do.
 
 ### 2.5.0 / 2011-02-05
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.4.0...v2.5.0)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.4.0...v2.5.0)
 
 Enhancements
 
@@ -872,7 +872,7 @@ Deprecations
 
 ### 2.4.0 / 2011-01-02
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.3.1...v2.4.0)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.3.1...v2.4.0)
 
 Enhancements
 
@@ -897,7 +897,7 @@ Bug fixes
 
 ### 2.3.1 / 2010-12-16
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.3.0...v2.3.1)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.3.0...v2.3.1)
 
 Bug fixes
 
@@ -908,7 +908,7 @@ Bug fixes
 
 ### 2.3.0 / 2010-12-12
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.2.1...v2.3.0)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.2.1...v2.3.0)
 
 Enhancements
 
@@ -928,7 +928,7 @@ Bug fixes
 
 ### 2.2.1 / 2010-11-28
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.2.0...v2.2.1)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.2.0...v2.2.1)
 
 Bug fixes
 * alias_method instead of override Kernel#method_missing (John Wilger)
@@ -938,7 +938,7 @@ Bug fixes
 
 ### 2.2.0 / 2010-11-28
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.1.0...v2.2.0)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.1.0...v2.2.0)
 
 Deprecations/changes
 
@@ -964,7 +964,7 @@ Bug fixes
 
 ### 2.1.0 / 2010-11-07
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.0.1...v2.1.0)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.0.1...v2.1.0)
 
 Enhancments
 
@@ -995,7 +995,7 @@ Bug fixes
 
 ### 2.0.1 / 2010-10-18
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.0.0...v2.0.1)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.0.0...v2.0.1)
 
 Bug fixes
 
@@ -1008,7 +1008,7 @@ Bug fixes
 
 ### 2.0.0 / 2010-10-10
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.0.0.rc...v2.0.0)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.0.0.rc...v2.0.0)
 
 RSpec-1 compatibility
 
@@ -1021,7 +1021,7 @@ Bug fixes
 
 ### 2.0.0.rc / 2010-10-05
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.0.0.beta.22...v2.0.0.rc)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.0.0.beta.22...v2.0.0.rc)
 
 Enhancements
 
@@ -1045,7 +1045,7 @@ Bug fixes
 
 ### 2.0.0.beta.22 / 2010-09-12
 
-[full changelog](http://github.com/rspec/rspec-core/compare/v2.0.0.beta.20...v2.0.0.beta.22)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.0.0.beta.20...v2.0.0.beta.22)
 
 Enhancements
 
