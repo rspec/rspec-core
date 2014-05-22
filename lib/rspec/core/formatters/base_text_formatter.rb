@@ -162,7 +162,10 @@ module RSpec
         end
 
         def close
-          output.close if IO === output && output != $stdout
+          return unless IO === output
+          return if output.closed? || output == $stdout
+
+          output.close
         end
 
         def self.const_missing(name)

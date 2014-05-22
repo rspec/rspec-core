@@ -5,6 +5,16 @@ describe RSpec::Core::Formatters::BaseTextFormatter do
   let(:output) { StringIO.new }
   let(:formatter) { RSpec::Core::Formatters::BaseTextFormatter.new(output) }
 
+  context "when closing the formatter", :isolated_directory => true do
+    it 'does not close an already closed output stream' do
+      output = File.new("./output_to_close", "w")
+      formatter = described_class.new(output)
+      output.close
+
+      expect { formatter.close }.not_to raise_error
+    end
+  end
+
   describe "#summary_line" do
     it "with 0s outputs pluralized (excluding pending)" do
       expect(formatter.summary_line(0,0,0)).to eq("0 examples, 0 failures")
