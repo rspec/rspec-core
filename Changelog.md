@@ -1,6 +1,12 @@
 ### 2.14.9 Development
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v2.14.8...2-14-maintenance)
 
+Bug fixes:
+
+* Use `RSpec::Configuration#backtrace_exclusion_patterns` rather than the
+  deprecated `RSpec::Configuration#backtrace_clean_patterns` when mocking
+  with rr. (David Dollar)
+
 ### 2.14.8 / 2014-02-27
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v2.14.7...v2.14.8)
 
