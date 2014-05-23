@@ -5,6 +5,9 @@ Bug Fixes:
 
 * Fix `BaseTextFormatter` so that it does not re-close a closed output
   stream. (Myron Marston)
+* Use `RSpec::Configuration#backtrace_exclusion_patterns` rather than the
+  deprecated `RSpec::Configuration#backtrace_clean_patterns` when mocking
+  with rr. (David Dollar)
 
 ### 2.99.0.rc1 / 2014-05-18
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.beta2...v2.99.0.rc1)
