@@ -113,6 +113,7 @@ Spork.prefork do
     end
 
     # runtime options
+    c.raise_errors_for_deprecations!
     c.treat_symbols_as_metadata_keys_with_true_values = true
     c.color = !in_editor?
     c.filter_run :focus
