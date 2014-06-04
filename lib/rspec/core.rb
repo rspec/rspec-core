@@ -70,9 +70,35 @@ module RSpec
   end
 
   # @private
+  # Query to check if the user has called RSpec.reset
+  def self.user_has_called_reset?
+    @user_has_called_reset ||= false
+  end
+
+  # @private
+  # Warns that RSpec 3.0.0 will no longer call reset for users
+  def self.warn_about_calling_reset
+    RSpec.warn_deprecation(<<-EOD)
+Calling `RSpec::Core::Runner.run` will no longer implicitly invoke
+`RSpec.reset` as of RSpec 3.0.0. If you need RSpec to be reset between your
+calls to `RSpec::Core::Runner.run` please invoke `RSpec.reset` manually in the
+appropriate place.
+EOD
+  end
+
+  # @public
   # Used internally to ensure examples get reloaded between multiple runs in
   # the same process.
   def self.reset
+    @user_has_called_reset = true
+    internal_reset
+  end
+
+  # @private
+  # @see RSpec.reset
+  # Warns if the user has invoked RSpec.run twice in the same process.
+  def self.internal_reset
+    warn_about_calling_reset unless user_has_called_reset?
     @world = nil
     @configuration = nil
   end

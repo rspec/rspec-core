@@ -56,7 +56,7 @@ describe RSpec do
       config_before_reset = RSpec.configuration
       world_before_reset  = RSpec.world
 
-      RSpec.reset
+      RSpec.internal_reset
 
       expect(RSpec.configuration).not_to equal(config_before_reset)
       expect(RSpec.world).not_to equal(world_before_reset)

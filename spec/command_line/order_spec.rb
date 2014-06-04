@@ -81,6 +81,10 @@ describe 'command line', :ui do
     """
   end
 
+  after do
+    RSpec.instance_variable_set(:@user_has_called_reset, false)
+  end
+
   describe '--order rand' do
     it 'runs the examples and groups in a different order each time' do
       run_command 'tmp/aruba/spec/order_spec.rb --order rand -f doc'
@@ -200,5 +204,7 @@ describe 'command line', :ui do
 
   def run_command(cmd)
     RSpec::Core::Runner.run(cmd.split, stderr, stdout)
+  ensure
+    RSpec.reset
   end
 end
