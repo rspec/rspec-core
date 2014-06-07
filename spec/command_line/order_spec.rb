@@ -82,7 +82,11 @@ describe 'command line', :ui do
   end
 
   after do
-    RSpec.instance_variable_set(:@user_has_called_reset, false)
+    RSpec.resets_required = 0
+  end
+
+  before do
+    RSpec.resets_required = 0
   end
 
   describe '--order rand' do
