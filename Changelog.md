@@ -1,3 +1,14 @@
+### 2.99.1 Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.99.0...2-99-maintenance)
+
+
+Bug Fixes:
+
+* Add missing deprecation warning for when `RSpec::Core::Runner` is used
+  multiple times in the same process. In 2.x RSpec's global state was
+  automatically cleared between runs but in 3.0 you need to call `RSpec.reset`
+  manually in these situations. (Sam Phippen, #1587)
+
 ### 2.99.0 / 2014-06-01
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.rc1...v2.99.0)
 
