@@ -112,7 +112,7 @@ module RSpec
         if ENV['SPEC']
           FileList[ ENV['SPEC'] ].sort
         else
-          FileList[ pattern ].sort.map(&:shellescape)
+          "-P #{pattern}"
         end
       end
 
