@@ -89,8 +89,9 @@ module RSpec
           new(options).run(err, out)
         end
       ensure
-        RSpec.reset
+        RSpec.internal_reset
       end
     end
+
   end
 end

@@ -28,8 +28,30 @@ module RSpec::Core
 
       it "tells RSpec to reset" do
         RSpec.configuration.stub(:files_to_run => [])
-        RSpec.should_receive(:reset)
+        RSpec.should_receive(:internal_reset)
         RSpec::Core::Runner.run([], err, out)
+      end
+
+      it "issues a deprecation if warn is invoked twice and reset is not called manually" do
+        RSpec.configuration.stub(:files_to_run => [])
+        RSpec::Core::Runner.run([], err, out)
+        RSpec.configuration.stub(:files_to_run => [])
+        expect(RSpec).to receive(:warn_deprecation).with(/no longer implicitly/)
+        RSpec::Core::Runner.run([], err, out)
+      end
+
+      context "when the user manually invokes reset" do
+        after { RSpec.instance_variable_set(:@reset_called_by_user, false) }
+
+        it "does not issue a deprecation warning" do
+          RSpec.configuration.stub(:files_to_run => [])
+          RSpec::Core::Runner.run([], err, out)
+          RSpec.configuration.stub(:files_to_run => [])
+          RSpec.reset
+          RSpec.configuration.stub(:files_to_run => [])
+          expect(RSpec).not_to receive(:warn_deprecation).with(/no longer implicitly/)
+          RSpec::Core::Runner.run([], err, out)
+        end
       end
 
       context "with --drb or -X" do
