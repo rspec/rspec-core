@@ -45,6 +45,14 @@ require_rspec['core/version']
 module RSpec
   autoload :SharedContext, 'rspec/core/shared_context'
 
+  class << self
+    # @private
+    # Counts the number of times RSpec.reset needs to be called to prevent
+    # a warning about reset's no longer being implicitly invoked.
+    attr_accessor :resets_required
+    RSpec.resets_required = 0
+  end
+
   # @private
   def self.wants_to_quit
   # Used internally to determine what to do when a SIGINT is received
@@ -90,7 +98,7 @@ EOD
   # Used internally to ensure examples get reloaded between multiple runs in
   # the same process.
   def self.reset
-    @user_has_called_reset = true
+    RSpec.resets_required -= 1
     internal_reset
   end
 
@@ -98,7 +106,6 @@ EOD
   # @see RSpec.reset
   # Warns if the user has invoked RSpec.run twice in the same process.
   def self.internal_reset
-    warn_about_calling_reset unless user_has_called_reset?
     @world = nil
     @configuration = nil
   end

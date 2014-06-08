@@ -47,6 +47,18 @@ module RSpec
         end
       end
 
+
+      # @private
+      # Warns that RSpec 3.0.0 will no longer call reset for users
+      def self.warn_about_calling_reset
+        RSpec.configuration.deprecation_stream.puts(<<-EOD)
+Calling `RSpec::Core::Runner.run` will no longer implicitly invoke
+`RSpec.reset` as of RSpec 3.0.0. If you need RSpec to be reset between your
+calls to `RSpec::Core::Runner.run` please invoke `RSpec.reset` manually in the
+appropriate place.
+        EOD
+      end
+
       # Run a suite of RSpec examples.
       #
       # This is used internally by RSpec to run a suite, but is available
@@ -64,6 +76,8 @@ module RSpec
       # #### Returns
       # * +Fixnum+ - exit status code (0/1)
       def self.run(args, err=$stderr, out=$stdout)
+        warn_about_calling_reset if RSpec.resets_required > 0
+        RSpec.resets_required += 1
         trap_interrupt
         options = ConfigurationOptions.new(args)
         options.parse_options

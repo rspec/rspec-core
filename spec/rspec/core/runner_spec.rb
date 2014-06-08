@@ -26,18 +26,30 @@ module RSpec::Core
       let(:err) { StringIO.new }
       let(:out) { StringIO.new }
 
+      after { RSpec.resets_required = 0 }
+      before { RSpec.resets_required = 0 }
+
       it "tells RSpec to reset" do
         RSpec.configuration.stub(:files_to_run => [])
         RSpec.should_receive(:internal_reset)
         RSpec::Core::Runner.run([], err, out)
       end
 
+      it "does not issue a deprecation warning at the end of the first run" do
+        RSpec.configuration.stub(:files_to_run => [])
+        RSpec.should_receive(:internal_reset)
+        allow(RSpec.configuration).to receive(:deprecation_stream).and_return(err)
+        RSpec::Core::Runner.run([], err, out)
+        expect(err.string).to eq("")
+      end
+
       it "issues a deprecation if warn is invoked twice and reset is not called manually" do
         RSpec.configuration.stub(:files_to_run => [])
         RSpec::Core::Runner.run([], err, out)
         RSpec.configuration.stub(:files_to_run => [])
-        expect(RSpec).to receive(:warn_deprecation).with(/no longer implicitly/)
+        allow(RSpec.configuration).to receive(:deprecation_stream).and_return(err)
         RSpec::Core::Runner.run([], err, out)
+        expect(err.string).to match(/no longer implicitly/)
       end
 
       context "when the user manually invokes reset" do
@@ -49,8 +61,9 @@ module RSpec::Core
           RSpec.configuration.stub(:files_to_run => [])
           RSpec.reset
           RSpec.configuration.stub(:files_to_run => [])
-          expect(RSpec).not_to receive(:warn_deprecation).with(/no longer implicitly/)
+          allow(RSpec.configuration).to receive(:deprecation_stream).and_return(err)
           RSpec::Core::Runner.run([], err, out)
+          expect(err.string).to eq("")
         end
       end
 
