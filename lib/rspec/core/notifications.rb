@@ -168,7 +168,7 @@ module RSpec::Core
       # @param colorizer [#wrap] An object to colorize the message_lines by
       # @return [Array(String)] The example failure message colorized
       def colorized_message_lines(colorizer = ::RSpec::Core::Formatters::ConsoleCodes)
-        message_lines.map do |line|
+        message_lines(colorizer).map do |line|
           colorizer.wrap line, RSpec.configuration.failure_color
         end
       end
