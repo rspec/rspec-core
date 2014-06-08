@@ -14,6 +14,9 @@ Bug Fixes:
   requiring it. (Sam Phippen, #1565)
 * Example groups named `Config` will no longer cause a Ruby warning to be
   issued. (Jimmy Cuadra, #1580)
+* Make the line that is printed when a shared example group fails indicating
+  where the concrete example group is white, separating it from the stack trace
+  that is produced for the failure. (Sam Phippen, #1593)
 
 ### 3.0.1 Development
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.0.0...3-0-maintenance)
