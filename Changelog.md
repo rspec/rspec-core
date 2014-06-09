@@ -5,6 +5,8 @@ Bug Fixes:
 
 * Fix a couple ruby warnings caused by rspec-core when loaded.
   (Prem Sichanugrist, #1584)
+* Example groups named `Config` will no longer cause a Ruby warning to be
+  issued. (Jimmy Cuadra, #1580)
 
 ### 3.0.0 / 2014-06-01
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.0.0.rc1...v3.0.0)
