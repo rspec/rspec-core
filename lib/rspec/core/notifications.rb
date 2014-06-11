@@ -146,7 +146,7 @@ module RSpec::Core
       # Returns the message generated for this failure line by line.
       #
       # @return [Array(String)] The example failure message
-      def message_lines
+      def message_lines(default_color_proc=lambda {|x| x })
         @lines ||=
           begin
             lines = ["Failure/Error: #{read_failed_line.strip}"]
@@ -155,8 +155,9 @@ module RSpec::Core
               lines << "  #{line}" if exception.message
             end
             if shared_group
-              lines << "Shared Example Group: \"#{shared_group.metadata[:shared_group_name]}\"" +
+              line = "Shared Example Group: \"#{shared_group.metadata[:shared_group_name]}\"" +
                 " called from #{backtrace_formatter.backtrace_line(shared_group.location)}"
+              lines << default_color_proc.call(line)
             end
             lines
           end
@@ -167,7 +168,8 @@ module RSpec::Core
       # @param colorizer [#wrap] An object to colorize the message_lines by
       # @return [Array(String)] The example failure message colorized
       def colorized_message_lines(colorizer = ::RSpec::Core::Formatters::ConsoleCodes)
-        message_lines.map do |line|
+        default_color_proc = lambda {|x| colorizer.wrap(x, RSpec.configuration.default_color) }
+        message_lines(default_color_proc).map do |line|
           colorizer.wrap line, RSpec.configuration.failure_color
         end
       end
