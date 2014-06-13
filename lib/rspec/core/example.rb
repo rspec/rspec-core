@@ -119,6 +119,7 @@ module RSpec
               rescue Exception => e
                 set_exception(e)
               ensure
+                assign_generated_description
                 run_after_each
               end
             end
@@ -130,12 +131,6 @@ module RSpec
             @example_group_instance.instance_variable_set(ivar, nil)
           end
           @example_group_instance = nil
-
-          begin
-            assign_generated_description
-          rescue Exception => e
-            set_exception(e, "while assigning the example description")
-          end
         end
 
         finish(reporter)
@@ -313,6 +308,9 @@ An error occurred #{context}
         if metadata[:description_args].empty? and !pending?
           metadata[:description_args] << RSpec::Matchers.generated_description
         end
+      rescue Exception => e
+        set_exception(e, "while assigning the example description")
+      ensure
         RSpec::Matchers.clear_generated_description
       end
 
