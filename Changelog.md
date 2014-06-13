@@ -8,6 +8,8 @@ Bug Fixes:
   multiple times in the same process. In 2.x RSpec's global state was
   automatically cleared between runs but in 3.0 you need to call `RSpec.reset`
   manually in these situations. (Sam Phippen, #1587)
+* Prevent deprecation being accidentally issues when doubles used with `be_`
+  matchers due to automatically generated descriptions. (Jon Rowe, #1573)
 
 ### 2.99.0 / 2014-06-01
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.rc1...v2.99.0)
