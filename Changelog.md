@@ -1,7 +1,6 @@
 ### 2.99.1 Development
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v2.99.0...2-99-maintenance)
 
-
 Bug Fixes:
 
 * Add missing deprecation warning for when `RSpec::Core::Runner` is used
@@ -10,6 +9,8 @@ Bug Fixes:
   manually in these situations. (Sam Phippen, #1587)
 * Prevent deprecation being accidentally issues when doubles used with `be_`
   matchers due to automatically generated descriptions. (Jon Rowe, #1573)
+* Load `rspec/core` when loading `rspec/core/rake_task` to ensure we can
+  issue deprecations correctly. (Jon Rowe, #1612)
 
 ### 2.99.0 / 2014-06-01
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v2.99.0.rc1...v2.99.0)
