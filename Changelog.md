@@ -1,5 +1,5 @@
-### 2.99.1 Development
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.99.0...2-99-maintenance)
+### 2.99.1 / 2014-06-19
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.99.0...v2.99.1)
 
 Bug Fixes:
 
