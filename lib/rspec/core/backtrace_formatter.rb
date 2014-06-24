@@ -52,17 +52,22 @@ module RSpec
       def exclude?(line)
         return false if @full_backtrace
         matches_an_exclusion_pattern?(line) &&
-        doesnt_match_inclusion_pattern_unless_system_exclusion?(line)
+          doesnt_match_inclusion_pattern_unless_system_exclusion?(line)
       end
 
     private
 
       def matches_an_exclusion_pattern?(line)
-        @exclusion_patterns.any? { |p| line =~ p }
+        matches_unless_working_directory? @exclusion_patterns, line
       end
 
       def doesnt_match_inclusion_pattern_unless_system_exclusion?(line)
-        @system_exclusion_patterns.any? { |p| line =~ p } || @inclusion_patterns.none? { |p| p =~ line }
+        matches_unless_working_directory?(@system_exclusion_patterns, line) ||
+          @inclusion_patterns.none? { |p| p =~ line }
+      end
+
+      def matches_unless_working_directory?(patterns, line)
+        patterns.any? { |p| line.gsub(Dir.getwd,'') =~ p }
       end
 
     end
