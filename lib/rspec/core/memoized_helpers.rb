@@ -1,3 +1,5 @@
+require "securerandom"
+
 module RSpec
   module Core
     # This module is included in {ExampleGroup}, making the methods
@@ -231,7 +233,7 @@ EOS
         def let(name, &block)
           # We have to pass the block directly to `define_method` to
           # allow it to use method constructs like `super` and `return`.
-          raise "#let or #subject called without a block" if block.nil?
+          block ||= Proc.new { SecureRandom.hex }
           MemoizedHelpers.module_for(self).__send__(:define_method, name, &block)
 
           # Apply the memoization. The method has been defined in an ancestor
