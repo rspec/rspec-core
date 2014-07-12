@@ -399,10 +399,14 @@ module RSpec::Core
       expect("RegexWithCapture1".match(regex_with_capture)[1]).to eq('1')
     end
 
-    it 'raises a useful error when called without a block' do
-      expect do
-        ExampleGroup.describe { let(:list) }
-      end.to raise_error(/#let or #subject called without a block/)
+    context 'when called without a block' do
+      let(:no_block)
+      let(:another_no_block)
+
+      it 'lets a uuid' do
+        expect(no_block).to match(/[a-z0-9]{32}/)
+        expect(no_block).to_not eq(another_no_block)
+      end
     end
 
     let(:a_value) { "a string" }
