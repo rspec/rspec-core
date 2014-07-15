@@ -44,32 +44,23 @@ module RSpec
       end
 
       def backtrace_line(line)
-        RSpec::Core::Metadata::relative_path(line) unless exclude?(line)
+        Metadata.relative_path(line) unless exclude?(line)
       rescue SecurityError
         nil
       end
 
       def exclude?(line)
         return false if @full_backtrace
-        matches_an_exclusion_pattern?(line) &&
-          doesnt_match_inclusion_pattern_unless_system_exclusion?(line)
+        relative_line = Metadata.relative_path(line)
+        return false unless matches?(@exclusion_patterns, relative_line)
+        matches?(@system_exclusion_patterns, relative_line) || !matches?(@inclusion_patterns, line)
       end
 
     private
 
-      def matches_an_exclusion_pattern?(line)
-        matches_unless_working_directory? @exclusion_patterns, line
+      def matches?(patterns, line)
+        patterns.any? { |p| line =~ p }
       end
-
-      def doesnt_match_inclusion_pattern_unless_system_exclusion?(line)
-        matches_unless_working_directory?(@system_exclusion_patterns, line) ||
-          @inclusion_patterns.none? { |p| p =~ line }
-      end
-
-      def matches_unless_working_directory?(patterns, line)
-        patterns.any? { |p| line.gsub(Dir.getwd,'') =~ p }
-      end
-
     end
   end
 end
