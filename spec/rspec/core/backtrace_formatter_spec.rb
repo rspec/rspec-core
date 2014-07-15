@@ -35,14 +35,23 @@ module RSpec::Core
         expect(make_backtrace_formatter.exclude?("#{Dir.getwd}/arbitrary")).to be false
       end
 
-      it "includes something in the current working directory when that name includes gems" do
-        allow(Dir).to receive(:getwd).and_return("/Code/gems/")
-        expect(make_backtrace_formatter.exclude?("#{Dir.getwd}/arbitrary")).to be false
-      end
-
       it "includes something in the current working directory even with a matching exclusion pattern" do
         formatter = make_backtrace_formatter([/foo/])
         expect(formatter.exclude? "#{Dir.getwd}/foo").to be false
+      end
+
+      context "when the current working directory includes `gems` in the name" do
+        around(:example) do |ex|
+          Dir.mktmpdir do |tmp_dir|
+            dir = File.join(tmp_dir, "gems")
+            Dir.mkdir(dir)
+            Dir.chdir(dir, &ex)
+          end
+        end
+
+        it "includes something in the current working directory" do
+          expect(make_backtrace_formatter.exclude?("#{Dir.getwd}/arbitrary")).to be false
+        end
       end
     end
 
