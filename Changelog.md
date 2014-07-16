@@ -1,3 +1,12 @@
+### Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.0.2...master)
+
+
+Bug Fixes:
+
+* Properly convert both parts of a description into strings before
+  concatenation.  (@nicklink483, #1636)
+
 ### 3.0.2 / 2014-06-19
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.0.1...v3.0.2)
 
