@@ -268,6 +268,7 @@ module RSpec
       attr_accessor :filter_manager
       # @private
       attr_reader :backtrace_formatter, :ordering_manager
+      add_setting :editor_url_template
 
       def initialize
         @start_time = $_rspec_core_load_started_at || ::RSpec::Core::Time.now
@@ -281,6 +282,7 @@ module RSpec
         @spec_files_loaded = false
 
         @backtrace_formatter = BacktraceFormatter.new
+        @editor_url_template = false
 
         @default_path = 'spec'
         @deprecation_stream = $stderr
