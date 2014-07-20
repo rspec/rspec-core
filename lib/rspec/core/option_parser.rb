@@ -137,6 +137,16 @@ module RSpec::Core
           $VERBOSE = true
         end
 
+        parser.on('--editor_url_template TEMPLATE', 'HTMLoutput only: make backtraces link to editor',
+                  '  [txmt]    TextMate txmt:// style',
+                  '  [subl]    Sublime subl:// style',
+                  '  [macvim]  MacVim macvim:// style',
+                  '  [emacs]   EMACS emacs:// style',
+                  '  or a custom url template using \%{file} and \%{line_num} placeholders',
+                  '  (defaults to no links)') do |template|
+          options[:editor_url_template] = template
+        end
+
         parser.separator <<-FILTERING
 
   **** Filtering/tags ****

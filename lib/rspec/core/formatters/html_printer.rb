@@ -6,6 +6,17 @@ module RSpec
       # @private
       class HtmlPrinter
         include ERB::Util # for the #h method
+
+        # These are all actually kind of the same, but it's possible that
+        # other URL schemes might be necessary.
+        EDITOR_URL_SHORTCUTS =
+        {
+          'txmt' => 'txmt://open?url=file://%{file}&line=%{line}',
+          'subl' => 'subl://open?url=file://%{file}&line=%{line}',
+          'emacs' => 'emacs://open?url=file://%{file}&line=%{line}',
+          'macvim' => 'mvim://open?url=file://%{file}&line=%{line}'
+        }
+
         def initialize(output)
           @output = output
         end
@@ -40,15 +51,39 @@ module RSpec
           @output.puts "      <div class=\"failure\" id=\"failure_#{failure_id}\">"
           if exception
             @output.puts "        <div class=\"message\"><pre>#{h(exception[:message])}</pre></div>"
-            if escape_backtrace
-              @output.puts "        <div class=\"backtrace\"><pre>#{h exception[:backtrace]}</pre></div>"
-            else
-              @output.puts "        <div class=\"backtrace\"><pre>#{exception[:backtrace]}</pre></div>"
-            end
+            @output.puts "        <div class=\"backtrace\"><pre>#{make_hyperlinked_backtrace exception[:backtrace], escape_backtrace}</pre></div>"
           end
           @output.puts extra_content if extra_content
           @output.puts "      </div>"
           @output.puts "    </dd>"
+        end
+
+        def make_hyperlinked_backtrace(backtrace, escape_backtrace = false)
+          result = ''
+          url_template = RSpec.configuration.editor_url_template || false
+          url_template = EDITOR_URL_SHORTCUTS[url_template] if EDITOR_URL_SHORTCUTS.keys.include? url_template
+
+          parse_backtrace(backtrace).each do |bt_item|
+            bt_item[:location] = h(bt_item[:location]) if escape_backtrace
+            if url_template
+              url = url_template % { file: File.expand_path(bt_item[:file]), line: bt_item[:line_num] }
+              result += "<a href=\"#{url}\">#{bt_item[:file]}:#{bt_item[:line_num]}</a> : #{bt_item[:location]}\n"
+            else
+              result += "#{bt_item[:file]}:#{bt_item[:line_num]} : #{bt_item[:location]}\n"
+            end
+          end
+
+          result
+        end
+
+        def parse_backtrace(backtrace)
+          backtrace_details = []
+          backtrace.split("\n").each do |bt_line|
+            parts = bt_line.split(':', 3)
+            bt_item = { file: parts[0], line_num: parts[1], location: parts[2] }
+            backtrace_details << bt_item
+          end
+          backtrace_details
         end
 
         def print_example_pending(description, pending_message)
