@@ -1,5 +1,5 @@
-### Development
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.0.2...3-0-maintenance)
+### 3.0.3 / 2014-07-21
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.0.2...v3.0.3)
 
 Bug Fixes:
 
@@ -8,7 +8,7 @@ Bug Fixes:
 * Exclude the working directory when figuring out folders to ignore.
   (Jon Rowe, Myron Marston, #1616)
 * Allow `::RSpec::Core::Notifications::FailedExampleNotification#message_lines`
-  to be accessed without a colouriser. (@tomykaira , #1637)
+  to be accessed without a colouriser. (@tomykaira, #1637)
 
 ### 3.0.2 / 2014-06-19
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.0.1...v3.0.2)
