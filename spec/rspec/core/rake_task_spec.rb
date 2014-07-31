@@ -55,6 +55,13 @@ module RSpec::Core
       end
     end
 
+    context "with pattern" do
+      it "adds the pattern" do
+        task.pattern = "complex_pattern"
+        expect(spec_command).to include(" --pattern 'complex_pattern'")
+      end
+    end
+
     context 'with custom exit status' do
       it 'returns the correct status on exit', :slow do
         with_isolated_stderr do
@@ -148,58 +155,6 @@ module RSpec::Core
         ])
 
         expect(spec_command).not_to include("simplecov", "minitest", "rspec-core/spec")
-      end
-    end
-
-    it "sets the files to run in a consistent order, regardless of the underlying FileList ordering" do
-      task = RakeTask.new(:consistent_file_order) do |t|
-        t.pattern = 'a/*.rb'
-      end
-
-      # since the config block is deferred til task invocation, must fake
-      # calling the task so the expected pattern is picked up
-      expect(task).to receive(:run_task) { true }
-      expect(Rake.application.invoke_task(task.name)).to be_truthy
-
-      specify_consistent_ordering_of_files_to_run('a/*.rb', task)
-    end
-
-    context "with paths with quotes or spaces" do
-      it "escapes the quotes and spaces" do
-        task.pattern = File.join(Dir.tmpdir, "*spec.rb")
-        ["first_spec.rb", "second_\"spec.rb", "third_\'spec.rb", "fourth spec.rb"].each do |file_name|
-          FileUtils.touch(File.join(Dir.tmpdir, file_name))
-        end
-        expect(task.__send__(:files_to_run).sort).to eq([
-          File.join(Dir.tmpdir, "first_spec.rb"),
-          File.join(Dir.tmpdir, "fourth\\ spec.rb"),
-          File.join(Dir.tmpdir, "second_\\\"spec.rb"),
-          File.join(Dir.tmpdir, "third_\\\'spec.rb")
-        ])
-      end
-    end
-
-    context "with paths including symlinked directories" do
-      it "finds the files" do
-        project_dir = File.join(Dir.tmpdir, "project")
-        FileUtils.rm_rf project_dir
-
-        foos_dir = File.join(project_dir, "spec/foos")
-        FileUtils.mkdir_p foos_dir
-        FileUtils.touch(File.join(foos_dir, "foo_spec.rb"))
-
-        bars_dir = File.join(Dir.tmpdir, "shared/spec/bars")
-        FileUtils.mkdir_p bars_dir
-        FileUtils.touch(File.join(bars_dir, "bar_spec.rb"))
-
-        FileUtils.ln_s bars_dir, File.join(project_dir, "spec/bars")
-
-        FileUtils.cd(project_dir) do
-          expect(RakeTask.new.__send__(:files_to_run).sort).to eq([
-            "./spec/bars/bar_spec.rb",
-            "./spec/foos/foo_spec.rb"
-          ])
-        end
       end
     end
   end
