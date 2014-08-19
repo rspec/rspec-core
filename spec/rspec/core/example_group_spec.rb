@@ -344,7 +344,7 @@ module RSpec::Core
           warn_opts
         end
 
-        it "prints a deprecation warning since the semantics are changing in RSpec 3" do
+        it "prints a deprecation warning since the semantics of an inner described_class are changing in RSpec 3" do
           warn_opts = capture_deprecation_options do
             ExampleGroup.describe(String) do
               describe Array do
@@ -354,6 +354,19 @@ module RSpec::Core
           end
 
           expect(warn_opts[:message]).to include("#{__FILE__}:#{__LINE__ - 5}")
+          expect(warn_opts[:message]).to include("described_class")
+        end
+
+        it "prints a deprecation warning since the semantics of an inner described symbol are changing in RSpec 3" do
+          warn_opts = capture_deprecation_options do
+            ExampleGroup.describe(String) do
+              describe :method do
+                example { described_class }
+              end
+            end.run
+          end
+
+          expect(warn_opts[:message]).to include("#{__FILE__}:#{__LINE__ - 6}")
           expect(warn_opts[:message]).to include("described_class")
         end
 
