@@ -1,9 +1,10 @@
-### 2.99.2 development
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.99.1...master)
+### 2.99.2 / 2014-08-19
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v2.99.1...v2.99.2)
 
 Enhancements:
 
-* Tweak deprecation warning for `Symbol` descriptions. (Jon Rowe, #1667)
+* Improve deprecation warning for RSpec 3 change in `describe <a symbol>`
+  behavior. (Jon Rowe, #1667)
 
 ### 2.99.1 / 2014-06-19
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v2.99.0...v2.99.1)
