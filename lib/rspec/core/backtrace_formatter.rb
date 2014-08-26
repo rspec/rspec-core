@@ -17,15 +17,13 @@ module RSpec
         @inclusion_patterns = [Regexp.new(Dir.getwd)]
       end
 
-      def full_backtrace=(full_backtrace)
-        @full_backtrace = full_backtrace
-      end
+      attr_writer :full_backtrace
 
       def full_backtrace?
         @full_backtrace || @exclusion_patterns.empty?
       end
 
-      def format_backtrace(backtrace, options = {})
+      def format_backtrace(backtrace, options={})
         return backtrace if options[:full_backtrace]
 
         backtrace.map { |l| backtrace_line(l) }.compact.
