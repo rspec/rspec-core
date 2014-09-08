@@ -1,3 +1,11 @@
+### 3.1.2 Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.1...3-1-maintenance)
+
+Bug Fixes:
+
+* Fix another regression in rake task pattern handling, so that patterns
+  that start with `./` still work. (Christian Nelson, #1696)
+
 ### 3.1.1 / 2014-09-05
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.0...v3.1.1)
 
