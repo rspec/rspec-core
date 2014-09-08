@@ -426,7 +426,7 @@ module RSpec::Core
     describe "#files_to_run" do
       it "loads files not following pattern if named explicitly" do
         assign_files_or_directories_to_run "spec/rspec/core/resources/a_bar.rb"
-        expect(config.files_to_run).to eq([      "spec/rspec/core/resources/a_bar.rb"])
+        expect(config.files_to_run).to eq(["spec/rspec/core/resources/a_bar.rb"])
       end
 
       it "prevents repetition of dir when start of the pattern" do
@@ -439,6 +439,12 @@ module RSpec::Core
         config.pattern = "rspec/**/a_spec.rb"
         assign_files_or_directories_to_run "spec"
         expect(config.files_to_run).to eq(["spec/rspec/core/resources/a_spec.rb"])
+      end
+
+      it "supports patterns starting with ./" do
+        config.pattern = "./spec/**/a_spec.rb"
+        assign_files_or_directories_to_run "spec"
+        expect(config.files_to_run).to eq(["./spec/rspec/core/resources/a_spec.rb"])
       end
 
       it 'reloads when `files_or_directories_to_run` is reassigned' do
