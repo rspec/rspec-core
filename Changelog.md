@@ -1,3 +1,13 @@
+### 3.1.3 Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.2...3-1-maintenance)
+
+Bug Fixes:
+
+* Fix yet another regression in rake task pattern handling, to allow
+  `task.pattern = FileList["..."]` to work. That was never intended
+  to be supported but accidentally worked in 3.0 and earlier.
+  (Myron Marston, #1701)
+
 ### 3.1.2 / 2014-09-08
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.1...v3.1.2)
 
