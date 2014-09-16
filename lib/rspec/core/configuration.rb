@@ -163,8 +163,8 @@ module RSpec
       # Indicates files configured to be required
       define_reader :requires
 
-      # @macro define_reader
-      # Returns dirs that have been prepended to the load path by the `-I` command line option
+      # @!method libs
+      # Returns dirs that have been prepended to the load path by the `-I` command line option.
       define_reader :libs
 
       # @macro add_setting
@@ -637,8 +637,9 @@ module RSpec
         end
       end
 
-      # @private
-      def libs=(libs)
+      # Define additional load paths for requiring test dependencies.
+      # @attr string_paths [Array] string load paths
+      def libs=(lib)
         libs.map do |lib|
           @libs.unshift lib
           $LOAD_PATH.unshift lib
