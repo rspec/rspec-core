@@ -1,7 +1,7 @@
-### 3.1.4 Development
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.3...master)
+### 3.1.4 / 2014-09-18
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.3...v3.1.4)
 
-Bugfixes:
+Bug Fixes:
 
 * Fix implicit `subject` when using `describe false` or `describe nil`
   so that it returns the provided primitive rather than the string
