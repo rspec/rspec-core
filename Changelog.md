@@ -6,6 +6,9 @@ Bugfixes:
 * Fix implicit `subject` when using `describe false` or `describe nil`
   so that it returns the provided primitive rather than the string
   representation. (Myron Marston, #1710)
+* Fix backtrace filtering to allow code in subdirectories of your
+  current working directory (such as vendor/bundle/...) to be filtered
+  from backtraces. (Myron Marston, #1708)
 
 ### 3.1.3 / 2014-09-15
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.2...v3.1.3)
