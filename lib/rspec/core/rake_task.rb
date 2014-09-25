@@ -115,7 +115,7 @@ module RSpec
         if ENV['SPEC']
           FileList[ ENV['SPEC']].sort
         elsif String === pattern && !File.exist?(pattern)
-          "--pattern #{pattern.shellescape}"
+          "--pattern '#{pattern}'"
         else
           # Before RSpec 3.1, we used `FileList` to get the list of matched files, and
           # then pass that along to the `rspec` command. Starting with 3.1, we prefer to
@@ -140,7 +140,7 @@ module RSpec
       end
 
       def file_exclusion_specification
-        " --exclude-pattern #{exclude_pattern.shellescape}" if exclude_pattern
+        " --exclude-pattern '#{exclude_pattern}'" if exclude_pattern
       end
 
       def spec_command

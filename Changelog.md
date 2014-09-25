@@ -7,6 +7,13 @@ Enhancements:
 * When rake task fails, only output the command if `verbose` flag is
   set. (Ben Snape, #1704)
 
+### 3.1.5 Development
+
+Bug Fixes:
+
+* Revert shell escaping of rake task patterns added in 3.1.0.
+  Apparently, patterns don't escape properly. (Myron Marston, #1720)
+
 ### 3.1.4 / 2014-09-18
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.3...v3.1.4)
 
