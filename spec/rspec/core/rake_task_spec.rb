@@ -58,12 +58,7 @@ module RSpec::Core
     context "with pattern" do
       it "adds the pattern" do
         task.pattern = "complex_pattern"
-        expect(spec_command).to include(" --pattern complex_pattern")
-      end
-
-      it "shellescapes the pattern as necessary" do
-        task.pattern = "foo'bar"
-        expect(spec_command).to include(" --pattern foo\\'bar")
+        expect(spec_command).to include(" --pattern 'complex_pattern'")
       end
     end
 
@@ -304,11 +299,6 @@ module RSpec::Core
         FileUtils.mkdir_p(File.join(spec_dir, "unit"))
 
         make_files_in_dir "acceptance"
-      end
-
-      it "shellescapes the pattern as necessary" do
-        task.exclude_pattern = "foo'bar"
-        expect(spec_command).to include(" --exclude-pattern foo\\'bar")
       end
 
       it "it does not load matching files" do
