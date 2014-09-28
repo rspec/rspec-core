@@ -1,3 +1,11 @@
+### 3.1.5 Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.4...3-1-maintenane)
+
+Bugfixes:
+
+* Fix issue with the rake task incorrectly escaping strings on Windows.
+  (Jon Rowe #1718)
+
 ### 3.1.4 / 2014-09-18
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.3...v3.1.4)
 
