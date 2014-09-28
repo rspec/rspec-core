@@ -1,5 +1,6 @@
 require 'rake'
 require 'rake/tasklib'
+require 'rbconfig'
 
 module RSpec
   module Core
