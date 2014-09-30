@@ -1,5 +1,5 @@
-### 3.1.5 Development
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.4...3-1-maintenane)
+### 3.1.5 / 2014-09-29
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.4...v3.1.5)
 
 Bug Fixes:
 
