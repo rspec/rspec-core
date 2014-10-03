@@ -1323,10 +1323,19 @@ module RSpec
     private
 
       def get_files_to_run(paths)
-        FlatMap.flat_map(paths) do |path|
+        FlatMap.flat_map(paths_to_check(paths)) do |path|
           path = path.gsub(File::ALT_SEPARATOR, File::SEPARATOR) if File::ALT_SEPARATOR
           File.directory?(path) ? gather_directories(path) : extract_location(path)
-        end.sort
+        end.sort.uniq
+      end
+
+      def paths_to_check(paths)
+        return paths if pattern_might_load_specs_from_vendored_dirs?
+        paths + ['.']
+      end
+
+      def pattern_might_load_specs_from_vendored_dirs?
+        pattern.split(File::SEPARATOR).first.include?('**')
       end
 
       def gather_directories(path)
@@ -1369,6 +1378,7 @@ module RSpec
           filter_manager.add_location path, lines
         end
 
+        return [] if path == default_path
         path
       end
 
