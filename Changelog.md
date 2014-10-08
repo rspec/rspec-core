@@ -1,3 +1,11 @@
+### 3.1.6 Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.5...3-1-maintenance)
+
+Bug Fixes:
+
+* Prevent rake task from generating duplicate load path entries.
+  (Myron Marston, #1735)
+
 ### 3.1.5 / 2014-09-29
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.4...v3.1.5)
 
