@@ -140,6 +140,7 @@ module RSpec
         RSpec.current_example = self
 
         start(reporter)
+        Pending.mark_pending!(self, pending) if pending?
 
         begin
           if skipped?
