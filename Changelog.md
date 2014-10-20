@@ -1,11 +1,6 @@
 ### 3.1.8 Development
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.7...3-1-maintenance)
 
-Enhancements:
-
-* Improve the message presented when a user hits Ctrl-C.
-  (Alex Chaffee #1717, #1742)
-
 ### 3.1.7 / 2014-10-11
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.6...v3.1.7)
 
