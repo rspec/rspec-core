@@ -21,6 +21,5 @@ test_script:
 environment:
   matrix:
     - ruby_version: '193'
+    - ruby_version: '21'
 
-matrix:
-  fast_finish: true
