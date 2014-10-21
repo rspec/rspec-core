@@ -15,6 +15,10 @@ RSpec.shared_examples_for "handling symlinked directories when loading spec file
   include_context "isolated directory"
   let(:project_dir) { Dir.getwd }
 
+  before(:example, :if => RSpec::Support::OS.windows?) do
+    pending "Windows does not support symlinking"
+  end
+
   it "finds the files" do
     foos_dir = File.join(project_dir, "spec/foos")
     FileUtils.mkdir_p foos_dir

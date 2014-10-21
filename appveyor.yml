@@ -13,15 +13,14 @@ install:
   - gem install bundler
   - bundler --version
   - bundle install
+  - cinst ansicon
 
 test_script:
   - bundle exec rspec
 
 environment:
   matrix:
-    - ruby_version: '187'
     - ruby_version: '193'
-    - ruby_version: '21'
 
 matrix:
   fast_finish: true
