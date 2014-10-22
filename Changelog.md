@@ -1,6 +1,11 @@
 ### 3.1.8 Development
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.7...3-1-maintenance)
 
+Bug Fixes:
+
+* Apply `--seed` before loading `--require` files so that required files
+  can access the provided seed. (Myron Marston, #1745)
+
 ### 3.1.7 / 2014-10-11
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.1.6...v3.1.7)
 
