@@ -1036,6 +1036,8 @@ module RSpec::Core
           end
 
           context "with ANSICON NOT available" do
+            around { |e| without_env_vars('ANSICON', &e) }
+
             before do
               allow_warning
             end
