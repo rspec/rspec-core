@@ -9,6 +9,7 @@ build: off
 install:
   - SET PATH=C:\Ruby%ruby_version%\bin;%PATH%
   - ruby --version
+  - ruby -e "puts RbConfig::CONFIG['host_os']"
   - gem --version
   - gem install bundler
   - bundler --version
