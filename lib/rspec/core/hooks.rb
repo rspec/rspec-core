@@ -489,7 +489,7 @@ EOS
         end
 
         def around_example_hooks_for(example, initial_procsy=nil)
-          AroundHookCollection.new(FlatMap.flat_map(@owner.parent_groups) do |a|
+          AroundHookCollection.new(FlatMap.flat_map(hook_owners) do |a|
             a.hooks[:around][:example]
           end).for(example, initial_procsy)
         end
@@ -587,15 +587,25 @@ EOS
         end
 
         def before_example_hooks_for(example)
-          HookCollection.new(FlatMap.flat_map(@owner.parent_groups.reverse) do |a|
+          HookCollection.new(FlatMap.flat_map(hook_owners.reverse) do |a|
             a.hooks[:before][:example]
           end).for(example)
         end
 
         def after_example_hooks_for(example)
-          HookCollection.new(FlatMap.flat_map(@owner.parent_groups) do |a|
+          HookCollection.new(FlatMap.flat_map(hook_owners) do |a|
             a.hooks[:after][:example]
           end).for(example)
+        end
+
+        if respond_to?(:singleton_class) && singleton_class.ancestors.include?(singleton_class)
+          def hook_owners
+            @hook_owners ||= @owner.parent_groups
+          end
+        else # Ruby < 2.1 (see https://bugs.ruby-lang.org/issues/8035)
+          def hook_owners
+            @hook_owners ||= [@owner] + @owner.parent_groups
+          end
         end
       end
     end
