@@ -284,8 +284,6 @@ module RSpec
       # @private
       add_setting :tty
       # @private
-      add_setting :include_or_extend_modules
-      # @private
       attr_writer :files_to_run
       # @private
       add_setting :expecting_with_rspec
@@ -295,13 +293,16 @@ module RSpec
       attr_accessor :static_config_filter_manager
       # @private
       attr_reader :backtrace_formatter, :ordering_manager
+      # @private
+      attr_reader :include_modules, :extend_modules
 
       def initialize
         # rubocop:disable Style/GlobalVars
         @start_time = $_rspec_core_load_started_at || ::RSpec::Core::Time.now
         # rubocop:enable Style/GlobalVars
         @expectation_frameworks = []
-        @include_or_extend_modules = []
+        @include_modules = []
+        @extend_modules = []
         @mock_framework = nil
         @files_or_directories_to_run = []
         @color = false
@@ -1049,7 +1050,7 @@ module RSpec
       # @see #extend
       def include(mod, *filters)
         meta = Metadata.build_hash_from(filters, :warn_about_example_group_filtering)
-        include_or_extend_modules << [:include, mod, meta]
+        include_modules << [mod, meta]
       end
 
       # Tells RSpec to extend example groups with `mod`. Methods defined in
@@ -1083,18 +1084,16 @@ module RSpec
       # @see #include
       def extend(mod, *filters)
         meta = Metadata.build_hash_from(filters, :warn_about_example_group_filtering)
-        include_or_extend_modules << [:extend, mod, meta]
+        extend_modules << [mod, meta]
       end
 
       # @private
       #
       # Used internally to extend a group with modules using `include` and/or
       # `extend`.
-      def configure_group(group, filterable=group)
-        include_or_extend_modules.each do |include_or_extend, mod, filters|
-          next unless filters.empty? || filterable.apply?(:any?, filters)
-          __send__("safe_#{include_or_extend}", mod, group)
-        end
+      def configure_group(group)
+        each_applicable_module(include_modules, group) { |mod| safe_include(mod, group) }
+        each_applicable_module(extend_modules,  group) { |mod| safe_extend(mod, group)  }
       end
 
       # @private
@@ -1102,12 +1101,9 @@ module RSpec
       # Used internally to extend the singleton class of a single example's
       # example group instance with modules using `include` and/or `extend`.
       def configure_example(example)
-        configure_group(example.example_group_instance.singleton_class, example)
-      end
-
-      # @private
-      def safe_include(mod, host)
-        host.__send__(:include, mod) unless host < mod
+        each_applicable_module(include_modules, example) do |mod|
+          safe_include(mod, example.example_group_instance.singleton_class)
+        end
       end
 
       # @private
@@ -1116,19 +1112,6 @@ module RSpec
         RSpec::Core::RubyProject.add_to_load_path(*directories)
         paths.each { |path| require path }
         @requires += paths
-      end
-
-      # @private
-      if RUBY_VERSION.to_f >= 1.9
-        # @private
-        def safe_extend(mod, host)
-          host.extend(mod) unless host.singleton_class < mod
-        end
-      else
-        # @private
-        def safe_extend(mod, host)
-          host.extend(mod) unless (class << host; self; end).included_modules.include?(mod)
-        end
       end
 
       # @private
@@ -1485,6 +1468,26 @@ module RSpec
 
         instance_variable_set(:"@#{name}", value)
         @files_to_run = nil
+      end
+
+      def each_applicable_module(modules, filterable)
+        modules.each do |mod, filters|
+          yield mod if filters.empty? || filterable.apply?(:any?, filters)
+        end
+      end
+
+      def safe_include(mod, host)
+        host.__send__(:include, mod) unless host < mod
+      end
+
+      if RUBY_VERSION.to_f >= 1.9
+        def safe_extend(mod, host)
+          host.extend(mod) unless host.singleton_class < mod
+        end
+      else
+        def safe_extend(mod, host)
+          host.extend(mod) unless (class << host; self; end).included_modules.include?(mod)
+        end
       end
     end
     # rubocop:enable Style/ClassLength
