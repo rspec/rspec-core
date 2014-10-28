@@ -1090,11 +1090,19 @@ module RSpec
       #
       # Used internally to extend a group with modules using `include` and/or
       # `extend`.
-      def configure_group(group)
+      def configure_group(group, filterable=group)
         include_or_extend_modules.each do |include_or_extend, mod, filters|
-          next unless filters.empty? || group.apply?(:any?, filters)
+          next unless filters.empty? || filterable.apply?(:any?, filters)
           __send__("safe_#{include_or_extend}", mod, group)
         end
+      end
+
+      # @private
+      #
+      # Used internally to extend the singleton class of a single example's
+      # example group instance with modules using `include` and/or `extend`.
+      def configure_example(example)
+        configure_group(example.example_group_instance.singleton_class, example)
       end
 
       # @private
