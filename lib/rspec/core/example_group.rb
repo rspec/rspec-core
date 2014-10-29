@@ -573,6 +573,13 @@ module RSpec
       def inspect
         "#<#{self.class} #{@__inspect_output}>"
       end
+
+      unless method_defined?(:singleton_class) # for 1.8.7
+        # @private
+        def singleton_class
+          class << self; self; end
+        end
+      end
     end
 
     # @private
