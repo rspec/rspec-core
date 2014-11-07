@@ -1354,16 +1354,53 @@ module RSpec
         end
       end
 
+      def before(*args, &block)
+        handle_suite_hook(args.first, before_suite_hooks, :append,
+                          Hooks::BeforeHook, block) || super(*args, &block)
+      end
+
+      def prepend_before(*args, &block)
+        handle_suite_hook(args.first, before_suite_hooks, :prepend,
+                          Hooks::BeforeHook, block) || super(*args, &block)
+      end
+
+      def after(*args, &block)
+        handle_suite_hook(args.first, after_suite_hooks, :prepend,
+                          Hooks::AfterHook, block) || super(*args, &block)
+      end
+
+      def append_after(*args, &block)
+        handle_suite_hook(args.first, after_suite_hooks, :append,
+                          Hooks::AfterHook, block) || super(*args, &block)
+      end
+
       # @private
       def with_suite_hooks
+        return yield if dry_run?
+
         hook_context = SuiteHookContext.new
-        hooks.run(:before, :suite, hook_context)
-        yield
-      ensure
-        hooks.run(:after, :suite, hook_context)
+        begin
+          before_suite_hooks.with(hook_context).run
+          yield
+        ensure
+          after_suite_hooks.with(hook_context).run
+        end
       end
 
     private
+
+      def handle_suite_hook(scope, collection, append_or_prepend, hook_type, block)
+        return nil unless scope == :suite
+        collection.__send__(append_or_prepend, hook_type.new(block, {}))
+      end
+
+      def before_suite_hooks
+        @before_suite_hooks ||= Hooks::HookCollection.new
+      end
+
+      def after_suite_hooks
+        @after_suite_hooks ||= Hooks::HookCollection.new
+      end
 
       def get_files_to_run(paths)
         FlatMap.flat_map(paths_to_check(paths)) do |path|
