@@ -376,7 +376,6 @@ module RSpec
           superclass_metadata, user_metadata, *args, &example_group_block
         )
 
-        hooks.register_globals(self, RSpec.configuration.hooks)
         RSpec.configuration.configure_group(self)
       end
 

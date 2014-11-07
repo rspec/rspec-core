@@ -282,6 +282,42 @@ module RSpec::Core
       end
     end
 
+    describe ":context hooks defined in configuration with metadata" do
+      it 'applies to individual matching examples' do
+        sequence = []
+
+        RSpec.configure do |config|
+          config.before(:context, :apply_it) { sequence << :before_context }
+          config.after(:context, :apply_it)  { sequence << :after_context  }
+        end
+
+        RSpec.describe do
+          example("ex", :apply_it) { sequence << :example }
+        end.run
+
+        expect(sequence).to eq([:before_context, :example, :after_context])
+      end
+
+      it 'does not apply to individual matching examples for which it also applies to a parent example group' do
+        sequence = []
+
+        RSpec.configure do |config|
+          config.before(:context, :apply_it) { sequence << :before_context }
+          config.after(:context, :apply_it)  { sequence << :after_context  }
+        end
+
+        RSpec.describe "Group", :apply_it do
+          example("ex") { sequence << :outer_example }
+
+          context "nested", :apply_it => false do
+            example("ex", :apply_it) { sequence << :inner_example }
+          end
+        end.run
+
+        expect(sequence).to eq([:before_context, :outer_example, :inner_example, :after_context])
+      end
+    end
+
     [:all, :each].each do |scope|
       describe "prepend_before(#{scope})" do
         it "adds to the front of the list of before(:#{scope}) hooks" do

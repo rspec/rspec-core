@@ -14,7 +14,7 @@ module RSpec::Core
     shared_examples_for "warning of deprecated `:example_group` during filtering configuration" do |method, *args|
       it "issues a deprecation warning when filtering by `:example_group`" do
         args << { :example_group => { :file_location => /spec\/unit/ } }
-        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /:example_group/)
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /:example_group/).at_least(:once)
         config.__send__(method, *args)
       end
     end

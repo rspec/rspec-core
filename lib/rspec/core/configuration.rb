@@ -30,8 +30,6 @@ module RSpec
     # @see RSpec.configure
     # @see Hooks
     class Configuration
-      include RSpec::Core::Hooks
-
       # Module that holds `attr_reader` declarations. It's in a separate
       # module to allow us to override those methods and use `super`.
       # @private
@@ -1354,24 +1352,59 @@ module RSpec
         end
       end
 
-      def before(*args, &block)
-        handle_suite_hook(args.first, before_suite_hooks, :append,
-                          Hooks::BeforeHook, block) || super(*args, &block)
+      def hook_shared_groups
+        @hook_shared_groups ||= Hash.new do |hash, metadata|
+          hash[metadata] = ConfigurationHookModule.new(metadata).tap do |mod|
+            include mod, metadata
+          end
+        end
       end
 
+      class ConfigurationHookModule < Module
+        def initialize(metadata)
+          @metadata = metadata
+          @hooks    = []
+        end
+
+        def add_hook(method, scope, block)
+          @hooks << [method, scope, block]
+        end
+
+        def included(klass)
+          hooks = @hooks
+
+          klass.class_exec do
+            hooks.each do |method, scope, block|
+              __send__ method, scope, &block
+            end
+          end
+        end
+      end
+
+      def before(*args, &block)
+        define_hook(:before, before_suite_hooks, :append,
+                    Hooks::BeforeHook, args, block)
+      end
+      alias append_before before
+
       def prepend_before(*args, &block)
-        handle_suite_hook(args.first, before_suite_hooks, :prepend,
-                          Hooks::BeforeHook, block) || super(*args, &block)
+        define_hook(:prepend_before, before_suite_hooks, :prepend,
+                    Hooks::BeforeHook, args, block)
       end
 
       def after(*args, &block)
-        handle_suite_hook(args.first, after_suite_hooks, :prepend,
-                          Hooks::AfterHook, block) || super(*args, &block)
+        define_hook(:after, after_suite_hooks, :prepend,
+                    Hooks::AfterHook, args, block)
       end
+      alias prepend_after after
 
       def append_after(*args, &block)
-        handle_suite_hook(args.first, after_suite_hooks, :append,
-                          Hooks::AfterHook, block) || super(*args, &block)
+        define_hook(:append_after, after_suite_hooks, :append,
+                    Hooks::AfterHook, args, block)
+      end
+
+      def around(*args, &block)
+        define_hook(:around, nil, :append, Hooks::AroundHook, args, block)
       end
 
       # @private
@@ -1389,9 +1422,17 @@ module RSpec
 
     private
 
-      def handle_suite_hook(scope, collection, append_or_prepend, hook_type, block)
+      def define_hook(add_hook_method, collection, append_or_prepend, hook_klass, hook_args, block)
+        scope, metadata = Hooks::HookCollections.new(self, {}).scope_and_options_from(*hook_args)
+
+        handle_suite_hook(
+          scope, collection, append_or_prepend, hook_klass, block
+        ) || hook_shared_groups[metadata].add_hook(add_hook_method, scope, block)
+      end
+
+      def handle_suite_hook(scope, collection, append_or_prepend, hook_klass, block)
         return nil unless scope == :suite
-        collection.__send__(append_or_prepend, hook_type.new(block, {}))
+        collection.__send__(append_or_prepend, hook_klass.new(block, {}))
       end
 
       def before_suite_hooks

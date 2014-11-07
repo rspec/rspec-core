@@ -475,15 +475,6 @@ EOS
           @data[key]
         end
 
-        def register_globals(host, globals)
-          process(host, globals, :before, :example)
-          process(host, globals, :after,  :example)
-          process(host, globals, :around, :example)
-
-          process(host, globals, :before, :context)
-          process(host, globals, :after,  :context)
-        end
-
         def around_example_hooks_for(example, initial_procsy=nil)
           AroundHookCollection.new(FlatMap.flat_map(hook_owners) do |a|
             a.hooks[:around][:example]
@@ -526,22 +517,14 @@ EOS
 
         HOOK_TYPES[:after][:context] = AfterContextHook
 
-      private
-
-        def process(host, globals, position, scope)
-          globals[position][scope].each do |hook|
-            next unless scope == :example || hook.options_apply?(host)
-            next if host.parent_groups.any? { |a| a.hooks[position][scope].include?(hook) }
-            self[position][scope] << hook
-          end
-        end
-
         def scope_and_options_from(*args)
           return :suite if args.first == :suite
           scope = extract_scope_from(args)
           meta  = Metadata.build_hash_from(args, :warn_about_example_group_filtering)
           return scope, meta
         end
+
+      private
 
         def extract_scope_from(args)
           if known_scope?(args.first)

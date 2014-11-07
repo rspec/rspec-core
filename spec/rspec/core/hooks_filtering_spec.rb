@@ -170,10 +170,6 @@ module RSpec::Core
               'after each in config'
             ])
           end
-
-          it "does not run the `:all` hooks" do
-            expect(all_filters).to be_empty
-          end
         end
 
         describe 'an example without matching metadata' do

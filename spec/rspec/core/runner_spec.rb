@@ -145,10 +145,6 @@ module RSpec::Core
     context "when run" do
       include_context "Runner support"
 
-      before do
-        allow(config.hooks).to receive(:run)
-      end
-
       it "configures streams before command line options" do
         allow(RSpec).to receive(:deprecate)  # remove this and should_receive when ordered
         stdout = StringIO.new
