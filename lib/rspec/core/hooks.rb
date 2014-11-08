@@ -326,12 +326,8 @@ module RSpec
         @hooks ||= HookCollections.new(
           self,
           :around => { :example => AroundHookCollection.new },
-          :before => { :example => HookCollection.new,
-                       :context => HookCollection.new,
-                       :suite => HookCollection.new },
-          :after  => { :example => HookCollection.new,
-                       :context => HookCollection.new,
-                       :suite => HookCollection.new }
+          :before => { :example => HookCollection.new, :context => HookCollection.new },
+          :after  => { :example => HookCollection.new, :context => HookCollection.new }
         )
       end
 
@@ -496,6 +492,15 @@ EOS
 
         def register(prepend_or_append, hook, *args, &block)
           scope, options = scope_and_options_from(*args)
+
+          if scope == :suite
+            RSpec.warn_with "`#{hook}(:suite)` hooks are only supported on " \
+                            "the RSpec configuration object. This " \
+                            "`#{hook}(:suite)` hook, defined on an example " \
+                            "group, will be ignored."
+            return
+          end
+
           self[hook][scope].__send__(prepend_or_append,
                                      HOOK_TYPES[hook][scope].new(block, options))
         end
@@ -509,7 +514,7 @@ EOS
           find_hook(hook, scope, example_or_group, initial_procsy).run
         end
 
-        SCOPES = [:example, :context, :suite]
+        SCOPES = [:example, :context]
 
         SCOPE_ALIASES = { :each => :example, :all => :context }
 
@@ -532,6 +537,7 @@ EOS
         end
 
         def scope_and_options_from(*args)
+          return :suite if args.first == :suite
           scope = extract_scope_from(args)
           meta  = Metadata.build_hash_from(args, :warn_about_example_group_filtering)
           return scope, meta
@@ -573,8 +579,6 @@ EOS
             before_example_hooks_for(example_or_group)
           when [:after, :example]
             after_example_hooks_for(example_or_group)
-          when [:before, :suite], [:after, :suite]
-            self[hook][:suite].with(example_or_group)
           end
         end
 

@@ -21,6 +21,20 @@ module RSpec::Core
             RSpec.configuration.with_suite_hooks { }
           }.to raise_error(ZeroDivisionError)
         end
+
+        context "defined on an example group" do
+          it "is ignored with a clear warning" do
+            sequence = []
+
+            expect {
+              RSpec.describe "Group" do
+                __send__(type, :suite) { sequence << :suite_hook }
+                example { sequence << :example }
+              end.run
+            }.to change { sequence }.to([:example]).
+              and output(a_string_including("#{type}(:suite)")).to_stderr
+          end
+        end
       end
     end
 
