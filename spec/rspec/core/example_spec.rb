@@ -255,6 +255,18 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
 
         expect(example.execution_result.exception.message).to eq("FOO")
       end
+
+      it "stores the exception for mock expectations" do
+        after_exception = nil
+
+        group = RSpec::Core::ExampleGroup.describe
+        group.after(:each) { |example| after_exception = example.exception }
+        group.example('example') { expect(double).to receive(:some_method) }
+
+        group.run
+
+        expect(after_exception).not_to be_nil
+      end
     end
 
     it "wraps before/after(:each) inside around" do
