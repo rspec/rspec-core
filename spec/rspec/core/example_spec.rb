@@ -152,6 +152,39 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
         end
       end
 
+      context "when the matcher delegates internally to another expectation" do
+        before do
+          @orig_syntax = RSpec::Expectations.configuration.syntax
+          RSpec::Expectations.configuration.syntax = [:expect, :should]
+        end
+
+        after { RSpec::Expectation.configuration.syntax = @orig_syntax }
+
+        RSpec::Matchers.define :matcher_that_delegates_internally do
+          match { expect(1).to eq(1) }
+        end
+
+        it "assigns the description from the matcher used directly from the example, not the nested one (using `expect`)" do
+          ex = nil
+
+          RSpec.describe do
+            ex = example { expect(1).to matcher_that_delegates_internally }
+          end.run
+
+          expect(ex.description).to end_with "matcher that delegates internally"
+        end
+
+        it "assigns the description from the matcher used directly from the example, not the nested one (using `should`)" do
+          ex = nil
+
+          RSpec.describe do
+            ex = example { should matcher_that_delegates_internally }
+          end.run
+
+          expect(ex.description).to end_with "matcher that delegates internally"
+        end
+      end
+
       context "when an `after(:example)` hook has an expectation" do
         it "assigns the description based on the example's last expectation, ignoring the `after` expectation since it can apply to many examples" do
           ex = nil
