@@ -790,7 +790,7 @@ module RSpec
       # @private
       def files_or_directories_to_run=(*files)
         files = files.flatten
-        files << default_path if (command == 'rspec' || Runner.running_in_drb?) && default_path && files.empty?
+        files << default_path if (command.start_with?('rspec') || Runner.running_in_drb?) && default_path && files.empty?
         @files_or_directories_to_run = files
         @files_to_run = nil
       end

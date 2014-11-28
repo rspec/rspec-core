@@ -565,6 +565,12 @@ module RSpec::Core
           expect(config.files_to_run).not_to be_empty
         end
 
+        it "loads file in the default path when run by rspec with additional parameters" do
+          allow(config).to receive(:command) { 'rspec --fail-fast' }
+          assign_files_or_directories_to_run []
+          expect(config.files_to_run).not_to be_empty
+        end
+
         it "loads files in the default path when run with DRB (e.g., spork)" do
           allow(config).to receive(:command) { 'spork' }
           allow(RSpec::Core::Runner).to receive(:running_in_drb?) { true }
