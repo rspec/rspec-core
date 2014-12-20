@@ -424,6 +424,11 @@ EOS
           process(host, globals, :after,  :context)
         end
 
+        def register_global_singleton_context_hooks(example, globals)
+          process_singleton_context_hooks(example, globals, :before)
+          process_singleton_context_hooks(example, globals, :after)
+        end
+
         def register(prepend_or_append, position, *args, &block)
           scope, options = scope_and_options_from(*args)
 
@@ -550,6 +555,18 @@ EOS
 
           repository = ensure_hooks_initialized_for(position, scope)
           hooks_to_process.each { |hook| repository.append hook, hook.options }
+        end
+
+        def process_singleton_context_hooks(example, globals, position)
+          hooks_to_add = globals.matching_hooks_for(position, :context, example)
+          return if hooks_to_add.empty?
+
+          repository = ensure_hooks_initialized_for(position, :context)
+          hooks_to_add.each do |hook|
+            # TODO: find a better implementation for this
+            next if example.example_group.parent_groups.any? { |g| MetadataFilter.apply?(:all?, hook.options, g.metadata) }
+            repository.append hook, {}
+          end
         end
 
         def scope_and_options_from(*args)
