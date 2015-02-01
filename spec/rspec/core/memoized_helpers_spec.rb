@@ -391,6 +391,44 @@ module RSpec::Core
       expect(counter.count).to eq(2)
     end
 
+    it "is threadsafe" do
+      value_queue = Queue.new
+      values      = []
+      RSpec.describe do
+        # a let block that will block
+        let(:memoize_threadsafe) { value_queue.shift }
+
+        example do
+          thread_blocked = Queue.new
+
+          # blocked, waiting on let to return
+          thread1 = Thread.new do
+            thread_blocked << true
+            values << memoize_threadsafe
+          end
+          thread_blocked.shift
+
+          # blocked, waiting on let to return
+          thread2 = Thread.new do
+            thread_blocked << true
+            values << memoize_threadsafe
+          end
+          thread_blocked.shift
+
+          # provide the values they are blocking for
+          value_queue << :value1
+          value_queue << :value2
+
+          # wait for them to finish
+          thread1.join
+          thread2.join
+        end
+      end.run
+
+      expect(values.size).to eq 2
+      expect(values[0]).to eq values[1]
+    end
+
     it "caches a nil value" do
       @nil_value_count = 0
       nil_value

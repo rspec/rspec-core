@@ -53,11 +53,9 @@ module RSpec
       # @see #should_not
       # @see #is_expected
       def subject
-        __memoized.fetch(:subject) do
-          __memoized[:subject] = begin
-            described = described_class || self.class.metadata.fetch(:description_args).first
-            Class === described ? described.new : described
-          end
+        __memoized.for(:subject) do
+          described = described_class || self.class.metadata.fetch(:description_args).first
+          Class === described ? described.new : described
         end
       end
 
@@ -123,14 +121,40 @@ module RSpec
 
       # @private
       def __memoized
-        @__memoized ||= {}
+        @__memoized ||= Memoized.new
+      end
+
+      # @private
+      class Memoized
+        def initialize
+          @memoized = {}
+          @mutex    = Mutex.new
+        end
+
+        def for(key, &initializer)
+          return @memoized[key][0] if @memoized.has_key? key
+
+          value = initializer.call
+
+          @mutex.synchronize do
+            memoized = (@memoized[key] ||= [value, Thread.current.object_id])
+            if memoized[1] == Thread.current.object_id
+              # set by call to super in initializer, we override. ie:
+              # let(:title) { super() + ' Child Context' }
+              memoized[0] = value
+            else
+              # some other thread beat us to it, stick with their value
+              memoized[0]
+            end
+          end
+        end
       end
 
       # Used internally to customize the behavior of the
       # memoized hash when used in a `before(:context)` hook.
       #
       # @private
-      class ContextHookMemoizedHash
+      class ContextHookMemoized
         def self.isolate_for_context_hook(example_group_instance)
           hash = self
 
@@ -145,7 +169,7 @@ module RSpec
           end
         end
 
-        def self.fetch(key, &_block)
+        def self.for(key, &_block)
           description = if key == :subject
                           "subject"
                         else
@@ -237,9 +261,9 @@ EOS
           # Apply the memoization. The method has been defined in an ancestor
           # module so we can use `super` here to get the value.
           if block.arity == 1
-            define_method(name) { __memoized.fetch(name) { |k| __memoized[k] = super(RSpec.current_example, &nil) } }
+            define_method(name) { __memoized.for(name) { super(RSpec.current_example, &nil) } }
           else
-            define_method(name) { __memoized.fetch(name) { |k| __memoized[k] = super(&nil) } }
+            define_method(name) { __memoized.for(name) { super(&nil) } }
           end
         end
 
