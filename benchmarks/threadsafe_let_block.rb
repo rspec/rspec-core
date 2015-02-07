@@ -1,4 +1,5 @@
 require 'rspec/core'
+require 'rspec/expectations'
 
 # switches between these implementations - https://github.com/rspec/rspec-core/pull/1858/files
 # benchmark requested in this PR         - https://github.com/rspec/rspec-core/pull/1858
@@ -6,96 +7,108 @@ require 'rspec/core'
 # I ran these by adding "benchmark-ips" to ../Gemfile
 # then exported BUNDLE_GEMFILE to point t it
 # then ran `bundle exec rspec threadsafe_let_block.rb`
-class LetBlockImplementationHelper
 
-  MemoizedHelpers = ::RSpec::Core::MemoizedHelpers
-  Memoized        = MemoizedHelpers::Memoized
-
-  def title(title)
-    hr    = "#" * (title.length + 6)
-    blank = "#  #{' ' * title.length}  #"
-    [hr, blank, "#  #{title}  #", blank, hr]
+# The old, non-thread safe implementation, imported from the `master`
+# branch and pared down.
+module NonThreadSafeMemoizedHelpers
+  def __memoized
+    @__memoized ||= {}
   end
 
-  def use_non_threadsafe
-    return if @state == :old
-    @state = :old
-    MemoizedHelpers.module_eval do
-      def subject
-        __memoized.fetch(:subject) do
-          __memoized[:subject] = begin
-            described = described_class || self.class.metadata.fetch(:description_args).first
-            Class === described ? described.new : described
-          end
-        end
-      end
+  module ClassMethods
+    def let(name, &block)
+      # We have to pass the block directly to `define_method` to
+      # allow it to use method constructs like `super` and `return`.
+      raise "#let or #subject called without a block" if block.nil?
+      NonThreadSafeMemoizedHelpers.module_for(self).__send__(:define_method, name, &block)
 
-      def __memoized
-        @__memoized ||= {}
-      end
-    end
-
-    class << MemoizedHelpers::ContextHookMemoized
-      alias fetch for
-    end
-
-    MemoizedHelpers::ClassMethods.module_eval do
-      def let(name, &block)
-        # We have to pass the block directly to `define_method` to
-        # allow it to use method constructs like `super` and `return`.
-        raise "#let or #subject called without a block" if block.nil?
-        MemoizedHelpers.module_for(self).__send__(:define_method, name, &block)
-
-        # Apply the memoization. The method has been defined in an ancestor
-        # module so we can use `super` here to get the value.
-        if block.arity == 1
-          define_method(name) { __memoized.fetch(name) { |k| __memoized[k] = super(RSpec.current_example, &nil) } }
-        else
-          define_method(name) { __memoized.fetch(name) { |k| __memoized[k] = super(&nil) } }
-        end
+      # Apply the memoization. The method has been defined in an ancestor
+      # module so we can use `super` here to get the value.
+      if block.arity == 1
+        define_method(name) { __memoized.fetch(name) { |k| __memoized[k] = super(RSpec.current_example, &nil) } }
+      else
+        define_method(name) { __memoized.fetch(name) { |k| __memoized[k] = super(&nil) } }
       end
     end
   end
 
-
-  def use_threadsafe
-    return if @state == :new
-    @state = :new
-    MemoizedHelpers.module_eval do
-      def subject
-        __memoized.for(:subject) do
-          described = described_class || self.class.metadata.fetch(:description_args).first
-          Class === described ? described.new : described
-        end
+  def self.module_for(example_group)
+    get_constant_or_yield(example_group, :LetDefinitions) do
+      mod = Module.new do
+        include Module.new {
+          example_group.const_set(:NamedSubjectPreventSuper, self)
+        }
       end
 
-      def __memoized
-        @__memoized ||= Memoized.new
-      end
+      example_group.const_set(:LetDefinitions, mod)
+      mod
     end
+  end
 
-    MemoizedHelpers::ClassMethods.module_eval do
-      def let(name, &block)
-        # We have to pass the block directly to `define_method` to
-        # allow it to use method constructs like `super` and `return`.
-        raise "#let or #subject called without a block" if block.nil?
-        MemoizedHelpers.module_for(self).__send__(:define_method, name, &block)
+  # @private
+  def self.define_helpers_on(example_group)
+    example_group.__send__(:include, module_for(example_group))
+  end
 
-        # Apply the memoization. The method has been defined in an ancestor
-        # module so we can use `super` here to get the value.
-        if block.arity == 1
-          define_method(name) { __memoized.for(name) { super(RSpec.current_example, &nil) } }
-        else
-          define_method(name) { __memoized.for(name) { super(&nil) } }
-        end
-      end
+  def self.get_constant_or_yield(example_group, name)
+    if example_group.const_defined?(name, (check_ancestors = false))
+      example_group.const_get(name, check_ancestors)
+    else
+      yield
     end
   end
 end
 
+class HostBase
+  def self.prepare_using(memoized_helpers)
+    include memoized_helpers
+    extend memoized_helpers::ClassMethods
+    memoized_helpers.define_helpers_on(self)
+    let(:name) { nil }
+
+    counter_class = Class.new(self) do
+      memoized_helpers.define_helpers_on(self)
+      counter = 0
+      let(:count) { counter += 1 }
+    end
+
+    verify_memoization_with(counter_class)
+
+    Class.new(self) do
+      memoized_helpers.define_helpers_on(self)
+      let(:name) { super() }
+    end
+  end
+
+  def self.verify_memoization_with(counter_class)
+    # Since we're using custom code, ensure it actually memoizes as we expect...
+    extend RSpec::Matchers
+
+    instance_1 = counter_class.new
+    expect(instance_1.count).to eq(1)
+    expect(instance_1.count).to eq(1)
+
+    instance_2 = counter_class.new
+    expect(instance_2.count).to eq(2)
+    expect(instance_2.count).to eq(2)
+  end
+end
+
+class ThreadSafeHost < HostBase
+  Subclass = prepare_using RSpec::Core::MemoizedHelpers
+end
+
+class NonThreadSafeHost < HostBase
+  Subclass = prepare_using NonThreadSafeMemoizedHelpers
+end
+
+def title(title)
+  hr    = "#" * (title.length + 6)
+  blank = "#  #{' ' * title.length}  #"
+  [hr, blank, "#  #{title}  #", blank, hr]
+end
 
 require 'benchmark/ips'
-
 
 # Given
 #   let(:name) { nil }
@@ -107,125 +120,61 @@ require 'benchmark/ips'
 #   10x
 # Same thing with a call to super
 
-
-helper = LetBlockImplementationHelper.new
-
-
-puts helper.title "versions"
+puts title "versions"
 puts "RUBY_VERSION             #{RUBY_VERSION}"
 puts "ruby -v                  #{`ruby -v`}"
 puts "Benchmark::IPS::VERSION  #{Benchmark::IPS::VERSION}"
 puts "rspec-core SHA           #{`git log --pretty=format:%H -1`}"
 puts
 
-
-puts helper.title "1 call to let -- each sets the value"
+puts title "1 call to let -- each sets the value"
 Benchmark.ips do |x|
-  x.report("threadsafe") do |times|
-    helper.use_threadsafe
-    group = RSpec::Core::ExampleGroup.describe 'threadsafe1' do
-      let(:name) { nil }
-      times.times { example { name } }
-    end
-    raise "the run did not succeed!" unless group.run
+  x.report("threadsafe") { ThreadSafeHost.new.name }
+  x.report("non-threadsafe") { NonThreadSafeHost.new.name }
+  x.compare!
+end
+
+puts title "10 calls to let -- 9 will find memoized value"
+Benchmark.ips do |x|
+  x.report("threadsafe") do
+    i = ThreadSafeHost.new
+    i.name; i.name; i.name; i.name; i.name
+    i.name; i.name; i.name; i.name; i.name
   end
 
   x.report("non-threadsafe") do |times|
-    helper.use_non_threadsafe
-    group = RSpec::Core::ExampleGroup.describe 'non-threadsafe1' do
-      let(:name) { nil }
-      times.times { example { name } }
-    end
-    raise "the run did not succeed!" unless group.run
+    i = NonThreadSafeHost.new
+    i.name; i.name; i.name; i.name; i.name
+    i.name; i.name; i.name; i.name; i.name
   end
 
   x.compare!
 end
 
+puts title "1 call to let which invokes super"
 
-puts helper.title "10 calls to let -- 9 will find memoized value"
 Benchmark.ips do |x|
-  x.report("threadsafe") do |times|
-    helper.use_threadsafe
-    group = RSpec::Core::ExampleGroup.describe 'threadsafe2' do
-      let(:name) { nil }
-      times.times { example { name; name; name; name; name; name; name; name; name; name; } }
-    end
-    raise "the run did not succeed!" unless group.run
+  x.report("threadsafe") { ThreadSafeHost::Subclass.new.name }
+  x.report("non-threadsafe") { NonThreadSafeHost::Subclass.new.name }
+  x.compare!
+end
+
+puts title "10 calls to let which invokes super"
+Benchmark.ips do |x|
+  x.report("threadsafe") do
+    i = ThreadSafeHost::Subclass.new
+    i.name; i.name; i.name; i.name; i.name
+    i.name; i.name; i.name; i.name; i.name
   end
 
-  x.report("non-threadsafe") do |times|
-    helper.use_non_threadsafe
-    group = RSpec::Core::ExampleGroup.describe 'non-threadsafe2' do
-      let(:name) { nil }
-      times.times { example { name; name; name; name; name; name; name; name; name; name; } }
-    end
-    raise "the run did not succeed!" unless group.run
+  x.report("non-threadsafe") do
+    i = NonThreadSafeHost::Subclass.new
+    i.name; i.name; i.name; i.name; i.name
+    i.name; i.name; i.name; i.name; i.name
   end
 
   x.compare!
 end
-
-
-puts helper.title "1 call to let which invokes super"
-Benchmark.ips do |x|
-  x.report("threadsafe") do |times|
-    helper.use_threadsafe
-    group = RSpec::Core::ExampleGroup.describe 'threadsafe3' do
-      let(:name) { nil }
-      describe 'child' do
-        let(:name) { super() }
-        times.times { example { name } }
-      end
-    end
-    raise "the run did not succeed!" unless group.run
-  end
-
-  x.report("non-threadsafe") do |times|
-    helper.use_non_threadsafe
-    group = RSpec::Core::ExampleGroup.describe 'non-threadsafe3' do
-      let(:name) { nil }
-      describe 'child' do
-        let(:name) { super() }
-        times.times { example { name } }
-      end
-    end
-    raise "the run did not succeed!" unless group.run
-  end
-
-  x.compare!
-end
-
-
-puts helper.title "10 calls to let which invokes super"
-Benchmark.ips do |x|
-  x.report("threadsafe") do |times|
-    helper.use_threadsafe
-    group = RSpec::Core::ExampleGroup.describe 'threadsafe4' do
-      let(:name) { nil }
-      describe 'child' do
-        let(:name) { super() }
-        times.times { example { name; name; name; name; name; name; name; name; name; name; } }
-      end
-    end
-    raise "the run did not succeed!" unless group.run
-  end
-
-  x.report("non-threadsafe") do |times|
-    helper.use_non_threadsafe
-    group = RSpec::Core::ExampleGroup.describe 'non-threadsafe4' do
-      let(:name) { nil }
-      describe 'child' do
-        let(:name) { super() }
-        times.times { example { name; name; name; name; name; name; name; name; name; name; } }
-      end
-    end
-    raise "the run did not succeed!" unless group.run
-  end
-
-  x.compare!
-end
-
 
 __END__
 
@@ -234,10 +183,10 @@ __END__
 #  versions  #
 #            #
 ##############
-RUBY_VERSION             2.2.0
-ruby -v                  ruby 2.2.0p0 (2014-12-25 revision 49005) [x86_64-darwin13]
+RUBY_VERSION             2.1.5
+ruby -v                  ruby 2.1.5p273 (2014-11-13 revision 48405) [x86_64-darwin12.0]
 Benchmark::IPS::VERSION  2.1.1
-rspec-core SHA           9daea3316b07736ac536f104d443d2f29e7ed722
+rspec-core SHA           d6f49d3d3778d83f218773e7c4c6e1e66fa0a823
 
 ##########################################
 #                                        #
@@ -245,15 +194,15 @@ rspec-core SHA           9daea3316b07736ac536f104d443d2f29e7ed722
 #                                        #
 ##########################################
 Calculating -------------------------------------
-          threadsafe   120.000  i/100ms
-      non-threadsafe   121.000  i/100ms
+          threadsafe    16.310k i/100ms
+      non-threadsafe    35.035k i/100ms
 -------------------------------------------------
-          threadsafe      7.949k (±19.7%) i/s -     35.760k
-      non-threadsafe      8.541k (±21.7%) i/s -     35.695k
+          threadsafe    210.946k (±15.4%) i/s -      1.044M
+      non-threadsafe    648.091k (±14.6%) i/s -      3.188M
 
 Comparison:
-      non-threadsafe:     8541.2 i/s
-          threadsafe:     7948.8 i/s - 1.07x slower
+      non-threadsafe:   648091.1 i/s
+          threadsafe:   210945.7 i/s - 3.07x slower
 
 ###################################################
 #                                                 #
@@ -261,15 +210,15 @@ Comparison:
 #                                                 #
 ###################################################
 Calculating -------------------------------------
-          threadsafe    45.000  i/100ms
-      non-threadsafe    49.000  i/100ms
+          threadsafe     6.271k i/100ms
+      non-threadsafe    22.738k i/100ms
 -------------------------------------------------
-          threadsafe      4.894k (±18.7%) i/s -     20.835k
-      non-threadsafe      5.603k (±17.8%) i/s -     23.128k
+          threadsafe     66.024k (±16.1%) i/s -    326.092k
+      non-threadsafe      5.618B (±26.5%) i/s -     16.572B
 
 Comparison:
-      non-threadsafe:     5603.0 i/s
-          threadsafe:     4894.2 i/s - 1.14x slower
+      non-threadsafe: 5618023428.8 i/s
+          threadsafe:    66023.6 i/s - 85091.11x slower
 
 #######################################
 #                                     #
@@ -277,15 +226,15 @@ Comparison:
 #                                     #
 #######################################
 Calculating -------------------------------------
-          threadsafe    23.000  i/100ms
-      non-threadsafe    25.000  i/100ms
+          threadsafe    12.125k i/100ms
+      non-threadsafe    30.324k i/100ms
 -------------------------------------------------
-          threadsafe      2.796k (±15.7%) i/s -     12.029k
-      non-threadsafe      3.313k (±13.3%) i/s -     14.200k
+          threadsafe    145.895k (±18.5%) i/s -    703.250k
+      non-threadsafe    483.209k (±11.2%) i/s -      2.396M
 
 Comparison:
-      non-threadsafe:     3312.7 i/s
-          threadsafe:     2795.8 i/s - 1.18x slower
+      non-threadsafe:   483209.5 i/s
+          threadsafe:   145895.1 i/s - 3.31x slower
 
 #########################################
 #                                       #
@@ -293,12 +242,12 @@ Comparison:
 #                                       #
 #########################################
 Calculating -------------------------------------
-          threadsafe    18.000  i/100ms
-      non-threadsafe    18.000  i/100ms
+          threadsafe     5.304k i/100ms
+      non-threadsafe    19.459k i/100ms
 -------------------------------------------------
-          threadsafe      2.283k (±12.3%) i/s -      9.684k
-      non-threadsafe      2.409k (±12.6%) i/s -     10.890k
+          threadsafe     61.323k (±17.0%) i/s -    302.328k
+      non-threadsafe    232.589k (±12.7%) i/s -      1.148M
 
 Comparison:
-      non-threadsafe:     2408.8 i/s
-          threadsafe:     2283.1 i/s - 1.06x slower
+      non-threadsafe:   232589.4 i/s
+          threadsafe:    61322.8 i/s - 3.79x slower
