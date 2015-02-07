@@ -142,7 +142,7 @@ Benchmark.ips do |x|
     i.name; i.name; i.name; i.name; i.name
   end
 
-  x.report("non-threadsafe") do |times|
+  x.report("non-threadsafe") do
     i = NonThreadSafeHost.new
     i.name; i.name; i.name; i.name; i.name
     i.name; i.name; i.name; i.name; i.name
@@ -186,7 +186,7 @@ __END__
 RUBY_VERSION             2.1.5
 ruby -v                  ruby 2.1.5p273 (2014-11-13 revision 48405) [x86_64-darwin12.0]
 Benchmark::IPS::VERSION  2.1.1
-rspec-core SHA           d6f49d3d3778d83f218773e7c4c6e1e66fa0a823
+rspec-core SHA           d371e8468ab75d312515389275cbd94e67f1e65e
 
 ##########################################
 #                                        #
@@ -194,15 +194,15 @@ rspec-core SHA           d6f49d3d3778d83f218773e7c4c6e1e66fa0a823
 #                                        #
 ##########################################
 Calculating -------------------------------------
-          threadsafe    16.310k i/100ms
-      non-threadsafe    35.035k i/100ms
+          threadsafe    16.059k i/100ms
+      non-threadsafe    35.537k i/100ms
 -------------------------------------------------
-          threadsafe    210.946k (±15.4%) i/s -      1.044M
-      non-threadsafe    648.091k (±14.6%) i/s -      3.188M
+          threadsafe    220.346k (±17.3%) i/s -      1.076M
+      non-threadsafe    634.321k (±16.1%) i/s -      3.092M
 
 Comparison:
-      non-threadsafe:   648091.1 i/s
-          threadsafe:   210945.7 i/s - 3.07x slower
+      non-threadsafe:   634321.2 i/s
+          threadsafe:   220346.2 i/s - 2.88x slower
 
 ###################################################
 #                                                 #
@@ -210,15 +210,15 @@ Comparison:
 #                                                 #
 ###################################################
 Calculating -------------------------------------
-          threadsafe     6.271k i/100ms
-      non-threadsafe    22.738k i/100ms
+          threadsafe     5.263k i/100ms
+      non-threadsafe    19.789k i/100ms
 -------------------------------------------------
-          threadsafe     66.024k (±16.1%) i/s -    326.092k
-      non-threadsafe      5.618B (±26.5%) i/s -     16.572B
+          threadsafe     69.083k (±16.1%) i/s -    336.832k
+      non-threadsafe    262.122k (±14.0%) i/s -      1.306M
 
 Comparison:
-      non-threadsafe: 5618023428.8 i/s
-          threadsafe:    66023.6 i/s - 85091.11x slower
+      non-threadsafe:   262121.9 i/s
+          threadsafe:    69082.7 i/s - 3.79x slower
 
 #######################################
 #                                     #
@@ -226,15 +226,15 @@ Comparison:
 #                                     #
 #######################################
 Calculating -------------------------------------
-          threadsafe    12.125k i/100ms
-      non-threadsafe    30.324k i/100ms
+          threadsafe    12.203k i/100ms
+      non-threadsafe    29.478k i/100ms
 -------------------------------------------------
-          threadsafe    145.895k (±18.5%) i/s -    703.250k
-      non-threadsafe    483.209k (±11.2%) i/s -      2.396M
+          threadsafe    158.228k (±15.2%) i/s -    780.992k
+      non-threadsafe    457.084k (±15.5%) i/s -      2.240M
 
 Comparison:
-      non-threadsafe:   483209.5 i/s
-          threadsafe:   145895.1 i/s - 3.31x slower
+      non-threadsafe:   457084.2 i/s
+          threadsafe:   158228.5 i/s - 2.89x slower
 
 #########################################
 #                                       #
@@ -242,12 +242,12 @@ Comparison:
 #                                       #
 #########################################
 Calculating -------------------------------------
-          threadsafe     5.304k i/100ms
-      non-threadsafe    19.459k i/100ms
+          threadsafe     5.417k i/100ms
+      non-threadsafe    16.023k i/100ms
 -------------------------------------------------
-          threadsafe     61.323k (±17.0%) i/s -    302.328k
-      non-threadsafe    232.589k (±12.7%) i/s -      1.148M
+          threadsafe     59.832k (±15.2%) i/s -    292.518k
+      non-threadsafe    228.003k (±13.6%) i/s -      1.122M
 
 Comparison:
-      non-threadsafe:   232589.4 i/s
-          threadsafe:    61322.8 i/s - 3.79x slower
+      non-threadsafe:   228002.9 i/s
+          threadsafe:    59831.6 i/s - 3.81x slower
