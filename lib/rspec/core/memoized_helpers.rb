@@ -1,3 +1,5 @@
+require 'thread'
+
 module RSpec
   module Core
     # This module is included in {ExampleGroup}, making the methods
@@ -132,7 +134,7 @@ module RSpec
         end
 
         def for(key, &initializer)
-          return @memoized[key][0] if @memoized.has_key? key
+          return @memoized[key][0] if @memoized.key? key
 
           value = initializer.call
 
