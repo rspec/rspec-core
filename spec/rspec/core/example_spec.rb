@@ -193,6 +193,7 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
         expect(RSpec::Matchers).not_to receive(:generated_description)
         example_group.example { assert 5 == 5 }
         example_group.run
+        RSpec::Mocks.space.reset_all
       end
 
       it "uses the file and line number" do
