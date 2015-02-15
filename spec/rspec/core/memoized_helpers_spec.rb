@@ -363,35 +363,8 @@ module RSpec::Core
         expect(subject).to eq(3)
       end
     end
-  end
 
-  RSpec.describe "#let" do
-    let(:counter) do
-      Class.new do
-        def initialize
-          @count = 0
-        end
-        def count
-          @count += 1
-        end
-      end.new
-    end
-
-    let(:nil_value) do
-      @nil_value_count += 1
-      nil
-    end
-
-    it "generates an instance method" do
-      expect(counter.count).to eq(1)
-    end
-
-    it "caches the value" do
-      expect(counter.count).to eq(1)
-      expect(counter.count).to eq(2)
-    end
-
-    it "is threadsafe" do
+    it "are threadsafe", threadsafe: true do
       value_queue = Queue.new
       values      = []
       RSpec.describe do
@@ -427,6 +400,34 @@ module RSpec::Core
 
       expect(values.size).to eq 2
       expect(values[0]).to eq values[1]
+    end
+
+  end
+
+  RSpec.describe "#let" do
+    let(:counter) do
+      Class.new do
+        def initialize
+          @count = 0
+        end
+        def count
+          @count += 1
+        end
+      end.new
+    end
+
+    let(:nil_value) do
+      @nil_value_count += 1
+      nil
+    end
+
+    it "generates an instance method" do
+      expect(counter.count).to eq(1)
+    end
+
+    it "caches the value" do
+      expect(counter.count).to eq(1)
+      expect(counter.count).to eq(2)
     end
 
     it "caches a nil value" do

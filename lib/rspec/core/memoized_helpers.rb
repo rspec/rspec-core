@@ -55,7 +55,7 @@ module RSpec
       # @see #should_not
       # @see #is_expected
       def subject
-        __memoized.for(:subject) do
+        __memoized.fetch_or_store(:subject) do
           described = described_class || self.class.metadata.fetch(:description_args).first
           Class === described ? described.new : described
         end
@@ -133,15 +133,15 @@ module RSpec
           @mutex    = Mutex.new
         end
 
-        def for(key, &initializer)
+        def fetch_or_store(key)
           return @memoized[key][0] if @memoized.key? key
 
-          value = initializer.call
+          value = yield
 
           @mutex.synchronize do
             memoized = (@memoized[key] ||= [value, Thread.current.object_id])
             if memoized[1] == Thread.current.object_id
-              # set by call to super in initializer, we override. ie:
+              # set by call to super in yield, we override. ie:
               # let(:title) { super() + ' Child Context' }
               memoized[0] = value
             else
@@ -171,7 +171,7 @@ module RSpec
           end
         end
 
-        def self.for(key, &_block)
+        def self.fetch_or_store(key, &_block)
           description = if key == :subject
                           "subject"
                         else
@@ -263,9 +263,9 @@ EOS
           # Apply the memoization. The method has been defined in an ancestor
           # module so we can use `super` here to get the value.
           if block.arity == 1
-            define_method(name) { __memoized.for(name) { super(RSpec.current_example, &nil) } }
+            define_method(name) { __memoized.fetch_or_store(name) { super(RSpec.current_example, &nil) } }
           else
-            define_method(name) { __memoized.for(name) { super(&nil) } }
+            define_method(name) { __memoized.fetch_or_store(name) { super(&nil) } }
           end
         end
 

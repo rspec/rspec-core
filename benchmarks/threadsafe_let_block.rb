@@ -4,12 +4,10 @@ require 'rspec/expectations'
 # switches between these implementations - https://github.com/rspec/rspec-core/pull/1858/files
 # benchmark requested in this PR         - https://github.com/rspec/rspec-core/pull/1858
 #
-# I ran these by adding "benchmark-ips" to ../Gemfile
-# then exported BUNDLE_GEMFILE to point t it
-# then ran `bundle exec rspec threadsafe_let_block.rb`
+# I ran these from lib root by adding "gem 'benchmark-ips'" to ../Gemfile-custom
+# then ran `bundle exec ruby benchmarks/threadsafe_let_block.rb`
 
-# The old, non-thread safe implementation, imported from the `master`
-# branch and pared down.
+# The old, non-thread safe implementation, imported from the `master` branch and pared down.
 module NonThreadSafeMemoizedHelpers
   def __memoized
     @__memoized ||= {}
@@ -60,6 +58,9 @@ module NonThreadSafeMemoizedHelpers
 end
 
 class HostBase
+  # wires the implementation
+  # adds `let(:name) { nil }`
+  # returns `Class.new(self) { let(:name) { super() } }`
   def self.prepare_using(memoized_helpers)
     include memoized_helpers
     extend memoized_helpers::ClassMethods
@@ -109,16 +110,6 @@ def title(title)
 end
 
 require 'benchmark/ips'
-
-# Given
-#   let(:name) { nil }
-# how many iterations per second for
-#   my branch
-#   master
-# when called
-#   once
-#   10x
-# Same thing with a call to super
 
 puts title "versions"
 puts "RUBY_VERSION             #{RUBY_VERSION}"
