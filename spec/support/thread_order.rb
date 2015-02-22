@@ -1,10 +1,10 @@
 class ThreadOrderSupport
   def initialize
-    @bodies     = {}
-    @threads    = []
-    @queue      = [] # we may not have thread stdlib required, so may not have Queue class
-    @mutex      = Mutex.new
-    @worker     = Thread.new { loop { work } }
+    @bodies  = {}
+    @threads = []
+    @queue   = [] # we may not have thread stdlib required, so may not have Queue class
+    @mutex   = Mutex.new
+    @worker  = Thread.new { loop { work } }
     @worker.abort_on_exception = true
   end
 
@@ -18,41 +18,38 @@ class ThreadOrderSupport
 
   def pass_to(name, options)
     parent       = Thread.current
+    child        = nil
     resume_event = extract_resume_event! options
-    body         = @bodies.fetch name
-    event        = lambda do |event|
+    resume_if    = lambda do |event|
       return unless event == sync { resume_event }
-      sync { resume_event = :has_passed }
       parent.wakeup
     end
 
-    child = Thread.new do
-      begin
-        event.call :run
-        Thread.current[:thread_order_name] = name
-        body.call
-      rescue Exception => error
-        parent.raise error
-        raise
-      ensure
-        event.call :exit
+    enqueue do
+      child = Thread.new do
+        enqueue { @threads << child }
+        sync { resume_event } == :sleep &&
+          enqueue { watch_for_sleep(child) { resume_if.call :sleep } }
+        begin
+          enqueue { resume_if.call :run }
+          Thread.current[:thread_order_name] = name
+          @bodies.fetch(name).call
+        rescue Exception => error
+          enqueue { parent.raise error }
+          raise
+        ensure
+          enqueue { resume_if.call :exit }
+        end
       end
     end
 
-    sync { @threads << child }
-
-    sync { resume_event == :sleep } &&
-      watch_for_sleep(child) { event.call :sleep }
-
-    sync { resume_event == :has_passed } ||
-      sleep
-
+    sleep
     child
   end
 
   def apocalypse!
     enqueue do
-      sync { @threads.each(&:kill) }
+      @threads.each(&:kill)
       @queue.clear
       @worker.kill
     end
@@ -84,8 +81,12 @@ class ThreadOrderSupport
   end
 
   def watch_for_sleep(thread, &cb)
-    return if thread.status == false
-    thread.status == 'sleep' && cb.call
-    enqueue { watch_for_sleep(thread, &cb) }
+    if thread.status == false || thread.status == nil
+      # noop, dead threads dream no dreams
+    elsif thread.status == 'sleep'
+      cb.call
+    else
+      enqueue { watch_for_sleep(thread, &cb) }
+    end
   end
 end
