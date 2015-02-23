@@ -453,16 +453,7 @@ module RSpec::Core
           end
         end
       end
-
-      specify 'does not rely on thread or monitor from the stdlib' do
-        pending 'We need to introduce our own thread abstractions to replace monitor (reentrance) and mutex (1.8.7 places this in thread.rb)'
-        loaded_filenames = $LOADED_FEATURES.map { |filepath| File.basename filepath }
-        expect(loaded_filenames).to_not include 'thread.rb'
-        expect(loaded_filenames).to_not include 'thread.bundle'
-        expect(loaded_filenames).to_not include 'monitor.rb'
-      end
     end
-
   end
 
   RSpec.describe "#let" do
