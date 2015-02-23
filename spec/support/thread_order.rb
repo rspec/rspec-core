@@ -47,9 +47,9 @@ class ThreadOrderSupport
     child
   end
 
-  def apocalypse!
+  def apocalypse!(thread_method=:kill)
     enqueue do
-      @threads.each(&:kill)
+      @threads.each(&thread_method)
       @queue.clear
       @worker.kill
     end

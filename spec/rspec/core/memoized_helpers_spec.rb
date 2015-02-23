@@ -365,51 +365,54 @@ module RSpec::Core
     end
 
     describe 'threadsafety', threadsafe: true do
-      specify 'first thread to access determines the return value' do
-        first_value = second_value = nil
-        ran_successfully = RSpec.describe do # would be nice to pull this into abstraction
-          let!(:order) { ThreadOrderSupport.new }
-          after { order.apocalypse! }
+      def describe_successfully(&describe_body)
+        example_group = RSpec.describe(&describe_body)
+        ran_successfully = example_group.run
+        example_group.examples.each do |example|
+          expect(example.execution_result.status).to eq(:passed), example.exception.inspect
+        end
+        expect(ran_successfully).to eq true
+      end
 
-          let :memoize_threadsafe do
-            if order.current == :second
-              :never_accessed
-            else
+      specify 'first thread to access determines the return value' do
+        describe_successfully do
+          let!(:order) { ThreadOrderSupport.new }
+
+          let :memoized_value do
+            if order.current == :first
               order.pass_to :second, :resume_on => :sleep
               :expected_value
+            else
+              :never_accessed
             end
           end
 
           example do
-            order.declare(:second) { second_value = memoize_threadsafe }
-            first_value = memoize_threadsafe
+            order.declare(:first)  { expect(memoized_value).to eq :expected_value }
+            order.declare(:second) { expect(memoized_value).to eq :expected_value }
+            order.pass_to :first, :resume_on => :exit
+            order.apocalypse! :join
           end
-        end.run
-
-        expect(ran_successfully).to eq true
-        expect(first_value).to  eq :expected_value
-        expect(second_value).to eq :expected_value
+        end
       end
 
       specify 'memoized block will only be evaluated once' do
-        ran_successfully = RSpec.describe do
-          let(:order) { ThreadOrderSupport.new }
-          after { order.apocalypse! }
+        describe_successfully do
+          let!(:order) { ThreadOrderSupport.new }
+          after  { order.apocalypse! :join }
+          before { @previously_accessed = false }
 
-          previously_accessed = false
-          let :memoize_threadsafe do
-            raise 'Called multiple times!' if previously_accessed
-            previously_accessed = true
+          let :memoized_value do
+            raise 'Called multiple times!' if @previously_accessed
+            @previously_accessed = true
             order.pass_to :second, :resume_on => :sleep
           end
 
           example do
-            order.declare(:second) { memoize_threadsafe }
-            memoize_threadsafe
+            order.declare(:second) { memoized_value }
+            memoized_value
           end
-        end.run
-
-        expect(ran_successfully).to eq true
+        end
       end
 
       specify 'memoized blocks are reentrant so calls to super() work correctly'
