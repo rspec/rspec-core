@@ -53,6 +53,7 @@ class ThreadOrderSupport
       @queue.clear
       @worker.kill
     end
+    @worker.join
   end
 
   private

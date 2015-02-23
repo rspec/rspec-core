@@ -364,42 +364,56 @@ module RSpec::Core
       end
     end
 
-    it "are threadsafe", threadsafe: true do
-      value_queue = Queue.new
-      values      = []
-      RSpec.describe do
-        # a let block that will block
-        let(:memoize_threadsafe) { value_queue.shift }
+    describe 'threadsafety', threadsafe: true do
+      specify 'first thread to access determines the return value' do
+        first_value = second_value = nil
+        ran_successfully = RSpec.describe do # would be nice to pull this into abstraction
+          let!(:order) { ThreadOrderSupport.new }
+          after { order.apocalypse! }
 
-        example do
-          thread_blocked = Queue.new
-
-          # blocked, waiting on let to return
-          thread1 = Thread.new do
-            thread_blocked << true
-            values << memoize_threadsafe
+          let :memoize_threadsafe do
+            if order.current == :second
+              :never_accessed
+            else
+              order.pass_to :second, :resume_on => :sleep
+              :expected_value
+            end
           end
-          thread_blocked.shift
 
-          # blocked, waiting on let to return
-          thread2 = Thread.new do
-            thread_blocked << true
-            values << memoize_threadsafe
+          example do
+            order.declare(:second) { second_value = memoize_threadsafe }
+            first_value = memoize_threadsafe
           end
-          thread_blocked.shift
+        end.run
 
-          # provide the values they are blocking for
-          value_queue << :value1
-          value_queue << :value2
+        expect(ran_successfully).to eq true
+        expect(first_value).to  eq :expected_value
+        expect(second_value).to eq :expected_value
+      end
 
-          # wait for them to finish
-          thread1.join
-          thread2.join
-        end
-      end.run
+      specify 'memoized block will only be evaluated once' do
+        ran_successfully = RSpec.describe do
+          let(:order) { ThreadOrderSupport.new }
+          after { order.apocalypse! }
 
-      expect(values.size).to eq 2
-      expect(values[0]).to eq values[1]
+          previously_accessed = false
+          let :memoize_threadsafe do
+            raise 'Called multiple times!' if previously_accessed
+            previously_accessed = true
+            order.pass_to :second, :resume_on => :sleep
+          end
+
+          example do
+            order.declare(:second) { memoize_threadsafe }
+            memoize_threadsafe
+          end
+        end.run
+
+        expect(ran_successfully).to eq true
+      end
+
+      specify 'memoized blocks are reentrant so calls to super() work correctly'
+      specify 'does not rely on Thread or Monitor being required'
     end
 
   end

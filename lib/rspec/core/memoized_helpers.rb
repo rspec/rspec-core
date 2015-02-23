@@ -128,26 +128,16 @@ module RSpec
 
       # @private
       class Memoized
+        require 'monitor' # reentrant mutex from stdlib
+
         def initialize
           @memoized = {}
-          @mutex    = Mutex.new
+          @monitor  = ::Monitor.new
         end
 
         def fetch_or_store(key)
-          return @memoized[key][0] if @memoized.key? key
-
-          value = yield
-
-          @mutex.synchronize do
-            memoized = (@memoized[key] ||= [value, Thread.current.object_id])
-            if memoized[1] == Thread.current.object_id
-              # set by call to super in yield, we override. ie:
-              # let(:title) { super() + ' Child Context' }
-              memoized[0] = value
-            else
-              # some other thread beat us to it, stick with their value
-              memoized[0]
-            end
+          @monitor.synchronize do
+            @memoized.fetch(key) { @memoized[key] = yield }
           end
         end
       end
