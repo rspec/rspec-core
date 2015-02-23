@@ -1,4 +1,5 @@
 require 'thread'
+require 'monitor' # reentrant mutex from stdlib
 
 module RSpec
   module Core
@@ -128,7 +129,6 @@ module RSpec
 
       # @private
       class Memoized
-        require 'monitor' # reentrant mutex from stdlib
 
         def initialize
           @memoized = {}

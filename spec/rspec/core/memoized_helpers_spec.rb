@@ -365,33 +365,45 @@ module RSpec::Core
     end
 
     describe 'threadsafety', threadsafe: true do
-      def describe_successfully(&describe_body)
-        example_group = RSpec.describe(&describe_body)
-        ran_successfully = example_group.run
-        example_group.examples.each do |example|
-          expect(example.execution_result.status).to eq(:passed), example.exception.inspect
+      # Force call to eq to happen in threaded env to prevent "circular require" warnings
+      # Not actually sure why calling eq in two threads at once causes this (it's a sporadic failure):
+      #
+      # /Users/josh/.gem/ruby/2.2.0/bundler/gems/rspec-expectations-c7f0054e40a1/lib/rspec/matchers.rb:527: warning: loading in progress, circular require considered harmful - /Users/josh/.gem/ruby/2.2.0/bundler/gems/rspec-expectations-c7f0054e40a1/lib/rspec/matchers/built_in/eq.rb
+      # \tfrom /Users/josh/ref/ruby/rspec-core/spec/support/thread_order.rb:36:in  `block (2 levels) in pass_to'
+      # \tfrom /Users/josh/ref/ruby/rspec-core/spec/support/thread_order.rb:36:in  `call'
+      # \tfrom /Users/josh/ref/ruby/rspec-core/spec/rspec/core/memoized_helpers_spec.rb:402:in  `block (6 levels) in <module:Core>'
+      # \tfrom /Users/josh/.gem/ruby/2.2.0/bundler/gems/rspec-expectations-c7f0054e40a1/lib/rspec/matchers.rb:527:in  `eq'
+      before(:all) { eq 1 }
+
+      class RaiseOnFailuresReporter < RSpec::Core::NullReporter
+        def self.example_failed(example)
+          raise example.exception
         end
+      end
+
+      def describe_successfully(&describe_body)
+        example_group    = RSpec.describe(&describe_body)
+        ran_successfully = example_group.run RaiseOnFailuresReporter
         expect(ran_successfully).to eq true
       end
 
       specify 'first thread to access determines the return value' do
         describe_successfully do
           let!(:order) { ThreadOrderSupport.new }
+          after { order.apocalypse! :join }
 
           let :memoized_value do
-            if order.current == :first
+            if order.current == :second
+              :never_accessed
+            else
               order.pass_to :second, :resume_on => :sleep
               :expected_value
-            else
-              :never_accessed
             end
           end
 
           example do
-            order.declare(:first)  { expect(memoized_value).to eq :expected_value }
             order.declare(:second) { expect(memoized_value).to eq :expected_value }
-            order.pass_to :first, :resume_on => :exit
-            order.apocalypse! :join
+            expect(memoized_value).to eq :expected_value
           end
         end
       end
@@ -415,8 +427,34 @@ module RSpec::Core
         end
       end
 
-      specify 'memoized blocks are reentrant so calls to super() work correctly'
-      specify 'does not rely on Thread or Monitor being required'
+      specify 'memoized blocks prevent other threads from accessing, even when it is accesssed in a superclass' do
+        describe_successfully do
+          let!(:order) { ThreadOrderSupport.new }
+          after { order.apocalypse! :join }
+
+          let!(:calls) { {:parent => 0, :child => 0} }
+          let(:memoized_value) do
+            calls[:parent] += 1
+            order.pass_to :second, :resume_on => :sleep
+            'parent'
+          end
+
+          describe 'child' do
+            let :memoized_value do
+              calls[:child] += 1
+              "#{super()}/child"
+            end
+
+            example do
+              order.declare(:second) { expect(memoized_value).to eq 'parent/child' }
+              expect(memoized_value).to eq 'parent/child'
+              expect(calls).to eq :parent => 1, :child => 1
+            end
+          end
+        end
+      end
+
+      specify 'does not rely on thread.rb or monitor.rb being required'
     end
 
   end
