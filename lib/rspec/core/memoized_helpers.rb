@@ -1,5 +1,4 @@
-require 'thread'
-require 'monitor' # reentrant mutex from stdlib
+require 'rspec/core/reentrant_mutex'
 
 module RSpec
   module Core
@@ -129,14 +128,13 @@ module RSpec
 
       # @private
       class Memoized
-
         def initialize
           @memoized = {}
-          @monitor  = ::Monitor.new
+          @mutex = ReentrantMutex.new
         end
 
         def fetch_or_store(key)
-          @monitor.synchronize do
+          @mutex.synchronize do
             @memoized.fetch(key) { @memoized[key] = yield }
           end
         end
