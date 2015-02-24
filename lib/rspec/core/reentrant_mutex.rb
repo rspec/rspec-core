@@ -24,7 +24,7 @@ module RSpec
         exit
       end
 
-      private
+    private
 
       def enter
         @mutex.lock if @owner != Thread.current

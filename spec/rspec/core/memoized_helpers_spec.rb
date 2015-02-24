@@ -364,7 +364,7 @@ module RSpec::Core
       end
     end
 
-    describe 'threadsafety', threadsafe: true do
+    describe 'threadsafety', :threadsafe => true do
       # Force call to eq to happen in threaded env to prevent "circular require" warnings
       # Not actually sure why calling eq in two threads at once causes this (it's a sporadic failure):
       #

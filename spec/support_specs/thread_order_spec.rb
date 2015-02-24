@@ -37,7 +37,9 @@ RSpec.describe ThreadOrderSupport do
       order.pass_to :t, :resume_on => :sleep
     end
 
-    test_status ':exit', [false, 'aborting'] do
+    # can't reproduce 'dead', but apparently JRuby 1.7.19 returned
+    # this on CI https://travis-ci.org/rspec/rspec-core/jobs/51933739
+    test_status ':exit', [false, 'aborting', 'dead'] do
       order.declare(:t) { Thread.exit }
       order.pass_to :t, :resume_on => :exit
     end
