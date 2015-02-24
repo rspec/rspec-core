@@ -8,6 +8,8 @@ module RSpec
     # Depends on Mutex, but Mutex is only available as part of core since 1.9.1:
     #   exists - http://ruby-doc.org/core-1.9.1/Mutex.html
     #   dne    - http://ruby-doc.org/core-1.9.0/Mutex.html
+    #
+    # @private
     class ReentrantMutex
       def initialize
         @owner = nil
