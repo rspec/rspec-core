@@ -86,7 +86,7 @@ RSpec.describe ThreadOrderSupport do
       thread_names << order.current
     }
     order.pass_to :a, :resume_on => :exit
-    expect(thread_names.sort).to eq [:a, :a, :b]
+    expect(thread_names.map(&:to_s).sort).to eq ['a', 'a', 'b']
   end
 
   it 'returns nil when asked for the current thread by one it did not define' do
