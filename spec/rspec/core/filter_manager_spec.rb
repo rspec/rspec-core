@@ -114,6 +114,25 @@ module RSpec::Core
         expect(filter_manager.prune([included, excluded])).to eq([included])
       end
 
+      it "still applies inclusion filters to examples from files with no location filters" do
+        group = RSpec.describe("group")
+        included_via_location = group.example("inc via location"); line = __LINE__
+        excluded_via_location = group.example("exc via location", :foo)
+
+        included_via_tag, excluded_via_tag = instance_eval <<-EOS, "some/other_spec.rb", 1
+          group = RSpec.describe("group")
+          [group.example("inc via tag", :foo), group.example("exc via tag")]
+        EOS
+
+        filter_manager.add_location(__FILE__, [line])
+        filter_manager.include_with_low_priority :foo => true
+
+        expect(filter_manager.prune([
+          included_via_location, excluded_via_location,
+          included_via_tag, excluded_via_tag
+        ]).map(&:description)).to eq([included_via_location, included_via_tag].map(&:description))
+      end
+
       it "prefers location to exclusion filter on entire group" do
         # We way want to change this behaviour in future, see:
         # https://github.com/rspec/rspec-core/issues/779

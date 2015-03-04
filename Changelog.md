@@ -1,3 +1,13 @@
+### 3.2.2 Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.2.1...3-2-maintenance)
+
+Bug Fixes:
+
+* Fix regression in 3.2.0 that allowed tag-filtered examples to
+  run even if there was a location filter applied to the spec
+  file that was intended to limit the file to other examples.
+  (#1894, Myron Marston)
+
 ### 3.2.1 / 2015-02-23
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.2.0...v3.2.1)
 
