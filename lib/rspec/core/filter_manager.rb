@@ -31,8 +31,13 @@ module RSpec
         if inclusions.standalone?
           examples.select { |e| include?(e) }
         else
-          locations = inclusions.fetch(:locations) { Hash.new([]) }
-          examples.select { |e| priority_include?(e, locations) || (!exclude?(e) && include?(e)) }
+          locations, other_inclusions = inclusions.partition_locations
+
+          examples.select do |e|
+            priority_include?(e, locations) do
+              !exclude?(e) && other_inclusions.include_example?(e)
+            end
+          end
         end
       end
 
@@ -83,7 +88,7 @@ module RSpec
       # defined in the same file as the location filters. Excluded specs in
       # other files should still be excluded.
       def priority_include?(example, locations)
-        return false if locations[example.metadata[:absolute_file_path]].empty?
+        return yield if locations[example.metadata[:absolute_file_path]].empty?
         MetadataFilter.filter_applies?(:locations, locations, example.metadata)
       end
     end
@@ -104,8 +109,8 @@ module RSpec
         [exclusions, inclusions]
       end
 
-      def initialize(*args, &block)
-        @rules = Hash.new(*args, &block)
+      def initialize(rules={})
+        @rules = rules
       end
 
       def add(updated)
@@ -171,6 +176,13 @@ module RSpec
 
       def use(*args)
         apply_standalone_filter(*args) || super
+      end
+
+      def partition_locations
+        locations = @rules.fetch(:locations) { Hash.new([]) }
+        other_inclusions = self.class.new(@rules.dup.tap { |r| r.delete(:locations) })
+
+        return locations, other_inclusions
       end
 
       def include_example?(example)
