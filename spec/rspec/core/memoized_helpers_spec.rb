@@ -366,13 +366,7 @@ module RSpec::Core
 
     describe 'threadsafety', :threadsafe => true do
       # Force call to eq to happen in threaded env to prevent "circular require" warnings
-      # Not actually sure why calling eq in two threads at once causes this (it's a sporadic failure):
-      #
-      # /Users/josh/.gem/ruby/2.2.0/bundler/gems/rspec-expectations-c7f0054e40a1/lib/rspec/matchers.rb:527: warning: loading in progress, circular require considered harmful - /Users/josh/.gem/ruby/2.2.0/bundler/gems/rspec-expectations-c7f0054e40a1/lib/rspec/matchers/built_in/eq.rb
-      # \tfrom /Users/josh/ref/ruby/rspec-core/spec/support/thread_order_support.rb:36:in  `block (2 levels) in pass_to'
-      # \tfrom /Users/josh/ref/ruby/rspec-core/spec/support/thread_order_support.rb:36:in  `call'
-      # \tfrom /Users/josh/ref/ruby/rspec-core/spec/rspec/core/memoized_helpers_spec.rb:402:in  `block (6 levels) in <module:Core>'
-      # \tfrom /Users/josh/.gem/ruby/2.2.0/bundler/gems/rspec-expectations-c7f0054e40a1/lib/rspec/matchers.rb:527:in  `eq'
+      # explanation: https://github.com/rspec/rspec-core/pull/1858/files#r25411166
       before(:all) { eq 1 }
 
       class RaiseOnFailuresReporter < RSpec::Core::NullReporter
