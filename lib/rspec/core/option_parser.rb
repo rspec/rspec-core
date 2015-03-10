@@ -156,6 +156,19 @@ module RSpec::Core
 
 FILTERING
 
+        parser.on('--only-failures', "Filter to just the examples that failed the last time they ran.") do
+          options[:inclusion_filter] ||= {}
+          options[:inclusion_filter][:last_run_status] = 'failed'
+        end
+
+        parser.on("--next-failure", "Apply `--only-failures` and abort after one failure.",
+                  "  (Equivalent to `--only-failures --fail-fast --order defined`)") do
+          options[:inclusion_filter] ||= {}
+          options[:inclusion_filter][:last_run_status] = 'failed'
+          options[:fail_fast] = true
+          options[:order] = "defined"
+        end
+
         parser.on('-P', '--pattern PATTERN', 'Load files matching pattern (default: "spec/**/*_spec.rb").') do |o|
           options[:pattern] = o
         end

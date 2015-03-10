@@ -124,3 +124,8 @@ end
 When /^I create "([^"]*)" with the following content:$/ do |file_name, content|
   write_file(file_name, content)
 end
+
+Given(/^I have run `([^`]*)` once, resulting in "([^"]*)"$/) do |command, output_snippet|
+  step %Q{I run `#{command}`}
+  step %Q{the output from "#{command}" should contain "#{output_snippet}"}
+end
