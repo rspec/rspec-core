@@ -1,10 +1,11 @@
 require 'rspec/core/reentrant_mutex'
+require 'thread_order'
 
 # There are no assertions specifically
 # They are pass if they don't deadlock
 RSpec.describe RSpec::Core::ReentrantMutex do
   let!(:mutex) { described_class.new }
-  let!(:order) { ThreadOrderSupport.new }
+  let!(:order) { ThreadOrder.new }
   after { order.apocalypse! }
 
   it 'can repeatedly synchronize within the same thread' do
@@ -27,7 +28,7 @@ RSpec.describe RSpec::Core::ReentrantMutex do
     order.apocalypse! :join
   end
 
-  it 'is implemented without depending on the stdlib' do
+  xit 'is implemented without depending on the stdlib' do
     loaded_filenames = $LOADED_FEATURES.map { |filepath| File.basename filepath }
     pending 'thread seems to be required from core, and something is still requiring monitor'
     expect(loaded_filenames).to_not include 'monitor.rb'

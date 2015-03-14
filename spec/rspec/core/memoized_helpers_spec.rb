@@ -1,3 +1,5 @@
+require 'thread_order'
+
 module RSpec::Core
   RSpec.describe MemoizedHelpers do
     before(:each) { RSpec.configuration.configure_expectation_framework }
@@ -383,7 +385,7 @@ module RSpec::Core
 
       specify 'first thread to access determines the return value' do
         describe_successfully do
-          let!(:order) { ThreadOrderSupport.new }
+          let!(:order) { ThreadOrder.new }
           after { order.apocalypse! :join }
 
           let :memoized_value do
@@ -404,7 +406,7 @@ module RSpec::Core
 
       specify 'memoized block will only be evaluated once' do
         describe_successfully do
-          let!(:order) { ThreadOrderSupport.new }
+          let!(:order) { ThreadOrder.new }
           after  { order.apocalypse! :join }
           before { @previously_accessed = false }
 
@@ -423,7 +425,7 @@ module RSpec::Core
 
       specify 'memoized blocks prevent other threads from accessing, even when it is accesssed in a superclass' do
         describe_successfully do
-          let!(:order) { ThreadOrderSupport.new }
+          let!(:order) { ThreadOrder.new }
           after { order.apocalypse! :join }
 
           let!(:calls) { {:parent => 0, :child => 0} }
