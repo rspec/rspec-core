@@ -27,12 +27,4 @@ RSpec.describe RSpec::Core::ReentrantMutex do
     mutex.synchronize { order.pass_to :thread, :resume_on => :sleep }
     order.apocalypse! :join
   end
-
-  xit 'is implemented without depending on the stdlib' do
-    loaded_filenames = $LOADED_FEATURES.map { |filepath| File.basename filepath }
-    pending 'thread seems to be required from core, and something is still requiring monitor'
-    expect(loaded_filenames).to_not include 'monitor.rb'
-    expect(loaded_filenames).to_not include 'thread.rb'
-    expect(loaded_filenames).to_not include 'thread.bundle'
-  end
 end
