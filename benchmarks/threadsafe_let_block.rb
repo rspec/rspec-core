@@ -8,7 +8,7 @@ require 'rspec/expectations'
 # then ran `bundle exec ruby benchmarks/threadsafe_let_block.rb`
 
 # The old, non-thread safe implementation, imported from the `master` branch and pared down.
-module NonThreadSafeMemoizedHelpers
+module OriginalNonThreadSafeMemoizedHelpers
   def __memoized
     @__memoized ||= {}
   end
@@ -18,7 +18,7 @@ module NonThreadSafeMemoizedHelpers
       # We have to pass the block directly to `define_method` to
       # allow it to use method constructs like `super` and `return`.
       raise "#let or #subject called without a block" if block.nil?
-      NonThreadSafeMemoizedHelpers.module_for(self).__send__(:define_method, name, &block)
+      OriginalNonThreadSafeMemoizedHelpers.module_for(self).__send__(:define_method, name, &block)
 
       # Apply the memoization. The method has been defined in an ancestor
       # module so we can use `super` here to get the value.
@@ -95,12 +95,33 @@ class HostBase
   end
 end
 
+ConfigNonThreadSafeMemoizedHelpers = ::RSpec::Core::MemoizedHelpers.dup
+ConfigNonThreadSafeMemoizedHelpers.module_eval do
+  def __memoized
+    @__memoized ||= NonThreadSafeMemoized.new
+  end
+
+  class NonThreadSafeMemoized
+    def initialize
+      @memoized = {}
+    end
+
+    def fetch_or_store(key)
+      @memoized.fetch(key) { @memoized[key] = yield }
+    end
+  end
+end
+
 class ThreadSafeHost < HostBase
   Subclass = prepare_using RSpec::Core::MemoizedHelpers
 end
 
-class NonThreadSafeHost < HostBase
-  Subclass = prepare_using NonThreadSafeMemoizedHelpers
+class OriginalNonThreadSafeHost < HostBase
+  Subclass = prepare_using OriginalNonThreadSafeMemoizedHelpers
+end
+
+class ConfigNonThreadSafeHost < HostBase
+  Subclass = prepare_using ConfigNonThreadSafeMemoizedHelpers
 end
 
 def title(title)
@@ -122,21 +143,28 @@ puts
 
 puts title "1 call to let -- each sets the value"
 Benchmark.ips do |x|
-  x.report("threadsafe") { ThreadSafeHost.new.name }
-  x.report("non-threadsafe") { NonThreadSafeHost.new.name }
+  x.report("non-threadsafe (original)") { OriginalNonThreadSafeHost.new.name }
+  x.report("non-threadsafe (config)  ") { ConfigNonThreadSafeHost.new.name }
+  x.report("threadsafe               ") { ThreadSafeHost.new.name }
   x.compare!
 end
 
 puts title "10 calls to let -- 9 will find memoized value"
 Benchmark.ips do |x|
-  x.report("threadsafe") do
-    i = ThreadSafeHost.new
+  x.report("non-threadsafe (original)") do
+    i = OriginalNonThreadSafeHost.new
     i.name; i.name; i.name; i.name; i.name
     i.name; i.name; i.name; i.name; i.name
   end
 
-  x.report("non-threadsafe") do
-    i = NonThreadSafeHost.new
+  x.report("non-threadsafe (config)  ") do
+    i = ConfigNonThreadSafeHost.new
+    i.name; i.name; i.name; i.name; i.name
+    i.name; i.name; i.name; i.name; i.name
+  end
+
+  x.report("threadsafe               ") do
+    i = ThreadSafeHost.new
     i.name; i.name; i.name; i.name; i.name
     i.name; i.name; i.name; i.name; i.name
   end
@@ -147,21 +175,28 @@ end
 puts title "1 call to let which invokes super"
 
 Benchmark.ips do |x|
-  x.report("threadsafe") { ThreadSafeHost::Subclass.new.name }
-  x.report("non-threadsafe") { NonThreadSafeHost::Subclass.new.name }
+  x.report("non-threadsafe (original)") { OriginalNonThreadSafeHost::Subclass.new.name }
+  x.report("non-threadsafe (config)  ") { ConfigNonThreadSafeHost::Subclass.new.name }
+  x.report("threadsafe               ") { ThreadSafeHost::Subclass.new.name }
   x.compare!
 end
 
 puts title "10 calls to let which invokes super"
 Benchmark.ips do |x|
-  x.report("threadsafe") do
-    i = ThreadSafeHost::Subclass.new
+  x.report("non-threadsafe (original)") do
+    i = OriginalNonThreadSafeHost::Subclass.new
     i.name; i.name; i.name; i.name; i.name
     i.name; i.name; i.name; i.name; i.name
   end
 
-  x.report("non-threadsafe") do
-    i = NonThreadSafeHost::Subclass.new
+  x.report("non-threadsafe (config)  ") do
+    i = ConfigNonThreadSafeHost::Subclass.new
+    i.name; i.name; i.name; i.name; i.name
+    i.name; i.name; i.name; i.name; i.name
+  end
+
+  x.report("threadsafe               ") do
+    i = ThreadSafeHost::Subclass.new
     i.name; i.name; i.name; i.name; i.name
     i.name; i.name; i.name; i.name; i.name
   end
@@ -176,12 +211,12 @@ __END__
 #  versions  #
 #            #
 ##############
-RUBY_VERSION             2.1.1
-RUBY_PLATFORM            x86_64-darwin13.0
+RUBY_VERSION             2.1.5
+RUBY_PLATFORM            x86_64-darwin12.0
 RUBY_ENGINE              ruby
-ruby -v                  ruby 2.1.1p76 (2014-02-24 revision 45161) [x86_64-darwin13.0]
+ruby -v                  ruby 2.1.5p273 (2014-11-13 revision 48405) [x86_64-darwin12.0]
 Benchmark::IPS::VERSION  2.1.1
-rspec-core SHA           47ab55fb65d540c087c91810dfcb866e65235afc
+rspec-core SHA           e32ada9cd4423cdf06df9ef6a99f8ad7b6e13bec
 
 ##########################################
 #                                        #
@@ -189,15 +224,24 @@ rspec-core SHA           47ab55fb65d540c087c91810dfcb866e65235afc
 #                                        #
 ##########################################
 Calculating -------------------------------------
-          threadsafe    25.254k i/100ms
-      non-threadsafe    51.157k i/100ms
+non-threadsafe (original)
+                        28.248k i/100ms
+non-threadsafe (config)
+                        23.804k i/100ms
+threadsafe
+                        13.001k i/100ms
 -------------------------------------------------
-          threadsafe    323.969k (±10.6%) i/s -      1.616M
-      non-threadsafe    782.539k (±11.4%) i/s -      3.888M
+non-threadsafe (original)
+                        478.456k (±13.1%) i/s -      2.373M
+non-threadsafe (config)
+                        465.080k (±17.6%) i/s -      2.261M
+threadsafe
+                        240.298k (± 9.2%) i/s -      1.196M
 
 Comparison:
-      non-threadsafe:   782539.4 i/s
-          threadsafe:   323968.9 i/s - 2.42x slower
+non-threadsafe (original):   478456.0 i/s
+non-threadsafe (config)  :   465080.3 i/s - 1.03x slower
+threadsafe               :   240298.3 i/s - 1.99x slower
 
 ###################################################
 #                                                 #
@@ -205,15 +249,24 @@ Comparison:
 #                                                 #
 ###################################################
 Calculating -------------------------------------
-          threadsafe    16.456k i/100ms
-      non-threadsafe    24.522k i/100ms
+non-threadsafe (original)
+                        20.678k i/100ms
+non-threadsafe (config)
+                        17.564k i/100ms
+threadsafe
+                        12.120k i/100ms
 -------------------------------------------------
-          threadsafe    183.918k (± 9.4%) i/s -    921.536k
-      non-threadsafe    304.863k (± 9.1%) i/s -      1.520M
+non-threadsafe (original)
+                        272.546k (± 8.0%) i/s -      1.365M
+non-threadsafe (config)
+                        226.533k (± 7.1%) i/s -      1.142M
+threadsafe
+                        146.561k (± 7.2%) i/s -    739.320k
 
 Comparison:
-      non-threadsafe:   304862.7 i/s
-          threadsafe:   183918.2 i/s - 1.66x slower
+non-threadsafe (original):   272545.7 i/s
+non-threadsafe (config)  :   226532.8 i/s - 1.20x slower
+threadsafe               :   146561.4 i/s - 1.86x slower
 
 #######################################
 #                                     #
@@ -221,15 +274,24 @@ Comparison:
 #                                     #
 #######################################
 Calculating -------------------------------------
-          threadsafe    19.731k i/100ms
-      non-threadsafe    39.129k i/100ms
+non-threadsafe (original)
+                        30.780k i/100ms
+non-threadsafe (config)
+                        26.364k i/100ms
+threadsafe
+                        14.261k i/100ms
 -------------------------------------------------
-          threadsafe    239.469k (± 8.2%) i/s -      1.204M
-      non-threadsafe    555.343k (±10.1%) i/s -      2.778M
+non-threadsafe (original)
+                        478.578k (± 9.0%) i/s -      2.401M
+non-threadsafe (config)
+                        395.975k (± 7.7%) i/s -      1.977M
+threadsafe
+                        176.326k (± 6.5%) i/s -    884.182k
 
 Comparison:
-      non-threadsafe:   555342.7 i/s
-          threadsafe:   239468.6 i/s - 2.32x slower
+non-threadsafe (original):   478578.3 i/s
+non-threadsafe (config)  :   395975.1 i/s - 1.21x slower
+threadsafe               :   176326.3 i/s - 2.71x slower
 
 #########################################
 #                                       #
@@ -237,12 +299,21 @@ Comparison:
 #                                       #
 #########################################
 Calculating -------------------------------------
-          threadsafe    13.305k i/100ms
-      non-threadsafe    21.778k i/100ms
+non-threadsafe (original)
+                        18.380k i/100ms
+non-threadsafe (config)
+                        16.342k i/100ms
+threadsafe
+                        10.262k i/100ms
 -------------------------------------------------
-          threadsafe    149.574k (± 8.7%) i/s -    745.080k
-      non-threadsafe    263.700k (± 9.9%) i/s -      1.307M
+non-threadsafe (original)
+                        235.513k (± 6.9%) i/s -      1.176M
+non-threadsafe (config)
+                        200.389k (± 5.4%) i/s -      1.013M
+threadsafe
+                        121.804k (± 7.6%) i/s -    605.458k
 
 Comparison:
-      non-threadsafe:   263700.1 i/s
-          threadsafe:   149573.5 i/s - 1.76x slower
+non-threadsafe (original):   235512.9 i/s
+non-threadsafe (config)  :   200389.0 i/s - 1.18x slower
+threadsafe               :   121803.9 i/s - 1.93x slower
