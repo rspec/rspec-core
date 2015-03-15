@@ -14,7 +14,7 @@ module RSpec
       def initialize
         @owner = nil
         @count = 0
-        @mutex = Mutex.new
+        @mutex = MUTEX.new
       end
 
       def synchronize
