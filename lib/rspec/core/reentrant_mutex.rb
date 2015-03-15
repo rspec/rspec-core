@@ -41,6 +41,7 @@ module RSpec
     end
 
     # @private
+    # :nocov:
     # This can be deleted once support for 1.8.7 is dropped
     MUTEX = if defined? ::Mutex
               # On 1.9 and up, this is in core, so we just use the real one
