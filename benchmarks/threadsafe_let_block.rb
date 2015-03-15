@@ -176,12 +176,12 @@ __END__
 #  versions  #
 #            #
 ##############
-RUBY_VERSION             2.2.0
-RUBY_PLATFORM            x86_64-darwin13
+RUBY_VERSION             2.1.1
+RUBY_PLATFORM            x86_64-darwin13.0
 RUBY_ENGINE              ruby
-ruby -v                  ruby 2.2.0p0 (2014-12-25 revision 49005) [x86_64-darwin13]
+ruby -v                  ruby 2.1.1p76 (2014-02-24 revision 45161) [x86_64-darwin13.0]
 Benchmark::IPS::VERSION  2.1.1
-rspec-core SHA           1dc69cd816fed7dd9f638e13ca2b1831d5c0174e
+rspec-core SHA           47ab55fb65d540c087c91810dfcb866e65235afc
 
 ##########################################
 #                                        #
@@ -189,15 +189,15 @@ rspec-core SHA           1dc69cd816fed7dd9f638e13ca2b1831d5c0174e
 #                                        #
 ##########################################
 Calculating -------------------------------------
-          threadsafe    25.316k i/100ms
-      non-threadsafe    47.650k i/100ms
+          threadsafe    25.254k i/100ms
+      non-threadsafe    51.157k i/100ms
 -------------------------------------------------
-          threadsafe    330.940k (±15.5%) i/s -      1.620M
-      non-threadsafe    745.917k (±15.6%) i/s -      3.621M
+          threadsafe    323.969k (±10.6%) i/s -      1.616M
+      non-threadsafe    782.539k (±11.4%) i/s -      3.888M
 
 Comparison:
-      non-threadsafe:   745917.1 i/s
-          threadsafe:   330939.6 i/s - 2.25x slower
+      non-threadsafe:   782539.4 i/s
+          threadsafe:   323968.9 i/s - 2.42x slower
 
 ###################################################
 #                                                 #
@@ -205,15 +205,15 @@ Comparison:
 #                                                 #
 ###################################################
 Calculating -------------------------------------
-          threadsafe     9.671k i/100ms
-      non-threadsafe    23.823k i/100ms
+          threadsafe    16.456k i/100ms
+      non-threadsafe    24.522k i/100ms
 -------------------------------------------------
-          threadsafe    100.772k (±15.0%) i/s -    493.221k
-      non-threadsafe    314.779k (±14.2%) i/s -      1.548M
+          threadsafe    183.918k (± 9.4%) i/s -    921.536k
+      non-threadsafe    304.863k (± 9.1%) i/s -      1.520M
 
 Comparison:
-      non-threadsafe:   314779.4 i/s
-          threadsafe:   100772.2 i/s - 3.12x slower
+      non-threadsafe:   304862.7 i/s
+          threadsafe:   183918.2 i/s - 1.66x slower
 
 #######################################
 #                                     #
@@ -221,15 +221,15 @@ Comparison:
 #                                     #
 #######################################
 Calculating -------------------------------------
-          threadsafe    20.027k i/100ms
-      non-threadsafe    40.314k i/100ms
+          threadsafe    19.731k i/100ms
+      non-threadsafe    39.129k i/100ms
 -------------------------------------------------
-          threadsafe    258.225k (±15.7%) i/s -      1.262M
-      non-threadsafe    528.911k (±14.9%) i/s -      2.580M
+          threadsafe    239.469k (± 8.2%) i/s -      1.204M
+      non-threadsafe    555.343k (±10.1%) i/s -      2.778M
 
 Comparison:
-      non-threadsafe:   528911.3 i/s
-          threadsafe:   258224.5 i/s - 2.05x slower
+      non-threadsafe:   555342.7 i/s
+          threadsafe:   239468.6 i/s - 2.32x slower
 
 #########################################
 #                                       #
@@ -237,90 +237,12 @@ Comparison:
 #                                       #
 #########################################
 Calculating -------------------------------------
-          threadsafe     9.022k i/100ms
-      non-threadsafe    21.712k i/100ms
+          threadsafe    13.305k i/100ms
+      non-threadsafe    21.778k i/100ms
 -------------------------------------------------
-          threadsafe     89.125k (±13.9%) i/s -    442.078k
-      non-threadsafe    266.991k (±15.7%) i/s -      1.303M
+          threadsafe    149.574k (± 8.7%) i/s -    745.080k
+      non-threadsafe    263.700k (± 9.9%) i/s -      1.307M
 
 Comparison:
-      non-threadsafe:   266991.2 i/s
-          threadsafe:    89124.8 i/s - 3.00x slower
-
-=============================================================================================
-
-##############
-#            #
-#  versions  #
-#            #
-##############
-RUBY_VERSION             2.1.0
-RUBY_PLATFORM            x86_64-darwin14.1.0
-RUBY_ENGINE              rbx
-ruby -v                  rubinius 2.5.0 (2.1.0 50777f41 2015-01-17 3.5.0 JI) [x86_64-darwin14.1.0]
-Benchmark::IPS::VERSION  2.1.1
-rspec-core SHA           1dc69cd816fed7dd9f638e13ca2b1831d5c0174e
-
-##########################################
-#                                        #
-#  1 call to let -- each sets the value  #
-#                                        #
-##########################################
-Calculating -------------------------------------
-          threadsafe    12.566k i/100ms
-      non-threadsafe    84.582k i/100ms
--------------------------------------------------
-          threadsafe    715.795k (±17.2%) i/s -      3.431M
-      non-threadsafe      1.187M (±14.6%) i/s -      5.836M
-
-Comparison:
-      non-threadsafe:  1186820.2 i/s
-          threadsafe:   715794.8 i/s - 1.66x slower
-
-###################################################
-#                                                 #
-#  10 calls to let -- 9 will find memoized value  #
-#                                                 #
-###################################################
-Calculating -------------------------------------
-          threadsafe    12.456k i/100ms
-      non-threadsafe    27.749k i/100ms
--------------------------------------------------
-          threadsafe    137.480k (±14.0%) i/s -    672.624k
-      non-threadsafe    320.032k (±13.5%) i/s -      1.582M
-
-Comparison:
-      non-threadsafe:   320031.6 i/s
-          threadsafe:   137479.6 i/s - 2.33x slower
-
-#######################################
-#                                     #
-#  1 call to let which invokes super  #
-#                                     #
-#######################################
-Calculating -------------------------------------
-          threadsafe    37.193k i/100ms
-      non-threadsafe    60.695k i/100ms
--------------------------------------------------
-          threadsafe    466.347k (±12.9%) i/s -      2.306M
-      non-threadsafe    763.771k (±16.1%) i/s -      3.702M
-
-Comparison:
-      non-threadsafe:   763771.5 i/s
-          threadsafe:   466347.0 i/s - 1.64x slower
-
-#########################################
-#                                       #
-#  10 calls to let which invokes super  #
-#                                       #
-#########################################
-Calculating -------------------------------------
-          threadsafe    11.484k i/100ms
-      non-threadsafe    25.345k i/100ms
--------------------------------------------------
-          threadsafe    129.065k (±14.0%) i/s -    631.620k
-      non-threadsafe    279.116k (±14.4%) i/s -      1.369M
-
-Comparison:
-      non-threadsafe:   279115.8 i/s
-          threadsafe:   129064.7 i/s - 2.16x slower
+      non-threadsafe:   263700.1 i/s
+          threadsafe:   149573.5 i/s - 1.76x slower
