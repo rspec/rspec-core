@@ -133,7 +133,6 @@ module RSpec
           @mutex = ReentrantMutex.new
         end
 
-
         def fetch_or_store(key)
           @memoized.fetch(key) do # only first access pays for synchronization
             @mutex.synchronize do
