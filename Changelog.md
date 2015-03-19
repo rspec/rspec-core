@@ -1,3 +1,12 @@
+### 3.2.3 Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.2.2...3-2-maintenance)
+
+Bug Fixes:
+
+* Fix how the DSL methods are defined so that RSpec is compatible with
+  gems that define methods of the same name on `Kernel` (such as
+  the `its-it` gem). (Alex Kwiatkowski, Ryan Ong, #1907)
+
 ### 3.2.2 / 2015-03-11
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.2.1...v3.2.2)
 
