@@ -29,6 +29,9 @@ Enhancements:
   relative to each other. (Myron Marston, #1908)
 * Set example group constant earlier so errors when evaluating the context
   include the example group name (Myron Marson, #1911)
+* Add `--bisect` CLI option, which will repeatedly run your suite in
+  order to isolate the failures to the smallest reproducible case.
+  (Myron Marston, #1917)
 
 Bug Fixes:
 
