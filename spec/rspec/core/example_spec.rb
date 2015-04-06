@@ -637,7 +637,7 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
           example {}
           example {}
         end
-        group.run
+        expect(group.run).to be true
         expect(group.examples.first).to be_skipped_with("not done")
         expect(group.examples.last).to be_skipped_with("not done")
       end
