@@ -1,3 +1,11 @@
+### Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.2.3...3-2-maintenance)
+
+Bug Fixes:
+
+* Prevent modules overriding example group defined methods when included,
+  prepended or extended by config defined after an example group. (Eugene Kenny, #1935)
+
 ### 3.2.3 / 2015-04-06
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.2.2...v3.2.3)
 

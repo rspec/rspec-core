@@ -1060,6 +1060,7 @@ module RSpec
       def include(mod, *filters)
         meta = Metadata.build_hash_from(filters, :warn_about_example_group_filtering)
         @include_modules.append(mod, meta)
+        configure_existing_groups(mod, meta, :safe_include)
       end
 
       # Tells RSpec to extend example groups with `mod`. Methods defined in
@@ -1095,6 +1096,7 @@ module RSpec
       def extend(mod, *filters)
         meta = Metadata.build_hash_from(filters, :warn_about_example_group_filtering)
         @extend_modules.append(mod, meta)
+        configure_existing_groups(mod, meta, :safe_extend)
       end
 
       if RSpec::Support::RubyFeatures.module_prepends_supported?
@@ -1133,6 +1135,7 @@ module RSpec
         def prepend(mod, *filters)
           meta = Metadata.build_hash_from(filters, :warn_about_example_group_filtering)
           @prepend_modules.append(mod, meta)
+          configure_existing_groups(mod, meta, :safe_prepend)
         end
       end
 
@@ -1149,6 +1152,14 @@ module RSpec
       # @private
       def configure_group_with(group, module_list, application_method)
         module_list.items_for(group.metadata).each do |mod|
+          __send__(application_method, mod, group)
+        end
+      end
+
+      # @private
+      def configure_existing_groups(mod, meta, application_method)
+        RSpec.world.all_example_groups.each do |group|
+          next unless meta.empty? || MetadataFilter.apply?(:any?, meta, group.metadata)
           __send__(application_method, mod, group)
         end
       end
