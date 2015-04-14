@@ -81,6 +81,11 @@ module RSpec
           inject(0) { |a, e| a + e.filtered_examples.size }
       end
 
+      # @private
+      def all_example_groups
+        FlatMap.flat_map(example_groups) { |g| g.descendants }
+      end
+
       # @api private
       #
       # Find line number of previous declaration.
