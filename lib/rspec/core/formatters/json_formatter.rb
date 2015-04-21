@@ -6,15 +6,28 @@ module RSpec
     module Formatters
       # @private
       class JsonFormatter < BaseFormatter
-        Formatters.register self, :message, :dump_summary, :dump_profile, :stop, :close
+        Formatters.register self, :message, :dump_summary, :dump_profile, :stop,
+                            :close, :example_group_started, :example_group_finished
 
         attr_reader :output_hash
 
         def initialize(output)
           super
+          @start = Hash.new(0)
+          @execution_times = Hash.new(0)
           @output_hash = {
             :version => RSpec::Core::Version::STRING
           }
+        end
+
+        def example_group_started(group)
+          key =  group.group.metadata[:location]
+          @start[key] = Time.now
+        end
+
+        def example_group_finished(group)
+          key = group.group.metadata[:location]
+          @execution_times[key] = Time.now - @start[key]
         end
 
         def message(notification)
@@ -72,8 +85,9 @@ module RSpec
 
         # @api private
         def dump_profile_slowest_example_groups(profile)
+          slowest_groups = profile.calculate_slowest_groups(@execution_times)
           @output_hash[:profile] ||= {}
-          @output_hash[:profile][:groups] = profile.slowest_groups.map do |loc, hash|
+          @output_hash[:profile][:groups] = slowest_groups.map do |loc, hash|
             hash.update(:location => loc)
           end
         end

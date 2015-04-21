@@ -577,23 +577,19 @@ module RSpec::Core
       end
 
       # @return [Array<RSpec::Core::Example>] the slowest example groups
-      def slowest_groups
-        @slowest_groups ||= calculate_slowest_groups
-      end
-
-    private
-
-      def calculate_slowest_groups
+      def calculate_slowest_groups(execution_times)
         example_groups = {}
+        slowest_first = execution_times.sort.reverse.first(number_of_examples).to_h
 
         examples.each do |example|
           location = example.example_group.parent_groups.last.metadata[:location]
-
-          location_hash = example_groups[location] ||= Hash.new(0)
-          location_hash[:total_time]  += example.execution_result.run_time
-          location_hash[:count]       += 1
-          next if location_hash.key?(:description)
-          location_hash[:description] = example.example_group.top_level_description
+          if(slowest_first.has_key?(location))
+            location_hash = example_groups[location] ||= Hash.new(0)
+            location_hash[:count]       += 1
+            next if location_hash.key?(:description)
+            location_hash[:description] = example.example_group.top_level_description
+            location_hash[:total_time] = slowest_first[location]
+          end
         end
 
         # stop if we've only one example group
@@ -603,9 +599,10 @@ module RSpec::Core
           hash[:average] = hash[:total_time].to_f / hash[:count]
         end
 
-        example_groups.sort_by { |_, hash| -hash[:average] }.first(number_of_examples)
+        example_groups.sort.reverse
       end
     end
+
 
     # The `DeprecationNotification` is issued by the reporter when a deprecated
     # part of RSpec is encountered. It represents information about the
@@ -634,6 +631,7 @@ module RSpec::Core
     end
 
     # `CustomNotification` is used when sending custom events to formatters /
+
     # other registered listeners, it creates attributes based on supplied hash
     # of options.
     class CustomNotification < Struct
