@@ -1663,7 +1663,7 @@ module RSpec::Core
       # for users. RSpec internals should not add methods here, though.
       expect(rspec_core_methods.map(&:to_sym)).to contain_exactly(
         :described_class, :subject,
-        :is_expected, :should, :should_not,
+        :is_expected, :will_be_expected, :should, :should_not,
         :pending, :skip,
         :setup_mocks_for_rspec, :teardown_mocks_for_rspec, :verify_mocks_for_rspec
       )

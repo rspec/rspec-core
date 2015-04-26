@@ -13,6 +13,8 @@ Feature: One-liner syntax
 
     * `is_expected` is defined simply as `expect(subject)` and is designed for
       when you are using rspec-expectations with its newer expect-based syntax.
+    * `will_be_expected` is similar to `is_expected` and defined
+       as `expect { subject }`
     * `should` was designed back when rspec-expectations only had a should-based
       syntax. However, it continues to be available and work even if the
       `:should` syntax is disabled (since that merely removes `Object#should`
@@ -70,3 +72,24 @@ Feature: One-liner syntax
            should not be empty
            should not be empty
        """
+
+  Scenario: Explicit subject
+   Given a file named "example_spec.rb" with:
+     """ruby
+     class SimplePrinter
+       def initialize
+         print "Printer is ready"
+       end
+     end
+
+     RSpec.describe SimplePrinter do
+       it { will_be_expected.to output("Printer is ready").to_stdout }
+     end
+     """
+   When I run `rspec example_spec.rb --format doc`
+   Then the examples should all pass
+    And the output should contain:
+      """
+      SimplePrinter
+        should output "Printer is ready" to stdout
+      """
