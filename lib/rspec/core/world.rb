@@ -78,9 +78,13 @@ module RSpec
       end
 
       # @private
+      def all_example_groups
+        FlatMap.flat_map(example_groups) { |g| g.descendants }
+      end
+
+      # @private
       def all_examples
-        flattened_groups = FlatMap.flat_map(example_groups) { |g| g.descendants }
-        FlatMap.flat_map(flattened_groups) { |g| g.examples }
+        FlatMap.flat_map(all_example_groups) { |g| g.examples }
       end
 
       # @api private
@@ -115,7 +119,7 @@ module RSpec
           end
         end
 
-        if @configuration.run_all_when_everything_filtered? && example_count.zero?
+        if @configuration.run_all_when_everything_filtered? && example_count.zero? && !@configuration.only_failures?
           reporter.message("#{everything_filtered_message}; ignoring #{inclusion_filter.description}")
           filtered_examples.clear
           inclusion_filter.clear

@@ -23,6 +23,27 @@ module RSpec::Core
       end
     end
 
+    describe "#all_example_groups" do
+      it "contains all example groups from all levels of nesting" do
+        RSpec.describe "eg1" do
+          context "eg2" do
+            context "eg3"
+            context "eg4"
+          end
+
+          context "eg5"
+        end
+
+        RSpec.describe "eg6" do
+          example
+        end
+
+        expect(RSpec.world.all_example_groups.map(&:description)).to match_array(%w[
+          eg1 eg2 eg3 eg4 eg5 eg6
+        ])
+      end
+    end
+
     describe "#all_examples" do
       it "contains all examples from all levels of nesting" do
         RSpec.describe do
@@ -114,6 +135,19 @@ module RSpec::Core
 
       context "when --only-failures is passed" do
         before { configuration.force(:only_failures => true) }
+
+        context "and all examples are filtered out" do
+          before do
+            configuration.filter_run_including :foo => 'bar'
+          end
+
+          it 'will ignore run_all_when_everything_filtered' do
+            configuration.run_all_when_everything_filtered = true
+            expect(world.filtered_examples).to_not receive(:clear)
+            expect(world.inclusion_filter).to_not receive(:clear)
+            world.announce_filters
+          end
+        end
 
         context "and `example_status_persistence_file_path` is not configured" do
           it 'aborts with a message explaining the config option must be set first' do

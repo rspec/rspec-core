@@ -34,6 +34,11 @@ Enhancements:
 * Add `--bisect` CLI option, which will repeatedly run your suite in
   order to isolate the failures to the smallest reproducible case.
   (Myron Marston, #1917)
+* For `config.include`, `config.extend` and `config.prepend`, apply the
+  module to previously defined matching example groups. (Eugene Kenny, #1935)
+* When invalid options are parsed, notify users where they came from
+  (e.g. `.rspec` or `~/.rspec` or `ENV['SPEC_OPTS']`) so they can
+  easily find the source of the problem. (Myron Marston, #1940)
 
 Bug Fixes:
 
@@ -45,6 +50,8 @@ Bug Fixes:
 * Make `let` work properly when defined in a shared context that is applied
   to an individual example via metadata. (Myron Marston, #1912)
 * Ensure `rspec/autorun` respects configuration defaults. (Jon Rowe, #1933)
+* Prevent modules overriding example group defined methods when included,
+  prepended or extended by config defined after an example group. (Eugene Kenny, #1935)
 
 ### 3.2.3 / 2015-04-06
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.2.2...v3.2.3)

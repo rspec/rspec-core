@@ -879,6 +879,17 @@ module RSpec::Core
           expect(group).not_to respond_to(:you_call_this_a_blt?)
           expect(group.new.you_call_this_a_blt?).to eq("egad man, where's the mayo?!?!?")
         end
+
+        it "includes the given module into each existing example group" do
+          group = RSpec.describe('does like, stuff and junk', :magic_key => :include) { }
+
+          RSpec.configure do |c|
+            c.include(InstanceLevelMethods)
+          end
+
+          expect(group).not_to respond_to(:you_call_this_a_blt?)
+          expect(group.new.you_call_this_a_blt?).to eq("egad man, where's the mayo?!?!?")
+        end
       end
 
       context "with a filter" do
@@ -890,6 +901,25 @@ module RSpec::Core
           group = RSpec.describe('does like, stuff and junk', :magic_key => :include) { }
           expect(group).not_to respond_to(:you_call_this_a_blt?)
           expect(group.new.you_call_this_a_blt?).to eq("egad man, where's the mayo?!?!?")
+        end
+
+        it "includes the given module into each existing matching example group" do
+          matching_group = RSpec.describe('does like, stuff and junk', :magic_key => :include) { }
+          non_matching_group = RSpec.describe
+          nested_matching_group = non_matching_group.describe("", :magic_key => :include)
+
+          RSpec.configure do |c|
+            c.include(InstanceLevelMethods, :magic_key => :include)
+          end
+
+          expect(matching_group).not_to respond_to(:you_call_this_a_blt?)
+          expect(matching_group.new.you_call_this_a_blt?).to eq("egad man, where's the mayo?!?!?")
+
+          expect(non_matching_group).not_to respond_to(:you_call_this_a_blt?)
+          expect(non_matching_group.new).not_to respond_to(:you_call_this_a_blt?)
+
+          expect(nested_matching_group).not_to respond_to(:you_call_this_a_blt?)
+          expect(nested_matching_group.new.you_call_this_a_blt?).to eq("egad man, where's the mayo?!?!?")
         end
 
         it "includes the given module into the singleton class of matching examples" do
@@ -981,6 +1011,19 @@ module RSpec::Core
         expect(group).to respond_to(:that_thing)
       end
 
+      it "extends the given module into each existing matching example group" do
+        matching_group = RSpec.describe(ThatThingISentYou, :magic_key => :extend) { }
+        non_matching_group = RSpec.describe
+        nested_matching_group = non_matching_group.describe("Other", :magic_key => :extend)
+
+        RSpec.configure do |c|
+          c.extend(ThatThingISentYou, :magic_key => :extend)
+        end
+
+        expect(matching_group).to respond_to(:that_thing)
+        expect(non_matching_group).not_to respond_to(:that_thing)
+        expect(nested_matching_group).to respond_to(:that_thing)
+      end
     end
 
     describe "#prepend", :if => RSpec::Support::RubyFeatures.module_prepends_supported? do
@@ -1008,6 +1051,16 @@ module RSpec::Core
           group = RSpec.describe('yo') { }
           expect(group.new.foo).to eq("foobar")
         end
+
+        it "prepends the given module into each existing example group" do
+          group = RSpec.describe('yo') { }
+
+          RSpec.configure do |c|
+            c.prepend(SomeRandomMod)
+          end
+
+          expect(group.new.foo).to eq("foobar")
+        end
       end
 
       context "with a filter" do
@@ -1018,6 +1071,20 @@ module RSpec::Core
 
           group = RSpec.describe('yo', :magic_key => :include) { }
           expect(group.new.foo).to eq("foobar")
+        end
+
+        it "prepends the given module into each existing matching example group" do
+          matching_group = RSpec.describe('yo', :magic_key => :include) { }
+          non_matching_group = RSpec.describe
+          nested_matching_group = non_matching_group.describe('', :magic_key => :include)
+
+          RSpec.configure do |c|
+            c.prepend(SomeRandomMod, :magic_key => :include)
+          end
+
+          expect(matching_group.new.foo).to eq("foobar")
+          expect(non_matching_group.new).not_to respond_to(:foo)
+          expect(nested_matching_group.new.foo).to eq("foobar")
         end
       end
 
