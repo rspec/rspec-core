@@ -631,7 +631,6 @@ module RSpec::Core
     end
 
     # `CustomNotification` is used when sending custom events to formatters /
-
     # other registered listeners, it creates attributes based on supplied hash
     # of options.
     class CustomNotification < Struct
