@@ -14,12 +14,13 @@ module RSpec
           @output = output
         end
 
-        def example_group_started(group)
-          key =  group.group.metadata[:location]
+        def example_group_started(notification)
+          #key = notification.group.id todo change key to use group.id, after refactor the example count
+          key =  notification.group.metadata[:location]
           @start[key] = Time.now
         end
 
-        def example_group_finished(group)
+        def example_group_finished(notification)
           key = group.group.metadata[:location]
           @execution_times[key] = Time.now - @start[key]
         end
