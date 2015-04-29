@@ -21,7 +21,7 @@ module RSpec
         end
 
         def example_group_finished(notification)
-          key = group.group.metadata[:location]
+          key = notification.group.metadata[:location]
           @execution_times[key] = Time.now - @start[key]
         end
 
