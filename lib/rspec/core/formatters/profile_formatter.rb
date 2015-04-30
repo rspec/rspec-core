@@ -1,4 +1,5 @@
 RSpec::Support.require_rspec_core "formatters/console_codes"
+require 'yaml'
 
 module RSpec
   module Core
@@ -6,10 +7,11 @@ module RSpec
       # @api private
       # Formatter for providing profile output.
       class ProfileFormatter
-        Formatters.register self, :dump_profile, :example_group_started, :example_group_finished
+        Formatters.register self, :dump_profile, :example_group_started, :example_group_finished, :example_started
 
         def initialize(output)
           @start = Hash.new(0)
+          @example_count = Hash.new(0) #todo rename
           @execution_times = Hash.new(0)
           @output = output
         end
@@ -23,6 +25,11 @@ module RSpec
         def example_group_finished(notification)
           key = notification.group.metadata[:location]
           @execution_times[key] = Time.now - @start[key]
+        end
+
+        def example_started(notification)
+          key = notification.example.example_group.parent_groups.last.id
+          @example_count[key] = @example_count[key] + 1
         end
 
         # @private
