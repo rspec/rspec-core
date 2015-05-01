@@ -1,5 +1,4 @@
 RSpec::Support.require_rspec_core "formatters/console_codes"
-require 'yaml'
 
 module RSpec
   module Core
@@ -10,26 +9,25 @@ module RSpec
         Formatters.register self, :dump_profile, :example_group_started, :example_group_finished, :example_started
 
         def initialize(output)
-          @start = Hash.new(0)
-          @example_count = Hash.new(0) #todo rename
-          @execution_times = Hash.new(0)
+          @example_groups = {} #todo rename
           @output = output
         end
 
         def example_group_started(notification)
-          #key = notification.group.id todo change key to use group.id, after refactor the example count
-          key =  notification.group.metadata[:location]
-          @start[key] = Time.now
+          group_id = notification.group.id
+          @example_groups[group_id] = Hash.new(0)
+          @example_groups[group_id][:start] = Time.now
+          @example_groups[group_id][:description] = notification.group.top_level_description
         end
 
         def example_group_finished(notification)
-          key = notification.group.metadata[:location]
-          @execution_times[key] = Time.now - @start[key]
+          group_id = notification.group.id
+          @example_groups[group_id][:total_time] =  Time.now - @example_groups[group_id][:start]
         end
 
         def example_started(notification)
-          key = notification.example.example_group.parent_groups.last.id
-          @example_count[key] = @example_count[key] + 1
+          group_id = notification.example.example_group.parent_groups.last.id
+          @example_groups[group_id][:count] += 1
         end
 
         # @private
@@ -62,7 +60,7 @@ module RSpec
         end
 
         def dump_profile_slowest_example_groups(profile)
-          slowest_groups = profile.calculate_slowest_groups(@execution_times)
+          slowest_groups = profile.calculate_slowest_groups(@example_groups)
           return if slowest_groups.empty?
 
           @output.puts "\nTop #{slowest_groups.size} slowest example groups:"

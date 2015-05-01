@@ -1,6 +1,5 @@
 Feature: Profile group example
 
-  @wip
   Scenario: Slowest before hook should be show
     Given a file named "spec/example_spec.rb" with:
       """ruby

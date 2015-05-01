@@ -7,27 +7,35 @@ module RSpec
       # @private
       class JsonFormatter < BaseFormatter
         Formatters.register self, :message, :dump_summary, :dump_profile, :stop,
-                            :close, :example_group_started, :example_group_finished
+                            :close, :example_group_started, :example_group_finished,
+                            :example_started
 
         attr_reader :output_hash
 
         def initialize(output)
           super
-          @start = Hash.new(0)
-          @execution_times = Hash.new(0)
+          @example_groups= {} #todo rename
           @output_hash = {
             :version => RSpec::Core::Version::STRING
           }
         end
 
+        #todo remove duplicaiton with lib/rspec/core/formatters/profile_formatter.rb
         def example_group_started(notification)
-          key =  notification.group.metadata[:location]
-          @start[key] = Time.now
+          group_id = notification.group.id
+          @example_groups[group_id] = Hash.new(0)
+          @example_groups[group_id][:start] = Time.now
+          @example_groups[group_id][:description] = notification.group.top_level_description
         end
 
         def example_group_finished(notification)
-          key = notification.group.metadata[:location]
-          @execution_times[key] = Time.now - @start[key]
+          group_id = notification.group.id
+          @example_groups[group_id][:total_time] =  Time.now - @example_groups[group_id][:start]
+        end
+
+        def example_started(notification)
+          group_id = notification.example.example_group.parent_groups.last.id
+          @example_groups[group_id][:count] += 1
         end
 
         def message(notification)
@@ -85,7 +93,7 @@ module RSpec
 
         # @api private
         def dump_profile_slowest_example_groups(profile)
-          slowest_groups = profile.calculate_slowest_groups(@execution_times)
+          slowest_groups = profile.calculate_slowest_groups(@example_groups)
           @output_hash[:profile] ||= {}
           @output_hash[:profile][:groups] = slowest_groups.map do |loc, hash|
             hash.update(:location => loc)
