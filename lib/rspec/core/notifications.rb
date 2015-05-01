@@ -577,7 +577,7 @@ module RSpec::Core
       end
 
       # @return [Array<RSpec::Core::Example>] the slowest example groups
-      # #todo rename this method or move it's code to the notifier
+      # todo rename this method or move it's code to the json_formater.rb and profile.formater.rb
       def calculate_slowest_groups(example_groups)
 
         # stop if we've only one example group

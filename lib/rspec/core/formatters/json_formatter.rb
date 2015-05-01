@@ -14,13 +14,13 @@ module RSpec
 
         def initialize(output)
           super
-          @example_groups= {} #todo rename
+          @example_groups= {} #todo rename, maybe example_groups_data ...
           @output_hash = {
             :version => RSpec::Core::Version::STRING
           }
         end
 
-        #todo remove duplicaiton with lib/rspec/core/formatters/profile_formatter.rb
+        #todo remove duplication with lib/rspec/core/formatters/profile_formatter.rb
         def example_group_started(notification)
           group_id = notification.group.id
           @example_groups[group_id] = Hash.new(0)
