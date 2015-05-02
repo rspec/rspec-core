@@ -13,24 +13,29 @@ module RSpec
           @output = output
         end
 
+        # @private
+        attr_reader :output
+
+        # @private
         def example_group_started(notification)
           @example_groups[notification.group.id] = Hash.new(0)
           @example_groups[notification.group.id][:start] = Time.now
           @example_groups[notification.group.id][:description] = notification.group.top_level_description
         end
 
+        # @private
         def example_group_finished(notification)
           @example_groups[notification.group.id][:total_time] =  Time.now - @example_groups[notification.group.id][:start]
         end
 
+        # @private
         def example_started(notification)
           #todo: maybe move example_group.parent_groups.last to an example or notification method like example.last_anscestor_group
           group = notification.example.example_group.parent_groups.last.id
+          puts group
           @example_groups[group][:count] += 1
         end
 
-        # @private
-        attr_reader :output
 
         # @api public
         #
