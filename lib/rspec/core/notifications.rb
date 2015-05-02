@@ -587,7 +587,7 @@ module RSpec::Core
           hash[:average] = hash[:total_time].to_f / hash[:count]
         end
 
-        example_groups.sort.reverse
+        example_groups.sort_by { |_, hash| -hash[:average] }.first(number_of_examples)
       end
     end
 
