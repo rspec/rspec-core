@@ -9,25 +9,24 @@ module RSpec
         Formatters.register self, :dump_profile, :example_group_started, :example_group_finished, :example_started
 
         def initialize(output)
-          @example_groups = {} #todo rename
+          @example_groups = {} #todo rename, maybe groups_data, groups_information or profile_information
           @output = output
         end
 
         def example_group_started(notification)
-          group_id = notification.group.id
-          @example_groups[group_id] = Hash.new(0)
-          @example_groups[group_id][:start] = Time.now
-          @example_groups[group_id][:description] = notification.group.top_level_description
+          @example_groups[notification.group] = Hash.new(0)
+          @example_groups[notification.group][:start] = Time.now
+          @example_groups[notification.group][:description] = notification.group.top_level_description
         end
 
         def example_group_finished(notification)
-          group_id = notification.group.id
-          @example_groups[group_id][:total_time] =  Time.now - @example_groups[group_id][:start]
+          @example_groups[notification.group][:total_time] =  Time.now - @example_groups[notification.group][:start]
         end
 
         def example_started(notification)
-          group_id = notification.example.example_group.parent_groups.last.id
-          @example_groups[group_id][:count] += 1
+          #todo: maybe move example_group.parent_groups.last to an example or notification method like example.last_anscestor_group
+          group = notification.example.example_group.parent_groups.last
+          @example_groups[group][:count] += 1
         end
 
         # @private

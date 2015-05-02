@@ -20,22 +20,20 @@ module RSpec
           }
         end
 
-        #todo remove duplication with lib/rspec/core/formatters/profile_formatter.rb
+        #todo remove duplication with lib/rspec/core/formatters/profile_formatter.rb line 16
         def example_group_started(notification)
-          group_id = notification.group.id
-          @example_groups[group_id] = Hash.new(0)
-          @example_groups[group_id][:start] = Time.now
-          @example_groups[group_id][:description] = notification.group.top_level_description
+          @example_groups[notification.group] = Hash.new(0)
+          @example_groups[notification.group][:start] = Time.now
+          @example_groups[notification.group][:description] = notification.group.top_level_description
         end
 
         def example_group_finished(notification)
-          group_id = notification.group.id
-          @example_groups[group_id][:total_time] =  Time.now - @example_groups[group_id][:start]
+          @example_groups[notification.group][:total_time] =  Time.now - @example_groups[notification.group][:start]
         end
 
         def example_started(notification)
-          group_id = notification.example.example_group.parent_groups.last.id
-          @example_groups[group_id][:count] += 1
+          group = notification.example.example_group.parent_groups.last
+          @example_groups[group][:count] += 1
         end
 
         def message(notification)
