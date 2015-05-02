@@ -22,17 +22,17 @@ module RSpec
 
         #todo remove duplication with lib/rspec/core/formatters/profile_formatter.rb line 16
         def example_group_started(notification)
-          @example_groups[notification.group] = Hash.new(0)
-          @example_groups[notification.group][:start] = Time.now
-          @example_groups[notification.group][:description] = notification.group.top_level_description
+          @example_groups[notification.group.id] = Hash.new(0)
+          @example_groups[notification.group.id][:start] = Time.now
+          @example_groups[notification.group.id][:description] = notification.group.top_level_description
         end
 
         def example_group_finished(notification)
-          @example_groups[notification.group][:total_time] =  Time.now - @example_groups[notification.group][:start]
+          @example_groups[notification.group.id][:total_time] =  Time.now - @example_groups[notification.group.id][:start]
         end
 
         def example_started(notification)
-          group = notification.example.example_group.parent_groups.last
+          group = notification.example.example_group.parent_groups.last.id
           @example_groups[group][:count] += 1
         end
 

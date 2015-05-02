@@ -183,7 +183,7 @@ RSpec.describe RSpec::Core::Formatters::JsonFormatter do
       end
 
       it "provides information" do
-        expect(formatter.output_hash[:profile][:groups].first.keys).to match_array([:total_time, :count, :description, :average, :location])
+        expect(formatter.output_hash[:profile][:groups].first.keys).to match_array([:total_time, :count, :description, :average, :location, :start])
       end
 
       #todo the group profiling dont use the example clock anymore
