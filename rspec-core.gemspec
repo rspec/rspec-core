@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rake",     "~> 10.0.0"
   s.add_development_dependency "cucumber", "~> 1.1.9"
   s.add_development_dependency "minitest", "~> 4.7"
-  s.add_development_dependency "aruba",    "~> 0.5"
+  s.add_development_dependency "aruba",    "0.6.1"
 
   s.add_development_dependency "ZenTest",  "~> 4.6"
   s.add_development_dependency "nokogiri", "1.5.2"
