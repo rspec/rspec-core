@@ -1,4 +1,5 @@
-### Development
+### 3.3.1 / 2015-06-18
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.3.0...v3.3.1)
 
 Bug Fixes:
 
