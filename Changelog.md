@@ -1,3 +1,11 @@
+### 3.3.2 Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.3.1...master)
+
+Bug Fixes:
+
+* Fix formatters to handle exceptions for which `backtrace` returns `nil`.
+  (Myron Marston, #2023)
+
 ### 3.3.1 / 2015-06-18
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.3.0...v3.3.1)
 
