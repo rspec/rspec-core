@@ -98,7 +98,7 @@ Then /^the output from `([^`]+)` should not contain "(.*?)"$/  do |cmd, expected
 end
 
 Given /^I have a brand new project with no files$/ do
-  in_current_dir do
+  cd '.' do
     expect(Dir["**/*"]).to eq([])
   end
 end
@@ -111,11 +111,11 @@ end
 Given(/^a vendored gem named "(.*?)" containing a file named "(.*?)" with:$/) do |gem_name, file_name, file_contents|
   gem_dir = "vendor/#{gem_name}-1.2.3"
   step %Q{a file named "#{gem_dir}/#{file_name}" with:}, file_contents
-  set_env('RUBYOPT', ENV['RUBYOPT'] + " -I#{gem_dir}/lib")
+  append_environment_variable('RUBYOPT', " -I#{gem_dir}/lib")
 end
 
 When "I accept the recommended settings by removing `=begin` and `=end` from `spec/spec_helper.rb`" do
-  in_current_dir do
+  cd '.' do
     spec_helper = File.read("spec/spec_helper.rb")
     expect(spec_helper).to include("=begin", "=end")
 
@@ -138,7 +138,7 @@ Given(/^I have run `([^`]*)` once, resulting in "([^"]*)"$/) do |command, output
 end
 
 When(/^I fix "(.*?)" by replacing "(.*?)" with "(.*?)"$/) do |file_name, original, replacement|
-  in_current_dir do
+  cd '.' do
     contents = File.read(file_name)
     expect(contents).to include(original)
     fixed = contents.sub(original, replacement)
@@ -151,7 +151,7 @@ Then(/^it should fail with "(.*?)"$/) do |snippet|
 end
 
 Given(/^I have not configured `example_status_persistence_file_path`$/) do
-  in_current_dir do
+  cd '.' do
     return unless File.exist?("spec/spec_helper.rb")
     return unless File.read("spec/spec_helper.rb").include?("example_status_persistence_file_path")
     File.open("spec/spec_helper.rb", "w") { |f| f.write("") }
@@ -183,7 +183,7 @@ Then(/^bisect should (succeed|fail) with output like:$/) do |succeed, expected_o
 end
 
 When(/^I run `([^`]+)` and abort in the middle with ctrl\-c$/) do |cmd|
-  set_env('RUBYOPT', ENV['RUBYOPT'] + " -r#{File.expand_path("../../support/send_sigint_during_bisect.rb", __FILE__)}")
+  append_environment_variable('RUBYOPT', " -r#{File.expand_path("../../support/send_sigint_during_bisect.rb", __FILE__)}")
   step "I run `#{cmd}`"
 end
 
