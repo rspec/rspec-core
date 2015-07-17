@@ -23,7 +23,7 @@ RSpec.shared_context "aruba support" do
     cmd_parts = Shellwords.split(cmd)
 
     handle_current_dir_change do
-      in_current_dir do
+      in_current_directory do
         RSpec::Core::Runner.run(cmd_parts, temp_stderr, temp_stdout)
       end
     end
