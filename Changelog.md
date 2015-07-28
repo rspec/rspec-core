@@ -1,3 +1,11 @@
+### 3.3.3 Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.3.2...3-3-maintenance)
+
+Bug Fixes:
+
+* Fix regression in 3.3 that caused spec file names with square brackets in
+  them (such as `1[]_spec.rb`) to not be loaded properly. (Myron Marston, #2041)
+
 ### 3.3.2 / 2015-07-15
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.3.1...v3.3.2)
 
