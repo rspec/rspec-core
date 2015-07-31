@@ -25,7 +25,7 @@ module RSpec
           parts << RUBY << load_path
           parts << open3_safe_escape(RSpec::Core.path_to_executable)
 
-          parts << "--format"   << "bisect"
+          parts << "--format" << "bisect"
           parts << "--drb-port" << @server.drb_port
           parts.concat reusable_cli_options
           parts.concat locations.map { |l| open3_safe_escape(l) }
@@ -131,8 +131,7 @@ module RSpec
         # https://github.com/ruby/rake/commit/968682759b3b65e42748cd2befb2ff3e982272d9
         RUBY = File.join(
           RbConfig::CONFIG['bindir'],
-          RbConfig::CONFIG['ruby_install_name'] + RbConfig::CONFIG['EXEEXT']).
-          sub(/.*\s.*/m, '"\&"')
+          RbConfig::CONFIG['ruby_install_name'] + RbConfig::CONFIG['EXEEXT']).sub(/.*\s.*/m, '"\&"')
       end
     end
   end

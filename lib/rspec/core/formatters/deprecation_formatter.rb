@@ -85,7 +85,7 @@ module RSpec
           end
 
           def deprecation_type_for(data)
-            data.message.gsub(/(\w+\/)+\w+\.rb:\d+/, '')
+            data.message.gsub(%r{(\w+\/)+\w+\.rb:\d+}, '')
           end
         end
 

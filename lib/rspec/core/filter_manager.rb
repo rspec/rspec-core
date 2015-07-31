@@ -107,7 +107,7 @@ module RSpec
         return yield if no_location_filters && no_id_filters
 
         MetadataFilter.filter_applies?(:ids, ids, ex_metadata) ||
-        MetadataFilter.filter_applies?(:locations, locations, ex_metadata)
+          MetadataFilter.filter_applies?(:locations, locations, ex_metadata)
       end
     end
 

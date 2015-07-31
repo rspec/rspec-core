@@ -151,7 +151,7 @@ module RSpec
           metadata[:line_number]        = line_number.to_i
           metadata[:location]           = "#{relative_file_path}:#{line_number}"
           metadata[:absolute_file_path] = File.expand_path(relative_file_path)
-          metadata[:rerun_file_path]  ||= relative_file_path
+          metadata[:rerun_file_path]    ||= relative_file_path
           metadata[:scoped_id]          = build_scoped_id_for(relative_file_path)
         end
 
@@ -185,7 +185,7 @@ module RSpec
           RESERVED_KEYS.each do |key|
             next unless user_metadata.key?(key)
             raise <<-EOM.gsub(/^\s+\|/, '')
-              |#{"*" * 50}
+              |#{'*' * 51}
               |:#{key} is not allowed
               |
               |RSpec reserves some hash keys for its own internal use,
@@ -196,7 +196,7 @@ module RSpec
               |Here are all of RSpec's reserved hash keys:
               |
               |  #{RESERVED_KEYS.join("\n  ")}
-              |#{"*" * 50}
+              |#{'*' * 50}
             EOM
           end
         end

@@ -37,7 +37,7 @@ module RSpec
           profile.slowest_examples.each do |example|
             @output.puts "  #{example.full_description}"
             @output.puts "    #{bold(Helpers.format_seconds(example.execution_result.run_time))} " \
-                         "#{bold("seconds")} #{format_caller(example.location)}"
+                         "#{bold('seconds')} #{format_caller(example.location)}"
           end
         end
 
@@ -46,7 +46,7 @@ module RSpec
 
           @output.puts "\nTop #{profile.slowest_groups.size} slowest example groups:"
           profile.slowest_groups.each do |loc, hash|
-            average = "#{bold(Helpers.format_seconds(hash[:average]))} #{bold("seconds")} average"
+            average = "#{bold(Helpers.format_seconds(hash[:average]))} #{bold('seconds')} average"
             total   = "#{Helpers.format_seconds(hash[:total_time])} seconds"
             count   = Helpers.pluralize(hash[:count], "example")
             @output.puts "  #{hash[:description]}"
