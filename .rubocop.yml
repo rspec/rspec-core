@@ -6,11 +6,11 @@ AllCops:
     - lib/rspec/core/backport_random.rb
 
 # This should go down over time.
-ClassLength:
+Metrics/ClassLength:
   Max: 330
 
 # This should go down over time.
-LineLength:
+Metrics/LineLength:
   Max: 130
 
 # This should go down over time
@@ -19,6 +19,14 @@ Metrics/AbcSize:
 
 Metrics/PerceivedComplexity:
   Max: 15
+
+# This should go down over time.
+Metrics/MethodLength:
+  Max: 40
+
+# This should go down over time.
+Metrics/CyclomaticComplexity:
+  Max: 12
 
 Lint/HandleExceptions:
   Exclude:
@@ -29,10 +37,6 @@ Lint/HandleExceptions:
 
 Lint/LiteralInInterpolation:
   Enabled: false
-
-# This should go down over time.
-MethodLength:
-  Max: 40
 
 Style/AccessModifierIndentation:
   Enabled: false
@@ -54,10 +58,6 @@ Style/ClassAndModuleChildren:
     - lib/rspec/core/notifications.rb
     - lib/rspec/core/option_parser.rb
     - lib/rspec/core/reporter.rb
-
-# This should go down over time.
-Style/CyclomaticComplexity:
-  Max: 12
 
 Style/RaiseArgs:
   Exclude:
