@@ -1713,7 +1713,7 @@ module RSpec
         if match
           captures = match.captures
           path = captures[0]
-          lines =  captures[1][1..-1].split(":").map(&:id)
+          lines = captures[1][1..-1].split(":").map(&:to_i)
           filter_manager.add_location path, lines
         else
           path, scoped_ids = Example.parse_id(path)
