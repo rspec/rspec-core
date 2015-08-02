@@ -20,7 +20,7 @@ module RSpec
         # @private
         VT100_CODE_VALUES = VT100_CODES.invert
 
-        module_function
+      module_function
 
         # @private
         CONFIG_COLORS_TO_METHODS = Configuration.instance_methods.grep(/_color\z/).inject({}) do |hash, method|

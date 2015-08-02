@@ -3,7 +3,7 @@ module RSpec
     # @private
     # Deals with the fact that `shellwords` only works on POSIX systems.
     module ShellEscape
-      module_function
+    module_function
 
       def quote(argument)
         "'#{argument.gsub("'", "\\\\'")}'"

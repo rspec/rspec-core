@@ -46,9 +46,6 @@ Style/SpaceAroundOperators:
       - '=>'
       - '<<'
 
-Style/AccessModifierIndentation:
-  Enabled: false
-
 # This could change depending of the style used
 Style/MultilineOperationIndentation:
   Enabled: false

@@ -9,7 +9,7 @@ module RSpec::Core
   module Notifications
     # @private
     module NullColorizer
-      module_function
+    module_function
 
       def wrap(line, _code_or_symbol)
         line
