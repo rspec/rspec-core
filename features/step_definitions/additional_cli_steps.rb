@@ -98,34 +98,30 @@ Then /^the output from `([^`]+)` should not contain "(.*?)"$/  do |cmd, expected
 end
 
 Given /^I have a brand new project with no files$/ do
-  in_current_dir do
-    expect(Dir["**/*"]).to eq([])
-  end
+  expect(all_directories).to be_empty
 end
 
 Given /^I have run `([^`]*)`$/ do |cmd|
   fail_on_error = true
-  run_simple(unescape(cmd), fail_on_error)
+  run_simple(Aruba.platform.unescape(cmd), fail_on_error)
 end
 
 Given(/^a vendored gem named "(.*?)" containing a file named "(.*?)" with:$/) do |gem_name, file_name, file_contents|
   gem_dir = "vendor/#{gem_name}-1.2.3"
   step %Q{a file named "#{gem_dir}/#{file_name}" with:}, file_contents
-  set_env('RUBYOPT', ENV['RUBYOPT'] + " -I#{gem_dir}/lib")
+  append_environment_variable('RUBYOPT', " -I#{gem_dir}/lib")
 end
 
 When "I accept the recommended settings by removing `=begin` and `=end` from `spec/spec_helper.rb`" do
-  in_current_dir do
-    spec_helper = File.read("spec/spec_helper.rb")
-    expect(spec_helper).to include("=begin", "=end")
+  spec_helper = read("spec/spec_helper.rb").join("\n")
+  expect(spec_helper).to include("=begin", "=end")
 
-    to_keep = spec_helper.lines.reject do |line|
-      line.start_with?("=begin") || line.start_with?("=end")
-    end
-
-    File.open("spec/spec_helper.rb", "w") { |f| f.write(to_keep.join) }
-    expect(File.read("spec/spec_helper.rb")).not_to include("=begin", "=end")
+  to_keep = spec_helper.lines.reject do |line|
+    line.start_with?("=begin") || line.start_with?("=end")
   end
+
+  write_file("spec/spec_helper.rb", to_keep.join)
+  expect(read("spec/spec_helper.rb").join("\n")).not_to include("=begin", "=end")
 end
 
 When /^I create "([^"]*)" with the following content:$/ do |file_name, content|
@@ -138,12 +134,10 @@ Given(/^I have run `([^`]*)` once, resulting in "([^"]*)"$/) do |command, output
 end
 
 When(/^I fix "(.*?)" by replacing "(.*?)" with "(.*?)"$/) do |file_name, original, replacement|
-  in_current_dir do
-    contents = File.read(file_name)
-    expect(contents).to include(original)
-    fixed = contents.sub(original, replacement)
-    File.open(file_name, "w") { |f| f.write(fixed) }
-  end
+  contents = read(file_name).join("\n")
+  expect(contents).to include(original)
+  fixed = contents.sub(original, replacement)
+  write_file(file_name, fixed)
 end
 
 Then(/^it should fail with "(.*?)"$/) do |snippet|
@@ -151,11 +145,9 @@ Then(/^it should fail with "(.*?)"$/) do |snippet|
 end
 
 Given(/^I have not configured `example_status_persistence_file_path`$/) do
-  in_current_dir do
-    return unless File.exist?("spec/spec_helper.rb")
-    return unless File.read("spec/spec_helper.rb").include?("example_status_persistence_file_path")
-    File.open("spec/spec_helper.rb", "w") { |f| f.write("") }
-  end
+  return unless exist?("spec/spec_helper.rb")
+  return unless read("spec/spec_helper.rb").join("\n").include?("example_status_persistence_file_path")
+  write_file("spec/spec_helper.rb", "")
 end
 
 Given(/^files "(.*?)" through "(.*?)" with an unrelated passing spec in each file$/) do |file1, file2|
@@ -173,17 +165,20 @@ Given(/^files "(.*?)" through "(.*?)" with an unrelated passing spec in each fil
 end
 
 Then(/^bisect should (succeed|fail) with output like:$/) do |succeed, expected_output|
-  last_process = only_processes.last
-  expect(last_exit_status).to eq(succeed == "succeed" ? 0 : 1)
+  if succeed == 'succeed'
+    expect(last_command).to be_successfully_executed
+  else
+    expect(last_command).to have_failed_running
+  end
 
   expected = normalize_durations(expected_output)
-  actual   = normalize_durations(last_process.stdout)
+  actual   = normalize_durations(last_command.stdout)
 
   expect(actual.sub(/\n+\Z/, '')).to eq(expected)
 end
 
 When(/^I run `([^`]+)` and abort in the middle with ctrl\-c$/) do |cmd|
-  set_env('RUBYOPT', ENV['RUBYOPT'] + " -r#{File.expand_path("../../support/send_sigint_during_bisect.rb", __FILE__)}")
+  append_environment_variable('RUBYOPT', " -r#{File.expand_path("../../support/send_sigint_during_bisect.rb", __FILE__)}")
   step "I run `#{cmd}`"
 end
 
