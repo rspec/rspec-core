@@ -103,7 +103,7 @@ end
 
 Given /^I have run `([^`]*)`$/ do |cmd|
   fail_on_error = true
-  run_simple(Aruba::Platform.unescape(cmd), fail_on_error)
+  run_simple(Aruba.platform.unescape(cmd), fail_on_error)
 end
 
 Given(/^a vendored gem named "(.*?)" containing a file named "(.*?)" with:$/) do |gem_name, file_name, file_contents|
