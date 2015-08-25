@@ -34,6 +34,16 @@ RSpec.describe "failing spec" do
   end
 end
 
+RSpec.describe "failing in after hook" do
+  after do
+    fail 'in an after hook'
+  end
+
+  it "fails" do
+    expect(1).to eq(1)
+  end
+end
+
 RSpec.describe "a failing spec with odd backtraces" do
   it "fails with a backtrace that has no file" do
     require 'erb'

@@ -80,36 +80,45 @@ module FormatterSupport
         |     # ./spec/support/sandboxing.rb:14
         |     # ./spec/support/sandboxing.rb:7
         |
-        |  3) a failing spec with odd backtraces fails with a backtrace that has no file
-        |     Failure/Error: Unable to find (erb) to read failed line
+        |  3) failing in after hook fails
+        |     Failure/Error: fail 'in an after hook'
+        |     RuntimeError:
+        |       in an after hook
+        |     # ./spec/rspec/core/resources/formatter_specs.rb:39
+        |     # ./spec/support/formatter_support.rb:13:in `run_example_specs_with_formatter'
+        |     # ./spec/support/sandboxing.rb:14
+        |     # ./spec/support/sandboxing.rb:14
+        |     # ./spec/support/sandboxing.rb:7
         |
+        |  4) a failing spec with odd backtraces fails with a backtrace that has no file
+        |     Failure/Error: Unable to find matching line from backtrace
         |     RuntimeError:
         |       foo
         |     # (erb):1
         |
-        |  4) a failing spec with odd backtraces fails with a backtrace containing an erb file
-        |     Failure/Error: Unable to find /foo.html.erb to read failed line
-        |
+        |  5) a failing spec with odd backtraces fails with a backtrace containing an erb file
+        |     Failure/Error: Unable to find matching line from backtrace
         |     Exception:
         |       Exception
         |     # /foo.html.erb:1:in `<main>': foo (RuntimeError)
         |
-        |  5) a failing spec with odd backtraces with a `nil` backtrace raises
+        |  6) a failing spec with odd backtraces with a `nil` backtrace raises
         |     Failure/Error: Unable to find matching line from backtrace
         |
         |     RuntimeError:
         |       boom
         |
         |Finished in n.nnnn seconds (files took n.nnnn seconds to load)
-        |8 examples, 5 failures, 2 pending
+        |9 examples, 6 failures, 2 pending
         |
         |Failed examples:
         |
         |rspec ./spec/rspec/core/resources/formatter_specs.rb:4 # pending command with block format behaves like shared is marked as pending but passes
         |rspec ./spec/rspec/core/resources/formatter_specs.rb:32 # failing spec fails
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:38 # a failing spec with odd backtraces fails with a backtrace that has no file
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:44 # a failing spec with odd backtraces fails with a backtrace containing an erb file
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:62 # a failing spec with odd backtraces with a `nil` backtrace raises
+        |rspec ./spec/rspec/core/resources/formatter_specs.rb:42 # failing in after hook fails
+        |rspec ./spec/rspec/core/resources/formatter_specs.rb:48 # a failing spec with odd backtraces fails with a backtrace that has no file
+        |rspec ./spec/rspec/core/resources/formatter_specs.rb:54 # a failing spec with odd backtraces fails with a backtrace containing an erb file
+        |rspec ./spec/rspec/core/resources/formatter_specs.rb:72 # a failing spec with odd backtraces with a `nil` backtrace raises
       EOS
     end
   else
@@ -153,40 +162,49 @@ module FormatterSupport
         |     # ./spec/support/sandboxing.rb:14:in `block (3 levels) in <top (required)>'
         |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
         |
-        |  3) a failing spec with odd backtraces fails with a backtrace that has no file
+        |  3) failing in after hook fails
+        |     Failure/Error: fail 'in an after hook'
+        |     RuntimeError:
+        |       in an after hook
+        |     # ./spec/rspec/core/resources/formatter_specs.rb:39:in `block (2 levels) in <top (required)>'
+        |     # ./spec/support/formatter_support.rb:13:in `run_example_specs_with_formatter'
+        |     # ./spec/support/sandboxing.rb:14:in `block (3 levels) in <top (required)>'
+        |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
+        |
+        |  4) a failing spec with odd backtraces fails with a backtrace that has no file
         |     Failure/Error: ERB.new("<%= raise 'foo' %>").result
         |
         |     RuntimeError:
         |       foo
         |     # (erb):1:in `<main>'
-        |     # ./spec/rspec/core/resources/formatter_specs.rb:41:in `block (2 levels) in <top (required)>'
-        |     # ./spec/support/formatter_support.rb:15:in `run_example_specs_with_formatter'
+        |     # ./spec/rspec/core/resources/formatter_specs.rb:51:in `block (2 levels) in <top (required)>'
+        |     # ./spec/support/formatter_support.rb:13:in `run_example_specs_with_formatter'
         |     # ./spec/support/sandboxing.rb:14:in `block (3 levels) in <top (required)>'
         |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
         |
-        |  4) a failing spec with odd backtraces fails with a backtrace containing an erb file
-        |     Failure/Error: Unable to find /foo.html.erb to read failed line
-        |
+        |  5) a failing spec with odd backtraces fails with a backtrace containing an erb file
+        |     Failure/Error: Unable to find matching line from backtrace
         |     Exception:
         |       Exception
         |     # /foo.html.erb:1:in `<main>': foo (RuntimeError)
         |
-        |  5) a failing spec with odd backtraces with a `nil` backtrace raises
+        |  6) a failing spec with odd backtraces with a `nil` backtrace raises
         |     Failure/Error: Unable to find matching line from backtrace
         |
         |     RuntimeError:
         |       boom
         |
         |Finished in n.nnnn seconds (files took n.nnnn seconds to load)
-        |8 examples, 5 failures, 2 pending
+        |9 examples, 6 failures, 2 pending
         |
         |Failed examples:
         |
         |rspec ./spec/rspec/core/resources/formatter_specs.rb:4 # pending command with block format behaves like shared is marked as pending but passes
         |rspec ./spec/rspec/core/resources/formatter_specs.rb:32 # failing spec fails
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:38 # a failing spec with odd backtraces fails with a backtrace that has no file
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:44 # a failing spec with odd backtraces fails with a backtrace containing an erb file
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:62 # a failing spec with odd backtraces with a `nil` backtrace raises
+        |rspec ./spec/rspec/core/resources/formatter_specs.rb:42 # failing in after hook fails
+        |rspec ./spec/rspec/core/resources/formatter_specs.rb:48 # a failing spec with odd backtraces fails with a backtrace that has no file
+        |rspec ./spec/rspec/core/resources/formatter_specs.rb:54 # a failing spec with odd backtraces fails with a backtrace containing an erb file
+        |rspec ./spec/rspec/core/resources/formatter_specs.rb:72 # a failing spec with odd backtraces with a `nil` backtrace raises
       EOS
     end
   end
