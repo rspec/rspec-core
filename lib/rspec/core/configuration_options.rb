@@ -9,7 +9,7 @@ module RSpec
     class ConfigurationOptions
       # @param args [Array<String>] command line arguments
       def initialize(args)
-        @args = args.dup
+        @args = args.reject { |arg| arg =~ /(^|\/)rspec$/ }
         organize_options
       end
 
