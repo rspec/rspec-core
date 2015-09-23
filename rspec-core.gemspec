@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rake",     "~> 10.0.0"
   s.add_development_dependency "cucumber", "~> 1.3"
   s.add_development_dependency "minitest", "~> 5.3"
-  s.add_development_dependency "aruba",    "~> 0.6"
+  s.add_development_dependency "aruba",    "~> 0.8"
 
   s.add_development_dependency "nokogiri", (RUBY_VERSION < '1.9.3' ? "1.5.2" : "~> 1.5")
   s.add_development_dependency "coderay",  "~> 1.0.9"
