@@ -32,12 +32,12 @@ module RSpec
         end
 
         def formatted_backtrace
-          backtrace_formatter.format_backtrace(exception_backtrace, example.metadata)
+          backtrace_formatter.format_backtrace(backtrace_presenter.backtrace, example.metadata)
         end
 
         def colorized_formatted_backtrace(colorizer=::RSpec::Core::Formatters::ConsoleCodes)
           formatted_backtrace.map do |backtrace_info|
-            colorizer.wrap "# #{backtrace_info}", RSpec.configuration.detail_color
+            colorizer.wrap "# #{backtrace_info}".strip, RSpec.configuration.detail_color
           end
         end
 
@@ -52,6 +52,10 @@ module RSpec
 
         def failure_slash_error_line
           @failure_slash_error_line ||= "Failure/Error: #{read_failed_line.strip}"
+        end
+
+        def backtrace_presenter
+          @backtrace_presenter ||= BacktracePresenter.new(exception)
         end
 
       private
@@ -150,6 +154,59 @@ module RSpec
 
         def exception_backtrace
           exception.backtrace || []
+        end
+
+        # @private
+        # Format exception backtrace, including nested "cause" exception(s)
+        class BacktracePresenter
+          attr_reader :exception, :nested
+
+          def initialize(exception, nested=false)
+            @exception = exception
+            @nested = nested
+          end
+
+          def backtrace
+            trace = separator
+            trace.concat exception_backtrace
+
+            if exception.respond_to?(:cause)
+              cause = exception.cause
+              if cause
+                trace.concat(BacktracePresenter.new(cause, true).backtrace)
+              end
+            end
+
+            trace
+          end
+
+        private
+
+          def separator
+            if nested
+              ['', '--- Caused by: ---', exception_class_name, exception_message].compact
+            else
+              []
+            end
+          end
+
+          def exception_class_name
+            class_name = exception.class.name.to_s
+            if class_name =~ /RSpec/
+              class_name = nil
+            else
+              class_name << ":"
+            end
+            class_name
+          end
+
+          def exception_message
+            "  #{exception.message}"
+          end
+
+          def exception_backtrace
+            exception.backtrace || []
+          end
         end
 
         # @private
