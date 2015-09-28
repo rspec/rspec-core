@@ -121,6 +121,26 @@ module RSpec::Core
           |     extra detail for failure: 2
         EOS
       end
+
+      context 'when cause is set to nested exception' do
+        let(:nested) { instance_double(Exception, :message => "The real problem", :backtrace => ["#{__FILE__}:#{line_num}"], :class => RuntimeError) }
+        let(:exception) { instance_double(Exception, :message => "The top level", :backtrace => ["#{__FILE__}:#{line_num}"], :cause => nested) }
+
+        it 'displays nested exception' do
+          expect(presenter.fully_formatted(2)).to eq(<<-EOS.gsub(/^ +\|/, ''))
+            |
+            |  2) Example
+            |     Failure/Error: # The failure happened here!#{ encoding_check }
+            |       The top level
+            |     # ./spec/rspec/core/formatters/exception_presenter_spec.rb:#{line_num}
+            |     #
+            |     # --- Caused by: ---
+            |     # RuntimeError:
+            |     #   The real problem
+            |     # ./spec/rspec/core/formatters/exception_presenter_spec.rb:#{line_num}
+          EOS
+        end
+      end
     end
 
     describe "#read_failed_line" do
