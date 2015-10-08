@@ -9,7 +9,8 @@ module RSpec::Core
   module Notifications
     # @private
     module NullColorizer
-      module_function
+    module_function
+
       def wrap(line, _code_or_symbol)
         line
       end
@@ -338,10 +339,10 @@ module RSpec::Core
       # @return [String] A colorized summary line.
       def colorized_rerun_commands(colorizer=::RSpec::Core::Formatters::ConsoleCodes)
         "\nFailed examples:\n\n" +
-        failed_examples.map do |example|
-          colorizer.wrap("rspec #{rerun_argument_for(example)}", RSpec.configuration.failure_color) + " " +
-          colorizer.wrap("# #{example.full_description}",   RSpec.configuration.detail_color)
-        end.join("\n")
+          failed_examples.map do |example|
+            colorizer.wrap("rspec #{rerun_argument_for(example)}", RSpec.configuration.failure_color) + " " +
+              colorizer.wrap("# #{example.full_description}", RSpec.configuration.detail_color)
+          end.join("\n")
       end
 
       # @return [String] a formatted version of the time it took to run the
