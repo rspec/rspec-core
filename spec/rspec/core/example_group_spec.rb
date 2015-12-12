@@ -1912,5 +1912,23 @@ module RSpec::Core
       expect(group.examples.length).to eq(0)
       expect(original_ids).to_not eq(group_ids(group))
     end
+
+    it 'allows extensions to add `method` to the DSL without causing problems' do
+      http_testing_extension = Module.new do
+        attr_reader :http_method
+        def method(meth); @http_method = meth; end
+      end
+
+      describe_successfully do
+        extend http_testing_extension
+        method :get
+
+        describe('group') do
+          it "allows `method` to specify the HTTP method" do
+            expect(self.class.http_method).to eq(:get)
+          end
+        end
+      end
+    end
   end
 end
