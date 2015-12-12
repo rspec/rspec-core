@@ -797,4 +797,20 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
       expect(example.reporter).to be reporter
     end
   end
+
+  it 'allows extensions to add `method` to the DSL without causing problems' do
+    http_testing_extension = Module.new do
+      attr_reader :http_method
+      def method(meth); @http_method = meth; end
+    end
+
+    describe_successfully do
+      extend http_testing_extension
+      method :get
+
+      it "allows `method` to specify the HTTP method" do
+        expect(self.class.http_method).to eq(:get)
+      end
+    end
+  end
 end
