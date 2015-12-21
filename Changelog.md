@@ -1,3 +1,12 @@
+### 3.4.3 Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.4.2...3-4-maintenance)
+
+Bug Fixes:
+
+* Only consider example and group declaration lines from a specific file
+  when applying line number filtering, instead of considering all
+  declaration lines from all spec files. (Myron Marston, #2170)
+
 ### 3.4.2 / 2016-01-26
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.4.1...v3.4.2)
 
