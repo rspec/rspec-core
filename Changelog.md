@@ -3,6 +3,8 @@
 
 Bug Fixes:
 
+* Prevent a `TypeError` from occuring when running via the rake task when
+  Ruby crashes. (Patrik Wenger, #2161)
 * Only consider example and group declaration lines from a specific file
   when applying line number filtering, instead of considering all
   declaration lines from all spec files. (Myron Marston, #2170)
