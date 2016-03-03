@@ -35,7 +35,7 @@ RSpec.describe RSpec::Core::Formatters::Helpers do
     end
     
     context '= 360' do
-      it "returns 'x minutes xseconds' formatted string" do
+      it "returns 'x minutes x seconds' formatted string" do
         expect(helper.format_duration(360)).to eq("6 minutes 0 seconds")
       end
     end
