@@ -29,11 +29,14 @@ module RSpec
                       else                  0
                       end
 
-          if duration >= 60
+          if duration > 60
             minutes = (duration.to_i / 60).to_i
             seconds = duration - minutes * 60
 
             "#{pluralize(minutes, 'minute')} #{pluralize(format_seconds(seconds, precision), 'second')}"
+          elsif duration == 60
+            minutes = 1
+            "#{pluralize(minutes, 'minute')}"
           else
             pluralize(format_seconds(duration, precision), 'second')
           end
