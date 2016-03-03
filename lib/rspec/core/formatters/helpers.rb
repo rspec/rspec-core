@@ -29,7 +29,7 @@ module RSpec
                       else                  0
                       end
 
-          if duration > 60
+          if duration >= 60
             minutes = (duration.to_i / 60).to_i
             seconds = duration - minutes * 60
 

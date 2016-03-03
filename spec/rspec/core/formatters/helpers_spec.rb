@@ -16,19 +16,19 @@ RSpec.describe RSpec::Core::Formatters::Helpers do
       end
     end
 
-    context '> 60 and < 120' do
+    context '>= 60 and < 120' do
       it "returns 'x minute xx.xx seconds' formatted string" do
         expect(helper.format_duration(70.14)).to eq("1 minute 10.14 seconds")
       end
     end
 
-    context '> 120 and < 300' do
+    context '>= 120 and < 300' do
       it "returns 'x minutes xx.x seconds' formatted string" do
         expect(helper.format_duration(135.14)).to eq("2 minutes 15.1 seconds")
       end
     end
 
-    context '> 300' do
+    context '>= 300' do
       it "returns 'x minutes xx seconds' formatted string" do
         expect(helper.format_duration(335.14)).to eq("5 minutes 35 seconds")
       end
