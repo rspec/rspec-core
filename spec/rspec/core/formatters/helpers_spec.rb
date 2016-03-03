@@ -33,6 +33,12 @@ RSpec.describe RSpec::Core::Formatters::Helpers do
         expect(helper.format_duration(335.14)).to eq("5 minutes 35 seconds")
       end
     end
+    
+    context '= 360' do
+      it "returns 'x minutes' formatted string" do
+        expect(helper.format_duration(360)).to eq("6 minutes")
+      end
+    end
 
     context '= 61' do
       it "returns 'x minute x second' formatted string" do
