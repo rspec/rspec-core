@@ -1,6 +1,11 @@
 ### Development
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.4.3...3-4-maintenance)
 
+Bug Fixes:
+
+* Fix `RSpec::Core::RakeTask` so that it works with Rake 11.
+  (Travis Grathwell, #2197)
+
 ### 3.4.3 / 2016-02-19
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.4.2...3.4.3)
 
