@@ -140,7 +140,7 @@ module RSpec
       def initialize(*args, &task_block)
         setup_ivars(args)
 
-        desc "Run RSpec code examples" unless ::Rake.application.last_comment
+        desc "Run RSpec code examples" unless ::Rake.application.last_description
 
         task name, *args do |_, task_args|
           RakeFileUtils.send(:verbose, verbose) do

@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.rdoc_options     = ["--charset=UTF-8"]
   s.require_path     = "lib"
 
-  s.add_development_dependency "rake",     "~> 10.0.0"
+  s.add_development_dependency "rake",     ">= 10.0.0"
   s.add_development_dependency "cucumber", "~> 1.1.9"
   s.add_development_dependency "minitest", "~> 4.7"
   s.add_development_dependency "aruba",    "0.6.1"
