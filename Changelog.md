@@ -2,7 +2,7 @@
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.4.4...3-4-maintenance)
 
 ### 3.4.4 / 2016-03-09
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.4.3...3.4.4)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.4.3...v3.4.4)
 
 Bug Fixes:
 
@@ -10,7 +10,7 @@ Bug Fixes:
   (Travis Grathwell, #2197)
 
 ### 3.4.3 / 2016-02-19
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.4.2...3.4.3)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.4.2...v3.4.3)
 
 Bug Fixes:
 
