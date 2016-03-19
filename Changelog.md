@@ -1,6 +1,10 @@
 ### Development
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.4.4...3-4-maintenance)
 
+Bug Fixes:
+
+* Use the encoded string logic for source extraction. (Jon Rowe, #2183)
+
 ### 3.4.4 / 2016-03-09
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.4.3...v3.4.4)
 
