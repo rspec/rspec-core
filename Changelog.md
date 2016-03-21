@@ -6,6 +6,9 @@ Bug Fixes:
 * Use the encoded string logic for source extraction. (Jon Rowe, #2183)
 * Fix rounding issue in duration formatting helper. (Fabersky, Jon Rowe, #2208)
 * Fix `NoMethodError` caused by Java backtraces. (Michele Piccirillo, #2244)
+* Fix failure snippet extraction so that `def-end` snippets
+  ending with `end`-only line can be extracted properly.
+  (Yuji Nakayama, #2215)
 * Fix `--bisect` so it works on large spec suites that were previously triggering
   "Argument list too long errors" due to all the spec locations being passed as
   CLI args. (Matt Jones, #2223).
