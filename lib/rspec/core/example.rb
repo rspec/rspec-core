@@ -190,7 +190,7 @@ module RSpec
 
         @metadata = Metadata::ExampleHash.create(
           @example_group_class.metadata, user_metadata,
-          example_group_class.method(:next_runnable_index_for),
+          lambda { |file| example_group_class.next_runnable_index_for(file) },
           description, example_block
         )
 

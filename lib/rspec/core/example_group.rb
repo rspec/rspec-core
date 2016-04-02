@@ -417,7 +417,7 @@ module RSpec
 
         @metadata = Metadata::ExampleGroupHash.create(
           superclass_metadata, user_metadata,
-          superclass.method(:next_runnable_index_for),
+          lambda { |file| superclass.next_runnable_index_for(file) },
           description, *args, &example_group_block
         )
         ExampleGroups.assign_const(self)
