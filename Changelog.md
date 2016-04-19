@@ -6,6 +6,9 @@ Bug Fixes:
 * Use the encoded string logic for source extraction. (Jon Rowe, #2183)
 * Fix rounding issue in duration formatting helper. (Fabersky, Jon Rowe, #2208)
 * Fix `NoMethodError` caused by Java backtraces. (Michele Piccirillo, #2244)
+* Fix `--bisect` so it works on large spec suites that were previously triggering
+  "Argument list too long errors" due to all the spec locations being passed as
+  CLI args. (Matt Jones, #2223).
 * Fix deprecated `:example_group`-based filtering so that it properly
   applies to matching example groups. (Myron Marston, #2234)
 
