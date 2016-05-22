@@ -5,6 +5,7 @@ Bug Fixes:
 
 * Use the encoded string logic for source extraction. (Jon Rowe, #2183)
 * Fix rounding issue in duration formatting helper. (Fabersky, Jon Rowe, #2208)
+* Fix `NoMethodError` caused by Java backtraces. (Michele Piccirillo, #2244)
 
 ### 3.4.4 / 2016-03-09
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.4.3...v3.4.4)
