@@ -15,18 +15,9 @@ module RSpec
         new(source, path)
       end
 
-      if String.method_defined?(:encoding)
-        def initialize(source_string, path=nil)
-          @source = RSpec::Support::EncodedString.new(source_string, Encoding.default_external)
-          @path = path ? File.expand_path(path) : '(string)'
-        end
-      else # for 1.8.7
-        # :nocov:
-        def initialize(source_string, path=nil)
-          @source = RSpec::Support::EncodedString.new(source_string)
-          @path = path ? File.expand_path(path) : '(string)'
-        end
-        # :nocov:
+      def initialize(source_string, path=nil)
+        @source = RSpec::Support::EncodedString.new(source_string, Encoding.default_external)
+        @path = path ? File.expand_path(path) : '(string)'
       end
 
       def lines

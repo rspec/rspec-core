@@ -527,28 +527,9 @@ module RSpec
         @currently_executing_a_context_hook = false
       end
 
-      if RUBY_VERSION.to_f >= 1.9
-        # @private
-        def self.superclass_before_context_ivars
-          superclass.before_context_ivars
-        end
-      else # 1.8.7
-        # :nocov:
-        # @private
-        def self.superclass_before_context_ivars
-          if superclass.respond_to?(:before_context_ivars)
-            superclass.before_context_ivars
-          else
-            # `self` must be the singleton class of an ExampleGroup instance.
-            # On 1.8.7, the superclass of a singleton class of an instance of A
-            # is A's singleton class. On 1.9+, it's A. On 1.8.7, the first ancestor
-            # is A, so we can mirror 1.8.7's behavior here. Note that we have to
-            # search for the first that responds to `before_context_ivars`
-            # in case a module has been included in the singleton class.
-            ancestors.find { |a| a.respond_to?(:before_context_ivars) }.before_context_ivars
-          end
-        end
-        # :nocov:
+      # @private
+      def self.superclass_before_context_ivars
+        superclass.before_context_ivars
       end
 
       # @private
@@ -679,15 +660,6 @@ module RSpec
       # @private
       def inspect
         "#<#{self.class} #{@__inspect_output}>"
-      end
-
-      unless method_defined?(:singleton_class) # for 1.8.7
-        # :nocov:
-        # @private
-        def singleton_class
-          class << self; self; end
-        end
-        # :nocov:
       end
 
       # Raised when an RSpec API is called in the wrong scope, such as `before`

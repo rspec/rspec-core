@@ -283,16 +283,6 @@ module RSpec::Core
         ./spec/integration/foo_spec.rb[1:2] | failed  |
       EOS
 
-      if RUBY_VERSION == '1.8.7' # unordered hashes :(.
-        produce_expected_output |= eq(unindent(<<-EOS))
-          status  | example_id                          |
-          ------- | ----------------------------------- |
-          passed  | ./spec/unit/foo_spec.rb[1:1]        |
-          pending | ./spec/unit/foo_spec.rb[1:2]        |
-          failed  | ./spec/integration/foo_spec.rb[1:2] |
-        EOS
-      end
-
       expect(dump(examples)).to produce_expected_output
     end
 
@@ -308,15 +298,6 @@ module RSpec::Core
         12       | 20 |
         120      | 2  |
       EOS
-
-      if RUBY_VERSION == '1.8.7' # unordered hashes :(.
-        produce_expected_output |= eq(unindent(<<-EOS))
-           a  | long_key |
-           -- | -------- |
-           20 | 12       |
-           2  | 120      |
-        EOS
-      end
 
       expect(dump(examples)).to produce_expected_output
     end

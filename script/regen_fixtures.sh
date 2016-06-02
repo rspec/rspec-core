@@ -21,8 +21,7 @@ for ruby in \
   1.9.3-p392 \
   2.0.0-p247 \
   2.1.0-p0 \
-  rbx-2.2.3 \
-  ree-1.8.7-2012.02;
+  rbx-2.2.3;
 do
   switch_ruby $ruby
   ruby -v
