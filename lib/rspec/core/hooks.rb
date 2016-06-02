@@ -385,16 +385,8 @@ EOS
                                 "#{hook_description} did not execute the example")
         end
 
-        if Proc.method_defined?(:source_location)
-          def hook_description
-            "around hook at #{Metadata.relative_path(block.source_location.join(':'))}"
-          end
-        else # for 1.8.7
-          # :nocov:
-          def hook_description
-            "around hook"
-          end
-          # :nocov:
+        def hook_description
+          "around hook at #{Metadata.relative_path(block.source_location.join(':'))}"
         end
       end
 

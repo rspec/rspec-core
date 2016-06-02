@@ -102,23 +102,12 @@ module RSpec
           end
         end
 
-        if String.method_defined?(:encoding)
-          def encoding_of(string)
-            string.encoding
-          end
+        def encoding_of(string)
+          string.encoding
+        end
 
-          def encoded_string(string)
-            RSpec::Support::EncodedString.new(string, Encoding.default_external)
-          end
-        else # for 1.8.7
-          # :nocov:
-          def encoding_of(_string)
-          end
-
-          def encoded_string(string)
-            RSpec::Support::EncodedString.new(string)
-          end
-          # :nocov:
+        def encoded_string(string)
+          RSpec::Support::EncodedString.new(string, Encoding.default_external)
         end
 
         def indent_lines(lines, failure_number)

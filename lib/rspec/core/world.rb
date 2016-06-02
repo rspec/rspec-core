@@ -185,10 +185,8 @@ module RSpec
           declaration_locations = FlatMap.flat_map(example_groups, &:declaration_locations)
           hash_of_arrays = Hash.new { |h, k| h[k] = [] }
 
-          # TODO: change `inject` to `each_with_object` when we drop 1.8.7 support.
-          line_nums_by_file = declaration_locations.inject(hash_of_arrays) do |hash, (file_name, line_number)|
+          line_nums_by_file = declaration_locations.each_with_object(hash_of_arrays) do |(file_name, line_number), hash|
             hash[file_name] << line_number
-            hash
           end
 
           line_nums_by_file.each_value do |list|
