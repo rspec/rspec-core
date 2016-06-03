@@ -8,11 +8,17 @@ module RSpec
       # the given bisect server to capture the results.
       # @private
       class Runner
-        attr_reader :original_cli_args
+        attr_reader :original_cli_args, :original_spec_opts, :spec_opts
 
         def initialize(server, original_cli_args)
           @server            = server
           @original_cli_args = original_cli_args.reject { |arg| arg.start_with?("--bisect") }
+          @original_spec_opts = ENV['SPEC_OPTS']
+          if original_spec_opts =~ /--bisect/
+            bisect_arg = Shellwords.split(ENV["SPEC_OPTS"]).flatten.grep(/--bisect/).shift
+            ENV['SPEC_OPTS'] = ENV['SPEC_OPTS'].sub(bisect_arg, '')
+          end
+          @spec_opts = ENV['SPEC_OPTS']
         end
 
         def run(locations)
