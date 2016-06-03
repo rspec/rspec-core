@@ -16,6 +16,7 @@ module RSpec
           @original_spec_opts = ENV['SPEC_OPTS']
           if original_spec_opts =~ /--bisect/
             bisect_arg = Shellwords.split(ENV["SPEC_OPTS"]).flatten.grep(/--bisect/).shift
+            # mutate spec_opts
             ENV['SPEC_OPTS'] = ENV['SPEC_OPTS'].sub(bisect_arg, '')
           end
           @spec_opts = ENV['SPEC_OPTS']
@@ -73,17 +74,22 @@ module RSpec
           end
         end
 
+        # Consider just using Process.spawn since Open3 uses that.
         # `Open3.capture2e` does not work on JRuby:
         # https://github.com/jruby/jruby/issues/2766
         if Open3.respond_to?(:capture2e) && !RSpec::Support::Ruby.jruby?
           def run_command(cmd)
+            # consider passing in { 'SPEC_OPTS' => spec_opts } when not spec_opts.empty?
+            # instead of mutating SPEC_OPTS
             Open3.capture2e(cmd).first
           end
-        else # for 1.8.7
+        else # for 1.8.7 and JRuby
           # :nocov:
           def run_command(cmd)
             out = err = nil
 
+            # consider passing in { 'SPEC_OPTS' => spec_opts } when not spec_opts.empty?
+            # instead of mutating SPEC_OPTS
             Open3.popen3(cmd) do |_, stdout, stderr|
               # Reading the streams blocks until the process is complete
               out = stdout.read

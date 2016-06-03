@@ -291,6 +291,8 @@ FILTERING
     def bisect_and_exit(argument)
       RSpec::Support.require_rspec_core "bisect/coordinator"
 
+      # This might be the best spot to mutate ENV['SPEC_OPTS']
+      # if we do that.
       success = Bisect::Coordinator.bisect_with(
         original_args,
         RSpec.configuration,
