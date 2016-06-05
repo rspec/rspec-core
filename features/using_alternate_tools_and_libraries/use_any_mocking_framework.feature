@@ -1,4 +1,4 @@
-Feature: mock with an alternative framework
+Feature: use any mocking framework
 
   In addition to rspec, mocha, flexmock, and RR, you can choose an alternate
   framework as the mocking framework. You (or the framework authors) just needs

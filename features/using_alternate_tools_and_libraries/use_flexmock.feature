@@ -1,19 +1,18 @@
-Feature: mock with rspec
+Feature: use flexmock
 
-  RSpec uses its own mocking framework by default. You can also configure it
-  explicitly if you wish.
+  Configure RSpec to use flexmock as shown in the scenarios below.
 
   Scenario: Passing message expectation
     Given a file named "example_spec.rb" with:
       """ruby
       RSpec.configure do |config|
-        config.mock_with :rspec
+        config.mock_with :flexmock
       end
 
-      RSpec.describe "mocking with RSpec" do
+      RSpec.describe "mocking with Flexmock" do
         it "passes when it should" do
-          receiver = double('receiver')
-          expect(receiver).to receive(:message)
+          receiver = flexmock('receiver')
+          receiver.should_receive(:message).once
           receiver.message
         end
       end
@@ -25,13 +24,13 @@ Feature: mock with rspec
     Given a file named "example_spec.rb" with:
       """ruby
       RSpec.configure do |config|
-        config.mock_with :rspec
+        config.mock_with :flexmock
       end
 
-      RSpec.describe "mocking with RSpec" do
+      RSpec.describe "mocking with Flexmock" do
         it "fails when it should" do
-          receiver = double('receiver')
-          expect(receiver).to receive(:message)
+          receiver = flexmock('receiver')
+          receiver.should_receive(:message).once
         end
       end
       """
@@ -42,14 +41,14 @@ Feature: mock with rspec
     Given a file named "example_spec.rb" with:
       """ruby
       RSpec.configure do |config|
-        config.mock_with :rspec
+        config.mock_with :flexmock
       end
 
       RSpec.describe "failed message expectation in a pending example" do
         it "is listed as pending" do
           pending
-          receiver = double('receiver')
-          expect(receiver).to receive(:message)
+          receiver = flexmock('receiver')
+          receiver.should_receive(:message).once
         end
       end
       """
@@ -61,14 +60,14 @@ Feature: mock with rspec
     Given a file named "example_spec.rb" with:
       """ruby
       RSpec.configure do |config|
-        config.mock_with :rspec
+        config.mock_with :flexmock
       end
 
       RSpec.describe "passing message expectation in a pending example" do
         it "fails with FIXED" do
           pending
-          receiver = double('receiver')
-          expect(receiver).to receive(:message)
+          receiver = flexmock('receiver')
+          receiver.should_receive(:message).once
           receiver.message
         end
       end
@@ -82,30 +81,12 @@ Feature: mock with rspec
     Given a file named "example_spec.rb" with:
       """ruby
       RSpec.configure do |config|
-        config.mock_with :rspec
+        config.mock_with :flexmock
       end
 
       RSpec.describe "RSpec.configuration.mock_framework.framework_name" do
-        it "returns :rspec" do
-          expect(RSpec.configuration.mock_framework.framework_name).to eq(:rspec)
-        end
-      end
-      """
-    When I run `rspec example_spec.rb`
-    Then the examples should all pass
-
-  Scenario: Doubles may be used in generated descriptions
-    Given a file named "example_spec.rb" with:
-      """ruby
-      RSpec.configure do |config|
-        config.mock_with :rspec
-      end
-
-      RSpec.describe "Testing" do
-        # Examples with no descriptions will default to RSpec-generated descriptions
-        it do
-          foo = double("Test")
-          expect(foo).to be foo
+        it "returns :flexmock" do
+          expect(RSpec.configuration.mock_framework.framework_name).to eq(:flexmock)
         end
       end
       """
