@@ -53,12 +53,12 @@
   - json_formatter.feature
   - custom_formatter.feature
 - core_standalone.feature
-- using_alternate_tools_and_libraries
+- using_alternate_tools_and_libraries:
   - use_flexmock.feature
   - use_mocha.feature
   - use_rr.feature
   - use_any_framework.feature
   - configure_expectation_framework.feature
-- legacy_features_and_workarounds
+- legacy_features_and_workarounds:
   - arbitrary_file_suffix.feature
   - alias_example_to.feature
