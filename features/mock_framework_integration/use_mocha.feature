@@ -1,4 +1,4 @@
-Feature: mock with mocha
+Feature: use mocha
 
   Configure RSpec to use mocha as shown in the scenarios below.
 
