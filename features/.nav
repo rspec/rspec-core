@@ -50,7 +50,7 @@
   - configure_expectation_framework.feature
   - failure_aggregation.feature
 - mock_framework_integration:
-  - use_rspec.feature
+  - use_rspec_mocks.feature
   - use_flexmock.feature
   - use_mocha.feature
   - use_rr.feature
