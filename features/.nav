@@ -56,7 +56,6 @@
 - legacy_support_and_special_project_needs
   - arbitrary_file_suffix.feature
   - alias_example_to.feature
-  - use_rspec_mocks.feature
   - use_flexmock.feature
   - use_mocha.feature
   - use_rr.feature
