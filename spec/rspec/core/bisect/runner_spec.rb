@@ -79,6 +79,15 @@ module RSpec::Core
         end
       end
 
+      %w[ --bisect --bisect=verbose --bisect=blah ].each do |value|
+        it "ignores SPEC_OPTS='#{value}' option since that would infinitely recurse" do
+          with_env_vars 'SPEC_OPTS' => value do
+            expect(runner.original_spec_opts).to eq(value)
+            expect(runner.spec_opts).to eq('')
+          end
+        end
+      end
+
       it 'uses the bisect formatter' do
         cmd = command_for([])
         expect(cmd).to include("--format bisect")
