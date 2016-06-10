@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module RSpec
   module Core
     # A sandbox isolates the enclosed code into an environment that looks 'new'

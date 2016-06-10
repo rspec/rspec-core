@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module RSpec
   module Core
     # Each ExampleGroup class and Example instance owns an instance of

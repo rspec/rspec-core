@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module RSpec
   module Core
     # DSL defines methods to group examples, most notably `describe`,

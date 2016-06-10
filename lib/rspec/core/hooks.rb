@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module RSpec
   module Core
     # Provides `before`, `after` and `around` hooks as a means of

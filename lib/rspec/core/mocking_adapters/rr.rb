@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rr'
 
 RSpec.configuration.backtrace_exclusion_patterns.push(RR::Errors::BACKTRACE_IDENTIFIER)

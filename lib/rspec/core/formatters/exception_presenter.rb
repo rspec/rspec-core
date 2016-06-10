@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # encoding: utf-8
 RSpec::Support.require_rspec_core "formatters/snippet_extractor"
 RSpec::Support.require_rspec_support "encoded_string"

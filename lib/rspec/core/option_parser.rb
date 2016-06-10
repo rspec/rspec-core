@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # http://www.ruby-doc.org/stdlib/libdoc/optparse/rdoc/classes/OptionParser.html
 require 'optparse'
 

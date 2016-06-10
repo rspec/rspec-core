@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test/unit/assertions'
 
 module RSpec
