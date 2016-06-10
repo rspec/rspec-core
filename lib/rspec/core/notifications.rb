@@ -112,7 +112,7 @@ module RSpec::Core
         formatted = "\nFailures:\n"
 
         failure_notifications.each_with_index do |failure, index|
-          formatted << failure.fully_formatted(index.next, colorizer)
+          formatted += failure.fully_formatted(index.next, colorizer)
         end
 
         formatted
@@ -124,7 +124,7 @@ module RSpec::Core
         formatted = "\nPending: (Failures listed here are expected and do not affect your suite's status)\n"
 
         pending_notifications.each_with_index do |notification, index|
-          formatted << notification.fully_formatted(index.next, colorizer)
+          formatted += notification.fully_formatted(index.next, colorizer)
         end
 
         formatted
@@ -227,9 +227,9 @@ module RSpec::Core
       #   RSpec's built-in formatters emit.
       def fully_formatted(pending_number, colorizer=::RSpec::Core::Formatters::ConsoleCodes)
         formatted_caller = RSpec.configuration.backtrace_formatter.backtrace_line(example.location)
-        colorizer.wrap("\n  #{pending_number}) #{example.full_description}", :pending) << "\n     " <<
-          Formatters::ExceptionPresenter::PENDING_DETAIL_FORMATTER.call(example, colorizer) <<
-          "\n" << colorizer.wrap("     # #{formatted_caller}\n", :detail)
+        colorizer.wrap("\n  #{pending_number}) #{example.full_description}", :pending) + "\n     " +
+          Formatters::ExceptionPresenter::PENDING_DETAIL_FORMATTER.call(example, colorizer) +
+          "\n" + colorizer.wrap("     # #{formatted_caller}\n", :detail)
       end
     end
 
@@ -307,8 +307,8 @@ module RSpec::Core
       # @return [String] A line summarising the result totals of the spec run.
       def totals_line
         summary = Formatters::Helpers.pluralize(example_count, "example")
-        summary << ", " << Formatters::Helpers.pluralize(failure_count, "failure")
-        summary << ", #{pending_count} pending" if pending_count > 0
+        summary += ", " + Formatters::Helpers.pluralize(failure_count, "failure")
+        summary += ", #{pending_count} pending" if pending_count > 0
         summary
       end
 
@@ -366,7 +366,7 @@ module RSpec::Core
                     "#{colorized_totals_line(colorizer)}\n"
 
         unless failed_examples.empty?
-          formatted << colorized_rerun_commands(colorizer) << "\n"
+          formatted += colorized_rerun_commands(colorizer) + "\n"
         end
 
         formatted
