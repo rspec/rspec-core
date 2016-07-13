@@ -1,3 +1,11 @@
+### 3.5.2 Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.5.1...3-5-maintenance)
+
+Bug Fixes:
+
+* Wait to report `example_finished` until the example's `execution_result`
+  has been completely filled in. (Myron Marston, #2291)
+
 ### 3.5.1 / 2016-07-06
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.5.0...v3.5.1)
 
