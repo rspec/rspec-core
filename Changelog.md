@@ -5,6 +5,8 @@ Bug Fixes:
 
 * Wait to report `example_finished` until the example's `execution_result`
   has been completely filled in. (Myron Marston, #2291)
+* Make sure example block is still available when using `duplicate_with`
+  to clone examples. (bootstraponline, #2298)
 * Don't include the default `--pattern` in the Rake task when
   `rspec_opts` specifies its own. (Jon Rowe, #2305)
 
