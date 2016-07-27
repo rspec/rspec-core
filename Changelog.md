@@ -5,6 +5,8 @@ Bug Fixes:
 
 * Wait to report `example_finished` until the example's `execution_result`
   has been completely filled in. (Myron Marston, #2291)
+* Don't include the default `--pattern` in the Rake task when
+  `rspec_opts` specifies its own. (Jon Rowe, #2305)
 
 ### 3.5.1 / 2016-07-06
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.5.0...v3.5.1)
