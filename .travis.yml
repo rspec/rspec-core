@@ -10,7 +10,8 @@ cache:
 before_install:
   - "script/clone_all_rspec_repos"
   # Note this doesn't work on JRUBY 2.0.0 mode so we don't do it, the excluded versions are broken on Ruby 2.3
-  - if [ "jruby" != "$TRAVIS_RUBY_VERSION"  ]; then gem install bundler --version "1.11.2"; fi
+  # RBX also comes with it's own bundler so we shouldn't attempt to upgrade
+  - if [ "jruby" != "$TRAVIS_RUBY_VERSION"  ] && [ "rbx" != "$TRAVIS_RUBY_VERSION"  ]; then gem install bundler --version "1.11.2"; fi
   - alias bundle="bundle _1.11.2_"
 bundler_args: "--binstubs --standalone --without documentation --path ../bundle"
 script: "script/run_build"
