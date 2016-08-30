@@ -69,9 +69,17 @@ module RSpec
           example = failure.example
 
           exception = failure.exception
+          
+          message = if exception && exception.is_a?(RSpec::Expectations::MultipleExpectationsNotMetError)
+            failure.fully_formatted(nil, RSpec::Core::Notifications::NullColorizer)
+              .split("\n").drop(2).join("\n").gsub(/\e\[(\d+)(;(\d+))?m/, '')
+          else
+            failure.message_lines.join("\n")
+          end
+          
           exception_details = if exception
                                 {
-                                  :message => failure.message_lines.join("\n"),
+                                  :message => message,
                                   :backtrace => failure.formatted_backtrace.join("\n")
                                 }
                               end
