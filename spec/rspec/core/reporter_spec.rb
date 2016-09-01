@@ -284,7 +284,7 @@ module RSpec::Core
 
     describe "#notify_non_example_exception" do
       it "sends a `message` notification that contains the formatted exception details" do
-        if RSpec::Support::Ruby.jruby_9000?
+        if RSpec::Support::Ruby.jruby? && JRUBY_VERSION >= '9.0.0.0'
           pending "RSpec gets `Unable to find matching line from backtrace` on JRuby 9000"
         end
 
