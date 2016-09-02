@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module RSpec
   module Core
     # Provides the main entry point to run a suite of RSpec examples.

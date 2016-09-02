@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec::Support.require_rspec_core "shell_escape"
 require 'open3'
 require 'shellwords'

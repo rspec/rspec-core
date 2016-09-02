@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'drb/drb'
 
 module RSpec
@@ -83,7 +84,7 @@ module RSpec
         hash.each_pair do |k, v|
           next if CONDITIONAL_FILTERS.include?(k)
           tag = name == :inclusion ? k.to_s : "~#{k}"
-          tag << ":#{v}" if v.is_a?(String)
+          tag += ":#{v}" if v.is_a?(String)
           argv << "--tag" << tag
         end unless hash.empty?
       end

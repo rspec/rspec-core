@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec::Support.require_rspec_support 'recursive_const_methods'
 
 module RSpec
@@ -831,7 +832,7 @@ module RSpec
       return "Anonymous" if group.description.empty?
 
       # Convert to CamelCase.
-      name = ' ' << group.description
+      name = ' ' + group.description
       name.gsub!(/[^0-9a-zA-Z]+([0-9a-zA-Z])/) do
         match = ::Regexp.last_match[1]
         match.upcase!
@@ -865,7 +866,7 @@ module RSpec
 
       # Add a trailing number if needed to disambiguate from an existing
       # constant.
-      name << "_2"
+      name += "_2"
       name.next! while const_defined_on?(const_scope, name)
       name
     end

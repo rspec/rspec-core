@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec::Support.require_rspec_core "formatters/helpers"
 
 module RSpec
@@ -72,8 +73,7 @@ module RSpec
 
           def too_many_warnings_message
             msg = "Too many similar deprecation messages reported, disregarding further reports. "
-            msg << DEPRECATION_STREAM_NOTICE
-            msg
+            msg + DEPRECATION_STREAM_NOTICE
           end
 
           private
@@ -97,14 +97,14 @@ module RSpec
 
           def to_s
             msg =  "#{@data.deprecated} is deprecated."
-            msg << " Use #{@data.replacement} instead." if @data.replacement
-            msg << " Called from #{@data.call_site}." if @data.call_site
+            msg += " Use #{@data.replacement} instead." if @data.replacement
+            msg += " Called from #{@data.call_site}." if @data.call_site
             msg
           end
 
           def too_many_warnings_message
             msg = "Too many uses of deprecated '#{type}'. "
-            msg << DEPRECATION_STREAM_NOTICE
+            msg += DEPRECATION_STREAM_NOTICE
             msg
           end
         end

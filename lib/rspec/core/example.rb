@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module RSpec
   module Core
     # Wrapper for an instance of a subclass of {ExampleGroup}. An instance of
@@ -87,7 +88,7 @@ module RSpec
       def inspect_output
         inspect_output = "\"#{description}\""
         unless metadata[:description].to_s.empty?
-          inspect_output << " (#{location})"
+          inspect_output += " (#{location})"
         end
         inspect_output
       end

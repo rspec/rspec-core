@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module RSpec
   module Core
     # Represents some functionality that is shared with multiple example groups.

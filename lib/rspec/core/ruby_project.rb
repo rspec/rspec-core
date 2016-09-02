@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # This is borrowed (slightly modified) from Scott Taylor's
 # project_path project:
 #   http://github.com/smtlaissezfaire/project_path
