@@ -54,6 +54,15 @@ RSpec.describe "failing spec" do
         expect(3).to eq(4)
       end
     end
+    
+    it 'has one failure and one error' do
+      aggregate_failures do
+        expect(1).to eq 1
+        expect(2).to eq 3
+        expect(4[:error]).to eq 4
+        expect(4).to eq 4
+      end
+    end
   end
 end
 
