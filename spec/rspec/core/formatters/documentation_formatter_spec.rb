@@ -95,18 +95,23 @@ root
         |    is pending (PENDING: No reason given)
         |  behaves like shared
         |    is marked as pending but passes (FAILED - 1)
+        |    fails twice with failure aggregation in shared (FAILED - 2)
         |
         |passing spec
         |  passes
         |
         |failing spec
-        |  fails (FAILED - 2)
+        |  fails (FAILED - 3)
+        |  fails twice with failure aggregation (FAILED - 4)
+        |  failure aggregation
+        |    fails twice with failure aggregation in context (FAILED - 5)
+        |    has one failure and one error (FAILED - 6)
         |
         |a failing spec with odd backtraces
-        |  fails with a backtrace that has no file (FAILED - 3)
-        |  fails with a backtrace containing an erb file (FAILED - 4)
+        |  fails with a backtrace that has no file (FAILED - 7)
+        |  fails with a backtrace containing an erb file (FAILED - 8)
         |  with a `nil` backtrace
-        |    raises (FAILED - 5)
+        |    raises (FAILED - 9)
         |
         |#{expected_summary_output_for_example_specs}
       EOS
