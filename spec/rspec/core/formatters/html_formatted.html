@@ -285,7 +285,7 @@ a {
     <script type="text/javascript">makeYellow('rspec-header');</script>
     <script type="text/javascript">makeYellow('div_group_1');</script>
     <script type="text/javascript">makeYellow('example_group_1');</script>
-    <script type="text/javascript">moveProgressBar('9.0');</script>
+    <script type="text/javascript">moveProgressBar('8.3');</script>
     <dd class="example not_implemented"><span class="not_implemented_spec_name">is pending (PENDING: Not yet implemented)</span></dd>
   </dl>
 </div>
@@ -300,7 +300,7 @@ a {
     <script type="text/javascript">makeYellow('rspec-header');</script>
     <script type="text/javascript">makeYellow('div_group_3');</script>
     <script type="text/javascript">makeYellow('example_group_3');</script>
-    <script type="text/javascript">moveProgressBar('18.1');</script>
+    <script type="text/javascript">moveProgressBar('16.6');</script>
     <dd class="example not_implemented"><span class="not_implemented_spec_name">is pending (PENDING: No reason given)</span></dd>
   </dl>
 </div>
@@ -310,7 +310,7 @@ a {
     <script type="text/javascript">makeRed('rspec-header');</script>
     <script type="text/javascript">makeRed('div_group_4');</script>
     <script type="text/javascript">makeRed('example_group_4');</script>
-    <script type="text/javascript">moveProgressBar('27.2');</script>
+    <script type="text/javascript">moveProgressBar('25.0');</script>
     <dd class="example pending_fixed">
       <span class="failed_spec_name">is marked as pending but passes</span>
       <span class="duration">n.nnnns</span>
@@ -325,7 +325,7 @@ Shared Example Group: &quot;shared&quot; called from ./spec/rspec/core/resources
 <span class="linenum">6</span>    expect(<span class="integer">1</span>).to eq(<span class="integer">1</span>)</code></pre>
       </div>
     </dd>
-    <script type="text/javascript">moveProgressBar('36.3');</script>
+    <script type="text/javascript">moveProgressBar('33.3');</script>
     <dd class="example failed">
       <span class="failed_spec_name">fails twice with failure aggregation in shared</span>
       <span class="duration">n.nnnns</span>
@@ -362,7 +362,7 @@ Shared Example Group: &quot;shared&quot; called from ./spec/rspec/core/resources
 <div id="div_group_5" class="example_group passed">
   <dl style="margin-left: 0px;">
   <dt id="example_group_5" class="passed">passing spec</dt>
-    <script type="text/javascript">moveProgressBar('45.4');</script>
+    <script type="text/javascript">moveProgressBar('41.6');</script>
     <dd class="example passed"><span class="passed_spec_name">passes</span><span class='duration'>n.nnnns</span></dd>
   </dl>
 </div>
@@ -371,7 +371,7 @@ Shared Example Group: &quot;shared&quot; called from ./spec/rspec/core/resources
   <dt id="example_group_6" class="passed">failing spec</dt>
     <script type="text/javascript">makeRed('div_group_6');</script>
     <script type="text/javascript">makeRed('example_group_6');</script>
-    <script type="text/javascript">moveProgressBar('54.5');</script>
+    <script type="text/javascript">moveProgressBar('50.0');</script>
     <dd class="example failed">
       <span class="failed_spec_name">fails</span>
       <span class="duration">n.nnnns</span>
@@ -390,7 +390,7 @@ Shared Example Group: &quot;shared&quot; called from ./spec/rspec/core/resources
 <span class="linenum">42</span>  </code></pre>
       </div>
     </dd>
-    <script type="text/javascript">moveProgressBar('63.6');</script>
+    <script type="text/javascript">moveProgressBar('58.3');</script>
     <dd class="example failed">
       <span class="failed_spec_name">fails twice with failure aggregation</span>
       <span class="duration">n.nnnns</span>
@@ -428,7 +428,7 @@ Shared Example Group: &quot;shared&quot; called from ./spec/rspec/core/resources
   <dt id="example_group_7" class="passed">failure aggregation</dt>
     <script type="text/javascript">makeRed('div_group_7');</script>
     <script type="text/javascript">makeRed('example_group_7');</script>
-    <script type="text/javascript">moveProgressBar('72.7');</script>
+    <script type="text/javascript">moveProgressBar('66.6');</script>
     <dd class="example failed">
       <span class="failed_spec_name">fails twice with failure aggregation in context</span>
       <span class="duration">n.nnnns</span>
@@ -459,6 +459,36 @@ Shared Example Group: &quot;shared&quot; called from ./spec/rspec/core/resources
 <span class="linenum">54</span>        expect(<span class="integer">3</span>).to eq(<span class="integer">4</span>)</code></pre>
       </div>
     </dd>
+    <script type="text/javascript">moveProgressBar('75.0');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">has one failure and one error</span>
+      <span class="duration">n.nnnns</span>
+      <div class="failure" id="failure_6">
+        <div class="message"><pre>  Got 1 failure and 1 other error from failure aggregation block.
+  # ./spec/rspec/core/resources/formatter_specs.rb:59:in `block (3 levels) in &lt;top (required)&gt;&#39;
+
+  .1) Failure/Error: expect(2).to eq 3
+
+        expected: 3
+             got: 2
+
+        (compared using ==)
+      # ./spec/rspec/core/resources/formatter_specs.rb:61:in `block (4 levels) in &lt;top (required)&gt;&#39;
+
+  .2) Failure/Error: expect(4[:error]).to eq 4
+
+      TypeError:
+        no implicit conversion of Symbol into Integer
+      # ./spec/rspec/core/resources/formatter_specs.rb:62:in `[]&#39;
+      # ./spec/rspec/core/resources/formatter_specs.rb:62:in `block (4 levels) in &lt;top (required)&gt;&#39;</pre></div>
+        <div class="backtrace"><pre>./spec/rspec/core/resources/formatter_specs.rb:59:in `block (3 levels) in &lt;top (required)&gt;&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">57</span>    
+<span class="linenum">58</span>    it <span class="string"><span class="delimiter">'</span><span class="content">has one failure and one error</span><span class="delimiter">'</span></span> <span class="keyword">do</span>
+<span class="offending"><span class="linenum">59</span>      aggregate_failures <span class="keyword">do</span></span>
+<span class="linenum">60</span>        expect(<span class="integer">1</span>).to eq <span class="integer">1</span>
+<span class="linenum">61</span>        expect(<span class="integer">2</span>).to eq <span class="integer">3</span></code></pre>
+      </div>
+    </dd>
   </dl>
 </div>
 <div id="div_group_8" class="example_group passed">
@@ -466,27 +496,27 @@ Shared Example Group: &quot;shared&quot; called from ./spec/rspec/core/resources
   <dt id="example_group_8" class="passed">a failing spec with odd backtraces</dt>
     <script type="text/javascript">makeRed('div_group_8');</script>
     <script type="text/javascript">makeRed('example_group_8');</script>
-    <script type="text/javascript">moveProgressBar('81.8');</script>
+    <script type="text/javascript">moveProgressBar('83.3');</script>
     <dd class="example failed">
       <span class="failed_spec_name">fails with a backtrace that has no file</span>
       <span class="duration">n.nnnns</span>
-      <div class="failure" id="failure_6">
+      <div class="failure" id="failure_7">
         <div class="message"><pre>Failure/Error: ERB.new(&quot;&lt;%= raise &#39;foo&#39; %&gt;&quot;).result
 
 RuntimeError:
   foo</pre></div>
-        <div class="backtrace"><pre>./spec/rspec/core/resources/formatter_specs.rb:64:in `block (2 levels) in &lt;top (required)&gt;&#39;</pre></div>
-    <pre class="ruby"><code><span class="linenum">62</span>    require <span class="string"><span class="delimiter">'</span><span class="content">erb</span><span class="delimiter">'</span></span>
-<span class="linenum">63</span>
-<span class="offending"><span class="linenum">64</span>    <span class="constant">ERB</span>.new(<span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;%= raise 'foo' %&gt;</span><span class="delimiter">&quot;</span></span>).result</span>
-<span class="linenum">65</span>  <span class="keyword">end</span></code></pre>
+        <div class="backtrace"><pre>./spec/rspec/core/resources/formatter_specs.rb:73:in `block (2 levels) in &lt;top (required)&gt;&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">71</span>    require <span class="string"><span class="delimiter">'</span><span class="content">erb</span><span class="delimiter">'</span></span>
+<span class="linenum">72</span>
+<span class="offending"><span class="linenum">73</span>    <span class="constant">ERB</span>.new(<span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;%= raise 'foo' %&gt;</span><span class="delimiter">&quot;</span></span>).result</span>
+<span class="linenum">74</span>  <span class="keyword">end</span></code></pre>
       </div>
     </dd>
-    <script type="text/javascript">moveProgressBar('90.9');</script>
+    <script type="text/javascript">moveProgressBar('91.6');</script>
     <dd class="example failed">
       <span class="failed_spec_name">fails with a backtrace containing an erb file</span>
       <span class="duration">n.nnnns</span>
-      <div class="failure" id="failure_7">
+      <div class="failure" id="failure_8">
         <div class="message"><pre>Failure/Error: Unable to find /foo.html.erb to read failed line
 
 Exception:
@@ -511,7 +541,7 @@ Exception:
     <dd class="example failed">
       <span class="failed_spec_name">raises</span>
       <span class="duration">n.nnnns</span>
-      <div class="failure" id="failure_8">
+      <div class="failure" id="failure_9">
         <div class="message"><pre>Failure/Error: Unable to find matching line from backtrace
 
 RuntimeError:
@@ -523,7 +553,7 @@ RuntimeError:
   </dl>
 </div>
 <script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>n.nnnn seconds</strong>";</script>
-<script type="text/javascript">document.getElementById('totals').innerHTML = "11 examples, 8 failures, 2 pending";</script>
+<script type="text/javascript">document.getElementById('totals').innerHTML = "12 examples, 9 failures, 2 pending";</script>
 </div>
 </div>
 </body>
