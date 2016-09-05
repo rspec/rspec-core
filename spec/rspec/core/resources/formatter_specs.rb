@@ -5,7 +5,7 @@ RSpec.shared_examples_for "shared" do
     pending
     expect(1).to eq(1)
   end
-  
+
   it "fails twice with failure aggregation in shared" do
     aggregate_failures do
       expect(1).to eq(2)
@@ -39,14 +39,14 @@ RSpec.describe "failing spec" do
   it "fails" do
     expect(1).to eq(2)
   end
-  
+
   it "fails twice with failure aggregation" do
     aggregate_failures do
       expect(1).to eq(2)
       expect(3).to eq(4)
     end
   end
-  
+
   context "failure aggregation" do
     it "fails twice with failure aggregation in context" do
       aggregate_failures do
@@ -54,7 +54,7 @@ RSpec.describe "failing spec" do
         expect(3).to eq(4)
       end
     end
-    
+
     it 'has one failure and one error' do
       aggregate_failures do
         expect(1).to eq 1
