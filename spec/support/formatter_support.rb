@@ -164,7 +164,7 @@ module FormatterSupport
         |          # ./spec/rspec/core/resources/formatter_specs.rb:54
         |
         |  6) failing spec failure aggregation has one failure and one error
-        |     Got 2 failures from failure aggregation block.
+        |     Got 1 failure and 1 other error from failure aggregation block.
         |     # ./spec/rspec/core/resources/formatter_specs.rb:59
         |     # ./spec/support/formatter_support.rb:39:in `run_rspec_with_formatter'
         |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
@@ -179,12 +179,8 @@ module FormatterSupport
         |            (compared using ==)
         |          # ./spec/rspec/core/resources/formatter_specs.rb:61
         |
-        |     6.2) Failure/Error: expect(4[:error]).to eq 4
-        |
-        |            expected: 4
-        |                 got: 0
-        |
-        |            (compared using ==)
+        |     6.2) Failure/Error: raise
+        |          RuntimeError:
         |          # ./spec/rspec/core/resources/formatter_specs.rb:62
         |
         |  7) a failing spec with odd backtraces fails with a backtrace that has no file
