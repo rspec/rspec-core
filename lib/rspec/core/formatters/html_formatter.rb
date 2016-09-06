@@ -72,8 +72,8 @@ module RSpec
 
           message = if exception
             if exception.is_a?(RSpec::Expectations::MultipleExpectationsNotMetError) || exception.is_a?(RSpec::Core::MultipleExceptionError)
-              failure.fully_formatted(nil, RSpec::Core::Notifications::NullColorizer)
-                .split("\n").drop(2).join("\n").gsub(/\e\[(\d+)(;(\d+))?m/, '')
+              failure.fully_formatted(nil, RSpec::Core::Notifications::NullColorizer).
+                split("\n").drop(2).join("\n").gsub(/\e\[(\d+)(;(\d+))?m/, '')
             else
               failure.message_lines.join("\n")
             end
