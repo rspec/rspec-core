@@ -355,11 +355,8 @@ module FormatterSupport
         |            (compared using ==)
         |          # ./spec/rspec/core/resources/formatter_specs.rb:61:in `block (4 levels) in <top (required)>'
         |
-        |     6.2) Failure/Error: expect(4[:error]).to eq 4
-        |
-        |          TypeError:
-        |            no implicit conversion of Symbol into Integer
-        |          # ./spec/rspec/core/resources/formatter_specs.rb:62:in `[]'
+        |     6.2) Failure/Error: raise
+        |          RuntimeError:
         |          # ./spec/rspec/core/resources/formatter_specs.rb:62:in `block (4 levels) in <top (required)>'
         |
         |  7) a failing spec with odd backtraces fails with a backtrace that has no file
