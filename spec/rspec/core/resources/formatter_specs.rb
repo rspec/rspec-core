@@ -5,6 +5,13 @@ RSpec.shared_examples_for "shared" do
     pending
     expect(1).to eq(1)
   end
+
+  it "fails twice with failure aggregation in shared" do
+    aggregate_failures do
+      expect(1).to eq(2)
+      expect(3).to eq(4)
+    end
+  end
 end
 
 RSpec.describe "pending spec with no implementation" do
@@ -31,6 +38,31 @@ end
 RSpec.describe "failing spec" do
   it "fails" do
     expect(1).to eq(2)
+  end
+
+  it "fails twice with failure aggregation" do
+    aggregate_failures do
+      expect(1).to eq(2)
+      expect(3).to eq(4)
+    end
+  end
+
+  context "failure aggregation" do
+    it "fails twice with failure aggregation in context" do
+      aggregate_failures do
+        expect(1).to eq(2)
+        expect(3).to eq(4)
+      end
+    end
+
+    it 'has one failure and one error' do
+      aggregate_failures do
+        expect(1).to eq 1
+        expect(2).to eq 3
+        raise
+        expect(4).to eq 4
+      end
+    end
   end
 end
 
