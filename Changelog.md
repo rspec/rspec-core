@@ -1,3 +1,11 @@
+### Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.5.3...master)
+
+Bug Fixes:
+
+* Remove accumulated `ExampleGroup` constants when reseting RSpec,
+  preventing a memory leak. (TravisSpangle, #2328)
+
 ### 3.5.3 / 2016-09-02
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.5.2...v3.5.3)
 
