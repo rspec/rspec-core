@@ -153,6 +153,16 @@ module RSpec
 
         def fetch_or_store(key)
           @memoized.fetch(key) do # only first access pays for synchronization
+            raise <<EOS if @mutex.locked? && !@mutex.owned?
+Possible deadlock at:
+  #{CallerFilter.first_non_rspec_line}
+
+This is caused when one `let` block is waiting for a thread that accesses another
+uninitialized `let` block. The thread gets put to sleep until the first `let`
+block finishes (to avoid race conditions), but it never will since it is waiting
+for the thread.
+EOS
+
             @mutex.synchronize do
               @memoized.fetch(key) { @memoized[key] = yield }
             end
