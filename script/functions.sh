@@ -32,7 +32,7 @@ function run_specs_and_record_done {
     rspec_bin=script/rspec_with_simplecov
   fi;
 
-  echo "${PWD}/bin/rspec"
+  echo "${PWD}/${rspec_bin}"
   $rspec_bin spec --backtrace --format progress --profile --format progress --out $SPECS_HAVE_RUN_FILE
 }
 
