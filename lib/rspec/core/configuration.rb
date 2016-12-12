@@ -980,7 +980,7 @@ module RSpec
           if (path = example_status_persistence_file_path)
             begin
               ExampleStatusPersister.load_from(path).inject(statuses) do |hash, example|
-                hash[example.fetch(:example_id)] = example.fetch(:status)
+                hash[example.fetch(:example_id)] = example.fetch(:status, UNKNOWN_STATUS)
                 hash
               end
             rescue SystemCallError => e
