@@ -53,6 +53,12 @@ module RSpec
         RSpec.configuration.format_docstrings_block.call(description)
       end
 
+      attr_accessor :succeeded
+
+      def succeeded?
+        @succeeded
+      end
+
       # @attr_reader
       #
       # Returns the first exception raised in the context of running this

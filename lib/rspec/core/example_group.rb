@@ -23,6 +23,12 @@ module RSpec
       include SharedExampleGroup
       extend SharedExampleGroup
 
+      def self.succeeded?
+        filtered_examples.ordered.map do |example|
+          example.succeeded?
+        end.all?
+      end
+
       # @private
       def self.world
         RSpec.world
@@ -359,7 +365,7 @@ module RSpec
       end
 
       # Runs all the examples in this group
-      def self.run(reporter)
+      def self.run(reporter, num_threads=1)
         if RSpec.wants_to_quit
           RSpec.clear_remaining_example_groups if top_level?
           return
@@ -368,9 +374,12 @@ module RSpec
 
         begin
           run_before_all_hooks(new)
-          result_for_this_group = run_examples(reporter)
-          results_for_descendants = children.ordered.map {|child| child.run(reporter)}.all?
-          result_for_this_group && results_for_descendants
+          group_threads = RSpec::Core::ExampleThreads.new(num_threads)
+          run_examples(reporter, group_threads)
+          children.ordered.map {|child| child.run(reporter, num_threads)}
+          # ensure all examples in the group are done before running 'after :all'
+          # this does NOT prevent utilization of other available threads
+          group_threads.wait_for_completion 
         rescue Exception => ex
           RSpec.wants_to_quit = true if fail_fast?
           fail_filtered_examples(ex, reporter)
@@ -382,15 +391,13 @@ module RSpec
       end
 
       # @private
-      def self.run_examples(reporter)
+      def self.run_examples(reporter, threads)
         filtered_examples.ordered.map do |example|
           next if RSpec.wants_to_quit
           instance = new
           set_ivars(instance, before_all_ivars)
-          succeeded = example.run(instance, reporter)
-          RSpec.wants_to_quit = true if fail_fast? && !succeeded
-          succeeded
-        end.all?
+          threads.run_example_as_thread(example, instance, reporter)
+        end
       end
 
       # @private
