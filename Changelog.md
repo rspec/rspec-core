@@ -1,3 +1,47 @@
+### Development
+
+Bug Fixes:
+
+* Delay formatter loading until the last minute to allow accessing the reporter
+  without triggering formatter setup. (Jon Rowe, #2243)
+
+### 3.6.0.beta2 / 2016-12-12
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.6.0.beta1...v3.6.0.beta2)
+
+Enhancements:
+
+* Include count of errors occurring outside examples in default summaries.
+  (#2351, Jon Rowe)
+* Warn when including shared example groups recursively. (#2356, Jon Rowe)
+* Improve failure snippet syntax highlighting with CodeRay to highlight
+  RSpec "keywords" like `expect`. (#2358, Myron Marston)
+
+### 3.6.0.beta1 / 2016-10-09
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.5.4...v3.6.0.beta1)
+
+Enhancements:
+
+* Warn when duplicate shared examples definitions are loaded due to being
+  defined in files matching the spec pattern (e.g. `_spec.rb`) (#2278, Devon Estes)
+* Improve metadata filtering so that it can match against any object
+  that implements `===` instead of treating regular expressions as
+  special. (Myron Marston, #2294)
+* Improve `rspec -v` so that it prints out the versions of each part of
+  RSpec to prevent confusion. (Myron Marston, #2304)
+* Add `config.fail_if_no_examples` option which causes RSpec to fail if
+  no examples are found. (Ewa Czechowska, #2302)
+* Nicely format errors encountered while loading spec files.
+  (Myron Marston, #2323)
+* Improve the API for enabling and disabling color output (Josh
+  Justice, #2321):
+  * Automatically enable color if the output is a TTY, since color is
+    nearly always desirable if the output can handle it.
+  * Introduce new CLI flag to force color on (`--force-color`), even
+    if the output is not a TTY. `--no-color` continues to work as well.
+  * Introduce `config.color_mode` for configuring the color from Ruby.
+    `:automatic` is the default and will produce color if the output is
+    a TTY. `:on` forces it on and `:off` forces it off.
+
 ### 3.5.4 / 2016-09-30
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.5.3...v3.5.4)
 
