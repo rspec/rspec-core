@@ -99,6 +99,22 @@ RSpec.describe RSpec::Core::Formatters::JsonFormatter do
     end
   end
 
+  describe "#seed" do
+    context "use random seed" do
+      it "adds random seed" do
+        send_notification :seed, seed_notification(42)
+        expect(formatter.output_hash[:seed]).to eq(42)
+      end
+    end
+
+    context "don't use random seed" do
+      it "don't add random seed" do
+        send_notification :seed, seed_notification(42, false)
+        expect(formatter.output_hash[:seed]).to be_nil
+      end
+    end
+  end
+
   describe "#close" do
     it "outputs the results as a JSON string" do
       expect(formatter_output.string).to eq ""
