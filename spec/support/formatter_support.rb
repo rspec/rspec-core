@@ -22,8 +22,10 @@ module FormatterSupport
   def run_rspec_with_formatter(formatter, options={})
     extra_options = options.fetch(:extra_options) { [] }
 
+    spec_order = options[:seed] ? ["--seed", options[:seed].to_s] : ["--order", "defined"]
+
     options = RSpec::Core::ConfigurationOptions.new([
-      "--format", formatter, "--order", "defined", *extra_options
+      "--format", formatter, *spec_order, *extra_options
     ])
 
     err, out = StringIO.new, StringIO.new
