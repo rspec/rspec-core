@@ -14,9 +14,9 @@ RSpec.describe RSpec::Core::Formatters::JsonFormatter do
   include FormatterSupport
 
   it "can be loaded via `--format json`" do
-    output = run_example_specs_with_formatter("json", :normalize_output => false)
+    output = run_example_specs_with_formatter("json", :normalize_output => false, :seed => 42)
     parsed = JSON.parse(output)
-    expect(parsed.keys).to include("examples", "summary", "summary_line")
+    expect(parsed.keys).to include("examples", "summary", "summary_line", "seed")
   end
 
   it "outputs expected json (brittle high level functional test)" do
