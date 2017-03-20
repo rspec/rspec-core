@@ -36,6 +36,24 @@ module RSpec::Core
       end
     end
 
+    describe 'Corrupt examples.txt file' do
+      before do
+        RSpec.configure do |c|
+          c.example_status_persistence_file_path = "spec/examples-corrupted.txt"
+        end
+      end
+
+      it 'should not crash' do
+        Array.new(9) do |i|
+          RSpec.describe("group") { it "example #{i}" do; end}
+        end
+        expectation = expect do
+          RSpec.world.example_groups
+        end
+        expectation.not_to raise_error
+      end
+    end
+
     describe "#fail_fast" do
       it "defaults to `nil`" do
         expect(RSpec::Core::Configuration.new.fail_fast).to be(nil)
