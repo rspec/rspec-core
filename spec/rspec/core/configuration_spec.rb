@@ -2,7 +2,6 @@ require 'tmpdir'
 require 'rspec/support/spec/in_sub_process'
 
 module RSpec::Core
-
   RSpec.describe Configuration do
     include RSpec::Support::InSubProcess
 
@@ -33,24 +32,6 @@ module RSpec::Core
         RSpec.describe("group") { it "example 1" do; end}
         example = RSpec.world.example_groups.first.examples.first
         expect(example.metadata[:new_key]).to eq(:new_value)
-      end
-    end
-
-    describe 'Corrupt examples.txt file' do
-      before do
-        RSpec.configure do |c|
-          c.example_status_persistence_file_path = "spec/examples-corrupted.txt"
-        end
-      end
-
-      it 'should not crash' do
-        Array.new(9) do |i|
-          RSpec.describe("group") { it "example #{i}" do; end}
-        end
-        expectation = expect do
-          RSpec.world.example_groups
-        end
-        expectation.not_to raise_error
       end
     end
 
