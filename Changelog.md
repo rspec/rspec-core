@@ -12,6 +12,8 @@ Bug Fixes:
   being closed after the first. (#2368, Xavier Shay)
 * Prevent unexpected `example_group_finished` notifications causing an error.
   (#2396, VTJamie)
+* Default `last_run_status` to "unknown" when the `status` field in the
+  persistence file contains an unrecognized value. (#2360, matrinox)
 * Prevent `let` from defining an `initialize` method. (#2414, Jon Rowe)
 
 ### 3.6.0.beta2 / 2016-12-12
