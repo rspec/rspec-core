@@ -157,8 +157,6 @@ describe RSpec::Core::Formatters::BaseTextFormatter do
     end
 
     context 'for #share_as' do
-      before { allow(RSpec).to receive(:deprecate) }
-
       it 'outputs the name and location' do
 
         group.share_as :FooBar do
@@ -296,8 +294,6 @@ describe RSpec::Core::Formatters::BaseTextFormatter do
       end
 
       context 'for #share_as' do
-        before { allow(RSpec).to receive(:deprecate) }
-
         it 'outputs the name and location' do
 
           group.share_as :FooBar2 do
@@ -506,7 +502,6 @@ describe RSpec::Core::Formatters::BaseTextFormatter do
     describe "##{name}" do
       before do
         allow(RSpec.configuration).to receive(:color_enabled?) { true }
-        allow(RSpec).to receive(:deprecate)
       end
 
       it "prints the text using the color code for #{name}" do
