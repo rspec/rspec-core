@@ -173,14 +173,14 @@ module RSpec
       def description
         rules.inspect.gsub(PROC_HEX_NUMBER, '').gsub(PROJECT_DIR, '.').gsub(' (lambda)', '')
       end
+    end
 
+    # @private
+    class ExclusionRules < FilterRules
       def include_example?(example)
         MetadataFilter.apply?(:any?, @rules, example.metadata)
       end
     end
-
-    # @private
-    ExclusionRules = FilterRules
 
     # @private
     class InclusionRules < FilterRules
@@ -193,7 +193,7 @@ module RSpec
       end
 
       def include_example?(example)
-        @rules.empty? || super
+        MetadataFilter.apply?(:all?, @rules, example.metadata)
       end
 
       def standalone?

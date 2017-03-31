@@ -292,11 +292,13 @@ module RSpec::Core
       end
 
       context "with multiple inclusion filters" do
-        it 'includes objects that match any of them' do
+        it 'only includes objects that match all of them' do
           examples = [
-            included_1 = example_with(:foo => true),
-            included_2 = example_with(:bar => true),
-                         example_with(:bazz => true)
+            example_with(:foo => true),
+            example_with(:bar => true),
+            included_1 = example_with(:foo => true, :bar => true),
+            example_with(:bazz => true),
+            included_2 = example_with(:bar => true, :bazz => true, :foo => true),
           ]
 
           filter_manager.include :foo => true, :bar => true

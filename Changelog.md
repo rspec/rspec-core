@@ -4,6 +4,12 @@ Enhancements:
 
 * Add seed information to JSON formatter output. (#2388, Mitsutaka Mimura)
 * Include example id in the JSON formatter output. (#2369, Xavier Shay)
+* When multiple inclusion filters are applied, only include examples
+  that match all of them (instead of including all examples that match
+  any of them). For example, when using both focus filtering and
+  `--only-failures`, previously it would include all examples that
+  were focused OR failed on the last run. Now it runs only the focused
+  examples from the subset that failed on the last run. (#2408, Myron Marston)
 
 Bug Fixes:
 
