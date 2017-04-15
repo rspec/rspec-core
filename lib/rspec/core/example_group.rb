@@ -449,6 +449,10 @@ module RSpec
       def self.children
         @children ||= []
       end
+      
+      class << self
+        alias_method :action, :describe
+      end
 
       # @private
       # Traverses the tree of groups, starting with `self`, then the children, recursively.
