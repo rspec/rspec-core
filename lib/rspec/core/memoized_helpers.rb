@@ -350,7 +350,9 @@ EOS
         #     end
         #   end
         def let!(name, &block)
-          let(name, &block)
+          # if let with same name exist and you just want to active it
+          # you only specify `let!(:name)` without block
+          let(name, &block) unless !block_given? && instance_methods.include?(name)
           before { __send__(name) }
         end
 

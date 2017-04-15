@@ -585,6 +585,7 @@ module RSpec::Core
   RSpec.describe "#let!" do
     subject { [1,2,3] }
     let!(:popped) { subject.pop }
+    let(:lazy_poped) { subject.pop }
 
     it "evaluates the value non-lazily" do
       expect(subject).to eq([1,2])
@@ -592,6 +593,13 @@ module RSpec::Core
 
     it "returns memoized value from first invocation" do
       expect(popped).to eq(3)
+    end
+
+    context "activate defined let" do
+      let!(:lazy_poped)
+
+      specify { expect(subject).to eq([1]) }
+      specify { expect(lazy_poped).to eq(2) }
     end
   end
 
