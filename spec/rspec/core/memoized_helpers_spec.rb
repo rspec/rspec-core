@@ -321,6 +321,21 @@ module RSpec::Core
             end
           end
         end
+
+        context "in a module that defines send with let definition that defines a let called send, followed by another let" do
+          it "works" do
+            run_result = ExampleGroup.describe do
+              subject(:send) { "WHAT" }
+              prepend_before { send(:nil?) }
+
+              it "something" do
+                send
+              end
+            end.run
+
+            expect(run_result).to be true
+          end
+        end
       end
     end
 
