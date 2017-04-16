@@ -48,6 +48,7 @@ module RSpec
           output.puts "\nFinished in #{format_duration(duration)}\n"
           output.puts colorise_summary(summary_line(example_count, failure_count, pending_count))
           dump_commands_to_rerun_failed_examples
+          dump_command_to_rerun_all_failed_examples
         end
 
         # @api public
@@ -63,6 +64,25 @@ module RSpec
           failed_examples.each do |example|
             output.puts(failure_color("rspec #{RSpec::Core::Metadata::relative_path(example.location)}") + " " + detail_color("# #{example.full_description}"))
           end
+        end
+
+        # @api public
+        #
+        # Outputs single command which can be used to re-run all failed examples.
+        #
+        def dump_command_to_rerun_all_failed_examples
+          return if failed_examples.empty?
+          output.puts
+          output.puts "To re-run all failed tests run:"
+          output.puts
+
+          command = "rspec "
+
+          failed_examples.each do |example|
+            command += "#{RSpec::Core::Metadata::relative_path(example.location)} "
+          end
+
+          output.puts(command)
         end
 
         # @api public
