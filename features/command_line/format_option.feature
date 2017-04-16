@@ -75,12 +75,11 @@ Feature: `--format` option
 
   Scenario: Multiple formats and output targets
     When I run `rspec example_spec.rb --format progress --format documentation --out rspec.txt`
-    Then the output should contain ".F**"
     And the file "rspec.txt" should contain:
       """
       something
-        does something that passes
-        does something that fails (FAILED - 1)
-        does something that is pending (PENDING: No reason given)
-        does something that is skipped (PENDING: No reason given)
+      .  does something that passes
+      F  does something that fails (FAILED - 1)
+      *  does something that is pending (PENDING: No reason given)
+      *  does something that is skipped (PENDING: No reason given)
       """
