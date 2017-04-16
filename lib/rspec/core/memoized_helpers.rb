@@ -350,7 +350,7 @@ EOS
         #     end
         #   end
         def let!(name, &block)
-          let(name, &block)
+          let(name, &block) if block_given?
           before { __send__(name) }
         end
 

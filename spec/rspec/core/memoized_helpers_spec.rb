@@ -583,15 +583,41 @@ module RSpec::Core
   end
 
   RSpec.describe "#let!" do
-    subject { [1,2,3] }
-    let!(:popped) { subject.pop }
+    context 'when called with a block' do
+      subject { [1,2,3] }
+      let!(:popped) { subject.pop }
 
-    it "evaluates the value non-lazily" do
-      expect(subject).to eq([1,2])
+      it "evaluates the value non-lazily" do
+        expect(subject).to eq([1,2])
+      end
+
+      it "returns memoized value from first invocation" do
+        expect(popped).to eq(3)
+      end
     end
 
-    it "returns memoized value from first invocation" do
-      expect(popped).to eq(3)
+    context 'when called without a block' do
+      subject { [1,2,3] }
+      let(:popped) { subject.pop }
+      let!(:popped)
+
+      it "evaluates the value non-lazily" do
+        expect(subject).to eq([1,2])
+      end
+
+      it "returns memoized value from first invocation" do
+        expect(popped).to eq(3)
+      end
+
+      context "without corresponding 'let'" do
+        let(:reporter) { double("reporter").as_null_object }
+
+        it "raises error, when called without a corresponding 'let' declared before" do
+          group = ExampleGroup.describe { let!(:xyz) }
+          group.it("should do something") { xyz}
+          expect(group.run(reporter)).to be_falsy
+        end
+      end
     end
   end
 
