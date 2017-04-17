@@ -18,6 +18,19 @@ RSpec repos as well. Add the following to your `Gemfile`:
   gem lib, :git => "git://github.com/rspec/#{lib}.git", :branch => 'master'
 end
 ```
+# Contributing
+
+Once you've set up the environment, you'll need to cd into the working
+directory of whichever repo you want to work in. From there you can run the
+specs and cucumber features, and make patches.
+
+NOTE: You do not need to use rspec-dev to work on a specific RSpec repo. You
+can treat each RSpec repo as an independent project.
+
+[Build Details](https://github.com/rspec/rspec-core/blob/master/BUILD_DETAIL.md)
+[Contributing](https://github.com/rspec/rspec-core/blob/master/CONTRIBUTING.md)
+[Code of Conduct](https://github.com/rspec/rspec-core/blob/master/code_of_conduct.md)
+[Development](https://github.com/rspec/rspec-core/blob/master/DEVELOPMENT.md)
 
 ## Contributing
 
