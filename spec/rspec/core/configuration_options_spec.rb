@@ -19,6 +19,11 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
     expect(args).to eq(['-e', 'some spec'])
   end
 
+  it "ignores files named rspec" do
+    opts = config_options_object(*%w[./bin/rspec spec/file.rb])
+    expect(opts.options[:files_or_directories_to_run]).to eq(%w[spec/file.rb])
+  end
+
   describe "#configure" do
     let(:config) { RSpec::Core::Configuration.new }
 
