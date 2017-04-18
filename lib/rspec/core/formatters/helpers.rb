@@ -34,6 +34,8 @@ module RSpec
             seconds = (duration - minutes * 60)
 
             "#{pluralize(minutes, 'minute')} #{pluralize(format_seconds(seconds, precision), 'second')}"
+          elsif duration % 60 == 1 && duration >= 60
+            pluralize(1, 'minute')
           else
             pluralize(format_seconds(duration, precision), 'second')
           end
