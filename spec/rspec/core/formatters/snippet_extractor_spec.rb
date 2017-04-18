@@ -283,6 +283,46 @@ module RSpec::Core::Formatters
         end
       end
 
+      context "when the failing expression is in the middle of a multi-line hash literal" do
+        let(:source) do
+          {
+            foo: 1,
+            bar: do_something_fail,
+            baz: 3
+          }
+        end
+
+        it 'returns the entire hash literal' do
+          expect(expression_lines).to eq([
+           '          {',
+           '            foo: 1,',
+           '            bar: do_something_fail,',
+           '            baz: 3',
+           '          }'
+          ])
+        end
+      end
+
+      context "when the failing expression is in the middle of a multi-line array literal" do
+        let(:source) do
+          [
+            1,
+            do_something_fail,
+            3
+          ]
+        end
+
+        it 'returns the entire array literal' do
+          expect(expression_lines).to eq([
+           '          [',
+           '            1,',
+           '            do_something_fail,',
+           '            3',
+           '          ]'
+          ])
+        end
+      end
+
       context 'when Ripper cannot parse the source (which can happen on JRuby -- see jruby/jruby#2427)', :isolated_directory do
         let(:file_path) { 'invalid_source.rb' }
 
