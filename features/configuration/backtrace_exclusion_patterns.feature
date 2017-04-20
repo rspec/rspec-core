@@ -68,12 +68,12 @@ Feature: Excluding lines from the backtrace
     require "support/really_assert_baz"
 
     def assert_baz(arg)
-      really_assert_baz(arg)
+      real_assert_baz(arg)
     end
     """
     And a file named "spec/support/really_assert_baz.rb" with:
     """ruby
-    def really_assert_baz(arg)
+    def real_assert_baz(arg)
       expect(arg).to eq("baz")
     end
     """
@@ -95,6 +95,31 @@ Feature: Excluding lines from the backtrace
     And the output should contain "assert_baz"
     But the output should not contain "really_assert_baz"
     And the output should not contain "lib/rspec/expectations"
+
+  Scenario: Exclude ignored paths from snippet
+    Given a file named "spec/support/file_name.rb" with:
+      """ruby
+      def assert
+        expect(yield).to be_truthy
+      end
+      """
+    Given a file named "spec/excluded_backtrace_paths_spec.rb" with:
+      """ruby
+      require 'support/file_name.rb'
+      RSpec.configure do |config|
+        config.backtrace_exclusion_patterns << /file_name/
+      end
+
+      RSpec.describe "failure" do
+        it "fails" do
+          assert { 2 + 2 == 5 }
+        end
+      end
+      """
+    When I run `rspec`
+    Then the output should contain "1 example, 1 failure"
+    And the output should contain "assert { 2 + 2 == 5 }"
+    But the output should not contain "expect(yield).to be_truthy"
 
   Scenario: Running `rspec` with `--backtrace` prints unfiltered backtraces
     Given a file named "spec/support/custom_helper.rb" with:

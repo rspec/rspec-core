@@ -228,7 +228,7 @@ module RSpec
           line_regex = RSpec.configuration.in_project_source_dir_regex
           loaded_spec_files = RSpec.configuration.loaded_spec_files
 
-          exception_backtrace.find do |line|
+          backtrace_formatter.format_backtrace(exception_backtrace).find do |line|
             next unless (line_path = line[/(.+?):(\d+)(|:\d+)/, 1])
             path = File.expand_path(line_path)
             loaded_spec_files.include?(path) || path =~ line_regex

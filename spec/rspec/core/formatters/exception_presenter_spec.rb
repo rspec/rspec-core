@@ -501,11 +501,25 @@ module RSpec::Core
 
       context "when ruby reports a file that does not exist" do
         let(:file) { "#{__FILE__}/blah.rb" }
-        let(:exception) { instance_double(Exception, :backtrace => [ "#{file}:1"]) }
+        let(:relative_path) { Metadata.relative_path(file) }
+        let(:exception) { instance_double(Exception, :backtrace => [ "#{file}:1" ]) }
 
         it "reports the filename and that it was unable to find the matching line" do
           example.metadata[:absolute_file_path] = file
-          expect(read_failed_lines.first).to include("Unable to find #{file} to read failed line")
+          expect(read_failed_lines.first).to include("Unable to find #{relative_path} to read failed line")
+        end
+      end
+
+      context "when some path is excluded from backtrace" do
+        let(:file) { "#{__FILE__}/blah.rb" }
+        let(:relative_path) { Metadata.relative_path(file) }
+        let(:exception) { instance_double(Exception, :backtrace => [ "this_is_some_ignored_path/file:1", "#{file}:1" ]) }
+        before do
+          RSpec.configuration.backtrace_exclusion_patterns << /some_ignored_path/
+        end
+        it "ignore excluded path from Error/Failure snippet" do
+          expect(Formatters::SnippetExtractor).to receive(:extract_expression_lines_at).with(relative_path, 1, 10).and_return(['this is error line'])
+          expect(read_failed_lines.first).to include("this is error line")
         end
       end
 
