@@ -1,4 +1,8 @@
 #!/usr/bin/env ruby
 
+unless $stdin.tty?
+  ARGV.concat($stdin.read.scan(/\S+/))
+end
+
 require 'rspec/core'
 RSpec::Core::Runner.invoke
