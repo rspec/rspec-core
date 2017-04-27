@@ -26,6 +26,7 @@ Feature: `--tag` option
         it "example I'm working now", :focus => true do; end
         it "special example with string", :type => 'special' do; end
         it "special example with symbol", :type => :special do; end
+        it "custom example with symbol", :type => :custom do; end
         it "slow example", :skip => true do; end
         it "ordinary example", :speed => 'slow' do; end
         it "untagged example" do; end
@@ -100,4 +101,12 @@ Feature: `--tag` option
     Then the output should contain one of the following:
       | exclude {:skip=>true, :speed=>"slow"} |
       | exclude {:speed=>"slow", :skip=>true} |
+    Then the examples should all pass
+
+  @wip
+  Scenario: Exclude two two values for thes same tag
+    When I run `rspec . --tag ~type:special --tag ~type:custom`
+    Then the output should contain one of the following:
+      | exclude {:type=>"special", :type=>"custom"} |
+      | exclude {:type=>"custom", :type=>"special"} |
     Then the examples should all pass
