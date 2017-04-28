@@ -63,7 +63,7 @@ module RSpec::Core
       end
 
       it 'is configurable' do
-        io = double 'deprecation io'
+        io = StringIO.new
         config.deprecation_stream = io
         expect(config.deprecation_stream).to eq io
       end
@@ -96,9 +96,11 @@ module RSpec::Core
       it 'defaults to standard output' do
         expect(config.output_stream).to eq $stdout
       end
+    end
 
+    describe "#output_stream=" do
       it 'is configurable' do
-        io = double 'output io'
+        io = StringIO.new
         config.output_stream = io
         expect(config.output_stream).to eq io
       end
@@ -123,6 +125,26 @@ module RSpec::Core
           config.output_stream = config.output_stream
           expect(config).not_to have_received(:warn)
         end
+      end
+
+      it 'creates a file at that path' do
+        path = File.join(Dir.tmpdir, 'output.txt')
+        config.output_stream = path
+        expect(config.output_stream).to be_a(File)
+        expect(config.output_stream.path).to eq(path)
+      end
+
+      it 'accepts a Pathname object' do
+        path = File.join(Dir.tmpdir, 'output.txt')
+        config.output_stream = Pathname.new(path)
+        expect(config.output_stream).to be_a(File)
+        expect(config.output_stream.path).to eq(path)
+      end
+
+      it 'changes the output wrapper output' do
+        io = StringIO.new
+        expect(config.send(:output_wrapper)).to receive(:output=).with(io)
+        config.output_stream = io
       end
     end
 
@@ -1444,8 +1466,18 @@ module RSpec::Core
     %w[formatter= add_formatter].each do |config_method|
       describe "##{config_method}" do
         it "delegates to formatters#add" do
-          expect(config.formatter_loader).to receive(:add).with('these','options')
-          config.send(config_method,'these','options')
+          expect(config.formatter_loader).to receive(:add) do |arg1, arg2|
+            expect(arg1).to eq 'these'
+            expect(arg2).to be_kind_of OutputWrapper
+            expect(arg2.instance_variable_get(:@output)).to be_kind_of File
+            expect(arg2.instance_variable_get(:@output).path).to eq 'options'
+          end
+          config.send(config_method, 'these', 'options')
+        end
+
+        it "uses the output wrapper as a default output" do
+          expect(config.formatter_loader).to receive(:add).with('these', config.send(:output_wrapper))
+          config.send(config_method, 'these')
         end
       end
     end
@@ -1455,6 +1487,12 @@ module RSpec::Core
         config.add_formatter 'doc'
         config.formatters.clear
         expect(config.formatters).to_not eq []
+      end
+    end
+
+    describe "#configuration" do
+      it "returns the same object every time" do
+        expect(config.send(:output_wrapper)).to equal(config.send(:output_wrapper))
       end
     end
 
@@ -2290,6 +2328,32 @@ module RSpec::Core
         config.add_formatter "doc"
         config.reset
         expect(config.formatters).to be_empty
+      end
+
+      it "clears the output wrapper" do
+        config.output_stream = StringIO.new
+        config.reset
+        expect(config.instance_variable_get("@output_wrapper")).to be_nil
+      end
+    end
+
+    describe "#reset_reporter" do
+      it "clears the reporter" do
+        expect(config.reporter).not_to be_nil
+        config.reset
+        expect(config.instance_variable_get("@reporter")).to be_nil
+      end
+
+      it "clears the formatters" do
+        config.add_formatter "doc"
+        config.reset
+        expect(config.formatters).to be_empty
+      end
+
+      it "clears the output wrapper" do
+        config.output_stream = StringIO.new
+        config.reset
+        expect(config.instance_variable_get("@output_wrapper")).to be_nil
       end
     end
 
