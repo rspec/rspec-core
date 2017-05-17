@@ -40,6 +40,10 @@ module RSpec
 
     private
 
+      # Keys that are appended to instead of overriden when organizing options
+      # from multiple sources such as CLI, options file, and SPEC_OPTS
+      APPEND_KEYS = Set.new([:libs, :requires, :formatters])
+
       def organize_options
         @filter_manager_options = []
 
@@ -50,7 +54,7 @@ module RSpec
 
         @options = @options.inject(:libs => [], :requires => []) do |hash, opts|
           hash.merge(opts) do |key, oldval, newval|
-            [:libs, :requires].include?(key) ? oldval + newval : newval
+            APPEND_KEYS.include?(key) ? oldval + newval : newval
           end
         end
       end

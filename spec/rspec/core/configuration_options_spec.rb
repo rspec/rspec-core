@@ -471,10 +471,10 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
       end
     end
 
-    it "prefers CLI over file options" do
+    it "includes all formatting options" do
       File.open("./.rspec", "w") {|f| f << "--format project"}
       File.open(File.expand_path("~/.rspec"), "w") {|f| f << "--format global"}
-      expect(parse_options("--format", "cli")[:formatters]).to eq([['cli']])
+      expect(parse_options("--format", "cli")[:formatters]).to eq([['global'], ['project'], ['cli']])
     end
 
     it "prefers CLI over file options for filter inclusion" do
