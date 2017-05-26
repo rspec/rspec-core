@@ -471,10 +471,10 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
       end
     end
 
-    it "prefers CLI over file options" do
+    it "includes all formatting options" do
       File.open("./.rspec", "w") {|f| f << "--format project"}
       File.open(File.expand_path("~/.rspec"), "w") {|f| f << "--format global"}
-      expect(parse_options("--format", "cli")[:formatters]).to eq([['cli']])
+      expect(parse_options("--format", "cli")[:formatters]).to eq([['global'], ['project'], ['cli']])
     end
 
     it "prefers CLI over file options for filter inclusion" do
@@ -487,15 +487,15 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
     end
 
     it "prefers project file options over global file options" do
-      File.open("./.rspec", "w") {|f| f << "--format project"}
-      File.open(File.expand_path("~/.rspec"), "w") {|f| f << "--format global"}
-      expect(parse_options[:formatters]).to eq([['project']])
+      File.open("./.rspec", "w") {|f| f << "--force-color"}
+      File.open(File.expand_path("~/.rspec"), "w") {|f| f << "--no-force-color"}
+      expect(parse_options[:color_mode]).to be_truthy
     end
 
     it "prefers local file options over project file options" do
-      File.open("./.rspec-local", "w") {|f| f << "--format local"}
-      File.open("./.rspec", "w") {|f| f << "--format global"}
-      expect(parse_options[:formatters]).to eq([['local']])
+      File.open("./.rspec-local", "w") {|f| f << "--force-color"}
+      File.open("./.rspec", "w") {|f| f << "--no-force-color"}
+      expect(parse_options[:color_mode]).to be_truthy
     end
 
     it "parses options file correctly if erb code has trimming options" do
