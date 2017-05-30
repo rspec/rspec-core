@@ -74,6 +74,8 @@ module RSpec::Core::Formatters
   autoload :JsonFormatter,            'rspec/core/formatters/json_formatter'
   autoload :BisectFormatter,          'rspec/core/formatters/bisect_formatter'
   autoload :ExceptionPresenter,       'rspec/core/formatters/exception_presenter'
+  autoload :ReRunFriendlyFormatter,   'rspec/core/formatters/re_run_friendly_formatter'
+  autoload :ImmediateFeedbackFormatter, 'rspec/core/formatters/immediate_feedback_formatter'
 
   # Register the formatter class
   # @param formatter_class [Class] formatter class to register
@@ -208,6 +210,8 @@ module RSpec::Core::Formatters
         JsonFormatter
       when 'bisect'
         BisectFormatter
+      when 'ReRunFriendlyFormatter'
+        ReRunFriendlyFormatter
       end
     end
 
