@@ -45,6 +45,30 @@ module RSpec::Core
       end
     end
 
+    describe "#examples_count" do
+      before do
+        configuration.filter_run_including :foo => "bar"
+      end
+
+      it "returns examples count that includes shared examples" do
+        RSpec.describe "eg1" do
+          shared_context "sc1", :foo do
+          end
+
+          shared_examples "se1" do
+            example("ex1")
+            example("ex2", :foo => "bar")
+          end
+
+          context "nested" do
+            include_examples "se1"
+          end
+        end
+
+        expect(RSpec.world.example_count).to eq 1
+      end
+    end
+
     describe "#all_example_groups" do
       it "contains all example groups from all levels of nesting" do
         RSpec.describe "eg1" do

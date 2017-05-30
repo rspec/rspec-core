@@ -86,8 +86,7 @@ module RSpec
       #
       # Get count of examples to be run.
       def example_count(groups=example_groups)
-        FlatMap.flat_map(groups) { |g| g.descendants }.
-          inject(0) { |a, e| a + e.filtered_examples.size }
+        FlatMap.flat_map(groups).inject(0) { |a, e| a + e.descendant_filtered_examples.size }
       end
 
       # @private

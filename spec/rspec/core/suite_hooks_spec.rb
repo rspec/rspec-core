@@ -102,7 +102,7 @@ module RSpec::Core
       include_context "Runner support"
 
       def define_and_run_example_group(&block)
-        example_group = class_double(ExampleGroup, :descendants => [])
+        example_group = class_double(ExampleGroup, :descendant_filtered_examples => [])
 
         allow(example_group).to receive(:run, &block)
         allow(world).to receive_messages(:ordered_example_groups => [example_group])
