@@ -1,3 +1,4 @@
+require 'rspec/support/spec/in_sub_process'
 require 'thread_order'
 
 module RSpec::Core
@@ -393,6 +394,7 @@ module RSpec::Core
 
       context 'when threadsafe' do
         before(:context) { RSpec.configuration.threadsafe = true }
+
         specify 'first thread to access determines the return value' do
           describe_successfully do
             let!(:order) { ThreadOrder.new }
@@ -402,14 +404,16 @@ module RSpec::Core
               if order.current == :second
                 :second_access
               else
-                order.pass_to :second, :resume_on => :sleep
                 :first_access
               end
             end
 
             example do
-              order.declare(:second) { expect(memoized_value).to eq :first_access }
+              order.declare(:second) do
+                expect(memoized_value).to eq :first_access
+              end
               expect(memoized_value).to eq :first_access
+              order.pass_to :second, :resume_on => :exit
             end
           end
         end
@@ -423,12 +427,12 @@ module RSpec::Core
             let :memoized_value do
               raise 'Called multiple times!' if @previously_accessed
               @previously_accessed = true
-              order.pass_to :second, :resume_on => :sleep
             end
 
             example do
               order.declare(:second) { memoized_value }
               memoized_value
+              order.pass_to :second, :resume_on => :exit
               order.join_all
             end
           end
@@ -442,12 +446,11 @@ module RSpec::Core
             let!(:calls) { {:parent => 0, :child => 0} }
             let(:memoized_value) do
               calls[:parent] += 1
-              order.pass_to :second, :resume_on => :sleep
               'parent'
             end
 
             describe 'child' do
-              let :memoized_value do
+              let(:memoized_value) do
                 calls[:child] += 1
                 "#{super()}/child"
               end
@@ -456,6 +459,23 @@ module RSpec::Core
                 order.declare(:second) { expect(memoized_value).to eq 'parent/child' }
                 expect(memoized_value).to eq 'parent/child'
                 expect(calls).to eq :parent => 1, :child => 1
+                order.pass_to :second, :resume_on => :exit
+              end
+            end
+          end
+        end
+
+        specify 'memoized blocks warns against deadlock' do
+          in_sub_process do
+            require 'thread'
+
+            describe_successfully do
+              let(:lock) do
+                Thread.new { lock }.join
+              end
+
+              example do
+                expect { lock }.to raise_error(/Possible deadlock/)
               end
             end
           end
@@ -637,4 +657,3 @@ module RSpec::Core
     end
   end
 end
-
