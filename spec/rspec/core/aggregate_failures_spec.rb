@@ -118,6 +118,39 @@ RSpec.describe "Aggregating failures" do
           )
         end
       end
+
+      context 'when the example has an exception' do
+        it 'can be accessed in the `after` hook' do
+          inner_exceptions = nil
+          outer_exceptions = nil
+          ex = nil
+
+          RSpec.describe "Aggregate failures" do
+            # After the scenario is executed the results should contain an exception.
+            after {|e| inner_exceptions = e.execution_result.exception}
+
+            ex = it "has multiple failures", :aggregate_failures do
+              expect(1).to be_even
+              expect(2).to be_odd
+            end
+          end.run
+
+          outer_exceptions = ex.execution_result.exception
+          expect(outer_exceptions).to have_attributes(
+            :all_exceptions => [
+              an_object_having_attributes(:message => 'expected `1.even?` to return true, got false'),
+              an_object_having_attributes(:message => 'expected `2.odd?` to return true, got false')
+            ]
+          )
+
+          expect(inner_exceptions).to have_attributes(
+            :all_exceptions => [
+              an_object_having_attributes(:message => 'expected `1.even?` to return true, got false'),
+              an_object_having_attributes(:message => 'expected `2.odd?` to return true, got false')
+            ]
+          )
+        end
+      end
     end
   end
 
