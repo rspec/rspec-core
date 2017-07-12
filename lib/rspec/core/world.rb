@@ -57,9 +57,9 @@ module RSpec
       # @api private
       #
       # Records an example group.
-      def record(example_group)
+      def record(example_group, is_shared_example_group=false)
         @configuration.on_example_group_definition_callbacks.each { |block| block.call(example_group) }
-        @example_group_counts_by_spec_file[example_group.metadata[:absolute_file_path]] += 1
+        @example_group_counts_by_spec_file[example_group.metadata[:absolute_file_path]] += 1 unless is_shared_example_group
       end
 
       # @private

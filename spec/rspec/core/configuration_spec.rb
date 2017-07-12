@@ -23,15 +23,29 @@ module RSpec::Core
       before do
         RSpec.configure do |c|
           c.on_example_group_definition do |example_group|
-            example_group.examples.first.metadata[:new_key] = :new_value
+            example = example_group.examples.first
+            example.metadata[:new_key] = :new_value unless example.nil?
           end
         end
       end
 
-      it 'successfully invokes the block' do
-        RSpec.describe("group") { it "example 1" do; end}
-        example = RSpec.world.example_groups.first.examples.first
-        expect(example.metadata[:new_key]).to eq(:new_value)
+      context 'when example group is defined' do
+        it 'successfully invokes the block' do
+          RSpec.describe("group") { it "example 1" do; end}
+          example = RSpec.world.example_groups.first.examples.first
+          expect(example.metadata[:new_key]).to eq(:new_value)
+        end
+      end
+
+      context 'when shared example group is defined' do
+        it 'successfully invokes the block' do
+          RSpec.shared_examples("shared example group") { it "example 1" do; end}
+          RSpec.describe("group") { it_behaves_like "shared example group"}
+          example_group = RSpec.world.example_groups.first
+          nested_example_group = example_group.children.first
+          nested_example_group_example = nested_example_group.examples.first
+          expect(nested_example_group_example.metadata[:new_key]).to eq(:new_value)
+        end
       end
     end
 
