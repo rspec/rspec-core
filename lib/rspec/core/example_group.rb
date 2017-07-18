@@ -310,6 +310,7 @@ module RSpec
             find_and_eval_shared("examples", name, the_caller.first, *args, &customization_block)
           end
           group.metadata[:shared_group_name] = name
+          RSpec.world.record(group, true)
           group
         end
       end
