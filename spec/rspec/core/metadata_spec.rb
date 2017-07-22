@@ -101,6 +101,13 @@ module RSpec
           expect(metadata_for "example description").to have_value("group description example description").for(:full_description)
         end
 
+        it "stores the full_description with a custom separator when specified" do
+          RSpec.configure do |config|
+            config.description_separator = ', '
+          end
+          expect(metadata_for "example description").to have_value("group description, example description").for(:full_description)
+        end
+
         it "creates an empty execution result" do
           expect(example_metadata[:execution_result].to_h.reject { |_, v| v.nil? } ).to eq({})
         end
