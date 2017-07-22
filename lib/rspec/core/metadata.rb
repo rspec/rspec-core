@@ -171,6 +171,8 @@ module RSpec
         def description_separator(parent_part, child_part)
           if parent_part.is_a?(Module) && child_part =~ /^(#|::|\.)/
             ''.freeze
+          elsif RSpec.configuration.description_separator?
+            RSpec.configuration.description_separator
           else
             ' '.freeze
           end

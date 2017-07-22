@@ -268,11 +268,16 @@ module RSpec
       add_setting :profile_examples
 
       # @macro add_setting
-      # Run all examples if none match the configured filters
+      # Run all examples if none match the configured filters.
       # (default: `false`).
       # @deprecated Use {#filter_run_when_matching} instead for the specific
       #   filters that you want to be ignored if none match.
       add_setting :run_all_when_everything_filtered
+
+      # @macro add_setting
+      # Define a custom separator to join nested examples/contexts' descriptions.
+      # (default: " ")
+      add_setting :description_separator
 
       # @macro add_setting
       # Color to use to indicate success.
