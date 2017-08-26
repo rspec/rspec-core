@@ -20,9 +20,11 @@ RSpec.describe 'Suite hook errors' do
   before do
     # get out of `aruba` sub-dir so that `filter_gems_from_backtrace 'aruba'`
     # below does not filter out our spec file.
-    expect(dirs.pop).to eq "aruba"
+    Aruba.configure do |config|
+      config.working_directory = "tmp"
+    end
 
-    clean_current_dir
+    setup_aruba
 
     RSpec.configure do |c|
       c.filter_gems_from_backtrace "aruba"
