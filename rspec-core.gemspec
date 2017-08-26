@@ -48,6 +48,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "cucumber", "~> 1.3"
   s.add_development_dependency "minitest", "~> 5.3"
   s.add_development_dependency "aruba",    "~> 0.14.8"
+  s.add_development_dependency "contracts", "< 0.16" # 0.16 does not work with Ruby 1.8.7
 
   s.add_development_dependency "coderay",  "~> 1.1.1"
 
