@@ -588,16 +588,18 @@ module RSpec::Core
     end
   end
 
-  RSpec.describe "#let!" do
-    subject { [1,2,3] }
-    let!(:popped) { subject.pop }
+  [:let!, :make].each do |registration_method|
+    RSpec.describe "##{registration_method}" do
+      subject { [1,2,3] }
+      send(registration_method, :popped) { subject.pop }
 
-    it "evaluates the value non-lazily" do
-      expect(subject).to eq([1,2])
-    end
+      it "evaluates the value non-lazily" do
+        expect(subject).to eq([1,2])
+      end
 
-    it "returns memoized value from first invocation" do
-      expect(popped).to eq(3)
+      it "returns memoized value from first invocation" do
+        expect(popped).to eq(3)
+      end
     end
   end
 

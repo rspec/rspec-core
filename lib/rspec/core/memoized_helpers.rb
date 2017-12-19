@@ -357,6 +357,8 @@ EOS
           before { __send__(name) }
         end
 
+        alias_method :make, :let!
+
         # Declares a `subject` for an example group which can then be wrapped
         # with `expect` using `is_expected` to make it the target of an
         # expectation in a concise, one-line example.
