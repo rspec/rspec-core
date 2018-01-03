@@ -1,5 +1,10 @@
-### Development
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.7.0...master)
+### 3.7.1 / 2018-01-02
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.7.0...v3.7.1)
+
+Bug Fixes:
+
+* Work around duplicate config hook regression introduced
+  by Ruby 2.5's lazy proc allocation. (Myron Marston, #2497)
 
 ### 3.7.0 / 2017-10-17
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.6.0...v3.7.0)
