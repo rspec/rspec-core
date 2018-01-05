@@ -93,7 +93,7 @@ module RSpec::Core
     end
 
     describe "interrupt handling" do
-      before { allow(Runner).to receive(:exit!) }
+      before { allow(Runner).to receive(:exit) }
 
       it 'prints a message the first time, then exits the second time' do
         expect {
@@ -101,13 +101,13 @@ module RSpec::Core
         }.to output(/shutting down/).to_stderr_from_any_process &
           change { RSpec.world.wants_to_quit }.from(a_falsey_value).to(true)
 
-        expect(Runner).not_to have_received(:exit!)
+        expect(Runner).not_to have_received(:exit)
 
         expect {
           Runner.handle_interrupt
         }.not_to output.to_stderr_from_any_process
 
-        expect(Runner).to have_received(:exit!)
+        expect(Runner).to have_received(:exit)
       end
     end
 
@@ -149,7 +149,7 @@ module RSpec::Core
       context "with SIGINT twice" do
         it "exits immediately" do
           Runner.send(:trap_interrupt)
-          expect(Runner).to receive(:exit!).with(1)
+          expect(Runner).to receive(:exit).with(1)
           expect { interrupt }.to output(//).to_stderr
           interrupt
         end
