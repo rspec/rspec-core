@@ -109,3 +109,7 @@ Performance/Caller:
 
 Metrics/BlockLength:
   Max: 193
+
+Layout/SpaceBeforeBlockBraces:
+  EnforcedStyle: space
+  EnforcedStyleForEmptyBraces: space
