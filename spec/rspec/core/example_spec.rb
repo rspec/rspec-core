@@ -110,7 +110,7 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
 
     begin
       example_group.run
-    rescue unhandled
+    rescue unhandled # rubocop:disable Lint/HandleExceptions
       # no-op, prevent from bubbling up
     end
     expect(example.execution_result.finished_at).not_to be_nil

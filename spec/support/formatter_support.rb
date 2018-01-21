@@ -5,7 +5,7 @@ module FormatterSupport
     return output unless options.fetch(:normalize_output, true)
     output = normalize_durations(output)
 
-    caller_line = RSpec::Core::Metadata.relative_path(caller.first)
+    caller_line = RSpec::Core::Metadata.relative_path(caller.first) # rubocop:disable Performance/Caller
     output.lines.reject do |line|
       # remove the direct caller as that line is different for the summary output backtraces
       line.include?(caller_line) ||

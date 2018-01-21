@@ -7,10 +7,6 @@ AllCops:
     # This code was taken from the backports gem. We don't want to mess with it.
     - lib/rspec/core/backport_random.rb
 
-Encoding:
-  Exclude:
-    - lib/rspec/core/formatters/exception_presenter.rb
-
 # This should go down over time.
 Metrics/AbcSize:
   Max: 40
@@ -64,6 +60,9 @@ Lint/LiteralInInterpolation:
   Enabled: false
 
 Lint/NonLocalExitFromIterator:
+  Enabled: false
+
+Style/Encoding:
   Enabled: false
 
 # We don't care about single vs double qoutes.

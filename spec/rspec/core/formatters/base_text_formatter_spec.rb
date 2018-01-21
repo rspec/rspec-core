@@ -181,7 +181,7 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
 
     context "with an exception class other than RSpec" do
       it "does not show the error class" do
-        group.example("example name") { raise NameError.new('foo') }
+        group.example("example name") { raise NameError.new('foo') } # rubocop:disable Style/RaiseArgs
         run_all_and_dump_failures
         expect(formatter_output.string).to match(/NameError/m)
       end

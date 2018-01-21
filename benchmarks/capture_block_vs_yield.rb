@@ -8,6 +8,7 @@ def capture_block_and_yield(&block)
   yield
 end
 
+# rubocop:disable Performance/RedundantBlockCall
 def capture_block_and_call(&block)
   block.call
 end
@@ -59,6 +60,7 @@ end
 def call_block_n_times(n, &block)
   n.times { block.call }
 end
+# rubocop:enable Performance/RedundantBlockCall
 
 [10, 25, 50, 100, 1000, 10000].each do |count|
   puts "Invoking the block #{count} times"

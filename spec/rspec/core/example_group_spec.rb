@@ -1727,7 +1727,7 @@ module RSpec::Core
             def foo; end
           end
           group.send(name, "named this with params", :a)
-          expect(group.public_instance_methods.map{|m| m.to_s}).to include("foo")
+          expect(group.public_instance_methods.map {|m| m.to_s}).to include("foo")
         end
 
         it "evals the shared example group only once" do
@@ -1787,7 +1787,7 @@ module RSpec::Core
           def foo; end
         end
         shared_group = group.it_should_behave_like("thing")
-        expect(shared_group.public_instance_methods.map{|m| m.to_s}).to include("foo")
+        expect(shared_group.public_instance_methods.map {|m| m.to_s}).to include("foo")
       end
 
       it "adds shared class methods to nested group" do
@@ -1796,7 +1796,7 @@ module RSpec::Core
           def self.foo; end
         end
         shared_group = group.it_should_behave_like("thing")
-        expect(shared_group.methods.map{|m| m.to_s}).to include("foo")
+        expect(shared_group.methods.map {|m| m.to_s}).to include("foo")
       end
 
       it "passes parameters to the shared example group" do
@@ -1824,7 +1824,7 @@ module RSpec::Core
           def foo; end
         end
         shared_group = group.it_should_behave_like("thing", :a)
-        expect(shared_group.public_instance_methods.map{|m| m.to_s}).to include("foo")
+        expect(shared_group.public_instance_methods.map {|m| m.to_s}).to include("foo")
       end
 
       it "evals the shared example group only once" do

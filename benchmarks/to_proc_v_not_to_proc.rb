@@ -22,7 +22,7 @@ def a(&block)
 end
 
 def b(&block)
-  block.call
+  block.call # rubocop:disable Performance/RedundantBlockCall
 end
 
 def c(&block)

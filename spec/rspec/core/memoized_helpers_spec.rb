@@ -137,7 +137,7 @@ module RSpec::Core
       describe "defined in a top level group" do
         let(:group) do
           RSpec.describe do
-            subject{ [4, 5, 6] }
+            subject { [4, 5, 6] }
           end
         end
 
