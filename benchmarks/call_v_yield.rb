@@ -3,7 +3,7 @@ require 'benchmark'
 n = 100_000
 
 def call_block(&block)
-  block.call # rubocop:disable Performance/RedundantBlockCall
+  block.call
 end
 
 def yield_control

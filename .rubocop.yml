@@ -6,6 +6,9 @@ AllCops:
   Exclude:
     # This code was taken from the backports gem. We don't want to mess with it.
     - lib/rspec/core/backport_random.rb
+    - spec/rspec/core/bisect/shell_command_spec.rb
+    - spec/rspec/core/bisect/shell_runner_spec.rb
+    - 'tmp/**/*'
 
 # This should go down over time.
 Metrics/AbcSize:
@@ -55,6 +58,8 @@ Lint/HandleExceptions:
     - lib/rspec/core/mocking_adapters/mocha.rb
     - lib/rspec/core/runner.rb
     - lib/rspec/core/test_unit_assertions_adapter.rb
+    - script/rspec_with_simplecov
+    - spec/rspec/core/example_spec.rb
 
 Lint/LiteralInInterpolation:
   Enabled: false
@@ -62,6 +67,7 @@ Lint/LiteralInInterpolation:
 Lint/NonLocalExitFromIterator:
   Enabled: false
 
+# Since we support Ruby 1.9-, 'encoding: utf-8' comments are meaningful.
 Style/Encoding:
   Enabled: false
 
@@ -108,10 +114,14 @@ Style/RaiseArgs:
     - lib/rspec/core/hooks.rb
     - lib/rspec/core/option_parser.rb
     - lib/rspec/core/pending.rb
+    - spec/rspec/core/formatters/base_text_formatter_spec.rb
 
 Performance/RedundantBlockCall:
   Exclude:
     - lib/rspec/core/rake_task.rb
+    - benchmarks/call_v_yield.rb
+    - benchmarks/capture_block_vs_yield.rb
+    - benchmarks/to_proc_v_not_to_proc.rb
 
 Lint/IneffectiveAccessModifier:
   Exclude:
@@ -123,7 +133,8 @@ Performance/Caller:
     # speed up can be substantial (previous optimization work I've done on
     # RSpec involved caller optimization) but I haven't benchmarked this
     # particular case to see if it's worth introducing version branching.
-    - 'lib/rspec/core/example_group.rb'
+    - lib/rspec/core/example_group.rb
+    - spec/support/formatter_support.rb
 
 Layout/SpaceBeforeBlockBraces:
   EnforcedStyle: space

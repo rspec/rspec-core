@@ -34,7 +34,7 @@ begin
       minimum_coverage(100)
     end
   end
-rescue LoadError # rubocop:disable Lint/HandleExceptions
+rescue LoadError
 ensure
   $VERBOSE = old_verbose
 end
