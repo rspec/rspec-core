@@ -7,10 +7,6 @@ AllCops:
     # This code was taken from the backports gem. We don't want to mess with it.
     - lib/rspec/core/backport_random.rb
 
-# This should go down over time.
-Metrics/ClassLength:
-  Max: 330
-
 Encoding:
   Exclude:
     - lib/rspec/core/formatters/exception_presenter.rb
@@ -18,21 +14,44 @@ Encoding:
 # This should go down over time.
 Metrics/AbcSize:
   Max: 40
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/BlockLength:
+  Max: 193
+  Exclude:
+    - 'spec/**/*'
 
 # This should go down over time.
-Metrics/LineLength:
-  Max: 130
-
-# This should go down over time.
-Metrics/MethodLength:
-  Max: 37
+Metrics/ClassLength:
+  Max: 330
 
 # This should go down over time.
 Metrics/CyclomaticComplexity:
   Max: 12
+  Exclude:
+    - 'spec/**/*'
+
+# This should go down over time.
+Metrics/LineLength:
+  Max: 130
+  Exclude:
+    - 'spec/**/*'
+
+# This should go down over time.
+Metrics/MethodLength:
+  Max: 37
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/ModuleLength:
+  Exclude:
+    - 'spec/**/*'
 
 Metrics/PerceivedComplexity:
   Max: 15
+  Exclude:
+    - 'spec/**/*'
 
 Lint/HandleExceptions:
   Exclude:
@@ -106,9 +125,6 @@ Performance/Caller:
     # RSpec involved caller optimization) but I haven't benchmarked this
     # particular case to see if it's worth introducing version branching.
     - 'lib/rspec/core/example_group.rb'
-
-Metrics/BlockLength:
-  Max: 193
 
 Layout/SpaceBeforeBlockBraces:
   EnforcedStyle: space
