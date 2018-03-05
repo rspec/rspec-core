@@ -24,7 +24,7 @@ RSpec.describe RSpec::Core::DRbRunner, :isolated_directory => true, :isolated_ho
   end
 
   describe "--drb-port" do
-    def with_RSPEC_DRB_set_to(val)
+    def with_RSPEC_DRB_set_to(val) # rubocop:disable Naming/MethodName
       with_env_vars('RSPEC_DRB' => val) { yield }
     end
 

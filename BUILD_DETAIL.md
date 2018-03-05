@@ -103,11 +103,11 @@ We use [Rubocop](https://github.com/bbatsov/rubocop) to enforce style convention
 that the code has stylistic consistency throughout. Run with:
 
 ```
-$ bundle exec rubocop lib
+$ bundle exec rubocop
 
 # or, if you installed your bundle with `--standalone --binstubs`:
 
-$ bin/rubocop lib
+$ bin/rubocop
 ```
 
 Our Rubocop configuration is a work-in-progress, so if you get a failure

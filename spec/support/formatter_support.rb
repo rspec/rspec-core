@@ -352,9 +352,11 @@ module FormatterSupport
     ::RSpec::Core::Notifications::ExamplesNotification.new reporter
   end
 
+  # rubocop:disable Metrics/ParameterLists
   def summary_notification(duration, examples, failed, pending, time, errors = 0)
     ::RSpec::Core::Notifications::SummaryNotification.new duration, examples, failed, pending, time, errors
   end
+  # rubocop:enable Metrics/ParameterLists
 
   def profile_notification(duration, examples, number)
     ::RSpec::Core::Notifications::ProfileNotification.new duration, examples, number, reporter.instance_variable_get('@profiler').example_groups

@@ -36,7 +36,6 @@ module RSpec
         # rubocop:disable Metrics/ParameterLists
         def print_example_failed(pending_fixed, description, run_time, failure_id,
                                  exception, extra_content)
-          # rubocop:enable Metrics/ParameterLists
           formatted_run_time = "%.5f" % run_time
 
           @output.puts "    <dd class=\"example #{pending_fixed ? 'pending_fixed' : 'failed'}\">"
@@ -51,6 +50,7 @@ module RSpec
           @output.puts "      </div>"
           @output.puts "    </dd>"
         end
+        # rubocop:enable Metrics/ParameterLists
 
         def print_example_pending(description, pending_message)
           @output.puts "    <dd class=\"example not_implemented\">" \

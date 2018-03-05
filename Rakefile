@@ -23,9 +23,9 @@ namespace :spec do
   end
 end
 
-desc 'Run RuboCop on the lib directory'
+desc 'Run RuboCop'
 task :rubocop do
-  sh 'bundle exec rubocop lib'
+  sh 'bundle exec rubocop'
 end
 
 desc "delete generated files"

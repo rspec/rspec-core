@@ -225,7 +225,7 @@ Then(/^the output should report "slow before context hook" as the slowest exampl
   seconds = '\d+(?:\.\d+)? seconds'
 
   expect(all_output).to match(
-    %r{Top 1 slowest example groups?:\n\s+slow before context hook\n\s+#{seconds} average \(#{seconds} / 1 example\) \./spec/example_spec\.rb:1}
+    %r{Top 1 slowest example groups?:\n\s+slow before context hook\n\s+#{seconds} average \(#{seconds} / 1 example\) \./spec/example_spec\.rb:1} # rubocop:disable Metrics/LineLength
   )
 end
 
