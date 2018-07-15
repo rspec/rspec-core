@@ -466,6 +466,13 @@ EOS
           subject(name, &block)
           before { subject }
         end
+        
+        def with(name, value, description = nil, &block)
+          context description || "When #{name} is #{value}" do
+            let(name) { value }
+            instance_exec(name, value, &block)
+          end
+        end
       end
 
       # @private
