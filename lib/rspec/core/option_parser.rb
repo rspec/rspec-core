@@ -129,6 +129,10 @@ module RSpec::Core
           options[:deprecation_stream] = file
         end
 
+        parser.on('--reproduction-order', 'Print the order the specs ran in at the example level') do |_o|
+          options[:reproduction_order] = true
+        end
+
         parser.on('-b', '--backtrace', 'Enable full backtrace.') do |_o|
           options[:full_backtrace] = true
         end

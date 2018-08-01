@@ -297,7 +297,8 @@ module RSpec::Core
     #                                                  the spec suite
     SummaryNotification = Struct.new(:duration, :examples, :failed_examples,
                                      :pending_examples, :load_time,
-                                     :errors_outside_of_examples_count)
+                                     :errors_outside_of_examples_count,
+                                     :reproduction_order)
     class SummaryNotification
       # @api
       # @return [Fixnum] the number of examples run
@@ -385,6 +386,11 @@ module RSpec::Core
         formatted = "\nFinished in #{formatted_duration} " \
                     "(files took #{formatted_load_time} to load)\n" \
                     "#{colorized_totals_line(colorizer)}\n"
+
+        if reproduction_order
+          formatted << "\nReproduce this spec order with:\n" \
+                       "rspec --seed ordered #{examples.map(&:location).join(' ')}\n"
+        end
 
         unless failed_examples.empty?
           formatted += (colorized_rerun_commands(colorizer) + "\n")
