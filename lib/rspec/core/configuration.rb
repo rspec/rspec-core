@@ -327,6 +327,10 @@ module RSpec
       add_setting :default_color
 
       # @macro add_setting
+      # Prints the reproduction order of the specs (default: `false`).
+      add_setting :reproduction_order
+
+      # @macro add_setting
       # Color used when a pending example is fixed. Defaults to `:blue` but can
       # be set to one of the following: `[:black, :white, :red, :green,
       # :yellow, :blue, :magenta, :cyan]`
@@ -519,6 +523,7 @@ module RSpec
         @fixed_color = :blue
         @detail_color = :cyan
         @profile_examples = false
+        @reproduction_order = false
         @requires = []
         @libs = []
         @derived_metadata_blocks = FilterableItemRepository::QueryOptimized.new(:any?)
