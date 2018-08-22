@@ -406,17 +406,12 @@ module RSpec::Core
 
           it "excludes examples in groups matching filter" do
             group = RSpec.describe("does something", spec_metadata)
-            [ group.example("first"), group.example("second") ]
 
             expect(group.filtered_examples).to be_empty
           end
 
           it "excludes examples directly matching filter" do
             group = RSpec.describe("does something")
-            [
-              group.example("first", spec_metadata),
-              group.example("second", spec_metadata)
-            ]
             unfiltered_example = group.example("third (not-filtered)")
 
             expect(group.filtered_examples).to eq([unfiltered_example])
