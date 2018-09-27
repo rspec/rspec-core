@@ -102,7 +102,10 @@ module RSpec
       # @param out [IO] output stream
       def setup(err, out)
         configure(err, out)
-        @configuration.load_spec_files unless RSpec.world.wants_to_quit
+        return if RSpec.world.wants_to_quit
+
+        @configuration.load_spec_files
+      ensure
         @world.announce_filters
       end
 
