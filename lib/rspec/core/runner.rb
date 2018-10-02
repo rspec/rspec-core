@@ -84,15 +84,10 @@ module RSpec
       # @param out [IO] output stream
       def run(err, out)
         setup(err, out)
+        return @configuration.reporter.exit_early(@configuration.failure_exit_code) if RSpec.world.wants_to_quit
 
-        if RSpec.world.wants_to_quit
-          @configuration.reporter.report(0) do
-            @configuration.failure_exit_code
-          end
-        else
-          run_specs(@world.ordered_example_groups).tap do
-            persist_example_statuses
-          end
+        run_specs(@world.ordered_example_groups).tap do
+          persist_example_statuses
         end
       end
 
