@@ -55,13 +55,11 @@ RSpec.describe 'Spec file load errors' do
   end
 
   it 'prints a single error when it happens on --require files' do
-    write_file_formatted "helper_with_error.rb", "raise 'boom'; class Perry; end"
+    write_file_formatted "helper_with_error.rb", "raise 'boom'"
 
     write_file_formatted "1_spec.rb", "
-      RSpec.describe Perry do
-        it 'will not run this example' do
-          expect(1).to eq 1
-        end
+      RSpec.describe 'A broken spec file that will raise when loaded' do
+        raise 'boom'
       end
     "
 
@@ -71,7 +69,7 @@ RSpec.describe 'Spec file load errors' do
     expect(output).to eq unindent(<<-EOS)
 
       An error occurred while loading ./helper_with_error.
-      Failure/Error: raise 'boom'; class Perry; end
+      Failure/Error: raise 'boom'
 
       RuntimeError:
         boom
