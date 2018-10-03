@@ -165,10 +165,13 @@ module RSpec::Core
         expect(reporter.exit_early(42)).to eq(42)
       end
 
-      it "reports zero examples" do
-        allow(reporter).to receive(:report)
+      it "sends a complete cycle of notifications" do
+        formatter = double("formatter")
+        %w[seed start start_dump dump_pending dump_failures dump_summary seed close].map(&:to_sym).each do |message|
+          reporter.register_listener formatter, message
+          expect(formatter).to receive(message).ordered
+        end
         reporter.exit_early(42)
-        expect(reporter).to have_received(:report).with(0)
       end
     end
 
