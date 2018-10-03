@@ -160,6 +160,18 @@ module RSpec::Core
       end
     end
 
+    describe "#exit_early" do
+      it "returns the passed exit code" do
+        expect(reporter.exit_early(42)).to eq(42)
+      end
+
+      it "reports zero examples" do
+        allow(reporter).to receive(:report)
+        reporter.exit_early(42)
+        expect(reporter).to have_received(:report).with(0)
+      end
+    end
+
     describe "#report" do
       it "supports one arg (count)" do
         reporter.report(1) {}
