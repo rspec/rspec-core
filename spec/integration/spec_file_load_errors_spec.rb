@@ -59,7 +59,7 @@ RSpec.describe 'Spec file load errors' do
 
     write_file_formatted "1_spec.rb", "
       RSpec.describe 'A broken spec file that will raise when loaded' do
-        raise 'boom'
+        raise 'kaboom'
       end
     "
 
