@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
 
   s.metadata = {
     'bug_tracker_uri'   => 'https://github.com/rspec/rspec-core/issues',
-    'changelog_uri'     => 'https://github.com/rspec/rspec-core/blob/master/Changelog.md',
+    'changelog_uri'     => "https://github.com/rspec/rspec-core/blob/v#{s.version}/Changelog.md",
     'documentation_uri' => 'https://rspec.info/documentation/',
     'mailing_list_uri'  => 'https://groups.google.com/forum/#!forum/rspec',
     'source_code_uri'   => 'https://github.com/rspec/rspec-core',
