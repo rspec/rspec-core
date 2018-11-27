@@ -3,6 +3,8 @@
 
 Bug Fixes:
 
+* Handle RSpec description(s) with japanese chars in CP932 encoded files.
+  (Benoit Tigeot, #2575)
 * When defining `let` methods that overwrite an existing method, prevent
   a warning being issued by removing the old definition. (Jon Rowe, #2593)
 
