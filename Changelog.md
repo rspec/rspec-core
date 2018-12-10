@@ -7,6 +7,7 @@ Bug Fixes:
   (Benoit Tigeot, #2575)
 * When defining `let` methods that overwrite an existing method, prevent
   a warning being issued by removing the old definition. (Jon Rowe, #2593)
+* Prevent warning on Ruby 2.6.0-rc1 (Keiji Yoshimi, #2582)
 
 ### 3.8.0 / 2018-08-04
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.7.1...v3.8.0)
