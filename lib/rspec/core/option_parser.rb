@@ -226,6 +226,11 @@ FILTERING
           (options[:full_description] ||= []) << Regexp.compile(Regexp.escape(o))
         end
 
+        parser.on('-E', '--example-matches STRING', "Run examples whose full nested names match REGEX (may be",
+                  "  used more than once)") do |o|
+          (options[:full_description] ||= []) << Regexp.compile(o)
+        end
+
         parser.on('-t', '--tag TAG[:VALUE]',
                   'Run examples with the specified tag, or exclude examples',
                   'by adding ~ before the tag.',
