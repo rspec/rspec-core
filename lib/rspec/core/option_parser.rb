@@ -226,7 +226,7 @@ FILTERING
           (options[:full_description] ||= []) << Regexp.compile(Regexp.escape(o))
         end
 
-        parser.on('-E', '--example-matches STRING', "Run examples whose full nested names match REGEX (may be",
+        parser.on('-E', '--example-matches REGEX', "Run examples whose full nested names match REGEX (may be",
                   "  used more than once)") do |o|
           (options[:full_description] ||= []) << Regexp.compile(o)
         end
