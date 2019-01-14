@@ -2034,7 +2034,8 @@ module RSpec
         __send__(method, file)
       rescue Support::AllExceptionsExceptOnesWeMustNotRescue => ex
         relative_file = Metadata.relative_path(file)
-        reporter.notify_non_example_exception(ex, "An error occurred while loading #{relative_file}.")
+        suggestions = DidYouMean::Suggestions.new(relative_file, ex).call
+        reporter.notify_non_example_exception(ex, "An error occurred while loading #{relative_file}.#{suggestions}")
         RSpec.world.wants_to_quit = true
       end
 
