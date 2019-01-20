@@ -98,7 +98,7 @@ Then /^the output from `([^`]+)` should not contain "(.*?)"$/  do |cmd, expected
 end
 
 Given /^I have a brand new project with no files$/ do
-  in_current_dir do
+  cd('.') do
     expect(Dir["**/*"]).to eq([])
   end
 end
@@ -115,7 +115,7 @@ Given(/^a vendored gem named "(.*?)" containing a file named "(.*?)" with:$/) do
 end
 
 When "I accept the recommended settings by removing `=begin` and `=end` from `spec/spec_helper.rb`" do
-  in_current_dir do
+  cd('.') do
     spec_helper = File.read("spec/spec_helper.rb")
     expect(spec_helper).to include("=begin", "=end")
 
@@ -138,7 +138,7 @@ Given(/^I have run `([^`]*)` once, resulting in "([^"]*)"$/) do |command, output
 end
 
 When(/^I fix "(.*?)" by replacing "(.*?)" with "(.*?)"$/) do |file_name, original, replacement|
-  in_current_dir do
+  cd('.') do
     contents = File.read(file_name)
     expect(contents).to include(original)
     fixed = contents.sub(original, replacement)
@@ -151,7 +151,7 @@ Then(/^it should fail with "(.*?)"$/) do |snippet|
 end
 
 Given(/^I have not configured `example_status_persistence_file_path`$/) do
-  in_current_dir do
+  cd('.') do
     return unless File.exist?("spec/spec_helper.rb")
     return unless File.read("spec/spec_helper.rb").include?("example_status_persistence_file_path")
     File.open("spec/spec_helper.rb", "w") { |f| f.write("") }
@@ -230,7 +230,7 @@ Then(/^the output should report "slow before context hook" as the slowest exampl
 end
 
 Given(/^I have changed `([^`]+)` to `([^`]+)` in "(.*?)"$/) do |old_code, new_code, file_name|
-  in_current_dir do
+  cd('.') do
     file_content = File.read(file_name)
     expect(file_content).to include(old_code)
     new_file_content = file_content.sub(old_code, new_code)
