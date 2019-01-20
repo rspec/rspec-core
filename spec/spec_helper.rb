@@ -66,6 +66,11 @@ module CommonHelpers
   ensure
     RSpec::Core::Metadata.instance_variable_set(:@relative_path_regex, nil)
   end
+
+  def in_current_directory(&block)
+    # Arbua deprecated this helper but we use it all over the place
+    cd('.', &block)
+  end
 end
 
 RSpec.configure do |c|
