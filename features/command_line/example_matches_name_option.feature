@@ -18,36 +18,37 @@ Feature: `--example-matches` option
     Given a file named "first_spec.rb" with:
       """ruby
       RSpec.describe "first group" do
-        it "first" do; end
-        it "first example in first group" do; end
-        it "second example in first group" do; end
+      it "first" do; end
+      it "first example in first group" do; end
+      it "second example in first group" do; end
       end
       """
     And a file named "second_spec.rb" with:
       """ruby
       RSpec.describe "second group" do
-        it "first example in second group" do; end
-        it "second example in second group" do; end
+      it "first example in second group" do; end
+      it "second example in second group" do; end
       end
       """
     And a file named "third_spec.rb" with:
       """ruby
       RSpec.describe "third group" do
-        it "first example in third group" do; end
-        context "nested group" do
-          it "first example in nested group" do; end
-          it "second example in nested group" do; end
-        end
+      it "first example in third group" do; end
+      context "group of nest" do
+      it "first example in nested group" do; end
+      it "second example in nested group" do; end
+      it "third example in nested_group with underscore" do; end
+      end
       end
       """
     And a file named "fourth_spec.rb" with:
       """ruby
       RSpec.describe Array do
-        describe "#length" do
-          it "is the number of items" do
-            expect(Array.new([1,2,3]).length).to eq 3
-          end
-        end
+      describe "#length" do
+      it "is the number of items" do
+      expect(Array.new([1,2,3]).length).to eq 3
+      end
+      end
       end
       """
 
@@ -88,29 +89,43 @@ Feature: `--example-matches` option
     Then the examples should all pass
 
   Scenario: Match only matching regex
-    When I run `rspec . --example-matches "first\b" --format d`
+    When I run `rspec . --example-matches "first$" --format d`
     Then the examples should all pass
     And the output should contain all of these:
-      |first|
+      | first |
     And the output should not contain any of these:
-      |first example in first group|
-      |second example in first group|
-      |first example in second group|
-      |second example in second group|
-      |first example in third group|
-      |nested group first example in nested group|
-      |nested group second example in nested group|
+      | first example in first group                |
+      | second example in first group               |
+      | first example in second group               |
+      | second example in second group              |
+      | first example in third group                |
+      | nested group first example in nested group  |
+      | nested group second example in nested group |
+
+  Scenario: Match only matching regex with word boundarries
+    When I run `rspec . --example-matches "nested\b" --format d`
+    Then the examples should all pass
+    And the output should contain all of these:
+      | first example in nested group  |
+      | second example in nested group |
+    And the output should not contain any of these:
+      | first example in first group   |
+      | second example in first group  |
+      | first example in second group  |
+      | second example in second group |
+      | first example in third group   |
+      | third example in nested_group  |
 
   Scenario: Multiple applications of example name option
     When I run `rspec . --example-matches 'first group' --example-matches 'second group' --format d`
     Then the examples should all pass
     And the output should contain all of these:
-      |first example in first group|
-      |second example in first group|
-      |first example in second group|
-      |second example in second group|
+      | first example in first group   |
+      | second example in first group  |
+      | first example in second group  |
+      | second example in second group |
     And the output should not contain any of these:
-      |first example in third group|
-      |nested group first example in nested group|
-      |nested group second example in nested group|
+      | first example in third group                |
+      | nested group first example in nested group  |
+      | nested group second example in nested group |
 
