@@ -18,37 +18,37 @@ Feature: `--example-matches` option
     Given a file named "first_spec.rb" with:
       """ruby
       RSpec.describe "first group" do
-      it "first" do; end
-      it "first example in first group" do; end
-      it "second example in first group" do; end
+        it "first" do; end
+        it "first example in first group" do; end
+        it "second example in first group" do; end
       end
       """
     And a file named "second_spec.rb" with:
       """ruby
       RSpec.describe "second group" do
-      it "first example in second group" do; end
-      it "second example in second group" do; end
+        it "first example in second group" do; end
+        it "second example in second group" do; end
       end
       """
     And a file named "third_spec.rb" with:
       """ruby
       RSpec.describe "third group" do
-      it "first example in third group" do; end
-      context "group of nest" do
-      it "first example in nested group" do; end
-      it "second example in nested group" do; end
-      it "third example in nested_group with underscore" do; end
-      end
+        it "first example in third group" do; end
+        context "group of nest" do
+          it "first example in nested group" do; end
+          it "second example in nested group" do; end
+          it "third example in nested_group with underscore" do; end
+        end
       end
       """
     And a file named "fourth_spec.rb" with:
       """ruby
       RSpec.describe Array do
-      describe "#length" do
-      it "is the number of items" do
-      expect(Array.new([1,2,3]).length).to eq 3
-      end
-      end
+        describe "#length" do
+          it "is the number of items" do
+            expect(Array.new([1,2,3]).length).to eq 3
+          end
+        end
       end
       """
 
