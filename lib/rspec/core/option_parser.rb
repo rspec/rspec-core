@@ -37,6 +37,7 @@ module RSpec::Core
     # rubocop:disable Metrics/AbcSize
     # rubocop:disable CyclomaticComplexity
     # rubocop:disable PerceivedComplexity
+    # rubocop:disable Metrics/BlockLength
     def parser(options)
       OptionParser.new do |parser|
         parser.summary_width = 34
@@ -293,6 +294,7 @@ FILTERING
         end
       end
     end
+    # rubocop:enable Metrics/BlockLength
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable MethodLength
     # rubocop:enable CyclomaticComplexity
