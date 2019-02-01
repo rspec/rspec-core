@@ -1,3 +1,11 @@
+### Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.8.0...3-8-maintenance)
+
+Bug Fixes:
+
+* When defining `let` methods that overwrite an existing method, prevent
+  a warning being issued by removing the old definition. (Jon Rowe, #2593)
+
 ### 3.8.0 / 2018-08-04
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.7.1...v3.8.0)
 
