@@ -104,7 +104,7 @@ Feature: `--example-matches` option
 
   # https://regex101.com/r/RABd8Q/2
   Scenario: Match only matching regex with word boundarries
-    When I run `rspec . --example-matches "nested\b" --format d`
+    When I run `rspec . --example-matches "nested[^_]" --format d`
     Then the examples should all pass
     And the output should contain all of these:
       | first example in nested group  |
