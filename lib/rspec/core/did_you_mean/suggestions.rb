@@ -1,6 +1,6 @@
-# Service object to provide did_you_mean suggestions
 module RSpec
   module Core
+    # Service object to provide did_you_mean suggestions
     # based on https://github.com/yuki24/did_you_mean
     module DidYouMean
       class Suggestions

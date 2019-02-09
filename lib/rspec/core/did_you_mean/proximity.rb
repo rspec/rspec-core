@@ -1,8 +1,8 @@
-# class to calculate jaro_winkler distance based on
-# https://github.com/yuki24/did_you_mean/blob/master/lib/did_you_mean/jaro_winkler.rb
 module RSpec
   module Core
     module DidYouMean
+      # class to calculate jaro_winkler distance based on
+      # https://github.com/yuki24/did_you_mean/blob/master/lib/did_you_mean/jaro_winkler.rb
       class Proximity
         WEIGHT    = 0.1
         THRESHOLD = 0.7
