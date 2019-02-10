@@ -14,7 +14,7 @@ module RSpec
         end
 
         def call
-          jaro_distance = distance(str1, str2)
+          jaro_distance = distance str1, str2
 
           if jaro_distance > THRESHOLD
             codepoints2  = str2.codepoints
@@ -34,21 +34,18 @@ module RSpec
 
         private
 
+        attr_reader :length1, :length2, :m, :t, :range, :flags1, :flags2
+
         def distance(str1, str2)
           str1, str2 = str2, str1 if str1.length > str2.length
-          length1, length2 = str1.length, str2.length
-
-          m          = 0.0
-          t          = 0.0
-          range      = (length2 / 2).floor - 1
-          range      = 0 if range < 0
-          flags1     = 0
-          flags2     = 0
-
-          # Avoid duplicating enumerable objects
+          initialise_flags_counters str1, str2
           str1_codepoints = str1.codepoints
           str2_codepoints = str2.codepoints
+          first_pass(str1_codepoints, str2_codepoints)
+          second_pass(str1_codepoints, str2_codepoints)
+        end
 
+        def first_pass(str1_codepoints, str2_codepoints)
           i = 0
           while i < length1
             last = i + range
@@ -56,9 +53,9 @@ module RSpec
 
             while j <= last
               if flags2[j] == 0 && str1_codepoints[i] == str2_codepoints[j]
-                flags2 |= (1 << j)
-                flags1 |= (1 << i)
-                m += 1
+                @flags2 |= (1 << j)
+                @flags1 |= (1 << i)
+                @m += 1
                 break
               end
 
@@ -67,27 +64,38 @@ module RSpec
 
             i += 1
           end
+        end
 
+        def second_pass(str1_codepoints, str2_codepoints)
           k = i = 0
           while i < length1
-            if flags1[i] != 0
-              j = index = k
+            break if flags1[i] == 0
+            j = index = k
 
-              k = while j < length2
-                index = j
-                break(j + 1) if flags2[j] != 0
+            k = while j < length2
+                  index = j
+                  break(j + 1) if flags2[j] != 0
 
-                j += 1
-              end
+                  j += 1
+                end
 
-              t += 1 if str1_codepoints[i] != str2_codepoints[index]
-            end
+            @t += 1 if str1_codepoints[i] != str2_codepoints[index]
 
             i += 1
           end
-          t = (t / 2).floor
+          @t = (t / 2).floor
 
-          m == 0 ? 0 : (m / length1 + m / length2 + (m - t) / m) / 3
+          @m == 0 ? 0 : (m / length1 + m / length2 + (m - t) / m) / 3
+        end
+
+        def initialise_flags_counters(str1, str2)
+          @length1, @length2 = str1.length, str2.length
+          @m          = 0.0
+          @t          = 0.0
+          @range      = (length2 / 2).floor - 1
+          @range      = 0 if range < 0
+          @flags1     = 0
+          @flags2     = 0
         end
       end
     end
