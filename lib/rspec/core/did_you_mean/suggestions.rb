@@ -1,11 +1,11 @@
 module RSpec
   module Core
-    # Service object to provide did_you_mean suggestions
-    # based on https://github.com/yuki24/did_you_mean
     module DidYouMean
+      # Service object to provide did_you_mean suggestions
+      # based on https://github.com/yuki24/did_you_mean
       class Suggestions
-        CUT_OFF = 0.834
-        MAX_SUGGESTIONS = 3
+        CUT_OFF = 0.834 # Lowest acceptable proximity to be considered probable
+        MAX_SUGGESTIONS = 3 # Maximum number of suggestions that can be provided.
         attr_reader :relative_file_name, :exception
 
         def initialize(relative_file_name, exception)
@@ -13,6 +13,7 @@ module RSpec
           @exception = exception
         end
 
+        # provide probable suggestions if a LoadError
         def call
           return unless exception.class == LoadError
 
