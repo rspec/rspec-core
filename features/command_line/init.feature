@@ -25,6 +25,7 @@ Feature: `--init` option
   Scenario: Accept and use the recommended settings in `spec_helper` (which are initially commented out)
     Given I have a brand new project with no files
       And I have run `rspec --init`
+      And I unset XDG_CONFIG_HOME environment var
      When I accept the recommended settings by removing `=begin` and `=end` from `spec/spec_helper.rb`
       And I create "spec/addition_spec.rb" with the following content:
         """ruby

@@ -238,6 +238,13 @@ Given(/^I have changed `([^`]+)` to `([^`]+)` in "(.*?)"$/) do |old_code, new_co
   end
 end
 
+Given(/^I unset XDG_CONFIG_HOME environment var$/) do
+  step %q{I set the environment variables to:}, table(%{
+  | variable        | value |
+  | XDG_CONFIG_HOME |       |
+  })
+end
+
 module Normalization
   def normalize_failure_output(text)
     whitespace_normalized = text.lines.map { |line| line.sub(/\s+$/, '').sub(/:in .*$/, '') }.join

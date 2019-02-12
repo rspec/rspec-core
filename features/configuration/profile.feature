@@ -73,6 +73,7 @@ Feature: Profile examples
       """
 
   Scenario: By default does not show profile
+    Given I unset XDG_CONFIG_HOME environment var
     When I run `rspec spec`
     Then the examples should all pass
     And the output should not contain "example 1"
@@ -92,6 +93,7 @@ Feature: Profile examples
       """ruby
       RSpec.configure { |c| c.profile_examples = true }
       """
+    And I unset XDG_CONFIG_HOME environment var
     When I run `rspec spec`
     Then the examples should all pass
     And the output should contain "Top 10 slowest examples"

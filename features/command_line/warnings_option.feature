@@ -25,5 +25,6 @@ Feature: `--warnings` option (run with warnings enabled)
         end
       end
       """
+    And I unset XDG_CONFIG_HOME environment var
     When I run `rspec example_spec.rb`
     Then the output should not contain "warning"

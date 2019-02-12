@@ -27,5 +27,6 @@ Feature: Configurable colors
         end
       end
       """
-      When I run `rspec custom_failure_color_spec.rb --format progress`
-      Then the failing example is printed in magenta
+    And I unset XDG_CONFIG_HOME environment var
+    When I run `rspec custom_failure_color_spec.rb --format progress`
+    Then the failing example is printed in magenta
