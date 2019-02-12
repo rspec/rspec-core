@@ -49,7 +49,7 @@ RSpec.describe 'Suite hook errors' do
     normalize_durations(last_cmd_stdout)
   end
 
-  it 'nicely formats errors in `before(:suite)` hooks and exits with non-zero' do
+  it 'nicely formats errors in `before(:suite)` hooks and exits with non-zero', :isolated_home => true do
     output = run_spec_expecting_non_zero(:before)
     expect(output).to eq unindent(<<-EOS)
 
@@ -67,7 +67,7 @@ RSpec.describe 'Suite hook errors' do
     EOS
   end
 
-  it 'nicely formats errors in `after(:suite)` hooks and exits with non-zero' do
+  it 'nicely formats errors in `after(:suite)` hooks and exits with non-zero', :isolated_home => true do
     output = run_spec_expecting_non_zero(:after)
     expect(output).to eq unindent(<<-EOS)
       .
@@ -85,7 +85,7 @@ RSpec.describe 'Suite hook errors' do
     EOS
   end
 
-  it 'nicely formats errors from multiple :suite hooks of both types and exits with non-zero' do
+  it 'nicely formats errors from multiple :suite hooks of both types and exits with non-zero', :isolated_home => true do
     write_file "the_spec.rb", "
       RSpec.configure do |c|
         c.before(:suite) { raise 'before 1' }

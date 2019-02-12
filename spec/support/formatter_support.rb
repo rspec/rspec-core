@@ -69,6 +69,12 @@ module FormatterSupport
         |     # ./spec/rspec/core/resources/formatter_specs.rb:18
         |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
         |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
+        |     # ./spec/support/isolated_home_directory.rb:13
+        |     # ./spec/spec_helper.rb:46:in `with_env_vars'
+        |     # ./spec/support/isolated_home_directory.rb:12
+        |     # ./spec/spec_helper.rb:57:in `without_env_vars'
+        |     # ./spec/support/isolated_home_directory.rb:11
+        |     # ./spec/support/isolated_home_directory.rb:7
         |     # ./spec/support/sandboxing.rb:16
         |     # ./spec/support/sandboxing.rb:7
         |
@@ -89,6 +95,12 @@ module FormatterSupport
         |     # ./spec/rspec/core/resources/formatter_specs.rb:37
         |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
         |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
+        |     # ./spec/support/isolated_home_directory.rb:13
+        |     # ./spec/spec_helper.rb:46:in `with_env_vars'
+        |     # ./spec/support/isolated_home_directory.rb:12
+        |     # ./spec/spec_helper.rb:57:in `without_env_vars'
+        |     # ./spec/support/isolated_home_directory.rb:11
+        |     # ./spec/support/isolated_home_directory.rb:7
         |     # ./spec/support/sandboxing.rb:16
         |     # ./spec/support/sandboxing.rb:7
         |
@@ -164,6 +176,12 @@ module FormatterSupport
         |     # ./spec/rspec/core/resources/formatter_specs.rb:18:in `block (3 levels) in <top (required)>'
         |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
         |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
+        |     # ./spec/support/isolated_home_directory.rb:13:in `block (5 levels) in <top (required)>'
+        |     # ./spec/spec_helper.rb:46:in `with_env_vars'
+        |     # ./spec/support/isolated_home_directory.rb:12:in `block (4 levels) in <top (required)>'
+        |     # ./spec/spec_helper.rb:57:in `without_env_vars'
+        |     # ./spec/support/isolated_home_directory.rb:11:in `block (3 levels) in <top (required)>'
+        |     # ./spec/support/isolated_home_directory.rb:7:in `block (2 levels) in <top (required)>'
         |     # ./spec/support/sandboxing.rb:16:in `block (3 levels) in <top (required)>'
         |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
         |
@@ -184,6 +202,12 @@ module FormatterSupport
         |     # ./spec/rspec/core/resources/formatter_specs.rb:37:in `block (2 levels) in <top (required)>'
         |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
         |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
+        |     # ./spec/support/isolated_home_directory.rb:13:in `block (5 levels) in <top (required)>'
+        |     # ./spec/spec_helper.rb:46:in `with_env_vars'
+        |     # ./spec/support/isolated_home_directory.rb:12:in `block (4 levels) in <top (required)>'
+        |     # ./spec/spec_helper.rb:57:in `without_env_vars'
+        |     # ./spec/support/isolated_home_directory.rb:11:in `block (3 levels) in <top (required)>'
+        |     # ./spec/support/isolated_home_directory.rb:7:in `block (2 levels) in <top (required)>'
         |     # ./spec/support/sandboxing.rb:16:in `block (3 levels) in <top (required)>'
         |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
         |
@@ -215,6 +239,12 @@ module FormatterSupport
         |     # ./spec/rspec/core/resources/formatter_specs.rb:50:in `block (2 levels) in <top (required)>'
         |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
         |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
+        |     # ./spec/support/isolated_home_directory.rb:13:in `block (5 levels) in <top (required)>'
+        |     # ./spec/spec_helper.rb:46:in `with_env_vars'
+        |     # ./spec/support/isolated_home_directory.rb:12:in `block (4 levels) in <top (required)>'
+        |     # ./spec/spec_helper.rb:57:in `without_env_vars'
+        |     # ./spec/support/isolated_home_directory.rb:11:in `block (3 levels) in <top (required)>'
+        |     # ./spec/support/isolated_home_directory.rb:7:in `block (2 levels) in <top (required)>'
         |     # ./spec/support/sandboxing.rb:16:in `block (3 levels) in <top (required)>'
         |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
         |

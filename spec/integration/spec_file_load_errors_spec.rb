@@ -83,7 +83,7 @@ RSpec.describe 'Spec file load errors' do
     EOS
   end
 
-  it 'nicely handles load-time errors in user spec files' do
+  it 'nicely handles load-time errors in user spec files', :isolated_home => true do
     write_file_formatted "1_spec.rb", "
       boom
 
