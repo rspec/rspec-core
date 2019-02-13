@@ -18,7 +18,7 @@ module RSpec
           jaro_distance = distance str1, str2
 
           if jaro_distance > THRESHOLD
-            codepoints2  = codepoints str2
+            codepoints2  = str2.codepoints
             prefix_bonus = 0
 
             i = 0
@@ -38,8 +38,8 @@ module RSpec
         def distance(str1, str2)
           str1, str2 = str2, str1 if str1.length > str2.length
           initialise_flags_counters str1, str2
-          str1_codepoints = codepoints str1
-          str2_codepoints = codepoints str2
+          str1_codepoints = str1.codepoints
+          str2_codepoints = str2.codepoints
           first_pass(str1_codepoints, str2_codepoints)
           second_pass(str1_codepoints, str2_codepoints)
         end
@@ -95,26 +95,6 @@ module RSpec
           @range      = 0 if range < 0
           @flags1     = 0
           @flags2     = 0
-        end
-
-        def codepoints(str)
-          # implementation of string.codepoints for pre 1.9.1 rubies
-          # Note the pre 1.9.1 version only works on ASCII strings not on UTF8.
-          # It appears to me that prior to 1.9.1 UTF8 was not fully supported.
-          # Need to disable some cops because the character literal had
-          # a different meaning in pre 1.9.1 rubies so some cops do not make sense.
-          # rubocop:disable Style/CharacterLiteral
-          # rubocop:disable Lint/UnusedBlockArgument
-          ruby_version_high_enough? ? str.codepoints : str.bytes.map { |b| ?b }
-          # rubocop:enable Style/CharacterLiteral
-          # rubocop:enable Lint/UnusedBlockArgument
-        end
-
-        # checks ruby version high enough to support string.codepoints
-        def ruby_version_high_enough?
-          return Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('1.9.1') if defined? RUBY_VERSION
-          return false unless defined? JRUBY_VERSION
-          Gem::Version.new(JRUBY_VERSION) >= Gem::Version.new('1.9.1')
         end
       end
     end

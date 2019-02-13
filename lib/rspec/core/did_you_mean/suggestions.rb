@@ -15,6 +15,7 @@ module RSpec
 
         # provide probable suggestions if a LoadError
         def call
+          return unless RUBY_VERSION.to_f >= 2.0
           return unless exception.class == LoadError
 
           probables = find_probables
