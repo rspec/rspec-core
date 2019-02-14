@@ -10,7 +10,7 @@ module RSpec::Core
           yield dir
           start = Time.now
           path = File.absolute_path(Bundler.which(cmd))
-          Open3.popen3(path + ' ' + args.join(" "), chdir: dir) do |_, stdout, stderr|
+          Open3.popen3(path + ' ' + args.join(" "), :chdir => dir) do |_, stdout, stderr|
             stdout.read
             stderr.read
           end
