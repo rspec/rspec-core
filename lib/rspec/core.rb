@@ -139,7 +139,7 @@ module RSpec
   module Core
     autoload :ExampleStatusPersister, "rspec/core/example_status_persister"
     autoload :Profiler,               "rspec/core/profiler"
-    autoload :DidYouMean,           "rspec/core/did_you_mean/did_you_mean"
+    autoload :DidYouMean,             "rspec/core/did_you_mean"
 
     # @private
     # This avoids issues with reporting time caused by examples that
