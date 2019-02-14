@@ -4,7 +4,7 @@ module RSpec
       # Service object to provide did_you_mean suggestions
       # based on https://github.com/yuki24/did_you_mean
       class Suggestions
-        CUT_OFF = 0.85 # Lowest acceptable nearness to be considered probable
+        CUT_OFF = 0.15 # Lowest acceptable nearness to be considered probable
         MAX_SUGGESTIONS = 3 # Maximum number of suggestions that can be provided.
         attr_reader :relative_file_name, :exception
 
@@ -21,7 +21,7 @@ module RSpec
             probables = find_probables
             return unless probables.any?
 
-            short_list = probables.sort_by { |_, proximity| proximity }.reverse[0...MAX_SUGGESTIONS]
+            short_list = probables.sort_by { |_, proximity| proximity }[0...MAX_SUGGESTIONS]
             formats short_list
           end
         else
@@ -46,7 +46,7 @@ module RSpec
           possibilities = Dir["spec/**/*.rb"]
           name = relative_file_name.sub('./', '')
           possibilities.map do |possible|
-            [possible,  nearness(possible, name)] if nearness(possible, name) >= CUT_OFF
+            [possible,  proximity(possible, name)] if proximity(possible, name) <= CUT_OFF
           end.compact
         end
 
@@ -80,11 +80,10 @@ module RSpec
           return x
         end
 
-        def nearness(str1, str2)
+        def proximity(str1, str2)
           distance = levenshtein_distance(str1, str2)
           average_length = (str1.length + str2.length) / 2.0
-          proximity = distance.to_f / average_length
-          1.0 - proximity
+          distance.to_f / average_length
         end
       end
     end
