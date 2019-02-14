@@ -20,9 +20,9 @@ module RSpec
             end
             context 'numerous possibilities' do
               it 'should only return a small number of suggestions' do
-                name = './spec/support/core_spec.rb'
+                name = './spec/rspec/core/drb_spec.r'
                 suggestions = DidYouMean::Suggestions.new(name, exception).call
-                expect(suggestions.split("\n").size).to eq 5
+                expect(suggestions.split("\n").size).to eq 4
               end
             end
           end
