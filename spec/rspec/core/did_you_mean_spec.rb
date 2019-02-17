@@ -40,8 +40,16 @@ module RSpec
           it{ expect(DidYouMean.new(str1).send(:levenshtein_distance, str1, test_h[:empty])).to eq 9 }
           it{ expect(DidYouMean.new(str1).send(:levenshtein_distance, str1, test_h[:identical])).to eq 0 }
           it{ expect(DidYouMean.new(str1).send(:levenshtein_distance, str1, test_h[:two_insertions])).to eq 2 }
+          it{ expect(DidYouMean.new(str1).send(:levenshtein_distance, str1, test_h[:two_insertions_deletion])).to eq 3 }
+          it{ expect(DidYouMean.new(str1).send(:levenshtein_distance, str1, test_h[:insertion_substitution_deletion])).to eq 3 }
+          context 'UTF-8' do
+            let(:str1) { '變形金剛4:絕跡重生' }
+            it{ expect(DidYouMean.new(str1).send(:levenshtein_distance, str1,
+              '變形金剛4: 絕跡重生')).to eq 1 }
+          end
         end
         describe 'proximity' do
+          it{ expect(DidYouMean.new(str1).send(:proximity, str1, test_h[:two_insertions])).to eq 0.2 }
         end
       end
 
@@ -50,7 +58,9 @@ module RSpec
         {
           empty: '',
           identical: 'canonical',
-          two_insertions: 'canonixxcal'
+          two_insertions: 'canonixxcal',
+          two_insertions_deletion: 'anonixxcal',
+          insertion_substitution_deletion: 'fnaonical'
         }
       end
     end

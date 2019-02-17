@@ -55,9 +55,9 @@ module RSpec
 
       # based on
       # https://github.com/ioquatix/build-text/blob/master/lib/build/text/merge.rb
-      def levenshtein_distance(s, t)
-        n = s.length
-        m = t.length
+      def levenshtein_distance(str1, str2)
+        n = str1.length
+        m = str2.length
         return m if n == 0
         return n if m == 0
         d = (0..m).to_a
@@ -65,7 +65,7 @@ module RSpec
         n.times do |i|
           e = i + 1
           m.times do |j|
-            cost = (s[i] == t[j]) ? 0 : 1
+            cost = (str1[i] == str2[j]) ? 0 : 1
             x = [
               d[j + 1] + 1, # insertion
               e + 1,      # deletion
