@@ -14,7 +14,7 @@ module RSpec
         let(:exception) { LoadError.new }
         describe 'Success' do
           it 'should return a useful suggestion' do
-            name = './spec/rspec/core/did_you_mean/suggestions_spec.rb'
+            name = './spec/rspec/core/did_you_mean_spec.rb'
             expect(DidYouMean.new(name[0..-2], exception).call).to include name
           end
           context 'numerous possibilities' do
