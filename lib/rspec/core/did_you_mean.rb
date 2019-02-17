@@ -7,17 +7,15 @@ module RSpec
       MAX_SUGGESTIONS = 3 # Maximum number of suggestions that can be provided.
       attr_reader :relative_file_name, :exception
 
-      def initialize(relative_file_name, exception=nil)
+      def initialize(relative_file_name)
         @relative_file_name = relative_file_name
-        @exception = exception
       end
 
       if RUBY_VERSION.to_f >= 2.0
         # provide probable suggestions if a LoadError
         def call
-          return unless exception.class == LoadError
-
           probables = find_probables
+          
           return unless probables.any?
 
           short_list = probables.sort_by { |_, proximity| proximity }[0...MAX_SUGGESTIONS]
