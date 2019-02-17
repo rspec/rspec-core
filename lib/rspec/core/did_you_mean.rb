@@ -7,7 +7,7 @@ module RSpec
       MAX_SUGGESTIONS = 3 # Maximum number of suggestions that can be provided.
       attr_reader :relative_file_name, :exception
 
-      def initialize(relative_file_name, exception)
+      def initialize(relative_file_name, exception=nil)
         @relative_file_name = relative_file_name
         @exception = exception
       end
