@@ -11,18 +11,18 @@ module RSpec
         @relative_file_name = relative_file_name
       end
 
-      if RUBY_VERSION.to_f >= 2.0
+      if String.method_defined?(:codepoints)
         # provide probable suggestions if a LoadError
         def call
           probables = find_probables
-          
+
           return unless probables.any?
 
           short_list = probables.sort_by { |_, proximity| proximity }[0...MAX_SUGGESTIONS]
           formats short_list
         end
-      else
-        # return nil
+      else # ruby 1.9.2 or less
+        # return nil if UTF-8 not fully supported
         def call
         end
       end
@@ -48,7 +48,8 @@ module RSpec
       end
 
       def red_font(mytext)
-        "\e[31m#{mytext}\e[0m"
+        colorizer = ::RSpec::Core::Formatters::ConsoleCodes
+        colorizer.wrap mytext, :failure
       end
 
       # based on
