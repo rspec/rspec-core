@@ -48,7 +48,7 @@ module RSpec
         describe 'Call to DidYouMean' do
           describe 'Success' do
             let(:name) { './spec/rspec/core/did_you_mean_spec.rb' }
-            it 'should return a useful suggestion' do
+            it 'should return no suggestion' do
               expect(DidYouMean.new(name[0..-2]).call).to eq nil
             end
           end
