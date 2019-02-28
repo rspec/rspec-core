@@ -3,7 +3,7 @@ module RSpec
     RSpec.describe DidYouMean do
       describe '#call' do
         if defined?(::DidYouMean::SpellChecker)
-          context "when `DidYouMean::SpellChecker` is available", skip: !defined?(::DidYouMean::SpellChecker) do
+          context "when `DidYouMean::SpellChecker` is available", :skip => !defined?(::DidYouMean::SpellChecker) do
             context 'Success' do
               let(:name) { './spec/rspec/core/did_you_mean_spec.rb' }
               it 'returns a useful suggestion' do
