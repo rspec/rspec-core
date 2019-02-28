@@ -1,6 +1,7 @@
 module RSpec
   module Core
-    # Service object to provide did_you_mean suggestions
+    # @private
+    # Wrapper around Ruby's `DidYouMean::SpellChecker` when available to provide file name suggestions.
     class DidYouMean
       attr_reader :relative_file_name
 
@@ -9,17 +10,18 @@ module RSpec
       end
 
       if defined?(::DidYouMean::SpellChecker)
-        # provide probable suggestions if a LoadError
+        # provide probable suggestions
         def call
           checker = ::DidYouMean::SpellChecker.new(:dictionary => Dir["spec/**/*.rb"])
           probables = checker.correct(relative_file_name)
-          return unless probables.any?
+          return '' unless probables.any?
 
           formats probables
         end
-      else # ruby 2.3.2 or less
-        # return nil if API for ::DidYouMean::SpellChecker not supported
+      else
+        # return a hint if API for ::DidYouMean::SpellChecker not supported
         def call
+          "\nHint: Install the `did_you_mean` gem in order to provide suggestions for similarly named files."
         end
       end
 
