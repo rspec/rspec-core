@@ -24,13 +24,11 @@ module RSpec
               end
             end
           end
-          unless defined?(::DidYouMean::SpellChecker)
-            context "when `DidYouMean::SpellChecker` is not available" do
-              describe 'Success' do
-                let(:name) { './spec/rspec/core/did_you_mean_spec.rb' }
-                it 'returns a hint' do
-                  expect(DidYouMean.new(name[0..-2]).call).to include 'Hint:'
-                end
+          context "when `DidYouMean::SpellChecker` is not available", :unless => defined?(::DidYouMean::SpellChecker) do
+            describe 'Success' do
+              let(:name) { './spec/rspec/core/did_you_mean_spec.rb' }
+              it 'returns a hint' do
+                expect(DidYouMean.new(name[0..-2]).call).to include 'Hint:'
               end
             end
           end
