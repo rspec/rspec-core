@@ -13,7 +13,7 @@ module RSpec
         # provide probable suggestions
         def call
           checker = ::DidYouMean::SpellChecker.new(:dictionary => Dir["spec/**/*.rb"])
-          probables = checker.correct(relative_file_name)
+          probables = checker.correct(relative_file_name.sub('./', ''))[0..2]
           return '' unless probables.any?
 
           formats probables

@@ -13,7 +13,7 @@ module RSpec
                 it 'returns a small number of suggestions' do
                   name = './spec/rspec/core/drb_spec.r'
                   suggestions = DidYouMean.new(name).call
-                  expect(suggestions.split("\n").size).to eq 2
+                  expect(suggestions.split("\n").size).to eq 4
                 end
               end
             end
@@ -24,14 +24,13 @@ module RSpec
               end
             end
           end
-          context "when `DidYouMean::SpellChecker` is not available" do
-            before do
-              hide_const("::DidYouMean::SpellChecker") if defined?(::DidYouMean::SpellChecker)
-            end
-            describe 'Success' do
-              let(:name) { './spec/rspec/core/did_you_mean_spec.rb' }
-              it 'returns a hint' do
-                expect(DidYouMean.new(name[0..-2]).call).to include 'Hint:'
+          unless defined?(::DidYouMean::SpellChecker)
+            context "when `DidYouMean::SpellChecker` is not available" do
+              describe 'Success' do
+                let(:name) { './spec/rspec/core/did_you_mean_spec.rb' }
+                it 'returns a hint' do
+                  expect(DidYouMean.new(name[0..-2]).call).to include 'Hint:'
+                end
               end
             end
           end
