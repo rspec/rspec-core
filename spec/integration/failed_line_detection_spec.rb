@@ -2,7 +2,7 @@ require 'support/aruba_support'
 
 RSpec.describe 'Failed line detection' do
   include_context "aruba support"
-  before { clean_current_dir }
+  before { setup_aruba }
 
   it "finds the source of a failure in a spec file that is defined at the current directory instead of in the normal `spec` subdir" do
     write_file "the_spec.rb", "

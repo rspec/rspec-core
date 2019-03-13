@@ -22,7 +22,7 @@ RSpec.describe 'Spec file load errors' do
     # below does not filter out our spec file.
     expect(dirs.pop).to eq "aruba"
 
-    clean_current_dir
+    setup_aruba
 
     RSpec.configure do |c|
       c.filter_gems_from_backtrace "aruba"

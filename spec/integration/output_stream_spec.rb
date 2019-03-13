@@ -2,7 +2,7 @@ require 'support/aruba_support'
 
 RSpec.describe 'Output stream' do
   include_context 'aruba support'
-  before { clean_current_dir }
+  before { setup_aruba }
 
   context 'when a formatter set in a configure block' do
     it 'writes to the right output stream' do
