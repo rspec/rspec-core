@@ -106,8 +106,7 @@ Given /^I have a brand new project with no files$/ do
 end
 
 Given /^I have run `([^`]*)`$/ do |cmd|
-  fail_on_error = true
-  run_simple(sanitize_text(cmd), fail_on_error)
+  run_command_and_stop(sanitize_text(cmd), fail_on_error: true)
 end
 
 Given(/^a vendored gem named "(.*?)" containing a file named "(.*?)" with:$/) do |gem_name, file_name, file_contents|
