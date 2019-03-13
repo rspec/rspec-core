@@ -38,7 +38,7 @@ RSpec.describe 'Persistence failures' do
         "
 
         write_file_formatted "spec/examples.txt", ""
-        in_current_dir do
+        cd '.' do
           FileUtils.chmod 0000, "spec/examples.txt"
         end
       end

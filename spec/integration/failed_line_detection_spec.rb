@@ -32,7 +32,7 @@ RSpec.describe 'Failed line detection' do
       end
     "
 
-    file = in_current_dir { "#{Dir.pwd}/failing_spec.rb" }
+    file = cd('.') { "#{Dir.pwd}/failing_spec.rb" }
     load file
     run_command "passing_spec.rb"
 

@@ -12,7 +12,7 @@ module RSpec::Core
 
     def with_runner(&block)
       handle_current_dir_change do
-        in_current_dir do
+        cd '.' do
           options = ConfigurationOptions.new(shell_command.original_cli_args)
           runner = Runner.new(options)
           output = StringIO.new
@@ -124,7 +124,7 @@ module RSpec::Core
           runner.run(%w[ ./spec/a_spec.rb[1:1] ])
         end
 
-        in_current_dir do
+        cd '.' do
           expect(File.read('spec_helper_loads')).to eq(".")
         end
       end

@@ -21,7 +21,7 @@ RSpec.describe 'Output stream' do
 
       run_command ''
       expect(last_cmd_stdout).to be_empty
-      in_current_dir do
+      cd '.' do
         expect(File.read('saved_output')).to include('1 example, 0 failures')
       end
     end
@@ -42,7 +42,7 @@ RSpec.describe 'Output stream' do
 
       run_command ''
       expect(last_cmd_stdout).to be_empty
-      in_current_dir do
+      cd '.' do
         expect(File.read('saved_output')).to include('1 example, 0 failures')
       end
     end
@@ -64,7 +64,7 @@ RSpec.describe 'Output stream' do
 
       run_command ''
       expect(last_cmd_stdout).to be_empty
-      in_current_dir do
+      cd '.' do
         expect(File.read('saved_output')).to include('1 example, 0 failures')
       end
     end

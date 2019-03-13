@@ -205,7 +205,7 @@ RSpec.describe 'Filtering' do
       expect(last_cmd_stdout).to match(/3 examples, 0 failures/)
 
       # Using absolute paths...
-      spec_root = in_current_dir { File.expand_path("spec") }
+      spec_root = cd('.') { File.expand_path("spec") }
       run_command "#{spec_root}/file_1_spec.rb[1:1,1:3] #{spec_root}/file_2_spec.rb[1:2]"
       expect(last_cmd_stdout).to match(/3 examples, 0 failures/)
     end
