@@ -147,11 +147,6 @@ When(/^I fix "(.*?)" by replacing "(.*?)" with "(.*?)"$/) do |file_name, origina
   end
 end
 
-Then(/^it should fail with output "(.*?)"$/) do |snippet|
-  expect(all_commands).not_to include_an_object(be_successfully_executed)
-  expect(all_commands.map { |c| c.output }.join("\n")).to include(snippet)
-end
-
 Given(/^I have not configured `example_status_persistence_file_path`$/) do
   cd('.') do
     return unless File.exist?("spec/spec_helper.rb")
