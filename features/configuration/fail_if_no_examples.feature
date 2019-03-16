@@ -28,4 +28,4 @@ Feature: fail if no examples
 
   Scenario: Examples file name is matched by RSpec pattern, 1 example is run
     When I run `rspec --pattern spec/**/*.spec.rb`
-    Then it should pass with output "1 example, 0 failures"
+    Then it should pass with "1 example, 0 failures"

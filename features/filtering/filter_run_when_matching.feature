@@ -44,7 +44,7 @@ Feature: filter_run_when_matching
 
   Scenario: The filter is ignored when nothing is focused
     When I run `rspec --format doc`
-    Then it should pass with output "2 examples, 0 failures"
+    Then it should pass with "2 examples, 0 failures"
     And the output should contain:
       """
       A group
@@ -56,7 +56,7 @@ Feature: filter_run_when_matching
   Scenario: Examples can be focused with `fit`
     Given I have changed `it "has a passing example"` to `fit "has a passing example"` in "spec/example_spec.rb"
     When I run `rspec --format doc`
-    Then it should pass with output "1 example, 0 failures"
+    Then it should pass with "1 example, 0 failures"
     And the output should contain:
       """
       A group
@@ -66,7 +66,7 @@ Feature: filter_run_when_matching
   Scenario: Groups can be focused with `fdescribe` or `fcontext`
     Given I have changed `context` to `fcontext` in "spec/example_spec.rb"
     When I run `rspec --format doc`
-    Then it should pass with output "1 example, 0 failures"
+    Then it should pass with "1 example, 0 failures"
     And the output should contain:
       """
       A group

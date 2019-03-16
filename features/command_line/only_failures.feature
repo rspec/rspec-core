@@ -105,7 +105,7 @@ Feature: Only Failures
 
   Scenario: Running `rspec --only-failures` with spec files that pass doesn't run anything
     When I run `rspec spec/passing_spec.rb --only-failures`
-    Then it should pass with output "0 examples, 0 failures"
+    Then it should pass with "0 examples, 0 failures"
 
   Scenario: Clear error given when using `--only-failures` without configuring `example_status_persistence_file_path`
     Given I have not configured `example_status_persistence_file_path`
