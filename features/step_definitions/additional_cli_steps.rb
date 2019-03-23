@@ -4,19 +4,19 @@ require './spec/support/formatter_support'
 
 Then /^the output should contain all of these:$/ do |table|
   table.raw.flatten.each do |string|
-    expect(all_commands.map { |c| c.output }.join("\n")).to include(string)
+    expect(all_output).to include(string)
   end
 end
 
 Then /^the output should not contain any of these:$/ do |table|
   table.raw.flatten.each do |string|
-    expect(all_commands.map { |c| c.output }.join("\n")).not_to include(string)
+    expect(all_output).not_to include(string)
   end
 end
 
 Then /^the output should contain one of the following:$/ do |table|
   matching_output = table.raw.flatten.select do |string|
-    all_commands.map { |c| c.output }.join("\n").include?(string)
+    all_output.include?(string)
   end
 
   expect(matching_output.count).to eq(1)
@@ -32,9 +32,7 @@ Then /^the example(?:s)? should(?: all)? fail$/ do
   step %q{the output should not contain "0 examples"}
   step %q{the output should not contain "0 failures"}
   step %q{the exit status should be 1}
-  example_summary = /(\d+) examples?, (\d+) failures?/.match(
-    all_commands.map { |c| c.output }.join("\n")
-  )
+  example_summary = /(\d+) examples?, (\d+) failures?/.match(all_output)
   example_count, failure_count = example_summary.captures
   expect(failure_count).to eq(example_count)
 end
@@ -66,7 +64,7 @@ end
 Then /^the backtrace\-normalized output should contain:$/ do |partial_output|
   # ruby 1.9 includes additional stuff in the backtrace,
   # so we need to normalize it to compare it with our expected output.
-  normalized_output = all_commands.map { |c| c.output }.map do |line|
+  normalized_output = all_output.split("\n").map do |line|
     line =~ /(^\s+# [^:]+:\d+)/ ? $1 : line # http://rubular.com/r/zDD7DdWyzF
   end.join("\n")
 
@@ -81,7 +79,7 @@ end
 Then /^the failing example is printed in magenta$/ do
   # \e[35m = enable magenta
   # \e[0m  = reset colors
-  expect(all_commands.map { |c| c.output }.join("\n")).to include("\e[35m" + "F" + "\e[0m")
+  expect(all_output).to include("\e[35m" + "F" + "\e[0m")
 end
 
 Then /^the output from `([^`]+)` should contain "(.*?)"$/  do |cmd, expected_output|
@@ -189,12 +187,12 @@ end
 
 Then(/^it should fail and list all the failures:$/) do |string|
   step %q{the exit status should not be 0}
-  expect(normalize_failure_output(all_commands.map { |c| c.output }.join("\n"))).to include(normalize_failure_output(string))
+  expect(normalize_failure_output(all_output)).to include(normalize_failure_output(string))
 end
 
 Then(/^it should pass and list all the pending examples:$/) do |string|
   step %q{the exit status should be 0}
-  expect(normalize_failure_output(all_commands.map { |c| c.output }.join("\n"))).to include(normalize_failure_output(string))
+  expect(normalize_failure_output(all_output)).to include(normalize_failure_output(string))
 end
 
 Then(/^the output should report "slow before context hook" as the slowest example group$/) do
@@ -210,7 +208,7 @@ Then(/^the output should report "slow before context hook" as the slowest exampl
   # - "Nested" group listed (it should be the outer group)
   # - The example group class name is listed (it should be the location)
 
-  output = all_commands.map { |c| c.output }.join("\n")
+  output = all_output
 
   expect(output).not_to match(/nested/i)
   expect(output).not_to match(/inf/i)
