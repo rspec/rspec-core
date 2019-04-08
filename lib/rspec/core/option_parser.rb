@@ -112,6 +112,7 @@ module RSpec::Core
                   '  [d]ocumentation (group and example names)',
                   '  [h]tml',
                   '  [j]son',
+                  '  c (minimalist output suitable for editors integration)',
                   '  custom formatter class name') do |o|
           options[:formatters] ||= []
           options[:formatters] << [o]
