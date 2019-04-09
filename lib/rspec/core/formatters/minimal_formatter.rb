@@ -4,7 +4,7 @@ module RSpec
   module Core
     module Formatters
       # @private
-      class CFormatter < BaseFormatter
+      class MinimalFormatter < BaseFormatter
         Formatters.register self, :example_failed, :dump_profile
 
         def example_failed(failure)

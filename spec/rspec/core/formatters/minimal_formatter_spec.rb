@@ -1,11 +1,11 @@
-require 'rspec/core/formatters/c_formatter'
+require 'rspec/core/formatters/minimal_formatter'
 
 module RSpec::Core::Formatters
-  RSpec.describe CFormatter do
+  RSpec.describe MinimalFormatter do
     include FormatterSupport
 
     it 'produces the expected full output' do
-      output = run_example_specs_with_formatter('c')
+      output = run_example_specs_with_formatter('minimal')
       expect(output).to eq(<<-EOS.gsub(/^\s+\|/, ''))
         |./spec/rspec/core/resources/formatter_specs.rb:4:is marked as pending but passes
         |./spec/rspec/core/resources/formatter_specs.rb:36:fails
