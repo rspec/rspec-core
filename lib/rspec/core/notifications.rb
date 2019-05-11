@@ -397,10 +397,17 @@ module RSpec::Core
 
       include RSpec::Core::ShellEscape
 
+      def hyperlink(example, text)
+        return text unless RSpec.configuration.hyperlink
+
+        uri = "rspec://#{File.expand_path(example.location)}"
+        "\e]8;;#{uri}\e\\#{text}\e]8;;\e\\\n"
+      end
+
       def rerun_argument_for(example)
         location = example.location_rerun_argument
-        return location unless duplicate_rerun_locations.include?(location)
-        conditionally_quote(example.id)
+        return hyperlink(example, location) unless duplicate_rerun_locations.include?(location)
+        conditionally_quote(hyperlink(example, example.id))
       end
 
       def duplicate_rerun_locations

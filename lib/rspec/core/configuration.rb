@@ -341,6 +341,11 @@ module RSpec
       add_setting :detail_color
 
       # @macro add_setting
+      # Hyperlink failed examples (default: `false`).
+      # @return [Boolean]
+      add_setting :hyperlink
+
+      # @macro add_setting
       # Don't print filter info i.e. "Run options: include {:focus=>true}"
       # (default `false`).
       # return [Boolean]

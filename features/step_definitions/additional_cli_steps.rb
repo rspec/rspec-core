@@ -82,6 +82,24 @@ Then /^the failing example is printed in magenta$/ do
   expect(all_output).to include("\e[35m" + "F" + "\e[0m")
 end
 
+Then /^the failed example includes shell hyperlink escape codes$/ do
+  open = "\e\\]8;;"
+  divider = "\e\\\\"
+  close = "\e\\]8;;"
+  uri = "rspec://.*/hyperlinks_spec.rb:6"
+  text = "./hyperlinks_spec.rb:6"
+  expect(all_output).to match(Regexp.new(open + uri + divider + text + close))
+end
+
+Then /^the failed shared examples includes shell hyperlink escape codes$/ do
+  open = "\e\\]8;;"
+  divider = "\e\\\\"
+  close = "\e\\]8;;"
+  uri = "rspec://.*/hyperlinks_in_shared_examples_spec.rb:7"
+  text = "./hyperlinks_in_shared_examples_spec.rb\\[[\\d:]+\\]"
+  expect(all_output).to match(Regexp.new(open + uri + divider + text + close))
+end
+
 Then /^the output from `([^`]+)` should contain "(.*?)"$/  do |cmd, expected_output|
   step %Q{I run `#{cmd}`}
   step %Q{the output from "#{cmd}" should contain "#{expected_output}"}

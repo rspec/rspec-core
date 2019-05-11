@@ -140,6 +140,10 @@ module RSpec::Core
           options[:color_mode] = :automatic
         end
 
+        parser.on('--hyperlink', 'Enable shell hyperlinks') do |_o|
+          options[:hyperlink] = true
+        end
+
         parser.on('--force-color', '--force-colour', 'Force the output to be in color, even if the output is not a TTY') do |_o|
           if options[:color_mode] == :off
             abort "Please only use one of `--force-color` and `--no-color`"
