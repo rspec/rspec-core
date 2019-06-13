@@ -1,5 +1,5 @@
 ### 3.8.1 / 2019-06-13
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.8.0...3-8-maintenance)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.8.0...3.8.1)
 
 Bug Fixes:
 
