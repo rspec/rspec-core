@@ -61,6 +61,11 @@ module RSpec
         end
       end
 
+      # The description of the inner-most `describe`/`context` block.
+      def description
+        self.class.metadata.fetch(:description_args).first
+      end
+      
       # When `should` is called with no explicit receiver, the call is
       # delegated to the object returned by `subject`. Combined with an
       # implicit subject this supports very concise expressions.
