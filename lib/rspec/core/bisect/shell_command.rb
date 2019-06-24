@@ -87,6 +87,16 @@ module RSpec
               opts -= %W[ --drb-port #{port} ]
             end
 
+            if (pattern = parsed_original_cli_options[:pattern])
+              opts -= %W[ --pattern #{pattern} ]
+              opts += %W[ --pattern #{open3_safe_escape pattern} ]
+            end
+
+            if (exclusion_pattern = parsed_original_cli_options[:exclude_pattern])
+              opts -= %W[ --exclude-pattern #{exclusion_pattern} ]
+              opts += %W[ --exclude-pattern #{open3_safe_escape exclusion_pattern} ]
+            end
+
             parsed_original_cli_options.fetch(:formatters) { [] }.each do |(name, out)|
               opts -= %W[ --format #{name} -f -f#{name} ]
               opts -= %W[ --out #{out} -o -o#{out} ]

@@ -16,7 +16,13 @@ module RSpec::Core
         $LOAD_PATH.replace(orig_load_path)
       end
 
-      let(:original_cli_args) { %w[ spec/unit -rfoo -Ibar --warnings --backtrace ] }
+      let(:original_cli_args) do
+        %w[
+          spec/unit -rfoo -Ibar --warnings --backtrace
+          --pattern spec/**{,/*/**}/*_spec.rb
+          --exclude-pattern spec/fixtures/**{,/*/**}/*.rb
+        ]
+      end
 
       it "includes the original CLI arg options" do
         cmd = command_for(%w[ spec/1.rb spec/2.rb ])
@@ -34,6 +40,19 @@ module RSpec::Core
           expect(cmd).to include("'path/with spaces/to/spec.rb'")
         else
           expect(cmd).to include('path/with\ spaces/to/spec.rb')
+        end
+      end
+
+      it 'escapes globs' do
+        cmd = command_for([])
+        if uses_quoting_for_escaping?
+          expect(cmd).to include("--pattern 'spec/**{,/*/**}/*_spec.rb'").and(
+            include("--exclude-pattern 'spec/fixtures/**{,/*/**}/*.rb'")
+          )
+        else
+          expect(cmd).to include("--pattern spec/\\*\\*\\{,/\\*/\\*\\*\\}/\\*_spec.rb").and(
+            include("--exclude-pattern spec/fixtures/\\*\\*\\{,/\\*/\\*\\*\\}/\\*.rb")
+          )
         end
       end
 
