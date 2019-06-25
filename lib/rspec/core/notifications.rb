@@ -323,10 +323,10 @@ module RSpec::Core
         summary = Formatters::Helpers.pluralize(example_count, "example") +
           ", " + Formatters::Helpers.pluralize(failure_count, "failure")
         summary += ", #{pending_count} pending" if pending_count > 0
-        if errors_outside_of_examples_count > 0
+        if outside_errors_count > 0
           summary += (
             ", " +
-            Formatters::Helpers.pluralize(errors_outside_of_examples_count, "error") +
+            Formatters::Helpers.pluralize(outside_errors_count, "error") +
             " occurred outside of examples"
           )
         end
@@ -413,6 +413,10 @@ module RSpec::Core
             end
           end
         end
+      end
+
+      def outside_errors_count
+        errors_outside_of_examples_count || 0
       end
     end
 
