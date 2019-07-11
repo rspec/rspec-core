@@ -6,6 +6,10 @@ require 'optparse'
  module RSpec
   module Core
     class ConfigurationOverlay < Configuration
+      def initialize
+        super
+      end
+
       def with_suite_hooks(retries)
         return yield if dry_run?
 
@@ -157,18 +161,18 @@ end
          if options.options[:runner]
           options.options[:runner].call(options, err, out)
         else
-          new(options).run_with_retries(err, out, 3)
+          new(options).run(err, out, 3)
         end
       end
 
-       def run_with_retries(err, out, retries)
+       def run(err, out, retries)
         setup(err, out)
-        run_specs_with_retries(@world.ordered_example_groups, retries).tap do
+        run_specs(@world.ordered_example_groups, retries).tap do
           persist_example_statuses
         end
       end
 
-       def run_specs_with_retries(example_groups, retries)
+       def run_specs(example_groups, retries)
         examples_count = @world.example_count(example_groups)
         success = @configuration.reporter.report(examples_count) do |reporter|
           @configuration.with_suite_hooks_retries(retries) do
@@ -176,7 +180,7 @@ end
               return @configuration.failure_exit_code
             end
 
-             example_groups.map { |g| g.run_with_retries(reporter, retries) }.all?
+             example_groups.map { |g| g.run(reporter, retries) }.all?
           end
         end && !@world.non_example_failure
 
@@ -190,13 +194,13 @@ end
   module Core
     class ExampleGroup
       # Runs all the examples in this group.
-      def self.run_with_retries(reporter = RSpec::Core::NullReporter, retries)
+      def self.run(reporter = RSpec::Core::NullReporter, retries)
         return if RSpec.world.wants_to_quit
         reporter.example_group_started(self)
 
          should_run_context_hooks = descendant_filtered_examples.any?
         begin
-          run_before_context_hooks_with_retries(new('before(:context) hook'), retries) if should_run_context_hooks
+          run_before_context_hooks(new('before(:context) hook'), retries) if should_run_context_hooks
           result_for_this_group = run_examples(reporter)
           results_for_descendants = ordering_strategy.order(children).map { |child| child.run(reporter) }.all?
           result_for_this_group && results_for_descendants
@@ -213,13 +217,13 @@ end
         end
       end
 
-       def self.run_before_context_hooks_with_retries(example_group_instance, retries)
+       def self.run_before_context_hooks(example_group_instance, retries)
         set_ivars(example_group_instance, superclass_before_context_ivars)
 
          @currently_executing_a_context_hook = true
 
          ContextHookMemoized::Before.isolate_for_context_hook(example_group_instance) do
-          hooks.run_with_retries(:before, :context, example_group_instance, retries)
+          hooks.run(:before, :context, example_group_instance, retries)
         end
       ensure
         store_before_context_ivars(example_group_instance)
@@ -234,43 +238,43 @@ module RSpec
   module Core
     module Hooks
       class BeforeHook < Hook
-        def run_with_retries(example, retries)
+        def run(example, retries)
           example.instance_exec(example, &block)
         rescue Exception => e
           raise "Issue after #{RETRY_COUNT} number of retries: #{e}" if retries == 1
           Capybara.reset!
-          run_with_retries(example, retries - 1)
+          run(example, retries - 1)
         end
       end
 
        class HookCollections
         # Runs all of the blocks stored with the hook in the context of the
         # example. If no example is provided, just calls the hook directly.
-        def run_with_retries(position, scope, example_or_group, retries)
+        def run(position, scope, example_or_group, retries)
           return if RSpec.configuration.dry_run?
 
            if scope == :context
             unless example_or_group.class.metadata[:skip]
-              run_owned_hooks_with_retries_for(position, :context, example_or_group, retries)
+              run_owned_hooks_for(position, :context, example_or_group, retries)
             end
           else
             case position
-            when :before then run_example_hooks_with_retries_for(example_or_group, :before, :reverse_each, retries)
+            when :before then run_example_hooks_for(example_or_group, :before, :reverse_each, retries)
             when :after  then run_example_hooks_for(example_or_group, :after,  :each)
             when :around then run_around_example_hooks_for(example_or_group) { yield }
             end
           end
         end
 
-         def run_example_hooks_with_retries_for(example, position, each_method, retries)
+         def run_example_hooks_for(example, position, each_method, retries)
           owner_parent_groups.__send__(each_method) do |group|
-            group.hooks.run_owned_hooks_with_retries_for(position, :example, example, retries)
+            group.hooks.run_owned_hooks_for(position, :example, example, retries)
           end
         end
 
-         def run_owned_hooks_with_retries_for(position, scope, example_or_group, retries)
+         def run_owned_hooks_for(position, scope, example_or_group, retries)
           matching_hooks_for(position, scope, example_or_group).each do |hook|
-            hook.run_with_retries(example_or_group, retries)
+            hook.run(example_or_group, retries)
           end
         end
       end
@@ -292,13 +296,13 @@ module RSpec::Core
       @original_args = original_args
     end
 
-     def parse_with_retries(source = nil)
+     def parse(source = nil)
       return { :files_or_directories_to_run => [] } if original_args.empty?
       args = original_args.dup
 
        options = args.delete('--tty') ? { :tty => true } : {}
       begin
-        parser_with_retries(options).parse!(args)
+        parser(options).parse!(args)
       rescue OptionParser::InvalidOption => e
         failure = e.message
         failure << " (defined in #{source})" if source
@@ -311,7 +315,7 @@ module RSpec::Core
 
      private
 
-     def parser_with_retries(options)
+     def parser(options)
       OptionParser.new do |parser|
         parser.summary_width = 34
 
@@ -574,7 +578,7 @@ end
           rescue DRb::DRbConnError
             err.puts "No DRb server is running. Running in local process instead ..."
           end
-          RSpec::Core::RunnerRetry.new(options).run_with_retries(err, out, 3)
+          RSpec::Core::RunnerRetry.new(options).run(err, out, 3)
         end
       end
     end
@@ -586,17 +590,17 @@ end
     class ConfigurationOptionsRetries < ConfigurationOptions
       def initialize(args)
         @args = args.dup
-        organize_options_with_retries
+        organize_options
       end
 
        private
 
-       def organize_options_with_retries
+       def organize_options
         @filter_manager_options = []
 
          #@before_suite_hooks << Hooks::BeforeHook.new(block, {})
 
-         @options = (file_options << command_line_options_with_retries << env_options).each do |opts|
+         @options = (file_options << command_line_options << env_options).each do |opts|
           @filter_manager_options << [:include, opts.delete(:inclusion_filter)] if opts.key?(:inclusion_filter)
           @filter_manager_options << [:exclude, opts.delete(:exclusion_filter)] if opts.key?(:exclusion_filter)
         end
@@ -608,7 +612,7 @@ end
         end
       end
 
-       def command_line_options_with_retries
+       def command_line_options
         @command_line_options ||= ParserWithRetries.parse(@args)
       end
     end
