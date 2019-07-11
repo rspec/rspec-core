@@ -23,7 +23,7 @@ module RSpec
         orig_world   = RSpec.world
         orig_example = RSpec.current_example
 
-        RSpec.configuration = RSpec::Core::Configuration.new
+        RSpec.configuration = RSpec::Core::ConfigurationOverlay.new
         RSpec.world         = RSpec::Core::World.new(RSpec.configuration)
 
         yield RSpec.configuration

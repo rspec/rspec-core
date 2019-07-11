@@ -468,7 +468,7 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
       end
 
       it 'releases references to the examples / their ivars', :if => reliable_gc do
-        config        = RSpec::Core::Configuration.new
+        config        = RSpec::Core::ConfigurationOverlay.new
         real_reporter = RSpec::Core::Reporter.new(config) # in case it is the cause of a leak
         garbage       = Struct.new :defined_in
 
@@ -560,10 +560,10 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
   end
 
   describe "reporting example_finished" do
-    let(:reporter) { RSpec::Core::Reporter.new(RSpec::Core::Configuration.new) }
+    let(:reporter) { RSpec::Core::Reporter.new(RSpec::Core::ConfigurationOverlay.new) }
 
     def capture_reported_execution_result_for_example(&block)
-      reporter = RSpec::Core::Reporter.new(RSpec::Core::Configuration.new)
+      reporter = RSpec::Core::Reporter.new(RSpec::Core::ConfigurationOverlay.new)
 
       reported_execution_result = nil
 

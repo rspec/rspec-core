@@ -2,7 +2,7 @@ require 'rubygems' if RUBY_VERSION.to_f < 1.9
 
 require 'rspec/support/spec'
 
-$rspec_core_without_stderr_monkey_patch = RSpec::Core::Configuration.new
+$rspec_core_without_stderr_monkey_patch = RSpec::Core::ConfigurationOverlay.new
 
 class RSpec::Core::Configuration
   def self.new(*args, &block)

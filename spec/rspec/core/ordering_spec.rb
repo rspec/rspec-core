@@ -15,7 +15,7 @@ module RSpec
             instance_double(Example, :id => "./some_spec.rb[1:#{n}]")
           end
 
-          let(:configuration)  { RSpec::Core::Configuration.new }
+          let(:configuration)  { RSpec::Core::ConfigurationOverlay.new }
           let(:items)          { 10.times.map { |n| item(n) } }
           let(:shuffled_items) { subject.order items }
 

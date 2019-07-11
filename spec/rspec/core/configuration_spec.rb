@@ -37,7 +37,7 @@ module RSpec::Core
 
     describe "#fail_fast" do
       it "defaults to `nil`" do
-        expect(RSpec::Core::Configuration.new.fail_fast).to be(nil)
+        expect(RSpec::Core::ConfigurationOverlay.new.fail_fast).to be(nil)
       end
     end
 
@@ -124,7 +124,7 @@ module RSpec::Core
 
     describe 'fail_if_no_examples' do
       it 'defaults to false' do
-        expect(RSpec::Core::Configuration.new.fail_if_no_examples).to be(false)
+        expect(RSpec::Core::ConfigurationOverlay.new.fail_if_no_examples).to be(false)
       end
 
       it 'can be set to true' do

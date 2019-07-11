@@ -20,7 +20,7 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
   end
 
   describe "#configure" do
-    let(:config) { RSpec::Core::Configuration.new }
+    let(:config) { RSpec::Core::ConfigurationOverlay.new }
 
     it "configures deprecation_stream before loading requires (since required files may issue deprecations)" do
       opts = config_options_object(*%w[--deprecation-out path/to/log --require foo])
@@ -383,7 +383,7 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
 
   describe "default_path" do
     it "gets set before files_or_directories_to_run" do
-      config = RSpec::Core::Configuration.new
+      config = RSpec::Core::ConfigurationOverlay.new
       expect(config).to receive(:force).with(:default_path => 'foo').ordered
       expect(config).to receive(:get_files_to_run).ordered
       opts = config_options_object("--default-path", "foo")
@@ -528,7 +528,7 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
     it "prefers CLI over file options for filter inclusion" do
       create_fixture_file("./.rspec", "--tag ~slow")
       opts = config_options_object("--tag", "slow")
-      config = RSpec::Core::Configuration.new
+      config = RSpec::Core::ConfigurationOverlay.new
       opts.configure(config)
       expect(config.inclusion_filter.rules).to have_key(:slow)
       expect(config.exclusion_filter.rules).not_to have_key(:slow)

@@ -83,7 +83,7 @@ module RSpec
   # @see RSpec.configure
   # @see Core::Configuration
   def self.configuration
-    @configuration ||= RSpec::Core::Configuration.new
+    @configuration ||= RSpec::Core::ConfigurationOverlay.new
   end
 
   # Yields the global configuration to a block.

@@ -2,7 +2,7 @@ require 'rspec/core/formatters/syntax_highlighter'
 
 module RSpec::Core::Formatters
   RSpec.describe SyntaxHighlighter do
-    let(:config)      { RSpec::Core::Configuration.new.tap { |config| config.color_mode = :on } }
+    let(:config)      { RSpec::Core::ConfigurationOverlay.new.tap { |config| config.color_mode = :on } }
     let(:highlighter) { SyntaxHighlighter.new(config)  }
 
     context "when CodeRay is available", :unless => RSpec::Support::OS.windows? do

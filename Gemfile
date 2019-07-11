@@ -55,6 +55,8 @@ platforms :jruby do
   end
 end
 
+gem 'rspec-retry', '~> 0.6'
+
 gem 'simplecov', '~> 0.8'
 
 # No need to run rubocop on earlier versions

@@ -1,7 +1,7 @@
 require 'rspec/core/drb'
 
 RSpec.describe RSpec::Core::DRbRunner, :isolated_directory => true, :isolated_home => true, :type => :drb, :unless => RUBY_PLATFORM == 'java' do
-  let(:config) { RSpec::Core::Configuration.new }
+  let(:config) { RSpec::Core::ConfigurationOverlay.new }
   let(:out)    { StringIO.new }
   let(:err)    { StringIO.new }
 
@@ -66,7 +66,7 @@ RSpec.describe RSpec::Core::DRbRunner, :isolated_directory => true, :isolated_ho
     class SimpleDRbSpecServer
       def self.run(argv, err, out)
         options = RSpec::Core::ConfigurationOptions.new(argv)
-        config  = RSpec::Core::Configuration.new
+        config  = RSpec::Core::ConfigurationOverlay.new
         RSpec.configuration = config
         RSpec::Core::Runner.new(options, config).run(err, out)
       end
@@ -118,7 +118,7 @@ RSpec.describe RSpec::Core::DRbOptions, :isolated_directory => true, :isolated_h
     end
 
     def drb_filter_manager_for(args)
-      configuration = RSpec::Core::Configuration.new
+      configuration = RSpec::Core::ConfigurationOverlay.new
       RSpec::Core::DRbRunner.new(config_options_object(*args), configuration).drb_argv
       configuration.filter_manager
     end
@@ -201,13 +201,13 @@ RSpec.describe RSpec::Core::DRbOptions, :isolated_directory => true, :isolated_h
 
       it "leaves formatters intact" do
         coo = config_options_object("--format", "d")
-        RSpec::Core::DRbRunner.new(coo, RSpec::Core::Configuration.new).drb_argv
+        RSpec::Core::DRbRunner.new(coo, RSpec::Core::ConfigurationOverlay.new).drb_argv
         expect(coo.options[:formatters]).to eq([["d"]])
       end
 
       it "leaves output intact" do
         coo = config_options_object("--format", "p", "--out", "foo.txt", "--format", "d")
-        RSpec::Core::DRbRunner.new(coo, RSpec::Core::Configuration.new).drb_argv
+        RSpec::Core::DRbRunner.new(coo, RSpec::Core::ConfigurationOverlay.new).drb_argv
         expect(coo.options[:formatters]).to eq([["p","foo.txt"],["d"]])
       end
     end

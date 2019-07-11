@@ -28,13 +28,13 @@ module RSpecConfigurationOverrides
 
   def self.prepare_implementation(prefix)
     RSpec.world = RSpec::Core::World.new # clear our state
-    RSpec::Core::Configuration.class_eval do
+    RSpec::Core::ConfigurationOverlay.class_eval do
       alias_method :configure_group, :"#{prefix}_configure_group"
     end
   end
 end
 
-RSpec::Core::Configuration.class_eval do
+RSpec::Core::ConfigurationOverlay.class_eval do
   prepend RSpecConfigurationOverrides
   alias new_configure_group configure_group
 end

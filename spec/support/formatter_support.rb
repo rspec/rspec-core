@@ -272,7 +272,7 @@ module FormatterSupport
   def config
     @configuration ||=
       begin
-        config = RSpec::Core::Configuration.new
+        config = RSpec::Core::ConfigurationOverlay.new
         config.output_stream = formatter_output
         config
       end

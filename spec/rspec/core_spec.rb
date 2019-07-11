@@ -87,7 +87,7 @@ RSpec.describe RSpec do
 
   describe ".configuration=" do
     it "sets the configuration object" do
-      configuration = RSpec::Core::Configuration.new
+      configuration = RSpec::Core::ConfigurationOverlay.new
 
       RSpec.configuration = configuration
 
