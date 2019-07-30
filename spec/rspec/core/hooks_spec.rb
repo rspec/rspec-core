@@ -145,6 +145,34 @@ module RSpec::Core
       end
     end
 
+    describe "#before(:all)" do
+      it "stops running subsequent after hook when an error is encountered" do
+        sequence = []
+
+        RSpec.configure do |c|
+          c.output_stream = StringIO.new
+
+          c.before(:all) do
+            sequence << :hook_1
+            raise "boom"
+          end
+
+          c.after do
+            sequence << :hook_2
+            raise "boom"
+          end
+        end
+
+        RSpec.configuration.with_suite_hooks do
+          RSpec.describe do
+            example { sequence << :example }
+          end.run
+        end
+
+        expect(sequence).to eq [:hook_1]
+      end
+    end
+
     describe "#around" do
       context "when it does not run the example" do
         context "for a hook declared in the group" do
