@@ -1,3 +1,4 @@
+require 'singleton'
 RSpec::Support.require_rspec_support 'reentrant_mutex'
 
 module RSpec
@@ -57,7 +58,16 @@ module RSpec
       def subject
         __memoized.fetch_or_store(:subject) do
           described = described_class || self.class.metadata.fetch(:description_args).first
-          Class === described ? described.new : described
+
+          if described.is_a?(Class)
+            if described.included_modules.include?(::Singleton)
+              described.instance
+            else
+              described.new
+            end
+          else
+            described
+          end
         end
       end
 
