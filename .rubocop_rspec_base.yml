@@ -307,3 +307,6 @@ Style/TrailingUnderscoreVariable:
 
 Layout/EmptyLinesAroundAccessModifier:
   Enabled: false
+
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: always
