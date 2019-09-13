@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'stringio'
 RSpec::Support.require_rspec_core "formatters/base_bisect_formatter"
 RSpec::Support.require_rspec_core "bisect/utilities"

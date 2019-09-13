@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec::Support.require_rspec_core "bisect/shell_command"
 RSpec::Support.require_rspec_core "bisect/example_minimizer"
 RSpec::Support.require_rspec_core "bisect/utilities"

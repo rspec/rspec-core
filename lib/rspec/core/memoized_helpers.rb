@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec::Support.require_rspec_support 'reentrant_mutex'
 
 module RSpec

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module RSpec
   module Core
     # Provides methods to mark examples as pending. These methods are available
