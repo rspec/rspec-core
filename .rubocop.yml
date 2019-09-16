@@ -108,3 +108,6 @@ Performance/Caller:
 
 Metrics/BlockLength:
   Max: 193
+
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: always
