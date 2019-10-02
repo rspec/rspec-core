@@ -5,11 +5,7 @@ Describe your issue here.
 
 ### Your environment
 * Ruby version:
-<<<<<<< HEAD
 * rspec-core version:
-=======
-* rspec-expectations version:
->>>>>>> rspec-expectations/master
 
 ### Steps to reproduce
 <!---

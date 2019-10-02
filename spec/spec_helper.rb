@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 require 'rubygems' if RUBY_VERSION.to_f < 1.9
 
 require 'rspec/support/spec'
@@ -39,20 +38,6 @@ module CommonHelpers
     example_group
   end
 
-=======
-require 'rspec/support/spec'
-require 'rspec/support/spec/in_sub_process'
-
-RSpec::Support::Spec.setup_simplecov do
-  minimum_coverage 97
-end
-
-Dir['./spec/support/**/*.rb'].each do |f|
-  require f.sub(%r|\./spec/|, '')
-end
-
-module CommonHelperMethods
->>>>>>> rspec-expectations/master
   def with_env_vars(vars)
     original = ENV.to_hash
     vars.each { |k, v| ENV[k] = v }
@@ -64,7 +49,6 @@ module CommonHelperMethods
     end
   end
 
-<<<<<<< HEAD
   def without_env_vars(*vars)
     original = ENV.to_hash
     vars.each { |k| ENV.delete(k) }
@@ -81,6 +65,25 @@ module CommonHelperMethods
     yield
   ensure
     RSpec::Core::Metadata.instance_variable_set(:@relative_path_regex, nil)
+  end
+
+  def dedent(string)
+    string.gsub(/^\s+\|/, '').chomp
+  end
+
+  # We have to use Hash#inspect in examples that have multi-entry
+  # hashes because the #inspect output on 1.8.7 is non-deterministic
+  # due to the fact that hashes are not ordered. So we can't simply
+  # put a literal string for what we expect because it varies.
+  if RUBY_VERSION.to_f == 1.8
+    def hash_inspect(hash)
+      "\\{(#{hash.map { |key, value| "#{key.inspect} => #{value.inspect}.*" }.join "|"}){#{hash.size}}\\}"
+    end
+  else
+    def hash_inspect(hash)
+      RSpec::Matchers::BuiltIn::BaseMatcher::HashFormatting.
+        improve_hash_formatting hash.inspect
+    end
   end
 end
 
@@ -101,6 +104,8 @@ RSpec.configure do |c|
   c.include CommonHelpers
 
   c.expect_with :rspec do |expectations|
+    $default_expectation_syntax = expectations.syntax # rubocop:disable Style/GlobalVars
+    expectations.syntax = :expect
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
 
@@ -124,53 +129,6 @@ RSpec.configure do |c|
   }
 
   $original_rspec_configuration = c
-end
-=======
-  def dedent(string)
-    string.gsub(/^\s+\|/, '').chomp
-  end
-
-  # We have to use Hash#inspect in examples that have multi-entry
-  # hashes because the #inspect output on 1.8.7 is non-deterministic
-  # due to the fact that hashes are not ordered. So we can't simply
-  # put a literal string for what we expect because it varies.
-  if RUBY_VERSION.to_f == 1.8
-    def hash_inspect(hash)
-      "\\{(#{hash.map { |key, value| "#{key.inspect} => #{value.inspect}.*" }.join "|"}){#{hash.size}}\\}"
-    end
-  else
-    def hash_inspect(hash)
-      RSpec::Matchers::BuiltIn::BaseMatcher::HashFormatting.
-        improve_hash_formatting hash.inspect
-    end
-  end
-end
-
-RSpec.configure do |config|
-  config.color = true
-  config.order = :random
-
-  config.include CommonHelperMethods
-  config.include RSpec::Support::InSubProcess
-
-  config.expect_with :rspec do |expectations|
-    $default_expectation_syntax = expectations.syntax # rubocop:disable Style/GlobalVars
-    expectations.syntax = :expect
-    expectations.include_chain_clauses_in_custom_matcher_descriptions = true
-  end
-
-  config.mock_with :rspec do |mocks|
-    mocks.verify_partial_doubles = true
-  end
-
-  config.disable_monkey_patching!
-
-  # We don't want rspec-core to look in our `lib` for failure snippets.
-  # When it does that, it inevitably finds this line:
-  # `RSpec::Support.notify_failure(RSpec::Expectations::ExpectationNotMetError.new message)`
-  # ...which isn't very helpful. Far better for it to find the expectation
-  # call site in the spec.
-  config.project_source_dirs -= ["lib"]
 end
 
 RSpec.shared_context "with #should enabled", :uses_should do
@@ -243,4 +201,3 @@ module MinitestIntegration
 end
 
 RSpec::Matchers.define_negated_matcher :avoid_outputting, :output
->>>>>>> rspec-expectations/master

@@ -1,9 +1,5 @@
 <!---
-<<<<<<< HEAD
 This file was generated on 2018-04-17T19:41:56+02:00 from the rspec-dev repo.
-=======
-This file was generated on 2018-04-17T19:41:57+02:00 from the rspec-dev repo.
->>>>>>> rspec-expectations/master
 DO NOT modify it by hand as your changes will get lost the next time it is generated.
 -->
 
@@ -15,11 +11,7 @@ get a full RSpec development environment using
 [rspec-dev](https://github.com/rspec/rspec-dev#README) or you can
 set this project up individually.
 
-<<<<<<< HEAD
 ## Setting up rspec-core individually
-=======
-## Setting up rspec-expectations individually
->>>>>>> rspec-expectations/master
 
 For most contributors, setting up the project individually will be simpler.
 Unless you have a specific reason to use rspec-dev, we recommend using this approach.
@@ -27,21 +19,13 @@ Unless you have a specific reason to use rspec-dev, we recommend using this appr
 Clone the repo:
 
 ```
-<<<<<<< HEAD
 $ git clone git@github.com:rspec/rspec-core.git
-=======
-$ git clone git@github.com:rspec/rspec-expectations.git
->>>>>>> rspec-expectations/master
 ```
 
 Install the dependencies using [Bundler](http://bundler.io/):
 
 ```
-<<<<<<< HEAD
 $ cd rspec-core
-=======
-$ cd rspec-expectations
->>>>>>> rspec-expectations/master
 $ bundle install
 ```
 
@@ -74,11 +58,7 @@ an RSpec development environment, making it easy to do things like:
 These sorts of tasks are essential for the RSpec maintainers but will
 probably be unnecessary complexity if you're just contributing to one
 repository. If you are getting setup to make your first contribution,
-<<<<<<< HEAD
 we recommend you take the simpler route of setting up rspec-core
-=======
-we recommend you take the simpler route of setting up rspec-expectations
->>>>>>> rspec-expectations/master
 individually.
 
 ## Gotcha: Version mismatch from sibling repos
@@ -105,11 +85,7 @@ gem declarations. The `Gemfile` evaluates that file if it exists, and it is git-
 
 # Running the build
 
-<<<<<<< HEAD
 The [Travis CI build](https://travis-ci.org/rspec/rspec-core)
-=======
-The [Travis CI build](https://travis-ci.org/rspec/rspec-expectations)
->>>>>>> rspec-expectations/master
 runs many verification steps to prevent regressions and
 ensure high-quality code. To run the Travis build locally, run:
 
@@ -132,11 +108,7 @@ Here's a short, non-exhaustive checklist of things we typically ask contributors
 - [ ] New behavior is covered by tests and all tests are passing.
 - [ ] No Ruby warnings are issued by your changes.
 - [ ] Documentation reflects changes and renders as intended.
-<<<<<<< HEAD
 - [ ] Rubocop passes (e.g. `bundle exec rubocop lib`).
-=======
-- [ ] RuboCop passes (e.g. `bundle exec rubocop`).
->>>>>>> rspec-expectations/master
 - [ ] Commits are squashed into a reasonable number of logical changesets that tell an easy-to-follow story.
 - [ ] No changelog entry is necessary (we'll add it as part of the merge process!)
 

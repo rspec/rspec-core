@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 RSpec::Matchers.define :map_specs do |specs|
   match do |autotest|
     @specs = specs
@@ -126,7 +125,7 @@ RSpec::Matchers.define_negated_matcher :excluding, :include
 RSpec::Matchers.define_negated_matcher :a_string_excluding, :a_string_including
 RSpec::Matchers.define_negated_matcher :avoid_changing,   :change
 RSpec::Matchers.define_negated_matcher :a_hash_excluding, :include
-=======
+
 require 'rspec/matchers/fail_matchers'
 
 RSpec::Matchers.define :include_method do |expected|
@@ -169,4 +168,4 @@ end
 
 RSpec::Matchers.define_negated_matcher :a_string_excluding, :a_string_including
 RSpec::Matchers.define_negated_matcher :a_string_not_matching, :match
->>>>>>> rspec-expectations/master
+
