@@ -1,8 +1,12 @@
 The MIT License (MIT)
 =====================
 
+<<<<<<< HEAD
 * Copyright © 2012 Chad Humphries, David Chelimsky, Myron Marston
 * Copyright © 2009 Chad Humphries, David Chelimsky
+=======
+* Copyright © 2012 David Chelimsky, Myron Marston
+>>>>>>> rspec-expectations/master
 * Copyright © 2006 David Chelimsky, The RSpec Development Team
 * Copyright © 2005 Steven Baker
 

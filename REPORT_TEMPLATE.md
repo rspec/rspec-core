@@ -1,5 +1,9 @@
 <!---
+<<<<<<< HEAD
 This file was generated on 2018-04-17T19:41:56+02:00 from the rspec-dev repo.
+=======
+This file was generated on 2018-04-17T19:41:57+02:00 from the rspec-dev repo.
+>>>>>>> rspec-expectations/master
 DO NOT modify it by hand as your changes will get lost the next time it is generated.
 -->
 

@@ -1,11 +1,19 @@
 <!---
+<<<<<<< HEAD
 This file was generated on 2018-04-17T19:41:56+02:00 from the rspec-dev repo.
+=======
+This file was generated on 2018-04-17T19:41:57+02:00 from the rspec-dev repo.
+>>>>>>> rspec-expectations/master
 DO NOT modify it by hand as your changes will get lost the next time it is generated.
 -->
 
 # The CI build, in detail
 
+<<<<<<< HEAD
 The [Travis CI build](https://travis-ci.org/rspec/rspec-core)
+=======
+The [Travis CI build](https://travis-ci.org/rspec/rspec-expectations)
+>>>>>>> rspec-expectations/master
 runs many verification steps to prevent regressions and
 ensure high-quality code. To run the Travis build locally, run:
 
@@ -97,6 +105,7 @@ $ bundle exec yard doc --no-cache
 $ bin/yard doc --no-cache
 ```
 
+<<<<<<< HEAD
 ## Rubocop
 
 We use [Rubocop](https://github.com/bbatsov/rubocop) to enforce style conventions on the project so
@@ -113,6 +122,25 @@ $ bin/rubocop lib
 Our Rubocop configuration is a work-in-progress, so if you get a failure
 due to a Rubocop default, feel free to ask about changing the
 configuration. Otherwise, you'll need to address the Rubocop failure,
+=======
+## RuboCop
+
+We use [RuboCop](https://github.com/rubocop-hq/rubocop) to enforce style
+conventions on the project so that the code has stylistic consistency
+throughout. Run with:
+
+```
+$ bundle exec rubocop
+
+# or, if you installed your bundle with `--standalone --binstubs`:
+
+$ bin/rubocop
+```
+
+Our RuboCop configuration is a work-in-progress, so if you get a failure
+due to a RuboCop default, feel free to ask about changing the
+configuration. Otherwise, you'll need to address the RuboCop failure,
+>>>>>>> rspec-expectations/master
 or, as a measure of last resort, by wrapping the offending code in
 comments like `# rubocop:disable SomeCheck` and `# rubocop:enable SomeCheck`.
 

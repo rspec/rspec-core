@@ -1,7 +1,12 @@
 ## Set up the dev environment
 
+<<<<<<< HEAD
     git clone https://github.com/rspec/rspec-core.git
     cd rspec-core
+=======
+    git clone https://github.com/rspec/rspec-expectations.git
+    cd rspec-expectations
+>>>>>>> rspec-expectations/master
     gem install bundler
     bundle install
 
@@ -20,7 +25,11 @@ Or ...
     bundle install --binstubs
     bin/rspec
 
+<<<<<<< HEAD
 ## Customize the dev environment
+=======
+## Customize the dev enviroment
+>>>>>>> rspec-expectations/master
 
 The Gemfile includes the gems you'll need to be able to run specs. If you want
 to customize your dev enviroment with additional tools like guard or

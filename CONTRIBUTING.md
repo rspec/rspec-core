@@ -1,5 +1,9 @@
 <!---
+<<<<<<< HEAD
 This file was generated on 2018-04-17T19:41:56+02:00 from the rspec-dev repo.
+=======
+This file was generated on 2018-04-17T19:41:57+02:00 from the rspec-dev repo.
+>>>>>>> rspec-expectations/master
 DO NOT modify it by hand as your changes will get lost the next time it is generated.
 -->
 
@@ -11,6 +15,7 @@ We welcome contributions from *everyone*. While contributing, please follow the 
 If you'd like to help make RSpec better, here are some ways you can contribute:
 
   - by running RSpec HEAD to help us catch bugs before new releases
+<<<<<<< HEAD
   - by [reporting bugs you encounter](https://github.com/rspec/rspec-core/issues/new) with [report template](#report-template)
   - by [suggesting new features](https://github.com/rspec/rspec-core/issues/new)
   - by improving RSpec's [Relish](https://relishapp.com/rspec) or [API](http://rspec.info/documentation/) documentation
@@ -18,6 +23,15 @@ If you'd like to help make RSpec better, here are some ways you can contribute:
   - by taking part in [feature and issue discussions](https://github.com/rspec/rspec-core/issues)
   - by adding a failing test for reproducible [reported bugs](https://github.com/rspec/rspec-core/issues)
   - by reviewing [pull requests](https://github.com/rspec/rspec-core/pulls) and suggesting improvements
+=======
+  - by [reporting bugs you encounter](https://github.com/rspec/rspec-expectations/issues/new) with [report template](#report-template)
+  - by [suggesting new features](https://github.com/rspec/rspec-expectations/issues/new)
+  - by improving RSpec's [Relish](https://relishapp.com/rspec) or [API](http://rspec.info/documentation/) documentation
+  - by improving [RSpec's website](http://rspec.info/) ([source](https://github.com/rspec/rspec.github.io))
+  - by taking part in [feature and issue discussions](https://github.com/rspec/rspec-expectations/issues)
+  - by adding a failing test for reproducible [reported bugs](https://github.com/rspec/rspec-expectations/issues)
+  - by reviewing [pull requests](https://github.com/rspec/rspec-expectations/pulls) and suggesting improvements
+>>>>>>> rspec-expectations/master
   - by [writing code](DEVELOPMENT.md) (no patch is too small! fix typos or bad whitespace)
 
 If you need help getting started, check out the [DEVELOPMENT](DEVELOPMENT.md) file for steps that will get you up and running.

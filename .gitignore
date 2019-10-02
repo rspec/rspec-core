@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .rvmrc
 *.sw?
 .DS_Store
@@ -7,16 +8,32 @@ rdoc
 pkg
 tmp
 tags
+=======
+*.sw?
+.DS_Store
+coverage*
+rdoc
+pkg
+doc
+tmp
+>>>>>>> rspec-expectations/master
 rerun.txt
 Gemfile.lock
 .bundle
 *.rbc
+<<<<<<< HEAD
 bin
 .rbx
 .yardoc
 vendor
 Gemfile-custom
 .idea
+=======
+.yardoc
+bin
+.rbx
+Gemfile-custom
+>>>>>>> rspec-expectations/master
 bundle
 .rspec-local
 spec/examples.txt

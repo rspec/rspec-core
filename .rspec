@@ -1,3 +1,6 @@
+<<<<<<< HEAD
 --order rand
+=======
+>>>>>>> rspec-expectations/master
 --warnings
 --require spec_helper

@@ -1,6 +1,18 @@
 <%
+<<<<<<< HEAD
 exclusions = []
 exclusions << ' --tags ~@no-jruby' if RUBY_PLATFORM == 'java'
 %>
 default: --require features --strict --format progress --tags ~@wip<%= exclusions.join %> features
 wip:     --require features --tags @wip:30 --wip features
+=======
+def tags(tag)
+  tags = [tag]
+  tags << "~@ruby-1.9" if RUBY_VERSION.to_f < 1.9
+  tags.join(" --tags ")
+end
+%>
+
+default: --require features --tags <%= tags("~@wip") %> --format progress
+wip: --require features --tags @wip:3 --wip features
+>>>>>>> rspec-expectations/master

@@ -1,8 +1,12 @@
 --exclude features
 --no-private
 --markup markdown
+<<<<<<< HEAD
 --default-return void
 -
 Filtering.md
+=======
+-
+>>>>>>> rspec-expectations/master
 Changelog.md
 LICENSE.md
