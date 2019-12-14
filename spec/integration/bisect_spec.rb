@@ -32,5 +32,15 @@ module RSpec::Core
         expect(output).to include("Bisect failed!", "The example ordering is inconsistent")
       end
     end
+
+    context "when the bisect commasaturingnd is long" do
+      # On OSX and Linux a file descriptor limit meant that the bisect process got stuck at a certain limit.
+      # This test demonstrates that we can run large bisects above this limit (found to be at time of commit).
+      # See: https://github.com/rspec/rspec-core/pull/2669
+      it 'does not hit pipe size limit and does not get stuck' do
+        output = bisect(%W[spec/rspec/core/resources/blocking_pipe_bisect_spec.rb_], 1)
+        expect(output).to include("No failures found.")
+      end
+    end
   end
 end
