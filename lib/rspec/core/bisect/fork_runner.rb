@@ -91,8 +91,9 @@ module RSpec
           end
 
           def dispatch_specs(run_descriptor)
-            pid = fork { run_specs(run_descriptor) }
-            Process.waitpid(pid)
+            fork { run_specs(run_descriptor) }
+            # We don't use Process.waitpid here as it was causing bisects to
+            # block due to the file descriptor limit on OSX / Linux.
           end
 
         private
