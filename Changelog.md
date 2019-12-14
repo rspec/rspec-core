@@ -1,3 +1,11 @@
+### Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.0...master)
+
+Bug Fixes:
+
+* Prevent bisect command from blocking when number of specs exceeds file
+  descriptor limit on OSX or Linux. (Benoit Tigeot, #2669)
+
 ### 3.9.0 / 2019-10-07
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.8.2...v3.9.0)
 
@@ -19,7 +27,6 @@ Enhancements:
   (Jon Rowe, #2632)
 * Indent messages by there example group / example in the documentation formatter.
   (Samuel Williams, #2649)
-* Avoid blocking bisect command on OSX or Linux (Benoit Tigeot, #2669)
 
 ### 3.8.2 / 2019-06-29
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.8.1...v3.8.2)
