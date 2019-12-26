@@ -12,11 +12,13 @@ module RSpec
           expect(RSpec::Core::Formatters::HtmlSnippetExtractor.new.lines_around("blech", 8)).to eq("# Couldn't get snippet for blech")
         end
 
-        it "falls back on a default message when it gets a security error" do
-          message = with_safe_set_to_level_that_triggers_security_errors do
-            RSpec::Core::Formatters::HtmlSnippetExtractor.new.lines_around("blech".dup.taint, 8)
+        if RSpec::Support::RubyFeatures.supports_taint?
+          it "falls back on a default message when it gets a security error" do
+            message = with_safe_set_to_level_that_triggers_security_errors do
+              RSpec::Core::Formatters::HtmlSnippetExtractor.new.lines_around("blech".dup.taint, 8)
+            end
+            expect(message).to eq("# Couldn't get snippet for blech")
           end
-          expect(message).to eq("# Couldn't get snippet for blech")
         end
 
         describe "snippet extraction" do
