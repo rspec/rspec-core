@@ -113,7 +113,7 @@ module RSpec
 
     # @private
     class FilterRules
-      PROC_HEX_NUMBER = /0x[0-9a-f]+@/
+      PROC_HEX_NUMBER = /0x[0-9a-f]+@?/
       PROJECT_DIR = File.expand_path('.')
 
       attr_accessor :opposite
