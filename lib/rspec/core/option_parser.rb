@@ -22,13 +22,8 @@ module RSpec::Core
       begin
         parser(options).parse!(args)
       rescue OptionParser::InvalidOption => e
-        failure =
-          if source
-            "#{e.message} (defined in #{source})"
-          else
-            e.message
-          end
-        abort "#{failure}\n\nPlease use --help for a listing of valid options"
+        abort "#{e.message}#{" (defined in #{source})" if source}\n\n" \
+              "Please use --help for a listing of valid options"
       end
 
       options[:files_or_directories_to_run] = args
