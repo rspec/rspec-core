@@ -1,10 +1,11 @@
-### Development
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.0...master)
+### 3.9.1 / 2019-12-28
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.0...v3.9.1)
 
 Bug Fixes:
 
 * Prevent bisect command from blocking when number of specs exceeds file
   descriptor limit on OSX or Linux. (Benoit Tigeot, #2669)
+* Prevent warnings being issued on Ruby 2.7.0. (Jon Rowe, #2680)
 
 ### 3.9.0 / 2019-10-07
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.8.2...v3.9.0)
