@@ -77,6 +77,14 @@ function is_ruby_23_plus {
   fi
 }
 
+function rspec_rails_compatible {
+  if is_ruby_23_plus; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 function rspec_support_compatible {
   if [ "$MAINTENANCE_BRANCH" != "2-99-maintenance" ] && [ "$MAINTENANCE_BRANCH" != "2-14-maintenance" ]; then
     return 0
