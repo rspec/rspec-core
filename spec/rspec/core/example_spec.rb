@@ -443,7 +443,9 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
 
     context 'memory leaks, see GH-321, GH-1921' do
       def self.reliable_gc
-        0 != GC.method(:start).arity # older Rubies don't give us options to ensure a full GC
+        # older Rubies don't give us options to ensure a full GC
+        # TruffleRuby GC.start arity matches but GC.disable and GC.enable are mock implementations
+        0 != GC.method(:start).arity && !(defined?(RUBY_ENGINE) && RUBY_ENGINE == "truffleruby")
       end
 
       def expect_gc(opts)
