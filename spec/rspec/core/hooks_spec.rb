@@ -492,5 +492,34 @@ module RSpec::Core
         :hooks
       ])
     end
+
+    it 'emits a warning for `around(:context)`' do
+      expect(RSpec).to receive(:warn_with).with(a_string_including(
+        '`around(:context)` hooks are not supported'
+      ))
+      RSpec.describe do
+        around(:context) { }
+      end
+    end
+
+    it 'emits a warning for `around(:context)` defined in `configure`' do
+      expect(RSpec).to receive(:warn_with).with(a_string_including(
+        '`around(:context)` hooks are not supported'
+      ))
+      RSpec.configure do |c|
+        c.around(:context) { }
+      end
+    end
+
+    [:before, :around, :after].each do |type|
+      it "emits a warning for `#{type}(:suite)` hooks" do
+        expect(RSpec).to receive(:warn_with).with(a_string_including(
+          "`#{type}(:suite)` hooks are only supported on the RSpec configuration object."
+        ))
+        RSpec.describe do
+          send(type, :suite) { }
+        end
+      end
+    end
   end
 end

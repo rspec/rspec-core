@@ -1,3 +1,11 @@
+### Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.1...master)
+
+Bug Fixes:
+
+* Emit a warning when `around` hook is used with `:context` scope
+  (Phil Pirozhkov, #2687)
+
 ### 3.9.1 / 2019-12-28
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.0...v3.9.1)
 
