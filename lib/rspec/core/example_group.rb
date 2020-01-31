@@ -111,16 +111,14 @@ module RSpec
       #   @overload $1
       #   @overload $1(&example_implementation)
       #     @param example_implementation [Block] The implementation of the example.
-      #   @overload $1(doc_string, *metadata_keys, metadata={})
+      #   @overload $1(doc_string, *metadata)
       #     @param doc_string [String] The example's doc string.
-      #     @param metadata [Hash] Metadata for the example.
-      #     @param metadata_keys [Array<Symbol>] Metadata tags for the example.
-      #       Will be transformed into hash entries with `true` values.
-      #   @overload $1(doc_string, *metadata_keys, metadata={}, &example_implementation)
+      #     @param metadata [Array<Symbol>, Hash] Metadata for the example.
+      #       Symbols will be transformed into hash entries with `true` values.
+      #   @overload $1(doc_string, *metadata, &example_implementation)
       #     @param doc_string [String] The example's doc string.
-      #     @param metadata [Hash] Metadata for the example.
-      #     @param metadata_keys [Array<Symbol>] Metadata tags for the example.
-      #       Will be transformed into hash entries with `true` values.
+      #     @param metadata [Array<Symbol>, Hash] Metadata for the example.
+      #       Symbols will be transformed into hash entries with `true` values.
       #     @param example_implementation [Block] The implementation of the example.
       #   @yield [Example] the example object
       #   @example
@@ -139,6 +137,11 @@ module RSpec
       #     $1 "does something" do |ex|
       #       # ex is the Example object that contains metadata about the example
       #     end
+      #
+      #  @example
+      #     $1 "does something", :slow, :load_factor => 100 do
+      #     end
+      #
       def self.define_example_method(name, extra_options={})
         idempotently_define_singleton_method(name) do |*all_args, &block|
           desc, *args = *all_args
@@ -204,11 +207,10 @@ module RSpec
       #   @overload $1
       #   @overload $1(&example_group_definition)
       #     @param example_group_definition [Block] The definition of the example group.
-      #   @overload $1(doc_string, *metadata_keys, metadata={}, &example_implementation)
+      #   @overload $1(doc_string, *metadata, &example_implementation)
       #     @param doc_string [String] The group's doc string.
-      #     @param metadata [Hash] Metadata for the group.
-      #     @param metadata_keys [Array<Symbol>] Metadata tags for the group.
-      #       Will be transformed into hash entries with `true` values.
+      #     @param metadata [Array<Symbol>, Hash] Metadata for the group.
+      #       Symbols will be transformed into hash entries with `true` values.
       #     @param example_group_definition [Block] The definition of the example group.
       #
       #   Generates a subclass of this example group which inherits
@@ -223,11 +225,20 @@ module RSpec
       #         do_something_before
       #       end
       #
+      #       before(:example, :clean_env) do
+      #         env.clear!
+      #       end
+      #
       #       let(:thing) { Thing.new }
       #
       #       $1 "attribute (of something)" do
       #         # examples in the group get the before hook
       #         # declared above, and can access `thing`
+      #       end
+      #
+      #       $1 "needs additional setup", :clean_env, :implementation => JSON do
+      #         # specifies that hooks with matching metadata
+      #         # should be be run additionally
       #       end
       #     end
       #
