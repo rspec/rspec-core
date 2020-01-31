@@ -13,13 +13,14 @@ module RSpec
       # @overload before(scope, &block)
       #   @param scope [Symbol] `:example`, `:context`, or `:suite`
       #     (defaults to `:example`)
-      # @overload before(scope, conditions, &block)
+      # @overload before(scope, *conditions, &block)
       #   @param scope [Symbol] `:example`, `:context`, or `:suite`
       #     (defaults to `:example`)
-      #   @param conditions [Hash]
-      #     constrains this hook to examples matching these conditions e.g.
+      #   @param conditions [Array<Symbol>, Hash] constrains this hook to
+      #     examples matching these conditions e.g.
       #     `before(:example, :ui => true) { ... }` will only run with examples
-      #     or groups declared with `:ui => true`.
+      #     or groups declared with `:ui => true`. Symbols will be transformed
+      #     into hash entries with `true` values.
       # @overload before(conditions, &block)
       #   @param conditions [Hash]
       #     constrains this hook to examples matching these conditions e.g.
@@ -214,13 +215,14 @@ module RSpec
       # @overload after(scope, &block)
       #   @param scope [Symbol] `:example`, `:context`, or `:suite` (defaults to
       #     `:example`)
-      # @overload after(scope, conditions, &block)
+      # @overload after(scope, *conditions, &block)
       #   @param scope [Symbol] `:example`, `:context`, or `:suite` (defaults to
       #     `:example`)
-      #   @param conditions [Hash]
-      #     constrains this hook to examples matching these conditions e.g.
+      #   @param conditions [Array<Symbol>, Hash] constrains this hook to
+      #     examples matching these conditions e.g.
       #     `after(:example, :ui => true) { ... }` will only run with examples
-      #     or groups declared with `:ui => true`.
+      #     or groups declared with `:ui => true`. Symbols will be transformed
+      #     into hash entries with `true` values.
       # @overload after(conditions, &block)
       #   @param conditions [Hash]
       #     constrains this hook to examples matching these conditions e.g.
@@ -290,13 +292,15 @@ module RSpec
       #   @param scope [Symbol] `:example` (defaults to `:example`)
       #     present for syntax parity with `before` and `after`, but
       #     `:example`/`:each` is the only supported value.
-      # @overload around(scope, conditions, &block)
+      # @overload around(scope, *conditions, &block)
       #   @param scope [Symbol] `:example` (defaults to `:example`)
       #     present for syntax parity with `before` and `after`, but
       #     `:example`/`:each` is the only supported value.
-      #   @param conditions [Hash] constrains this hook to examples matching
-      #     these conditions e.g. `around(:example, :ui => true) { ... }` will
-      #     only run with examples or groups declared with `:ui => true`.
+      #   @param conditions [Array<Symbol>, Hash] constrains this hook to
+      #     examples matching these conditions e.g.
+      #     `around(:example, :ui => true) { ... }` will only run with examples
+      #     or groups declared with `:ui => true`. Symbols will be transformed
+      #     into hash entries with `true` values.
       # @overload around(conditions, &block)
       #   @param conditions [Hash] constrains this hook to examples matching
       #     these conditions e.g. `around(:example, :ui => true) { ... }` will
