@@ -253,7 +253,7 @@ Feature: `before` and `after` hooks
       .after context
       """
 
-  Scenario: `before`/after` blocks defined in configuration are run in order
+  Scenario: `before`/`after` blocks defined in configuration are run in order
     Given a file named "configuration_spec.rb" with:
       """ruby
       require "rspec/expectations"
