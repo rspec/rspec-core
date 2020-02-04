@@ -300,6 +300,31 @@ Feature: `before` and `after` hooks
       after suite
       """
 
+  Scenario: `after` blocks are run also for examples which have failed or encountered other errors
+    Given a file named "after_example_spec.rb" with:
+      """ruby
+      RSpec.describe "after callbacks" do
+        after(:example) do
+          puts "this is executed"
+          raise "error in after example block"
+        end
+
+        after(:example) do
+          puts "this is also executed"
+          raise "another error"
+        end
+
+        example "deliberate failure" do
+          expect(true).to be(false)
+        end
+      end
+      """
+    When I run `rspec --format progress after_example_spec.rb`
+    Then the output should contain "1 example, 1 failure"
+    And the output should contain "Got 1 failure and 2 other errors"
+    And the output should contain "this is executed"
+    And the output should contain "this is also executed"
+
   Scenario: `before`/`after` context blocks are run once
     Given a file named "before_and_after_context_spec.rb" with:
       """ruby
