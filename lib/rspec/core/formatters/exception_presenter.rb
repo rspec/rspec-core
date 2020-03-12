@@ -43,7 +43,7 @@ module RSpec
 
         if RSpec::Support::RubyFeatures.supports_exception_cause?
           def formatted_cause(exception)
-            last_cause = final_exception(exception)
+            last_cause = final_exception(exception, [exception])
             cause = []
 
             if exception.cause
@@ -55,7 +55,9 @@ module RSpec
                 cause << "  #{line}"
               end
 
-              cause << ("  #{backtrace_formatter.format_backtrace(last_cause.backtrace, example.metadata).first}")
+              unless last_cause.backtrace.empty?
+                cause << ("  #{backtrace_formatter.format_backtrace(last_cause.backtrace, example.metadata).first}")
+              end
             end
 
             cause
@@ -96,7 +98,8 @@ module RSpec
 
         def final_exception(exception, previous=[])
           cause = exception.cause
-          if cause && !previous.include?(cause)
+
+          if cause && Exception === cause && !previous.include?(cause)
             previous << cause
             final_exception(cause, previous)
           else
