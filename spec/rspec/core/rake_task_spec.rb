@@ -77,6 +77,13 @@ module RSpec::Core
           exclude(escape(RSpec::Core::RakeTask::DEFAULT_PATTERN))
         )
       end
+
+      it 'behaves properly if rspec_opts is an array' do
+        task.rspec_opts = %w[--pattern some_specs]
+        expect(spec_command).to include("--pattern some_specs").and(
+          exclude(escape(RSpec::Core::RakeTask::DEFAULT_PATTERN))
+        )
+      end
     end
 
     context "with pattern" do
