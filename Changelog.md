@@ -8,6 +8,8 @@ Bug Fixes:
 * Prevent invalid implementations of `Exception#cause` from being treated as a
   valid cause (and causing strange errors) in `RSpec::Core::Formatters::ExceptionPresenter`.
   (Jon Rowe, #2703)
+* Correctly detect patterns when `rspec_opts` is an array in `RSpec::Core::RakeTask`.
+  (Marc-André Lafortune, #2704)
 
 ### 3.9.1 / 2019-12-28
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.0...v3.9.1)
