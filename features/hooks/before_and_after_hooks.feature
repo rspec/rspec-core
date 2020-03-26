@@ -22,6 +22,8 @@ Feature: `before` and `after` hooks
   after  :suite
   ```
 
+  A bare `before` or `after` hook defaults to the `:example` scope.
+
   `before` and `after` hooks can be defined directly in the example groups they
   should run in, or in a global `RSpec.configure` block.
 
@@ -231,8 +233,16 @@ Feature: `before` and `after` hooks
           puts "before example"
         end
 
+        before do
+          puts "also before example but by default"
+        end
+
         after(:example) do
           puts "after example"
+        end
+
+        after do
+          puts "also after example but by default"
         end
 
         after(:context) do
@@ -249,6 +259,8 @@ Feature: `before` and `after` hooks
       """
       before context
       before example
+      also before example but by default
+      also after example but by default
       after example
       .after context
       """
