@@ -543,6 +543,16 @@ module RSpec
               expect(group).to have_example_descriptions("a different spec")
             end
           end
+
+          context "supporting kwargs" do
+            __send__ shared_method_name, "shared context" do |foo:|
+              it "has an expected value" do
+                expect(foo).to eq("bar")
+              end
+            end
+
+            it_behaves_like "shared context", foo: "bar"
+          end
         end
       end
     end

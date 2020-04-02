@@ -315,12 +315,12 @@ module RSpec
       #
       #   @see SharedExampleGroup
       def self.define_nested_shared_group_method(new_name, report_label="it should behave like")
-        idempotently_define_singleton_method(new_name) do |name, *args, &customization_block|
+        idempotently_define_singleton_method(new_name) do |name, *args, **kwargs, &customization_block|
           # Pass :caller so the :location metadata is set properly.
           # Otherwise, it'll be set to the next line because that's
           # the block's source_location.
           group = example_group("#{report_label} #{name}", :caller => (the_caller = caller)) do
-            find_and_eval_shared("examples", name, the_caller.first, *args, &customization_block)
+            find_and_eval_shared("examples", name, the_caller.first, *args, **kwargs, &customization_block)
           end
           group.metadata[:shared_group_name] = name
           group
@@ -340,8 +340,8 @@ module RSpec
       # context.
       #
       # @see SharedExampleGroup
-      def self.include_context(name, *args, &block)
-        find_and_eval_shared("context", name, caller.first, *args, &block)
+      def self.include_context(name, *args, **kwargs, &block)
+        find_and_eval_shared("context", name, caller.first, *args, **kwargs, &block)
       end
 
       # Includes shared content mapped to `name` directly in the group in which
@@ -350,8 +350,8 @@ module RSpec
       # context.
       #
       # @see SharedExampleGroup
-      def self.include_examples(name, *args, &block)
-        find_and_eval_shared("examples", name, caller.first, *args, &block)
+      def self.include_examples(name, *args, **kwargs, &block)
+        find_and_eval_shared("examples", name, caller.first, *args, **kwargs, &block)
       end
 
       # Clear memoized values when adding/removing examples
@@ -376,7 +376,7 @@ module RSpec
       end
 
       # @private
-      def self.find_and_eval_shared(label, name, inclusion_location, *args, &customization_block)
+      def self.find_and_eval_shared(label, name, inclusion_location, *args, **kwargs, &customization_block)
         shared_module = RSpec.world.shared_example_group_registry.find(parent_groups, name)
 
         unless shared_module
@@ -385,7 +385,7 @@ module RSpec
 
         shared_module.include_in(
           self, Metadata.relative_path(inclusion_location),
-          args, customization_block
+          args, kwargs, customization_block
         )
       end
 

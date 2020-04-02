@@ -25,15 +25,15 @@ module RSpec
       # including example group.
       def included(klass)
         inclusion_line = klass.metadata[:location]
-        include_in klass, inclusion_line, [], nil
+        include_in klass, inclusion_line, [], {}, nil
       end
 
       # @private
-      def include_in(klass, inclusion_line, args, customization_block)
+      def include_in(klass, inclusion_line, args, kwargs, customization_block)
         klass.update_inherited_metadata(@metadata) unless @metadata.empty?
 
         SharedExampleGroupInclusionStackFrame.with_frame(@description, inclusion_line) do
-          klass.class_exec(*args, &@definition)
+          klass.class_exec(*args, **kwargs, &@definition)
           klass.class_exec(&customization_block) if customization_block
         end
       end
