@@ -25,7 +25,8 @@ Feature: `before` and `after` hooks
   A bare `before` or `after` hook defaults to the `:example` scope.
 
   `before` and `after` hooks can be defined directly in the example groups they
-  should run in, or in a global `RSpec.configure` block.
+  should run in, or in a global `RSpec.configure` block. Note that the status of
+  the example does not affect the hooks.
 
   **WARNING:** Setting instance variables are not supported in `before(:suite)`.
 
@@ -187,6 +188,29 @@ Feature: `before` and `after` hooks
       StandardError:
         Boom!
       # ./after_context_spec.rb:3
+      """
+
+  Scenario: A failure in an example does not affect hooks
+    Given a file named "failure_in_example_spec.rb" with:
+      """ruby
+      RSpec.describe "a failing example does not affect hooks" do
+        before(:context) { puts "before context runs" }
+        before(:example) { puts "before example runs" }
+        after(:example) { puts "after example runs" }
+        after(:context) { puts "after context runs" }
+
+        it "fails the example but runs the hooks" do
+          raise "An Error"
+        end
+      end
+      """
+    When I run `rspec failure_in_example_spec.rb`
+    Then it should fail with:
+      """
+      before context runs
+      before example runs
+      after example runs
+      Fafter context runs
       """
 
   Scenario: Define `before` and `after` blocks in configuration
