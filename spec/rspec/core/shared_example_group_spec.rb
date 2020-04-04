@@ -544,14 +544,18 @@ module RSpec
             end
           end
 
-          context "supporting kwargs" do
-            __send__ shared_method_name, "shared context" do |foo:|
-              it "has an expected value" do
-                expect(foo).to eq("bar")
+          if RSpec::Support::RubyFeatures.required_kw_args_supported?
+            binding.eval(<<-CODE, __FILE__, __LINE__)
+            context "supporting kwargs" do
+              __send__ shared_method_name, "shared context" do |foo:|
+                it "has an expected value" do
+                  expect(foo).to eq("bar")
+                end
               end
-            end
 
-            it_behaves_like "shared context", foo: "bar"
+              it_behaves_like "shared context", foo: "bar"
+            end
+            CODE
           end
         end
       end

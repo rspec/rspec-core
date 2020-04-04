@@ -43,6 +43,7 @@ module RSpec
       if RSpec::Support::RubyFeatures.kw_args_supported?
         # Remove this in RSpec 4 in favour of explictly passed in kwargs down the entire
         # stack, e.g. rspec/rspec-core#2711
+        binding.eval(<<-CODE, __FILE__, __LINE__)
         def klass_exec(klass, *args, &definition)
           if RSpec::Support::MethodSignature.new(definition).has_kw_args_in?(args)
             kwargs = args.pop
@@ -51,6 +52,7 @@ module RSpec
             klass.class_exec(*args, &definition)
           end
         end
+        CODE
       else
         def klass_exec(klass, *args, &definition)
           klass.class_exec(*args, &definition)
