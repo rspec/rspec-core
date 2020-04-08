@@ -24,6 +24,7 @@ Bug Fixes:
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.8.2...v3.9.0)
 
 Enhancements:
+
 * Improve the handling of errors during loading support files, if a file
   errors before loading specs, RSpec will now skip loading the specs.
   (David Rodríguez, #2568)
