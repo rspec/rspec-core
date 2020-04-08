@@ -1,3 +1,5 @@
+RSpec::Support.require_rspec_support "with_keywords_when_needed"
+
 module RSpec
   module Core
     # Represents some functionality that is shared with multiple example groups.
@@ -33,7 +35,7 @@ module RSpec
         klass.update_inherited_metadata(@metadata) unless @metadata.empty?
 
         SharedExampleGroupInclusionStackFrame.with_frame(@description, inclusion_line) do
-          klass.class_exec(*args, &@definition)
+          RSpec::Support::WithKeywordsWhenNeeded.class_exec(klass, *args, &@definition)
           klass.class_exec(&customization_block) if customization_block
         end
       end
