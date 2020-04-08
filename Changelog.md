@@ -2142,6 +2142,7 @@ Bug fixes
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v2.2.0...v2.2.1)
 
 Bug fixes
+
 * alias_method instead of override Kernel#method_missing (John Wilger)
 * changed --autotest to --tty in generated command (MIKAMI Yoshiyuki)
 * revert change to debugger (had introduced conflict with Rails)
