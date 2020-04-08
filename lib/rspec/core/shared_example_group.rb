@@ -1,3 +1,5 @@
+RSpec::Support.require_rspec_support "with_keywords_when_needed"
+
 module RSpec
   module Core
     # Represents some functionality that is shared with multiple example groups.
@@ -33,29 +35,8 @@ module RSpec
         klass.update_inherited_metadata(@metadata) unless @metadata.empty?
 
         SharedExampleGroupInclusionStackFrame.with_frame(@description, inclusion_line) do
-          klass_exec(klass, *args, &@definition)
+          RSpec::Support::WithKeywordsWhenNeeded.class_exec(klass, *args, &@definition)
           klass.class_exec(&customization_block) if customization_block
-        end
-      end
-
-    private
-
-      if RSpec::Support::RubyFeatures.kw_args_supported?
-        # Remove this in RSpec 4 in favour of explictly passed in kwargs down the entire
-        # stack, e.g. rspec/rspec-core#2711
-        binding.eval(<<-CODE, __FILE__, __LINE__)
-        def klass_exec(klass, *args, &definition)
-          if RSpec::Support::MethodSignature.new(definition).has_kw_args_in?(args)
-            kwargs = args.pop
-            klass.class_exec(*args, **kwargs, &definition)
-          else
-            klass.class_exec(*args, &definition)
-          end
-        end
-        CODE
-      else
-        def klass_exec(klass, *args, &definition)
-          klass.class_exec(*args, &definition)
         end
       end
     end
