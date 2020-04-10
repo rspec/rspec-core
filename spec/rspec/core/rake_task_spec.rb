@@ -170,7 +170,7 @@ module RSpec::Core
 
           expect {
             task.with_clean_environment = true
-            task.ruby_opts = '-e "puts \"Environment: #{ENV.keys}\""'
+            task.ruby_opts = '-e "puts \"Environment: #{ENV.keys.sort.inspect}\""'
             task.run_task false
           }.to avoid_outputting.to_stderr.and output(essential_shell_variables).to_stdout_from_any_process
         end
