@@ -62,7 +62,6 @@ module RSpec
       #   or the configured failure exit code (1 by default) if specs
       #   failed.
       def self.run(args, err=$stderr, out=$stdout)
-        trap_interrupt
         options = ConfigurationOptions.new(args)
 
         if options.options[:runner]
@@ -86,8 +85,10 @@ module RSpec
         setup(err, out)
         return @configuration.reporter.exit_early(@configuration.failure_exit_code) if RSpec.world.wants_to_quit
 
-        run_specs(@world.ordered_example_groups).tap do
-          persist_example_statuses
+        with_interrupts do
+          run_specs(@world.ordered_example_groups).tap do
+            persist_example_statuses
+          end
         end
       end
 
@@ -171,13 +172,23 @@ module RSpec
         ["127.0.0.1", "localhost", local_ipv4].any? { |addr| addr == URI(DRb.current_server.uri).host }
       end
 
-      # @private
-      def self.trap_interrupt
-        trap('INT') { handle_interrupt }
+    private
+
+      def with_interrupts
+        if @configuration.trap_interrupt
+          previous = Signal.trap(:INT) { handle_interrupt }
+
+          begin
+            yield
+          ensure
+            Signal.trap(:INT, previous)
+          end
+        else
+          yield
+        end
       end
 
-      # @private
-      def self.handle_interrupt
+      def handle_interrupt
         if RSpec.world.wants_to_quit
           exit!(1)
         else
@@ -185,8 +196,6 @@ module RSpec
           $stderr.puts "\nRSpec is shutting down and will print the summary report... Interrupt again to force quit."
         end
       end
-
-    private
 
       def persist_example_statuses
         return if @configuration.dry_run

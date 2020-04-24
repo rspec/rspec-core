@@ -3,6 +3,9 @@ require 'support/runner_support'
 
 module RSpec::Core
   RSpec.describe Runner do
+    let(:options) { Hash.new }
+    subject(:runner) { described_class.new(options) }
+
     describe 'invocation' do
       before do
         # Simulate invoking the suite like exe/rspec does.
@@ -93,21 +96,21 @@ module RSpec::Core
     end
 
     describe "interrupt handling" do
-      before { allow(Runner).to receive(:exit!) }
+      before { allow(runner).to receive(:exit!) }
 
       it 'prints a message the first time, then exits the second time' do
         expect {
-          Runner.handle_interrupt
+          runner.send(:handle_interrupt)
         }.to output(/shutting down/).to_stderr_from_any_process &
           change { RSpec.world.wants_to_quit }.from(a_falsey_value).to(true)
 
-        expect(Runner).not_to have_received(:exit!)
+        expect(runner).not_to have_received(:exit!)
 
         expect {
-          Runner.handle_interrupt
+          runner.send(:handle_interrupt)
         }.not_to output.to_stderr_from_any_process
 
-        expect(Runner).to have_received(:exit!)
+        expect(runner).to have_received(:exit!)
       end
     end
 
@@ -115,7 +118,7 @@ module RSpec::Core
       let(:interrupt_handlers) { [] }
 
       before do
-        allow(Runner).to receive(:trap).with("INT", any_args) do |&block|
+        allow(Signal).to receive(:trap).with(:INT, any_args) do |&block|
           interrupt_handlers << block
         end
       end
@@ -126,32 +129,35 @@ module RSpec::Core
 
       it "adds a handler for SIGINT" do
         expect(interrupt_handlers).to be_empty
-        Runner.send(:trap_interrupt)
-        expect(interrupt_handlers.size).to eq(1)
+        runner.send(:with_interrupts) do
+          expect(interrupt_handlers.size).to eq(1)
+        end
       end
 
       context "with SIGINT once" do
         it "aborts processing" do
-          Runner.send(:trap_interrupt)
-          expect(Runner).to receive(:handle_interrupt)
-          interrupt
+          runner.send(:with_interrupts) do
+            expect(runner).to receive(:handle_interrupt)
+            interrupt
+          end
         end
 
         it "does not exit immediately, but notifies the user" do
-          Runner.send(:trap_interrupt)
-          expect(Runner).not_to receive(:exit)
-          expect(Runner).not_to receive(:exit!)
-
-          expect { interrupt }.to output(/RSpec is shutting down/).to_stderr
+          expect(runner).not_to receive(:exit)
+          expect(runner).not_to receive(:exit!)
+          runner.send(:with_interrupts) do
+            expect { interrupt }.to output(/RSpec is shutting down/).to_stderr
+          end
         end
       end
 
       context "with SIGINT twice" do
         it "exits immediately" do
-          Runner.send(:trap_interrupt)
-          expect(Runner).to receive(:exit!).with(1)
-          expect { interrupt }.to output(//).to_stderr
-          interrupt
+          expect(runner).to receive(:exit!).with(1)
+          runner.send(:with_interrupts) do
+            expect { interrupt }.to output(//).to_stderr
+            interrupt
+          end
         end
       end
     end

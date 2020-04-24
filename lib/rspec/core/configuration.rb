@@ -230,6 +230,10 @@ module RSpec
         end
       end
 
+      # @macro trap_interrupt
+      # Default: `true`.
+      add_setting :trap_interrupt
+
       # @macro add_setting
       # Prints the formatter output of your suite without running any
       # examples or hooks.
@@ -522,6 +526,7 @@ module RSpec
         @failure_exit_code = 1
         @fail_if_no_examples = false
         @spec_files_loaded = false
+        @trap_interrupt = true
 
         @backtrace_formatter = BacktraceFormatter.new
 
