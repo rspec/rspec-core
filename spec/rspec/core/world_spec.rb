@@ -36,6 +36,14 @@ module RSpec::Core
           RSpec.world.reset
         }.to change(RSpec::ExampleGroups, :constants).to([])
       end
+
+      it 'clears #example_group_counts_by_spec_file' do
+        RSpec.describe "group"
+
+        expect {
+          RSpec.world.reset
+        }.to change { world.example_group_counts_by_spec_file }.to be_empty
+      end
     end
 
     describe "#example_groups" do
