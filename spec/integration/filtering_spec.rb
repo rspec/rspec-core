@@ -66,6 +66,49 @@ RSpec.describe 'Filtering' do
   end
 
   context "passing a line-number filter" do
+    it "works with different custom runners used in the same process" do
+      result_counter = Class.new do
+        RSpec::Core::Formatters.register(self, :example_passed)
+
+        attr_accessor :passed_examples
+
+        def initialize(*)
+          @passed_examples = 0
+        end
+
+        def example_passed(notification)
+          @passed_examples += 1
+        end
+      end
+
+      spec_file = "spec/filtering_custom_runner_spec.rb"
+
+      write_file_formatted spec_file, "
+        RSpec.describe 'A group' do
+          example('ex 1') { }
+          example('ex 2') { }
+        end
+      "
+
+      spec_file_path = expand_path(spec_file)
+
+      formatter = result_counter.new
+      RSpec.configuration.add_formatter(formatter)
+      opts = RSpec::Core::ConfigurationOptions.new(["#{spec_file_path}[1:1]"])
+      RSpec::Core::Runner.new(opts).run(StringIO.new, StringIO.new)
+
+      expect(formatter.passed_examples).to eq 1
+
+      RSpec.clear_examples
+
+      formatter = result_counter.new
+      RSpec.configuration.add_formatter(formatter)
+      opts = RSpec::Core::ConfigurationOptions.new(["#{spec_file_path}[1:2]"])
+      RSpec::Core::Runner.new(opts).run(StringIO.new, StringIO.new)
+
+      expect(formatter.passed_examples).to eq 1
+    end
+
     it "trumps exclusions, except for :if/:unless (which are absolute exclusions)" do
       write_file_formatted 'spec/a_spec.rb', "
         RSpec.configure do |c|
