@@ -10,6 +10,8 @@ Bug Fixes:
   (Jon Rowe, #2703)
 * Correctly detect patterns when `rspec_opts` is an array in `RSpec::Core::RakeTask`.
   (Marc-André Lafortune, #2704)
+* Make `RSpec.clear_examples` reset example counts for example groups. This fixes
+  an issue with re-running specs not matching ids. (Agis Anastasopoulos, #2723)
 
 ### 3.9.1 / 2019-12-28
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.0...v3.9.1)
