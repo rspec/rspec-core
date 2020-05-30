@@ -111,6 +111,16 @@ module RSpec::Core
 
           expect(exit_code).to eq(1)
         end
+
+        context "with a custom failure code set" do
+          it "returns the custom failure code" do
+            in_sub_process do
+              RSpec.configuration.failure_exit_code = 42
+              exit_code = run_invocation
+              expect(exit_code).to eq(42)
+            end
+          end
+        end
       end
 
       context "and the verbose option is specified" do

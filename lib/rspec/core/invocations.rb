@@ -37,7 +37,7 @@ module RSpec
             runner, options.args, formatter
           )
 
-          success ? 0 : 1
+          success ? 0 : runner.configuration.failure_exit_code
         end
 
       private
