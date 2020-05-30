@@ -761,8 +761,9 @@ module RSpec
                 "on an example group (e.g. a `describe` or `context` block)."
         end
 
-        super
+        super(name, *args)
       end
+      ruby2_keywords :method_missing if respond_to?(:ruby2_keywords, true)
     end
     # rubocop:enable Metrics/ClassLength
 
