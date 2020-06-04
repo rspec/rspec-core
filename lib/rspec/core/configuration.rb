@@ -75,7 +75,13 @@ module RSpec
 
       # @private
       def self.define_predicate_for(*names)
-        names.each { |name| alias_method "#{name}?", name }
+        names.each do |name|
+          class_eval <<-PREDICATE, __FILE__ , __LINE__ + 1
+            def #{name}?
+              !!#{name}
+            end
+          PREDICATE
+        end
       end
 
       # @private
@@ -1038,6 +1044,7 @@ module RSpec
       #
       # Defaults `profile_examples` to 10 examples when `@profile_examples` is
       # `true`.
+      remove_method :profile_examples
       def profile_examples
         profile = value_for(:profile_examples) { @profile_examples }
         if profile && !profile.is_a?(Integer)
