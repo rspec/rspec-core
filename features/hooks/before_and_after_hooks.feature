@@ -32,7 +32,7 @@ Feature: `before` and `after` hooks
 
   **WARNING:** Mocks are only supported in `before(:example)`.
 
-  **WARNING:** `around` hooks will execute *after* any `before` hooks, and *before*
+  **WARNING:** `around` hooks will execute *before* any `before` hooks, and *after*
   any `after` hooks regardless of the context they were defined in.
 
   Note: the `:example` and `:context` scopes are also available as `:each` and

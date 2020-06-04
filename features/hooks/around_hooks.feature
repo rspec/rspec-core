@@ -17,7 +17,7 @@ Feature: `around` hooks
   **WARNING:** Mock frameworks are set up and torn down within the context of
   running the example. You cannot interact with them directly in `around` hooks.
 
-  **WARNING:** `around` hooks will execute *after* any `before` hooks, and *before*
+  **WARNING:** `around` hooks will execute *before* any `before` hooks, and *after*
   any `after` hooks regardless of the context they were defined in.
 
   Scenario: Use the example as a proc within the block passed to `around()`
