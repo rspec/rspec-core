@@ -34,7 +34,7 @@ Feature: Running specs multiple times with different runner options in the same 
     RSpec.describe "truth" do
       describe true do
         it "is truthy" do
-          expect(true).to be_truthy
+          expect(true).to be(true)
         end
 
         it "is not falsy" do
@@ -48,7 +48,7 @@ Feature: Running specs multiple times with different runner options in the same 
         end
 
         it "is truthy" do
-          expect(false).not_to be_truthy
+          expect(false).not_to be(true)
         end
       end
     end

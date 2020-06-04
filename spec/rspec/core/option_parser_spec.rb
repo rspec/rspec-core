@@ -89,7 +89,7 @@ module RSpec::Core
         it 'sets the `:drb` option to true' do
           options = parser.parse
 
-          expect(options[:drb]).to be_truthy
+          expect(options[:drb]).to be(true)
         end
 
         it 'sets the `:runner` option with the `DrbWithFallback` invocation' do
@@ -339,7 +339,7 @@ module RSpec::Core
       it "sets the `:bisect` option" do
         options = Parser.parse(%w[ --bisect ])
 
-        expect(options[:bisect]).to be_truthy
+        expect(options[:bisect]).to be(true)
       end
 
       it "sets the `:runner` option with the `Bisect` invocation" do
