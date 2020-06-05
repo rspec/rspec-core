@@ -1,3 +1,10 @@
+### Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.2...3-9-maintenance)
+
+Bug Fixes:
+
+* Declare `ruby2_keywords` on `method_missing` for other gems. (Jon Rowe, #2731)
+
 ### 3.9.2 / 2020-05-02
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.1...v3.9.2)
 
