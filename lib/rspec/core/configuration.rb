@@ -67,21 +67,19 @@ module RSpec
       end
 
       # @private
-      def self.define_aliases(name, alias_name)
+      def self.define_alias(name, alias_name)
         alias_method alias_name, name
         alias_method "#{alias_name}=", "#{name}="
-        define_predicate_for alias_name
+        define_predicate alias_name
       end
 
       # @private
-      def self.define_predicate_for(*names)
-        names.each do |name|
-          class_eval <<-PREDICATE, __FILE__ , __LINE__ + 1
-            def #{name}?
-              !!#{name}
-            end
-          PREDICATE
-        end
+      def self.define_predicate(name)
+        class_eval <<-PREDICATE, __FILE__ , __LINE__ + 1
+          def #{name}?
+            !!#{name}
+          end
+        PREDICATE
       end
 
       # @private
@@ -94,7 +92,7 @@ module RSpec
         add_read_only_setting name
 
         Array(opts[:alias_with]).each do |alias_name|
-          define_aliases(name, alias_name)
+          define_alias(name, alias_name)
         end
       end
 
@@ -104,7 +102,7 @@ module RSpec
       def self.add_read_only_setting(name, opts={})
         raise "Use the instance add_setting method if you want to set a default" if opts.key?(:default)
         define_reader name
-        define_predicate_for name
+        define_predicate name
       end
 
       # @macro [attach] add_setting
