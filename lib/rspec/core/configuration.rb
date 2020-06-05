@@ -318,7 +318,8 @@ module RSpec
       # Report the times for the slowest examples (default: `false`).
       # Use this to specify the number of examples to include in the profile.
       # @return [Boolean]
-      add_setting :profile_examples
+      attr_writer :profile_examples
+      define_predicate :profile_examples
 
       # @macro add_setting
       # Run all examples if none match the configured filters
@@ -1044,7 +1045,6 @@ module RSpec
       #
       # Defaults `profile_examples` to 10 examples when `@profile_examples` is
       # `true`.
-      remove_method :profile_examples
       def profile_examples
         profile = value_for(:profile_examples) { @profile_examples }
         if profile && !profile.is_a?(Integer)
