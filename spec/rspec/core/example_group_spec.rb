@@ -180,7 +180,7 @@ module RSpec::Core
 
       it 'does not have problems with example groups named "Core"', :unless => RUBY_VERSION == '1.9.2' do
         RSpec.describe("Core")
-        expect(defined?(::RSpec::ExampleGroups::Core)).to eq('constant')
+        expect(defined?(::RSpec::ExampleGroups::Core)).to be
 
         # The original bug was triggered when a group was defined AFTER one named `Core`,
         # due to it not using the fully qualified `::RSpec::Core::ExampleGroup` constant.
@@ -190,7 +190,7 @@ module RSpec::Core
 
       it 'does not have problems with example groups named "RSpec"', :unless => RUBY_VERSION == '1.9.2' do
         RSpec.describe("RSpec")
-        expect(defined?(::RSpec::ExampleGroups::RSpec)).to eq('constant')
+        expect(defined?(::RSpec::ExampleGroups::RSpec)).to be
 
         # The original bug was triggered when a group was defined AFTER one named `RSpec`,
         # due to it not using the fully qualified `::RSpec::Core::ExampleGroup` constant.
