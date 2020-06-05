@@ -1,5 +1,12 @@
 ### Development
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.1...master)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.2...master)
+
+Bug Fixes:
+
+* Ensure custom error codes are returned from bisect runs. (Jon Rowe, #2732)
+
+### 3.9.2 / 2020-05-02
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.1...v3.9.2)
 
 Bug Fixes:
 
@@ -12,7 +19,6 @@ Bug Fixes:
   (Marc-André Lafortune, #2704)
 * Make `RSpec.clear_examples` reset example counts for example groups. This fixes
   an issue with re-running specs not matching ids. (Agis Anastasopoulos, #2723)
-* Ensure custom error codes are returned from bisect runs. (Jon Rowe, #2732)
 
 ### 3.9.1 / 2019-12-28
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.0...v3.9.1)
