@@ -1301,7 +1301,7 @@ module RSpec::Core
 
     describe "#run_all_when_everything_filtered?" do
 
-      it "defaults to nil" do
+      it "defaults to false" do
         expect(config.run_all_when_everything_filtered?).to be(false)
       end
 
