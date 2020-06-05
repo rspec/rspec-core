@@ -75,11 +75,9 @@ module RSpec
 
       # @private
       def self.define_predicate(name)
-        class_eval <<-PREDICATE, __FILE__ , __LINE__ + 1
-          def #{name}?
-            !!#{name}
-          end
-        PREDICATE
+        define_method "#{name}?" do
+          !!send(name)
+        end
       end
 
       # @private
