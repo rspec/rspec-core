@@ -60,9 +60,10 @@ module RSpec
       #     before(:example)  # Declared in a parent group.
       #     before(:example)  # Declared in the current group.
       #
-      # If more than one `before` is declared within any one scope, they are run
-      # in the order in which they are declared. Any `around` hooks will execute
-      # later than any `before` hook regardless of scope.
+      # If more than one `before` is declared within any one example group, they
+      # are run in the order in which they are declared. Any `around` hooks will
+      # execute after `before` context hooks but before any `before` example
+      # hook regardless of where they are declared.
       #
       # ### Conditions
       #
@@ -263,9 +264,10 @@ module RSpec
       #     after(:suite)   # Declared in RSpec.configure.
       #
       # This is the reverse of the order in which `before` hooks are run.
-      # Similarly, if more than one `after` is declared within any one scope,
-      # they are run in reverse order of that in which they are declared. Also
-      # `around` hooks will all have run before any after hooks are invoked.
+      # Similarly, if more than one `after` is declared within any example
+      # group, they are run in reverse order of that in which they are declared.
+      # Also `around` hooks will run after any `after` example hooks are
+      # invoked but before any `after` context hooks.
       #
       # @note The `:example` and `:context` scopes are also available as
       #       `:each` and `:all`, respectively. Use whichever you prefer.
@@ -337,8 +339,11 @@ module RSpec
       #
       # ### Order
       #
-      # All `around` hooks execute immediately surrounding an example, this means
-      # that all `before` hooks will have run and no `after` hooks will have run yet.
+      # The `around` hooks execute surrounding an example and its hooks.
+      #
+      # This means after any `before` context hooks, but before any `before`
+      # example hooks, and similarly after any `after` example hooks but before
+      # any `after` context hooks.
       #
       # They are not a synonym for `before`/`after`.
       def around(*args, &block)
