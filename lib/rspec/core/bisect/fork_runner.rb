@@ -91,9 +91,12 @@ module RSpec
           end
 
           def dispatch_specs(run_descriptor)
-            fork { run_specs(run_descriptor) }
+            pid = fork { run_specs(run_descriptor) }
             # We don't use Process.waitpid here as it was causing bisects to
-            # block due to the file descriptor limit on OSX / Linux.
+            # block due to the file descriptor limit on OSX / Linux. We need
+            # to detach the process to avoid having zombie process and consume
+            # slot in the kernel process table.
+            Process.detach(pid)
           end
 
         private
