@@ -44,7 +44,7 @@ RSpec.describe "an example" do
 
       group.run
       example = group.examples.first
-      expect(example.metadata[:pending]).to be_truthy
+      expect(example.metadata[:pending]).to be(true)
     end
   end
 

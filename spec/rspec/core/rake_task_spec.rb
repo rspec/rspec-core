@@ -28,7 +28,7 @@ module RSpec::Core
         end
 
         expect(the_task).to receive(:run_task) { true }
-        expect(Rake.application.invoke_task("rake_task_args[first_spec.rb]")).to be_truthy
+        Rake.application.invoke_task("rake_task_args[first_spec.rb]")
       end
     end
 

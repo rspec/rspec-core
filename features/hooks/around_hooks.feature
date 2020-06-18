@@ -219,7 +219,7 @@ Feature: `around` hooks
         end
 
         it "runs the example in the correct context" do
-          expect(included_in_configure_block).to be_truthy
+          expect(included_in_configure_block).to be(true)
         end
       end
       """

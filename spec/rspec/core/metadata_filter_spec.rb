@@ -60,45 +60,45 @@ module RSpec
           it "matches the group when the line_number is the example group line number" do
             # this call doesn't really make sense since filter_applies? is only called
             # for example metadata not group metadata
-            expect(filter_applies?(condition_key, group_condition, group_metadata)).to be_truthy
+            expect(filter_applies?(condition_key, group_condition, group_metadata)).to be(true)
           end
 
           it "matches the example when the line_number is the grandparent example group line number" do
-            expect(filter_applies?(condition_key, parent_group_condition, example_metadata)).to be_truthy
+            expect(filter_applies?(condition_key, parent_group_condition, example_metadata)).to be(true)
           end
 
           it "matches the example when the line_number is the parent example group line number" do
-            expect(filter_applies?(condition_key, group_condition, example_metadata)).to be_truthy
+            expect(filter_applies?(condition_key, group_condition, example_metadata)).to be(true)
           end
 
           it "matches the example when the line_number is the example line number" do
-            expect(filter_applies?(condition_key, example_condition, example_metadata)).to be_truthy
+            expect(filter_applies?(condition_key, example_condition, example_metadata)).to be(true)
           end
 
           it "matches when the line number is between this example and the next" do
-            expect(filter_applies?(condition_key, between_examples_condition, example_metadata)).to be_truthy
+            expect(filter_applies?(condition_key, between_examples_condition, example_metadata)).to be(true)
           end
 
           it "does not match when the line number matches the next example" do
-            expect(filter_applies?(condition_key, next_example_condition, example_metadata)).to be_falsey
+            expect(filter_applies?(condition_key, next_example_condition, example_metadata)).to be(false)
           end
         end
 
         it "matches a proc with no arguments that evaluates to true" do
-          expect(filter_applies?(:if, lambda { true }, example_metadata)).to be_truthy
+          expect(filter_applies?(:if, lambda { true }, example_metadata)).to be(true)
         end
 
         it "matches a proc that evaluates to true" do
-          expect(filter_applies?(:if, lambda { |v| v }, example_metadata)).to be_truthy
+          expect(filter_applies?(:if, lambda { |v| v }, example_metadata)).to be(true)
         end
 
         it "does not match a proc that evaluates to false" do
-          expect(filter_applies?(:if, lambda { |v| !v }, example_metadata)).to be_falsey
+          expect(filter_applies?(:if, lambda { |v| !v }, example_metadata)).to be(false)
         end
 
         it "matches a proc with an arity of 2" do
           example_metadata[:foo] = nil
-          expect(filter_applies?(:foo, lambda { |v, m| m == example_metadata }, example_metadata)).to be_truthy
+          expect(filter_applies?(:foo, lambda { |v, m| m == example_metadata }, example_metadata)).to be(true)
         end
 
         it "raises an error when the proc has an incorrect arity" do
@@ -151,26 +151,26 @@ module RSpec
         context "with a nested hash" do
           it 'matches when the nested entry matches' do
             metadata = { :foo => { :bar => "words" } }
-            expect(filter_applies?(:foo, { :bar => /wor/ }, metadata)).to be_truthy
+            expect(filter_applies?(:foo, { :bar => /wor/ }, metadata)).to be(true)
           end
 
           it 'does not match when the nested entry does not match' do
             metadata = { :foo => { :bar => "words" } }
-            expect(filter_applies?(:foo, { :bar => /sword/ }, metadata)).to be_falsey
+            expect(filter_applies?(:foo, { :bar => /sword/ }, metadata)).to be(false)
           end
 
           it 'does not match when the metadata lacks the key' do
-            expect(filter_applies?(:foo, { :bar => /sword/ }, {})).to be_falsey
+            expect(filter_applies?(:foo, { :bar => /sword/ }, {})).to be(false)
           end
 
           it 'does not match when the metadata does not have a hash entry for the key' do
             metadata = { :foo => "words" }
-            expect(filter_applies?(:foo, { :bar => /word/ }, metadata)).to be_falsey
+            expect(filter_applies?(:foo, { :bar => /word/ }, metadata)).to be(false)
           end
 
           it 'matches when a metadata key is specified without a value and exists in the metadata hash' do
             metadata = { :foo => "words" }
-            expect(filter_applies?(:foo, true, metadata)).to be_truthy
+            expect(filter_applies?(:foo, true, metadata)).to be(true)
           end
         end
 
@@ -184,39 +184,39 @@ module RSpec
           end
 
           it "matches a symbol" do
-            expect(filter_applies?(:tag, 'one', metadata_with_array)).to be_truthy
-            expect(filter_applies?(:tag, :one, metadata_with_array)).to be_truthy
-            expect(filter_applies?(:tag, 'two', metadata_with_array)).to be_falsey
+            expect(filter_applies?(:tag, 'one', metadata_with_array)).to be(true)
+            expect(filter_applies?(:tag, :one, metadata_with_array)).to be(true)
+            expect(filter_applies?(:tag, 'two', metadata_with_array)).to be(false)
           end
 
           it "matches a string" do
-            expect(filter_applies?(:tag, 'three', metadata_with_array)).to be_truthy
-            expect(filter_applies?(:tag, :three, metadata_with_array)).to be_truthy
-            expect(filter_applies?(:tag, 'tree', metadata_with_array)).to be_falsey
+            expect(filter_applies?(:tag, 'three', metadata_with_array)).to be(true)
+            expect(filter_applies?(:tag, :three, metadata_with_array)).to be(true)
+            expect(filter_applies?(:tag, 'tree', metadata_with_array)).to be(false)
           end
 
           it "matches an integer" do
-            expect(filter_applies?(:tag, '2', metadata_with_array)).to be_truthy
-            expect(filter_applies?(:tag, 2, metadata_with_array)).to be_truthy
-            expect(filter_applies?(:tag, 3, metadata_with_array)).to be_falsey
+            expect(filter_applies?(:tag, '2', metadata_with_array)).to be(true)
+            expect(filter_applies?(:tag, 2, metadata_with_array)).to be(true)
+            expect(filter_applies?(:tag, 3, metadata_with_array)).to be(false)
           end
 
           it "matches a regexp" do
-            expect(filter_applies?(:tag, 'four', metadata_with_array)).to be_truthy
-            expect(filter_applies?(:tag, 'fourtune', metadata_with_array)).to be_truthy
-            expect(filter_applies?(:tag, 'fortune', metadata_with_array)).to be_falsey
+            expect(filter_applies?(:tag, 'four', metadata_with_array)).to be(true)
+            expect(filter_applies?(:tag, 'fourtune', metadata_with_array)).to be(true)
+            expect(filter_applies?(:tag, 'fortune', metadata_with_array)).to be(false)
           end
 
           it "matches a proc that evaluates to true" do
-            expect(filter_applies?(:tag, lambda { |values| values.include? 'three' }, metadata_with_array)).to be_truthy
+            expect(filter_applies?(:tag, lambda { |values| values.include? 'three' }, metadata_with_array)).to be(true)
           end
 
           it "does not match a proc that evaluates to false" do
-            expect(filter_applies?(:tag, lambda { |values| values.include? 'nothing' }, metadata_with_array)).to be_falsey
+            expect(filter_applies?(:tag, lambda { |values| values.include? 'nothing' }, metadata_with_array)).to be(false)
           end
 
           it 'matches when a metadata key is specified without a value and exists in the metadata hash' do
-            expect(filter_applies?(:tag, true, metadata_with_array)).to be_truthy
+            expect(filter_applies?(:tag, true, metadata_with_array)).to be(true)
           end
         end
       end
