@@ -6,7 +6,7 @@ Bug Fixes:
 * Declare `ruby2_keywords` on `method_missing` for other gems. (Jon Rowe, #2731)
 * Ensure custom error codes are returned from bisect runs. (Jon Rowe, #2732)
 * Prevent `rspec --bisect` from generating zombie processes while executing
-  (Benoit Tigeot, Jon Rowe, #2739)
+  bisect runs. (Benoit Tigeot, Jon Rowe, #2739)
 
 ### 3.9.2 / 2020-05-02
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.1...v3.9.2)
