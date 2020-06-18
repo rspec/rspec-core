@@ -5,6 +5,8 @@ Bug Fixes:
 
 * Declare `ruby2_keywords` on `method_missing` for other gems. (Jon Rowe, #2731)
 * Ensure custom error codes are returned from bisect runs. (Jon Rowe, #2732)
+* Ensure `RSpec::Core::Configuration` predicate config methods return booleans.
+  (Marc-André Lafortune, #2736)
 
 ### 3.9.2 / 2020-05-02
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.1...v3.9.2)
