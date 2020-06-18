@@ -86,6 +86,7 @@ RSpec.configure do |c|
 
   c.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
+    expectations.max_formatted_output_length = 1000
   end
 
   c.mock_with :rspec do |mocks|

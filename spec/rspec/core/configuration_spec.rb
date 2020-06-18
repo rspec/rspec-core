@@ -293,7 +293,7 @@ module RSpec::Core
           mod_config.custom_setting = true
         end
 
-        expect(mod.configuration.custom_setting).to be_truthy
+        expect(mod.configuration.custom_setting).to be(true)
       end
 
       it "raises if framework module doesn't support configuration" do
@@ -1302,12 +1302,12 @@ module RSpec::Core
     describe "#run_all_when_everything_filtered?" do
 
       it "defaults to false" do
-        expect(config.run_all_when_everything_filtered?).to be_falsey
+        expect(config.run_all_when_everything_filtered?).to be(false)
       end
 
       it "can be queried with question method" do
         config.run_all_when_everything_filtered = true
-        expect(config.run_all_when_everything_filtered?).to be_truthy
+        expect(config.run_all_when_everything_filtered?).to be(true)
       end
     end
 
@@ -1779,14 +1779,14 @@ module RSpec::Core
         config_2 = Configuration.new
 
         config_1.full_backtrace = true
-        expect(config_2.full_backtrace?).to be_falsey
+        expect(config_2.full_backtrace?).to be(false)
       end
     end
 
     describe "#backtrace_exclusion_patterns=" do
       it "actually receives the new filter values" do
         config.backtrace_exclusion_patterns = [/.*/]
-        expect(config.backtrace_formatter.exclude? "this").to be_truthy
+        expect(config.backtrace_formatter.exclude? "this").to be(true)
       end
     end
 
@@ -1805,7 +1805,7 @@ module RSpec::Core
     describe "#backtrace_exclusion_patterns" do
       it "can be appended to" do
         config.backtrace_exclusion_patterns << /.*/
-        expect(config.backtrace_formatter.exclude? "this").to be_truthy
+        expect(config.backtrace_formatter.exclude? "this").to be(true)
       end
     end
 
@@ -2213,7 +2213,7 @@ module RSpec::Core
           end
 
           it "adds a predicate" do
-            expect(config.custom_option?).to be_falsey
+            expect(config.custom_option?).to be(false)
           end
 
           it "can be overridden" do
@@ -2232,7 +2232,7 @@ module RSpec::Core
           end
 
           it "returns true for the predicate" do
-            expect(config.custom_option?).to be_truthy
+            expect(config.custom_option?).to be(true)
           end
 
           it "can be overridden with a truthy value" do
@@ -2269,7 +2269,7 @@ module RSpec::Core
 
         it "delegates the predicate to the other option" do
           config.custom_option = true
-          expect(config.another_custom_option?).to be_truthy
+          expect(config.another_custom_option?).to be(true)
         end
       end
     end
@@ -2526,11 +2526,11 @@ module RSpec::Core
       it "forces 'false' value" do
         config.add_setting :custom_option
         config.custom_option = true
-        expect(config.custom_option?).to be_truthy
+        expect(config.custom_option?).to be(true)
         config.force :custom_option => false
-        expect(config.custom_option?).to be_falsey
+        expect(config.custom_option?).to be(false)
         config.custom_option = true
-        expect(config.custom_option?).to be_falsey
+        expect(config.custom_option?).to be(false)
       end
     end
 

@@ -14,18 +14,14 @@ Feature: custom settings
           expect(RSpec.configuration.custom_setting).to be_nil
         end
 
-        it "acts false by default" do
-          expect(RSpec.configuration.custom_setting).to be_falsey
-        end
-
         it "is exposed as a predicate" do
-          expect(RSpec.configuration.custom_setting?).to be_falsey
+          expect(RSpec.configuration.custom_setting?).to be(false)
         end
 
         it "can be overridden" do
           RSpec.configuration.custom_setting = true
-          expect(RSpec.configuration.custom_setting).to be_truthy
-          expect(RSpec.configuration.custom_setting?).to be_truthy
+          expect(RSpec.configuration.custom_setting).to be(true)
+          expect(RSpec.configuration.custom_setting?).to be(true)
         end
       end
       """
@@ -41,17 +37,17 @@ Feature: custom settings
 
       RSpec.describe "custom setting" do
         it "is true by default" do
-          expect(RSpec.configuration.custom_setting).to be_truthy
+          expect(RSpec.configuration.custom_setting).to be(true)
         end
 
         it "is exposed as a predicate" do
-          expect(RSpec.configuration.custom_setting?).to be_truthy
+          expect(RSpec.configuration.custom_setting?).to be(true)
         end
 
         it "can be overridden" do
           RSpec.configuration.custom_setting = false
-          expect(RSpec.configuration.custom_setting).to be_falsey
-          expect(RSpec.configuration.custom_setting?).to be_falsey
+          expect(RSpec.configuration.custom_setting).to be(false)
+          expect(RSpec.configuration.custom_setting?).to be(false)
         end
       end
       """
@@ -71,11 +67,11 @@ Feature: custom settings
 
       RSpec.describe "custom setting" do
         it "returns the value set in the last cofigure block to get eval'd" do
-          expect(RSpec.configuration.custom_setting).to be_truthy
+          expect(RSpec.configuration.custom_setting).to be(true)
         end
 
         it "is exposed as a predicate" do
-          expect(RSpec.configuration.custom_setting?).to be_truthy
+          expect(RSpec.configuration.custom_setting?).to be(true)
         end
       end
       """

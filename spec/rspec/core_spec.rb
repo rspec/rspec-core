@@ -289,9 +289,9 @@ RSpec.describe RSpec do
 
   describe "::Core.path_to_executable" do
     it 'returns the absolute location of the exe/rspec file' do
-      expect(File.exist? RSpec::Core.path_to_executable).to be_truthy
+      expect(File.exist? RSpec::Core.path_to_executable).to be(true)
       expect(File.read(RSpec::Core.path_to_executable)).to include("RSpec::Core::Runner.invoke")
-      expect(File.executable? RSpec::Core.path_to_executable).to be_truthy unless RSpec::Support::OS.windows?
+      expect(File.executable? RSpec::Core.path_to_executable).to be(true) unless RSpec::Support::OS.windows?
     end
   end
 

@@ -180,7 +180,7 @@ module RSpec::Core
 
       it 'does not have problems with example groups named "Core"', :unless => RUBY_VERSION == '1.9.2' do
         RSpec.describe("Core")
-        expect(defined?(::RSpec::ExampleGroups::Core)).to be_truthy
+        expect(defined?(::RSpec::ExampleGroups::Core)).to be
 
         # The original bug was triggered when a group was defined AFTER one named `Core`,
         # due to it not using the fully qualified `::RSpec::Core::ExampleGroup` constant.
@@ -190,7 +190,7 @@ module RSpec::Core
 
       it 'does not have problems with example groups named "RSpec"', :unless => RUBY_VERSION == '1.9.2' do
         RSpec.describe("RSpec")
-        expect(defined?(::RSpec::ExampleGroups::RSpec)).to be_truthy
+        expect(defined?(::RSpec::ExampleGroups::RSpec)).to be
 
         # The original bug was triggered when a group was defined AFTER one named `RSpec`,
         # due to it not using the fully qualified `::RSpec::Core::ExampleGroup` constant.
@@ -535,7 +535,7 @@ module RSpec::Core
               end
             end
 
-            expect(group.run).to be_truthy
+            expect(group.run).to be(true)
           end
         end
 
@@ -551,7 +551,7 @@ module RSpec::Core
               end
             end
 
-            expect(group.run).to be_truthy
+            expect(group.run).to be(true)
           end
         end
       end
@@ -566,7 +566,7 @@ module RSpec::Core
             end
           end
 
-          expect(group.run).to be_truthy, "expected examples in group to pass"
+          expect(group.run).to be(true), "expected examples in group to pass"
         end
 
         context "when a class is passed" do
@@ -662,7 +662,7 @@ module RSpec::Core
         let(:focused_example) { RSpec.describe.send example_alias, "a focused example" }
 
         it 'defines an example that can be filtered with :focus => true' do
-          expect(focused_example.metadata[:focus]).to be_truthy
+          expect(focused_example.metadata[:focus]).to be(true)
         end
       end
     end
@@ -778,7 +778,7 @@ module RSpec::Core
         group.example("example") {}
 
         group.run
-        expect(RSpec.world.wants_to_quit).to be_falsey
+        expect(RSpec.world.wants_to_quit).to be(false)
       end
 
       it "runs the before eachs in order" do
@@ -941,7 +941,7 @@ module RSpec::Core
         group = RSpec.describe
         group.before(:all) { raise "error in before all" }
         example = group.example("equality") { expect(1).to eq(2) }
-        expect(group.run).to be_falsey
+        expect(group.run).to be(false)
 
         expect(example.metadata).not_to be_nil
         expect(example.execution_result.exception).not_to be_nil
@@ -1291,7 +1291,7 @@ module RSpec::Core
           example('ex 2') { expect(1).to eq(1) }
         end
         allow(group).to receive(:filtered_examples) { group.examples }
-        expect(group.run(reporter)).to be_truthy
+        expect(group.run(reporter)).to be(true)
       end
 
       it "returns false if any of the examples fail" do
@@ -1300,7 +1300,7 @@ module RSpec::Core
           example('ex 2') { expect(1).to eq(2) }
         end
         allow(group).to receive(:filtered_examples) { group.examples }
-        expect(group.run(reporter)).to be_falsey
+        expect(group.run(reporter)).to be(false)
       end
 
       it "runs all examples, regardless of any of them failing" do
@@ -1312,7 +1312,7 @@ module RSpec::Core
         group.filtered_examples.each do |example|
           expect(example).to receive(:run)
         end
-        expect(group.run(reporter)).to be_falsey
+        expect(group.run(reporter)).to be(false)
       end
     end
 
@@ -1366,12 +1366,12 @@ module RSpec::Core
     describe "ivars are not shared across examples" do
       it "(first example)" do
         @a = 1
-        expect(defined?(@b)).to be_falsey
+        expect(defined?(@b)).to be(nil)
       end
 
       it "(second example)" do
         @b = 2
-        expect(defined?(@a)).to be_falsey
+        expect(defined?(@a)).to be(nil)
       end
     end
 
@@ -1427,8 +1427,8 @@ module RSpec::Core
         it "sets RSpec.world.wants_to_quit flag if encountering an exception in before(:all)" do
           group().before(:all) { raise "error in before all" }
           group().example("equality") { expect(1).to eq(2) }
-          expect(group().run(reporter)).to be_falsey
-          expect(RSpec.world.wants_to_quit).to be_truthy
+          expect(group().run(reporter)).to be(false)
+          expect(RSpec.world.wants_to_quit).to be(true)
         end
       end
 
@@ -1457,7 +1457,7 @@ module RSpec::Core
 
           expect(group().run(reporter)).to be false
 
-          expect(RSpec.world.wants_to_quit).to be_falsey
+          expect(RSpec.world.wants_to_quit).to be(false)
         end
 
         it "sets RSpec.world.wants_to_quit flag if encountering an exception in before(:all) causing at least 3 failures" do
@@ -1500,7 +1500,7 @@ module RSpec::Core
             end
           end
 
-          expect(group.run(reporter)).to be_truthy
+          expect(group.run(reporter)).to be(true)
         end
       end
 
@@ -1517,7 +1517,7 @@ module RSpec::Core
             end
           end
 
-          expect(group.run(reporter)).to be_falsey
+          expect(group.run(reporter)).to be(false)
         end
       end
 
@@ -1534,7 +1534,7 @@ module RSpec::Core
             end
           end
 
-          expect(group.run(reporter)).to be_falsey
+          expect(group.run(reporter)).to be(false)
         end
       end
     end
@@ -1751,7 +1751,7 @@ module RSpec::Core
               def foo; "bar"; end
             end
           end
-          expect(group.run).to be_truthy
+          expect(group.run).to be(true)
         end
       end
     end

@@ -26,10 +26,10 @@ RSpec.describe RSpec::SharedContext do
 
     group.run
 
-    expect(before_all_hook).to be_truthy
-    expect(before_each_hook).to be_truthy
-    expect(after_each_hook).to be_truthy
-    expect(after_all_hook).to be_truthy
+    expect(before_all_hook).to be(true)
+    expect(before_each_hook).to be(true)
+    expect(after_each_hook).to be(true)
+    expect(after_all_hook).to be(true)
   end
 
   include RSpec::Core::SharedExampleGroup::TopLevelDSL
