@@ -443,46 +443,46 @@ module RSpec::Core
       describe "the default :if filter" do
         it "does not exclude a spec with  { :if => true } metadata" do
           example = example_with_metadata(:if => true)
-          expect(exclude?(example)).to be_falsey
+          expect(exclude?(example)).to be(false)
         end
 
         it "excludes a spec with  { :if => false } metadata" do
           example = example_with_metadata(:if => false)
-          expect(exclude?(example)).to be_truthy
+          expect(exclude?(example)).to be(true)
         end
 
         it "excludes a spec with  { :if => nil } metadata" do
           example = example_with_metadata(:if => nil)
-          expect(exclude?(example)).to be_truthy
+          expect(exclude?(example)).to be(true)
         end
 
         it "continues to be an exclusion even if exclusions are cleared" do
           example = example_with_metadata(:if => false)
           filter_manager.exclusions.clear
-          expect(exclude?(example)).to be_truthy
+          expect(exclude?(example)).to be(true)
         end
       end
 
       describe "the default :unless filter" do
         it "excludes a spec with  { :unless => true } metadata" do
           example = example_with_metadata(:unless => true)
-          expect(exclude?(example)).to be_truthy
+          expect(exclude?(example)).to be(true)
         end
 
         it "does not exclude a spec with { :unless => false } metadata" do
           example = example_with_metadata(:unless => false)
-          expect(exclude?(example)).to be_falsey
+          expect(exclude?(example)).to be(false)
         end
 
         it "does not exclude a spec with { :unless => nil } metadata" do
           example = example_with_metadata(:unless => nil)
-          expect(exclude?(example)).to be_falsey
+          expect(exclude?(example)).to be(false)
         end
 
         it "continues to be an exclusion even if exclusions are cleared" do
           example = example_with_metadata(:unless => true)
           filter_manager.exclusions.clear
-          expect(exclude?(example)).to be_truthy
+          expect(exclude?(example)).to be(true)
         end
       end
     end

@@ -371,7 +371,7 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
         example('example') { expect(1).to eq(1) }
       end
       group.run
-      expect(after_run).to be_truthy, "expected after(:each) to be run"
+      expect(after_run).to be(true), "expected after(:each) to be run"
     end
 
     it "runs after(:each) when the example fails" do
@@ -381,7 +381,7 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
         example('example') { expect(1).to eq(2) }
       end
       group.run
-      expect(after_run).to be_truthy, "expected after(:each) to be run"
+      expect(after_run).to be(true), "expected after(:each) to be run"
     end
 
     it "runs after(:each) when the example raises an Exception" do
@@ -391,7 +391,7 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
         example('example') { raise "this error" }
       end
       group.run
-      expect(after_run).to be_truthy, "expected after(:each) to be run"
+      expect(after_run).to be(true), "expected after(:each) to be run"
     end
 
     context "with an after(:each) that raises" do
@@ -403,7 +403,7 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
           example('example') { expect(1).to eq(1) }
         end
         group.run
-        expect(after_run).to be_truthy, "expected after(:each) to be run"
+        expect(after_run).to be(true), "expected after(:each) to be run"
       end
 
       it "stores the exception" do

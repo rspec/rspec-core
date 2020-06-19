@@ -106,13 +106,13 @@ Feature: shared examples
         describe "#include?" do
           context "with an item that is in the collection" do
             it "returns true" do
-              expect(collection.include?(7)).to be_truthy
+              expect(collection.include?(7)).to be(true)
             end
           end
 
           context "with an item that is not in the collection" do
             it "returns false" do
-              expect(collection.include?(9)).to be_falsey
+              expect(collection.include?(9)).to be(false)
             end
           end
         end

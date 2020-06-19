@@ -17,6 +17,7 @@ module RSpec
       attr_accessor :non_example_failure
 
       def initialize(configuration=RSpec.configuration)
+        @wants_to_quit = false
         @configuration = configuration
         configuration.world = self
         @example_groups = []
