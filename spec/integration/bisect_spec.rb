@@ -45,7 +45,7 @@ module RSpec::Core
       it 'does not leave zombie processes', :unless => RSpec::Support::OS.windows? do
         original_pids = pids()
         bisect(%W[spec/rspec/core/resources/blocking_pipe_bisect_spec.rb_], 1)
-        sleep 0.1 while (extra_pids = pids() - original_pids).join.match?(/[RE]/i)
+        sleep 0.1 while (extra_pids = pids() - original_pids).join =~ /[RE]/i
         expect(extra_pids.join).to_not include "Z"
       end
     end
