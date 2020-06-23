@@ -50,7 +50,7 @@ module RSpec::Core
           puts pids()
           puts "original_pids"
           puts original_pids
-          puts "sleep time"
+          puts
           sleep 0.1
         end
         expect(extra_pids.join).to_not include "Z"
@@ -58,7 +58,9 @@ module RSpec::Core
     end
 
     def pids
-      %x[ps -ho pid=,state=,command=].split("\n").map { |line| line.split(/\s+/).compact.join(' ') }
+      %x[ps -ho pid=,state=,command= | grep "[r]spec"].split("\n").map do |line|
+        line.split(/\s+/).compact.join(' ')
+      end
     end
   end
 end
