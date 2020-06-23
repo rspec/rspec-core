@@ -44,20 +44,17 @@ module RSpec::Core
 
       it 'does not leave zombie processes', :unless => RSpec::Support::OS.windows? do
         original_pids = pids()
-        ps_ho
         bisect(%W[spec/rspec/core/resources/blocking_pipe_bisect_spec.rb_], 1)
         while (extra_pids = pids() - original_pids).join =~ /[RE]/i do
-          ps_ho
+          puts "pids()"
+          puts pids()
+          puts "original_pids"
+          puts original_pids
+          puts "sleep time"
           sleep 0.1
         end
         expect(extra_pids.join).to_not include "Z"
       end
-    end
-
-    def ps_ho
-      puts ">> ps ho"
-      puts `ps -ho pid=,state=`
-      puts
     end
 
     def pids
