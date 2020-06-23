@@ -46,11 +46,6 @@ module RSpec::Core
         original_pids = pids()
         bisect(%W[spec/rspec/core/resources/blocking_pipe_bisect_spec.rb_], 1)
         while (extra_pids = pids() - original_pids).join =~ /[RE]/i do
-          puts "pids()"
-          puts pids()
-          puts "original_pids"
-          puts original_pids
-          puts
           sleep 0.1
         end
         expect(extra_pids.join).to_not include "Z"
