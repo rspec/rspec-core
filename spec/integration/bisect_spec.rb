@@ -58,7 +58,7 @@ module RSpec::Core
     end
 
     def pids
-      %x[ps -ho pid=,state=].split("\n").map { |line| line.split(/\s+/).compact.join(' ') }
+      %x[ps -ho pid=,state=,command=].split("\n").map { |line| line.split(/\s+/).compact.join(' ') }
     end
   end
 end
