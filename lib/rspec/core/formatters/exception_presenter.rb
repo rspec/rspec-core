@@ -175,12 +175,14 @@ module RSpec
         end
 
         def exception_lines
-          lines = []
-          lines << "#{exception_class_name}:" unless exception_class_name =~ /RSpec/
-          encoded_string(exception.message.to_s).split("\n").each do |line|
-            lines << (line.empty? ? line : "  #{line}")
+          @exception_lines ||= begin
+            lines = []
+            lines << "#{exception_class_name}:" unless exception_class_name =~ /RSpec/
+            encoded_string(exception.message.to_s).split("\n").each do |line|
+              lines << (line.empty? ? line : "  #{line}")
+            end
+            lines
           end
-          lines
         end
 
         def extra_failure_lines
