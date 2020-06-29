@@ -45,7 +45,10 @@ module RSpec::Core
       it 'does not leave zombie processes', :unless => RSpec::Support::OS.windows? do
         original_pids = pids()
         bisect(%W[spec/rspec/core/resources/blocking_pipe_bisect_spec.rb_], 1)
+        cursor = 0
         while ((extra_pids = pids() - original_pids).join =~ /[RE]/i)
+          raise "Extra process detected" if cursor > 10
+          cursor += 1
           sleep 0.1
         end
         expect(extra_pids.join).to_not include "Z"
