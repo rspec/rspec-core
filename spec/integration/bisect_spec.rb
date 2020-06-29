@@ -45,13 +45,17 @@ module RSpec::Core
       it 'does not leave zombie processes', :unless => RSpec::Support::OS.windows? do
         original_pids = pids()
         bisect(%W[spec/rspec/core/resources/blocking_pipe_bisect_spec.rb_], 1)
-        sleep 0.1 while ((extra_pids = pids() - original_pids).join =~ /[RE]/i)
+        while ((extra_pids = pids() - original_pids).join =~ /[RE]/i)
+          sleep 0.1
+        end
         expect(extra_pids.join).to_not include "Z"
       end
     end
 
     def pids
-      %x[ps -ho pid,state].split("\n").map { |line| line.split(/\s+/).compact.join(' ') }
+      %x[ps -ho pid,state,cmd | grep "[r]uby"].split("\n").map do |line|
+        line.split(/\s+/).compact.join(' ')
+      end
     end
   end
 end
