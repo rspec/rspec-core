@@ -19,6 +19,82 @@ Feature: Aggregating Failures
       end
       """
 
+  @skip-when-diff-lcs-1.3
+  Scenario: Use `aggregate_failures` block form
+    Given a file named "spec/use_block_form_spec.rb" with:
+      """ruby
+      require 'client'
+
+      RSpec.describe Client do
+        after do
+          # this should be appended to failure list
+          expect(false).to be(true), "after hook failure"
+        end
+
+        around do |ex|
+          ex.run
+          # this should also be appended to failure list
+          expect(false).to be(true), "around hook failure"
+        end
+
+        it "returns a successful response" do
+          response = Client.make_request
+
+          aggregate_failures "testing response" do
+            expect(response.status).to eq(200)
+            expect(response.headers).to include("Content-Type" => "application/json")
+            expect(response.body).to eq('{"message":"Success"}')
+          end
+        end
+      end
+      """
+    When I run `rspec spec/use_block_form_spec.rb`
+    Then it should fail and list all the failures:
+      """
+      Failures:
+
+        1) Client returns a successful response
+           Got 3 failures:
+
+           1.1) Got 3 failures from failure aggregation block "testing response".
+                # ./spec/use_block_form_spec.rb:18
+                # ./spec/use_block_form_spec.rb:10
+
+                1.1.1) Failure/Error: expect(response.status).to eq(200)
+
+                         expected: 200
+                              got: 404
+
+                         (compared using ==)
+                       # ./spec/use_block_form_spec.rb:19
+
+                1.1.2) Failure/Error: expect(response.headers).to include("Content-Type" => "application/json")
+                         expected {"Content-Type" => "text/plain"} to include {"Content-Type" => "application/json"}
+                         Diff:
+                         @@ -1 +1 @@
+                         -"Content-Type" => "application/json",
+                         +"Content-Type" => "text/plain",
+                       # ./spec/use_block_form_spec.rb:20
+
+                1.1.3) Failure/Error: expect(response.body).to eq('{"message":"Success"}')
+
+                         expected: "{\"message\":\"Success\"}"
+                              got: "Not Found"
+
+                         (compared using ==)
+                       # ./spec/use_block_form_spec.rb:21
+
+           1.2) Failure/Error: expect(false).to be(true), "after hook failure"
+                  after hook failure
+                # ./spec/use_block_form_spec.rb:6
+                # ./spec/use_block_form_spec.rb:10
+
+           1.3) Failure/Error: expect(false).to be(true), "around hook failure"
+                  around hook failure
+                # ./spec/use_block_form_spec.rb:12
+      """
+
+  @skip-when-diff-lcs-1.4
   Scenario: Use `aggregate_failures` block form
     Given a file named "spec/use_block_form_spec.rb" with:
       """ruby
@@ -143,6 +219,62 @@ Feature: Aggregating Failures
                 # ./spec/use_metadata_spec.rb:10
       """
 
+  @skip-when-diff-lcs-1.3
+  Scenario: Enable failure aggregation globally using `define_derived_metadata`
+    Given a file named "spec/enable_globally_spec.rb" with:
+      """ruby
+      require 'client'
+
+      RSpec.configure do |c|
+        c.define_derived_metadata do |meta|
+          meta[:aggregate_failures] = true
+        end
+      end
+
+      RSpec.describe Client do
+        it "returns a successful response" do
+          response = Client.make_request
+
+          expect(response.status).to eq(200)
+          expect(response.headers).to include("Content-Type" => "application/json")
+          expect(response.body).to eq('{"message":"Success"}')
+        end
+      end
+      """
+    When I run `rspec spec/enable_globally_spec.rb`
+    Then it should fail and list all the failures:
+      """
+      Failures:
+
+        1) Client returns a successful response
+           Got 3 failures:
+
+           1.1) Failure/Error: expect(response.status).to eq(200)
+
+                  expected: 200
+                       got: 404
+
+                  (compared using ==)
+                # ./spec/enable_globally_spec.rb:13
+
+           1.2) Failure/Error: expect(response.headers).to include("Content-Type" => "application/json")
+                  expected {"Content-Type" => "text/plain"} to include {"Content-Type" => "application/json"}
+                  Diff:
+                  @@ -1 +1 @@
+                  -"Content-Type" => "application/json",
+                  +"Content-Type" => "text/plain",
+                # ./spec/enable_globally_spec.rb:14
+
+           1.3) Failure/Error: expect(response.body).to eq('{"message":"Success"}')
+
+                  expected: "{\"message\":\"Success\"}"
+                       got: "Not Found"
+
+                  (compared using ==)
+                # ./spec/enable_globally_spec.rb:15
+      """
+
+  @skip-when-diff-lcs-1.4
   Scenario: Enable failure aggregation globally using `define_derived_metadata`
     Given a file named "spec/enable_globally_spec.rb" with:
       """ruby
@@ -197,6 +329,72 @@ Feature: Aggregating Failures
                 # ./spec/enable_globally_spec.rb:15
       """
 
+  @skip-when-diff-lcs-1.3
+  Scenario: Nested failure aggregation works
+    Given a file named "spec/nested_failure_aggregation_spec.rb" with:
+      """ruby
+      require 'client'
+
+      RSpec.describe Client do
+        it "returns a successful response", :aggregate_failures do
+          response = Client.make_request
+
+          expect(response.status).to eq(200)
+
+          aggregate_failures "testing headers" do
+            expect(response.headers).to include("Content-Type" => "application/json")
+            expect(response.headers).to include("Content-Length" => "21")
+          end
+
+          expect(response.body).to eq('{"message":"Success"}')
+        end
+      end
+      """
+    When I run `rspec spec/nested_failure_aggregation_spec.rb`
+    Then it should fail and list all the failures:
+      """
+      Failures:
+
+        1) Client returns a successful response
+           Got 3 failures:
+
+           1.1) Failure/Error: expect(response.status).to eq(200)
+
+                  expected: 200
+                       got: 404
+
+                  (compared using ==)
+                # ./spec/nested_failure_aggregation_spec.rb:7
+
+           1.2) Got 2 failures from failure aggregation block "testing headers".
+                # ./spec/nested_failure_aggregation_spec.rb:9
+
+                1.2.1) Failure/Error: expect(response.headers).to include("Content-Type" => "application/json")
+                         expected {"Content-Type" => "text/plain"} to include {"Content-Type" => "application/json"}
+                         Diff:
+                         @@ -1 +1 @@
+                         -"Content-Type" => "application/json",
+                         +"Content-Type" => "text/plain",
+                       # ./spec/nested_failure_aggregation_spec.rb:10
+
+                1.2.2) Failure/Error: expect(response.headers).to include("Content-Length" => "21")
+                         expected {"Content-Type" => "text/plain"} to include {"Content-Length" => "21"}
+                         Diff:
+                         @@ -1 +1 @@
+                         -"Content-Length" => "21",
+                         +"Content-Type" => "text/plain",
+                       # ./spec/nested_failure_aggregation_spec.rb:11
+
+           1.3) Failure/Error: expect(response.body).to eq('{"message":"Success"}')
+
+                  expected: "{\"message\":\"Success\"}"
+                       got: "Not Found"
+
+                  (compared using ==)
+                # ./spec/nested_failure_aggregation_spec.rb:14
+      """
+
+  @skip-when-diff-lcs-1.4
   Scenario: Nested failure aggregation works
     Given a file named "spec/nested_failure_aggregation_spec.rb" with:
       """ruby
@@ -301,6 +499,58 @@ Feature: Aggregating Failures
 
       """
 
+  @skip-when-diff-lcs-1.3
+  Scenario: Pending integrates properly with aggregated failures
+    Given a file named "spec/pending_spec.rb" with:
+      """ruby
+      require 'client'
+
+      RSpec.describe Client do
+        it "returns a successful response", :aggregate_failures do
+          pending "Not yet ready"
+          response = Client.make_request
+
+          expect(response.status).to eq(200)
+          expect(response.headers).to include("Content-Type" => "application/json")
+          expect(response.body).to eq('{"message":"Success"}')
+        end
+      end
+      """
+    When I run `rspec spec/pending_spec.rb`
+    Then it should pass and list all the pending examples:
+      """
+      Pending: (Failures listed here are expected and do not affect your suite's status)
+
+        1) Client returns a successful response
+           # Not yet ready
+           Got 3 failures:
+
+           1.1) Failure/Error: expect(response.status).to eq(200)
+
+                  expected: 200
+                       got: 404
+
+                  (compared using ==)
+                # ./spec/pending_spec.rb:8
+
+           1.2) Failure/Error: expect(response.headers).to include("Content-Type" => "application/json")
+                  expected {"Content-Type" => "text/plain"} to include {"Content-Type" => "application/json"}
+                  Diff:
+                  @@ -1 +1 @@
+                  -"Content-Type" => "application/json",
+                  +"Content-Type" => "text/plain",
+                # ./spec/pending_spec.rb:9
+
+           1.3) Failure/Error: expect(response.body).to eq('{"message":"Success"}')
+
+                  expected: "{\"message\":\"Success\"}"
+                       got: "Not Found"
+
+                  (compared using ==)
+                # ./spec/pending_spec.rb:10
+      """
+
+  @skip-when-diff-lcs-1.4
   Scenario: Pending integrates properly with aggregated failures
     Given a file named "spec/pending_spec.rb" with:
       """ruby
