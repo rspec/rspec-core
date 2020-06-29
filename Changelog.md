@@ -1,6 +1,11 @@
 ### Development
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.2...master)
 
+Enhancements:
+
+* Memoize `RSpec::Core::Formatters::ExceptionPresenter#exception_lines` to improve performance
+  with slow exception messages. (Maxime Lapointe, #2743)
+
 Bug Fixes:
 
 * Declare `ruby2_keywords` on `method_missing` for other gems. (Jon Rowe, #2731)
