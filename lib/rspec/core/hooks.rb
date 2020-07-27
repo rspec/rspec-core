@@ -312,7 +312,7 @@ module RSpec
       #
       # @note the syntax of `around` is similar to that of `before` and `after`
       #   but the semantics are quite different. `before` and `after` hooks are
-      #   run in the context of of the examples with which they are associated,
+      #   run in the context of the examples with which they are associated,
       #   whereas `around` hooks are actually responsible for running the
       #   examples. Consequently, `around` hooks do not have direct access to
       #   resources that are made available within the examples and their
