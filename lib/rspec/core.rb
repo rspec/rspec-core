@@ -1,3 +1,5 @@
+warn "This branch is deprecated. Please use `main`."
+
 # rubocop:disable Style/GlobalVars
 $_rspec_core_load_started_at = Time.now
 # rubocop:enable Style/GlobalVars
