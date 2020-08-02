@@ -8,7 +8,7 @@ require 'rspec/expectations'
 # then ran `bundle install --standalone --binstubs bundle/bin`
 # then ran `ruby --disable-gems -I lib -I "$PWD/bundle" -r bundler/setup -S benchmarks/threadsafe_let_block.rb`
 
-# The old, non-thread safe implementation, imported from the `master` branch and pared down.
+# The old, non-thread safe implementation, imported from the `main` branch and pared down.
 module OriginalNonThreadSafeMemoizedHelpers
   def __memoized
     @__memoized ||= {}
