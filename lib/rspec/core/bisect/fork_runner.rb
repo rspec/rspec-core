@@ -6,7 +6,7 @@ module RSpec
   module Core
     module Bisect
       # A Bisect runner that runs requested subsets of the suite by forking
-      # sub-processes. The master process bootstraps RSpec and the application
+      # sub-processes. The main process bootstraps RSpec and the application
       # environment (including preloading files specified via `--require`) so
       # that the individual spec runs do not have to re-pay that cost.  Each
       # spec run happens in a forked process, ensuring that the spec files are

@@ -1,4 +1,4 @@
-# rspec-core [![Build Status](https://secure.travis-ci.org/rspec/rspec-core.svg?branch=master)](http://travis-ci.org/rspec/rspec-core) [![Code Climate](https://codeclimate.com/github/rspec/rspec-core.svg)](https://codeclimate.com/github/rspec/rspec-core)
+# rspec-core [![Build Status](https://secure.travis-ci.org/rspec/rspec-core.svg?branch=main)](http://travis-ci.org/rspec/rspec-core) [![Code Climate](https://codeclimate.com/github/rspec/rspec-core.svg)](https://codeclimate.com/github/rspec/rspec-core)
 
 rspec-core provides the structure for writing executable examples of how your
 code should behave, and an `rspec` command with tools to constrain which
@@ -10,12 +10,12 @@ examples get run and tailor the output.
     gem install rspec-core # for rspec-core only
     rspec --help
 
-Want to run against the `master` branch? You'll need to include the dependent
+Want to run against the `main` branch? You'll need to include the dependent
 RSpec repos as well. Add the following to your `Gemfile`:
 
 ```ruby
 %w[rspec rspec-core rspec-expectations rspec-mocks rspec-support].each do |lib|
-  gem lib, :git => "https://github.com/rspec/#{lib}.git", :branch => 'master'
+  gem lib, :git => "https://github.com/rspec/#{lib}.git", :branch => 'main'
 end
 ```
 

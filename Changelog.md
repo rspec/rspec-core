@@ -1,4 +1,3 @@
-### Development
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.2...3-9-maintenance)
 
 Bug Fixes:
