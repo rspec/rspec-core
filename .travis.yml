@@ -5,9 +5,6 @@
 dist: trusty
 language: ruby
 email: false
-cache:
-  directories:
-    - ../bundle
 before_install:
   - "script/update_rubygems_and_install_bundler"
   - unset _JAVA_OPTIONS
