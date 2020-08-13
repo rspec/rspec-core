@@ -63,10 +63,9 @@ platforms :jruby do
   end
 end
 
-gem 'simplecov', '~> 0.8'
-
-# No need to run rubocop on earlier versions
+# No need to run rubocop & simplecov on earlier versions
 if RUBY_VERSION >= '2.4' && RUBY_ENGINE == 'ruby'
+  gem 'simplecov', '~> 0.8'
   gem "rubocop", "~> 0.52.1"
 end
 

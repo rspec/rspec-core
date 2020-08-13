@@ -24,7 +24,7 @@ begin
   # Simplecov emits some ruby warnings when loaded, so silence them.
   old_verbose, $VERBOSE = $VERBOSE, false
 
-  unless ENV['NO_COVERAGE'] || RUBY_VERSION.to_f < 2.1
+  unless ENV['NO_COVERAGE'] || RUBY_VERSION.to_f < 2.4
     require 'simplecov'
 
     SimpleCov.start do
