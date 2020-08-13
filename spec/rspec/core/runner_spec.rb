@@ -232,6 +232,51 @@ module RSpec::Core
       end
     end
 
+    describe '#exit_code' do
+      let(:world) { World.new }
+      let(:config) { Configuration.new }
+      let(:runner) { Runner.new({}, config, world) }
+
+      it 'defaults to 1' do
+        expect(runner.exit_code).to eq 1
+      end
+
+      it 'is failure_exit_code by default' do
+        config.failure_exit_code = 2
+        expect(runner.exit_code).to eq 2
+      end
+
+      it 'is failure_exit_code when world is errored by default' do
+        world.non_example_failure = true
+        config.failure_exit_code = 2
+        expect(runner.exit_code).to eq 2
+      end
+
+      it 'is error_exit_code when world is errored by and both are defined' do
+        world.non_example_failure = true
+        config.failure_exit_code = 2
+        config.error_exit_code = 3
+        expect(runner.exit_code).to eq 3
+      end
+
+      it 'is error_exit_code when world is errored by and failure exit code is not defined' do
+        world.non_example_failure = true
+        config.error_exit_code = 3
+        expect(runner.exit_code).to eq 3
+      end
+
+      it 'can be given success' do
+        config.error_exit_code = 3
+        expect(runner.exit_code(true)).to eq 0
+      end
+
+      it 'can be given success, but non_example_failure=true will still cause an error code' do
+        world.non_example_failure = true
+        config.error_exit_code = 3
+        expect(runner.exit_code(true)).to eq 3
+      end
+    end
+
     describe ".invoke" do
       let(:runner) { RSpec::Core::Runner }
 
@@ -287,7 +332,6 @@ module RSpec::Core
           expect(process_proxy).to have_received(:run).with(err, out)
         end
       end
-
     end
 
     context "when run" do

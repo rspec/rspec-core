@@ -6,6 +6,7 @@ RSpec.describe 'Suite hook errors' do
   include FormatterSupport
 
   let(:failure_exit_code) { rand(97) + 2 } # 2..99
+  let(:error_exit_code) { failure_exit_code + 2 } # 4..101
 
   if RSpec::Support::Ruby.jruby_9000?
     let(:spec_line_suffix) { ":in `block in (root)'" }
@@ -24,6 +25,7 @@ RSpec.describe 'Suite hook errors' do
       c.filter_gems_from_backtrace "gems/aruba"
       c.backtrace_exclusion_patterns << %r{/rspec-core/spec/} << %r{rspec_with_simplecov}
       c.failure_exit_code = failure_exit_code
+      c.error_exit_code = error_exit_code
     end
   end
 
@@ -41,7 +43,7 @@ RSpec.describe 'Suite hook errors' do
     "
 
     run_command "the_spec.rb"
-    expect(last_cmd_exit_status).to eq(failure_exit_code)
+    expect(last_cmd_exit_status).to eq(error_exit_code)
     normalize_durations(last_cmd_stdout)
   end
 
@@ -96,7 +98,7 @@ RSpec.describe 'Suite hook errors' do
     "
 
     run_command "the_spec.rb"
-    expect(last_cmd_exit_status).to eq(failure_exit_code)
+    expect(last_cmd_exit_status).to eq(error_exit_code)
     output = normalize_durations(last_cmd_stdout)
 
     expect(output).to eq unindent(<<-EOS)

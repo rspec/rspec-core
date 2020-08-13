@@ -95,6 +95,11 @@ module RSpec::Core
           options[:failure_exit_code] = code
         end
 
+        parser.on('--error-exit-code CODE', Integer,
+                  'Override the exit code used when there are errors loading or running specs outside of examples.') do |code|
+          options[:error_exit_code] = code
+        end
+
         parser.on('-X', '--[no-]drb', 'Run examples via DRb.') do |use_drb|
           options[:drb] = use_drb
           options[:runner] = RSpec::Core::Invocations::DRbWithFallback.new if use_drb

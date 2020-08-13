@@ -51,6 +51,7 @@ module RSpec
         argv << "--order"        << @submitted_options[:order]               if @submitted_options[:order]
 
         add_failure_exit_code(argv)
+        add_error_exit_code(argv)
         add_full_description(argv)
         add_filter(argv, :inclusion, @filter_manager.inclusions)
         add_filter(argv, :exclusion, @filter_manager.exclusions)
@@ -65,6 +66,12 @@ module RSpec
         return unless @submitted_options[:failure_exit_code]
 
         argv << "--failure-exit-code" << @submitted_options[:failure_exit_code].to_s
+      end
+
+      def add_error_exit_code(argv)
+        return unless @submitted_options[:error_exit_code]
+
+        argv << "--error-exit-code" << @submitted_options[:error_exit_code].to_s
       end
 
       def add_full_description(argv)
