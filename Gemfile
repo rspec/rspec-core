@@ -60,6 +60,10 @@ elsif RUBY_VERSION < '2.4.0'
   gem "childprocess", "< 4.0.0"
 end
 
+if RUBY_VERSION < '2.0.0'
+  gem 'thor', '< 1.0.0'
+end
+
 platforms :jruby do
   if RUBY_VERSION < '1.9.0'
     # Pin jruby-openssl on older J Ruby
