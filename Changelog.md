@@ -5,6 +5,8 @@ Enhancements:
 
 * Memoize `RSpec::Core::Formatters::ExceptionPresenter#exception_lines` to improve performance
   with slow exception messages. (Maxime Lapointe, #2743)
+* Add configuration for an error exit code (to disambiguate errored builds from failed builds
+  by exit status). (Dana Sherson, #2749)
 
 Bug Fixes:
 
