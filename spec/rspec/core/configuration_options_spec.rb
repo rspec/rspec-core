@@ -321,6 +321,18 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
     end
   end
 
+  describe "--error-exit-code" do
+    it "sets :error_exit_code" do
+      expect(parse_options('--error-exit-code', '0')).to include(:error_exit_code => 0)
+      expect(parse_options('--error-exit-code', '1')).to include(:error_exit_code => 1)
+      expect(parse_options('--error-exit-code', '2')).to include(:error_exit_code => 2)
+    end
+
+    it "overrides previous :error_exit_code" do
+      expect(parse_options('--error-exit-code', '2', '--error-exit-code', '3')).to include(:error_exit_code => 3)
+    end
+  end
+
   describe "--dry-run" do
     it "defaults to nil" do
       expect(parse_options[:dry_run]).to be(nil)

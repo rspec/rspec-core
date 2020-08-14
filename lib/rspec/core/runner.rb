@@ -84,7 +84,7 @@ module RSpec
       # @param out [IO] output stream
       def run(err, out)
         setup(err, out)
-        return @configuration.reporter.exit_early(@configuration.failure_exit_code) if RSpec.world.wants_to_quit
+        return @configuration.reporter.exit_early(exit_code) if RSpec.world.wants_to_quit
 
         run_specs(@world.ordered_example_groups).tap do
           persist_example_statuses
@@ -112,7 +112,7 @@ module RSpec
       #   failed.
       def run_specs(example_groups)
         examples_count = @world.example_count(example_groups)
-        success = @configuration.reporter.report(examples_count) do |reporter|
+        examples_passed = @configuration.reporter.report(examples_count) do |reporter|
           @configuration.with_suite_hooks do
             if examples_count == 0 && @configuration.fail_if_no_examples
               return @configuration.failure_exit_code
@@ -120,9 +120,9 @@ module RSpec
 
             example_groups.map { |g| g.run(reporter) }.all?
           end
-        end && !@world.non_example_failure
+        end
 
-        success ? 0 : @configuration.failure_exit_code
+        exit_code(examples_passed)
       end
 
       # @private
@@ -184,6 +184,14 @@ module RSpec
           RSpec.world.wants_to_quit = true
           $stderr.puts "\nRSpec is shutting down and will print the summary report... Interrupt again to force quit."
         end
+      end
+
+      # @private
+      def exit_code(examples_passed=false)
+        return @configuration.error_exit_code || @configuration.failure_exit_code if @world.non_example_failure
+        return @configuration.failure_exit_code unless examples_passed
+
+        0
       end
 
     private

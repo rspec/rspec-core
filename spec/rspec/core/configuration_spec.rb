@@ -2862,6 +2862,28 @@ module RSpec::Core
       end
     end
 
+    describe '#failure_exit_code' do
+      it 'defaults to 1' do
+        expect(config.failure_exit_code).to eq 1
+      end
+
+      it 'is configurable' do
+        config.failure_exit_code = 2
+        expect(config.failure_exit_code).to eq 2
+      end
+    end
+
+    describe '#error_exit_code' do
+      it 'defaults to nil' do
+        expect(config.error_exit_code).to eq nil
+      end
+
+      it 'is configurable' do
+        config.error_exit_code = 2
+        expect(config.error_exit_code).to eq 2
+      end
+    end
+
     describe "#shared_context_metadata_behavior" do
       it "defaults to :trigger_inclusion for backwards compatibility" do
         expect(config.shared_context_metadata_behavior).to eq :trigger_inclusion

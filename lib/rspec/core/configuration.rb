@@ -243,6 +243,11 @@ module RSpec
       add_setting :failure_exit_code
 
       # @macro add_setting
+      # The exit code to return if there are any errors outside examples (default: failure_exit_code)
+      # @return [Integer]
+      add_setting :error_exit_code
+
+      # @macro add_setting
       # Whether or not to fail when there are no RSpec examples (default: false).
       # @return [Boolean]
       add_setting :fail_if_no_examples
@@ -523,6 +528,7 @@ module RSpec
         @pattern = '**{,/*/**}/*_spec.rb'
         @exclude_pattern = ''
         @failure_exit_code = 1
+        @error_exit_code = nil # so it can be overridden by failure exit code
         @fail_if_no_examples = false
         @spec_files_loaded = false
 
