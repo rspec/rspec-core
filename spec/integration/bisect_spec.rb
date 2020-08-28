@@ -43,21 +43,47 @@ module RSpec::Core
       end
 
       it 'does not leave zombie processes', :unless => RSpec::Support::OS.windows? do
-        original_pids = pids()
-        bisect(%W[spec/rspec/core/resources/blocking_pipe_bisect_spec.rb_], 1)
-        cursor = 0
-        while ((extra_pids = pids() - original_pids).join =~ /[RE]/i)
-          raise "Extra process detected" if cursor > 10
-          cursor += 1
-          sleep 0.1
-        end
-        expect(extra_pids.join).to_not include "Z"
+        bisect(['--format', 'json', 'spec/rspec/core/resources/blocking_pipe_bisect_spec.rb_'], 1)
+
+        zombie_process = RSpecChildProcess.new(Process.pid).zombie_process
+        expect(zombie_process).to eq([]), <<-MSG
+          Expected no zombie processes got #{zombie_process.count}:
+            #{zombie_process}
+        MSG
       end
     end
 
-    def pids
-      %x[ps -ho pid,state,cmd | grep "[r]uby"].split("\n").map do |line|
-        line.split(/\s+/).compact.join(' ')
+    class RSpecChildProcess
+      Ps = Struct.new(:pid, :ppid, :state, :command)
+
+      def initialize(pid)
+        @list = child_process_list(pid)
+      end
+
+      def zombie_process
+        @list.select { |child_process| child_process.state =~ /Z/ }
+      end
+
+      private
+
+      def child_process_list(pid)
+        childs_process_list = []
+        ps_pipe = `ps -o pid=,ppid=,state=,args= | grep #{pid}`
+
+        ps_pipe.split(/\n/).map do |line|
+          ps_part = line.lstrip.split(/\s+/)
+
+          next unless ps_part[1].to_i == pid
+
+          child_process = Ps.new
+          child_process.pid = ps_part[0]
+          child_process.ppid = ps_part[1]
+          child_process.state = ps_part[2]
+          child_process.command = ps_part[3..-1].join(' ')
+
+          childs_process_list << child_process
+        end
+        childs_process_list
       end
     end
   end
