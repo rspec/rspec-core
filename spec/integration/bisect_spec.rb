@@ -33,13 +33,57 @@ module RSpec::Core
       end
     end
 
-    context "when the bisect commasaturingnd is long" do
+    context "when the bisect command saturates the pipe" do
       # On OSX and Linux a file descriptor limit meant that the bisect process got stuck at a certain limit.
       # This test demonstrates that we can run large bisects above this limit (found to be at time of commit).
       # See: https://github.com/rspec/rspec-core/pull/2669
       it 'does not hit pipe size limit and does not get stuck' do
         output = bisect(%W[spec/rspec/core/resources/blocking_pipe_bisect_spec.rb_], 1)
         expect(output).to include("No failures found.")
+      end
+
+      it 'does not leave zombie processes', :unless => RSpec::Support::OS.windows? do
+        bisect(['--format', 'json', 'spec/rspec/core/resources/blocking_pipe_bisect_spec.rb_'], 1)
+
+        zombie_process = RSpecChildProcess.new(Process.pid).zombie_process
+        expect(zombie_process).to eq([]), <<-MSG
+          Expected no zombie processes got #{zombie_process.count}:
+            #{zombie_process}
+        MSG
+      end
+    end
+
+    class RSpecChildProcess
+      Ps = Struct.new(:pid, :ppid, :state, :command)
+
+      def initialize(pid)
+        @list = child_process_list(pid)
+      end
+
+      def zombie_process
+        @list.select { |child_process| child_process.state =~ /Z/ }
+      end
+
+      private
+
+      def child_process_list(pid)
+        childs_process_list = []
+        ps_pipe = `ps -o pid=,ppid=,state=,args= | grep #{pid}`
+
+        ps_pipe.split(/\n/).map do |line|
+          ps_part = line.lstrip.split(/\s+/)
+
+          next unless ps_part[1].to_i == pid
+
+          child_process = Ps.new
+          child_process.pid = ps_part[0]
+          child_process.ppid = ps_part[1]
+          child_process.state = ps_part[2]
+          child_process.command = ps_part[3..-1].join(' ')
+
+          childs_process_list << child_process
+        end
+        childs_process_list
       end
     end
   end
