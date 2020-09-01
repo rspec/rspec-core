@@ -232,7 +232,10 @@ module RSpec
       end
 
       alias_method :pending?, :pending
-      alias_method :skipped?, :skip
+
+      def skipped?
+        !!skip
+      end
 
       # @api private
       # instance_execs the block passed to the constructor in the context of
@@ -578,6 +581,10 @@ module RSpec
         attr_accessor :pending_fixed
 
         alias pending_fixed? pending_fixed
+
+        def initialize
+          @pending_fixed = false
+        end
 
         # @return [Boolean] Indicates if the example was completely skipped
         #   (typically done via `:skip` metadata or the `skip` method). Skipped examples
