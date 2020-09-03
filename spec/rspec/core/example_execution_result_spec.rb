@@ -22,7 +22,7 @@ module RSpec
 
         it 'provides a `pending_fixed?` predicate' do
           er = ExecutionResult.new
-          expect { er.pending_fixed = true }.to change(er, :pending_fixed?).to(true)
+          expect { er.pending_fixed = true }.to change(er, :pending_fixed?).from(false).to(true)
         end
 
         describe "backwards compatibility" do
