@@ -778,7 +778,18 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
         expect_pending_result(group.examples.last)
       end
     end
+  end
 
+  describe "#pending?" do
+    it "only returns true / false values" do
+      group = describe_successfully do
+        example("", :pending => "a message thats ignored") { fail }
+        example { }
+      end
+
+      expect(group.examples[0].pending?).to eq true
+      expect(group.examples[1].pending?).to eq false
+    end
   end
 
   describe "#skip" do
@@ -844,6 +855,18 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
         end
         expect(group.examples.first).to be_skipped
       end
+    end
+  end
+
+  describe "#skipped?" do
+    it "only returns true / false values" do
+      group = describe_successfully do
+        example("", :skip => "a message thats ignored") { fail }
+        example { }
+      end
+
+      expect(group.examples[0].skipped?).to eq true
+      expect(group.examples[1].skipped?).to eq false
     end
   end
 
