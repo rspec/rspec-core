@@ -15,7 +15,7 @@ RSpec.describe "Aggregating failures" do
 
           expect(ex.execution_result.__send__(exception_attribute)).to have_attributes(
             :all_exceptions => [
-              an_object_having_attributes(:message => 'expected `1.even?` to return true, got false'),
+              an_object_having_attributes(:message => /expected.*even\?/),
               an_object_having_attributes(:message => 'after'),
               an_object_having_attributes(:message => 'around')
             ]
@@ -49,8 +49,8 @@ RSpec.describe "Aggregating failures" do
           )
 
           expect(exception.all_exceptions.first.all_exceptions).to match [
-            an_object_having_attributes(:message => 'expected `1.even?` to return true, got false'),
-            an_object_having_attributes(:message => 'expected `2.odd?` to return true, got false')
+            an_object_having_attributes(:message => /expected.*even\?/),
+            an_object_having_attributes(:message => /expected.*odd\?/)
           ]
         end
       end
@@ -71,8 +71,8 @@ RSpec.describe "Aggregating failures" do
         expect(ex.execution_result.status).to eq(:pending) if example_meta.key?(:pending)
         expect(ex.execution_result.__send__(exception_attribute)).to have_attributes(
           :all_exceptions => [
-            an_object_having_attributes(:message => 'expected `1.even?` to return true, got false'),
-            an_object_having_attributes(:message => 'expected `2.odd?` to return true, got false')
+            an_object_having_attributes(:message => /expected.*even\?/),
+            an_object_having_attributes(:message => /expected.*odd\?/)
           ]
         )
       end
@@ -90,7 +90,7 @@ RSpec.describe "Aggregating failures" do
 
           expect(ex.execution_result.__send__(exception_attribute)).to have_attributes(
             :all_exceptions => [
-              an_object_having_attributes(:message => 'expected `1.even?` to return true, got false'),
+              an_object_having_attributes(:message => /expected.*even\?/),
               an_object_having_attributes(:class => NameError, :message => /boom/)
             ]
           )
@@ -111,8 +111,8 @@ RSpec.describe "Aggregating failures" do
 
           expect(ex.execution_result.__send__(exception_attribute)).to have_attributes(
             :all_exceptions => [
-              an_object_having_attributes(:message => 'expected `1.even?` to return true, got false'),
-              an_object_having_attributes(:message => 'expected `2.odd?` to return true, got false'),
+              an_object_having_attributes(:message => /expected.*even\?/),
+              an_object_having_attributes(:message => /expected.*odd\?/),
               an_object_having_attributes(:class => NameError, :message => /boom/)
             ]
           )
