@@ -51,7 +51,7 @@ module RSpec
               cause << '--- Caused by: ---'
               cause << "#{exception_class_name(last_cause)}:" unless exception_class_name(last_cause) =~ /RSpec/
 
-              encoded_string(last_cause.message.to_s).split("\n").each do |line|
+              encoded_string(exception_message_string(last_cause)).split("\n").each do |line|
                 cause << "  #{line}"
               end
 
@@ -174,11 +174,19 @@ module RSpec
           lines
         end
 
+        # rubocop:disable Lint/RescueException
+        def exception_message_string(exception)
+          exception.message.to_s
+        rescue Exception => other
+          "A #{exception.class} for which `exception.message.to_s` raises #{other.class}."
+        end
+        # rubocop:enable Lint/RescueException
+
         def exception_lines
           @exception_lines ||= begin
             lines = []
             lines << "#{exception_class_name}:" unless exception_class_name =~ /RSpec/
-            encoded_string(exception.message.to_s).split("\n").each do |line|
+            encoded_string(exception_message_string(exception)).split("\n").each do |line|
               lines << (line.empty? ? line : "  #{line}")
             end
             lines
