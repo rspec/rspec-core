@@ -260,6 +260,32 @@ module RSpec::Core
         EOS
       end
 
+      it 'will work then the message to_s raises a looped exception' do
+        raising_to_s_klass =
+          Class.new do
+            def to_s
+              raise StandardError, self
+            end
+          end
+
+        if RSpec::Support::Ruby.jruby?
+          expected_error = Java::JavaLang::StackOverflowError
+        else
+          expected_error = StandardError
+        end
+
+        incorrect_message_exception = FakeException.new(raising_to_s_klass.new, [])
+
+        the_presenter = Formatters::ExceptionPresenter.new(incorrect_message_exception, example)
+
+        expect(the_presenter.fully_formatted(1)).to eq(<<-EOS.gsub(/^ +\|/, ''))
+          |
+          |  1) Example
+          |     Failure/Error: Unable to find matching line from backtrace
+          |       A #{FakeException} for which `exception.message.to_s` raises #{expected_error}.
+        EOS
+      end
+
       it "adds extra failure lines from the example metadata" do
         extra_example = example.clone
         failure_line = 'http://www.example.com/job_details/123'

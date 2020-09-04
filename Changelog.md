@@ -19,6 +19,8 @@ Bug Fixes:
 * Predicates for pending examples, (in `RSpec::Core::Example`, `#pending?`, `#skipped?` and
   `#pending_fixed?`) now return boolean values rather than truthy values.
   (Marc-André Lafortune, #2756, #2758)
+* Exceptions which have a message which cannot be cast to a string will no longer
+  cause a crash. (Jon Rowe, #2761)
 
 ### 3.9.2 / 2020-05-02
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.1...v3.9.2)
