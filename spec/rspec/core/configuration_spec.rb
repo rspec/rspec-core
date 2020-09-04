@@ -1300,12 +1300,11 @@ module RSpec::Core
     end
 
     describe "#run_all_when_everything_filtered?" do
-
       it "defaults to false" do
         expect(config.run_all_when_everything_filtered?).to be(false)
       end
 
-      it "can be queried with question method" do
+      it "can be queried by predicate method" do
         config.run_all_when_everything_filtered = true
         expect(config.run_all_when_everything_filtered?).to be(true)
       end
