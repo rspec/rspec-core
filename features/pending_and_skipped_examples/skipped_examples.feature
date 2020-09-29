@@ -110,3 +110,24 @@ Feature: `skip` examples
            # No reason given
            # ./skipped_spec.rb:2
       """
+
+  Scenario: Skipping using metadata with a reason
+    Given a file named "skipped_with_reason_spec.rb" with:
+      """ruby
+      RSpec.describe "an example" do
+        example "is skipped", :skip => "waiting for planets to align" do
+          raise "this line is never executed"
+        end
+      end
+      """
+    When I run `rspec skipped_with_reason_spec.rb`
+    Then the exit status should be 0
+    And the output should contain "1 example, 0 failures, 1 pending"
+    And the output should contain:
+      """
+      Pending: (Failures listed here are expected and do not affect your suite's status)
+
+        1) an example is skipped
+           # waiting for planets to align
+           # ./skipped_with_reason_spec.rb:2
+      """
