@@ -8,6 +8,9 @@ Bug Fixes:
   (Marc-André Lafortune, #2736)
 * Prevent `rspec --bisect` from generating zombie processes while executing
   bisect runs. (Benoit Tigeot, Jon Rowe, #2739)
+* Predicates for pending examples, (in `RSpec::Core::Example`, `#pending?`, `#skipped?` and
+  `#pending_fixed?`) now return boolean values rather than truthy values.
+  (Marc-André Lafortune, #2756, #2758)
 
 ### 3.9.2 / 2020-05-02
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.1...v3.9.2)
