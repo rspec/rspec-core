@@ -32,6 +32,10 @@ before_test:
 test_script:
   - bundle exec rspec --backtrace
 
+on_failure:
+  - cat C:/Ruby22/lib/ruby/gems/2.2.0/extensions/x86-mingw32/2.2.0/childprocess-1.0.0/gem_make.out
+  - cat C:/projects/rspec-core/vendor/bundle/ruby/2.2.0/extensions/x86-mingw32/2.2.0/childprocess-1.0.0/gem_make.out
+
 environment:
   matrix:
     - ruby_version: 21
