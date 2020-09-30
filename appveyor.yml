@@ -19,6 +19,7 @@ cache:
 install:
   - set PATH=C:\Ruby%RUBY_VERSION%\bin;%PATH%
   - bundle config --local path vendor/bundle
+  - gem install ffi -v '1.0.11' --verbose --backtrace
   - gem install childprocess -v '1.0.1' --verbose --backtrace --debug
   - gem install childprocess -v '1.0.0' --verbose --backtrace --debug
   - cat C:/projects/rspec-core/vendor/bundle/ruby/2.2.0/extensions/x86-mingw32/2.2.0/childprocess-1.0.0/gem_make.out
