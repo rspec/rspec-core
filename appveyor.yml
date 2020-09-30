@@ -9,7 +9,6 @@ version: "{build}"
 branches:
   only:
     - main
-    - /.*-maintenance$/
 
 # Disable normal Windows builds in favor of our test script.
 build: off
@@ -20,6 +19,8 @@ cache:
 install:
   - set PATH=C:\Ruby%RUBY_VERSION%\bin;%PATH%
   - bundle config --local path vendor/bundle
+  - gem install childprocess -v '1.0.0' --verbose --backtrace --debug
+  - cat C:/projects/rspec-core/vendor/bundle/ruby/2.2.0/extensions/x86-mingw32/2.2.0/childprocess-1.0.0/gem_make.out
   - bundle install
   - cinst ansicon
 
@@ -33,10 +34,5 @@ test_script:
 
 environment:
   matrix:
-    - ruby_version: 200
     - ruby_version: 21
     - ruby_version: 22
-    - ruby_version: 23-x64
-    - ruby_version: 24-x64
-    - ruby_version: 25-x64
-    - ruby_version: 26-x64
