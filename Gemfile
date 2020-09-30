@@ -48,9 +48,7 @@ else
   gem 'ffi', '~> 1.11.0'
 end
 
-if RUBY_VERSION < '2.2.0' && !!(RbConfig::CONFIG['host_os'] =~ /cygwin|mswin|mingw|bccwin|wince|emx/)
-  gem "childprocess", "< 1.0.0"
-end
+gem "childprocess", "< 1.0.0"
 
 platforms :jruby do
   if RUBY_VERSION < '1.9.0'
