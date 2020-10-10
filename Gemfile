@@ -38,6 +38,12 @@ end
 # Contracts gem denies that it uses Ruby 2.0 syntax
 gem 'contracts', '< 0.16' if RUBY_VERSION < '1.9.0'
 
+# json 2.2.0 denies that it needs Ruby 2.0
+gem 'json', '< 2.0.0' if RUBY_VERSION < '2.0.0' || RUBY_ENGINE == 'java'
+
+# Test::Unit was removed from stdlib in Ruby 2.2
+gem 'test-unit', '~> 3.0' if RUBY_VERSION.to_f >= 2.2
+
 # Minitest version 5.12.0 relies on Ruby 2.4, but denies it
 gem 'minitest', '!= 5.12.0'
 
