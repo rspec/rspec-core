@@ -35,6 +35,9 @@ if RUBY_VERSION >= '2.4' && RUBY_ENGINE == 'ruby'
   gem "rubocop", "~> 0.52.1"
 end
 
+# Contracts gem denies that it uses Ruby 2.0 syntax
+gem 'contracts', '< 0.16' if RUBY_VERSION < '1.9.0'
+
 # Minitest version 5.12.0 relies on Ruby 2.4, but denies it
 gem 'minitest', '!= 5.12.0'
 
