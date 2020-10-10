@@ -32,6 +32,11 @@ if RUBY_VERSION < '2.3.0' && !!(RbConfig::CONFIG['host_os'] =~ /cygwin|mswin|min
   gem "childprocess", "< 1.0.0"
 end
 
+platforms :jruby do
+  # Pin child-process on older JRuby
+  gem "childprocess", "< 1.0.0" if RUBY_VERSION < '1.9.0'
+end
+
 gem 'simplecov', '~> 0.8'
 
 # No need to run rubocop on earlier versions
