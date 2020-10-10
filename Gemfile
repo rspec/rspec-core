@@ -28,8 +28,6 @@ group :documentation do
   gem 'github-markup', :platform => :mri
 end
 
-gem 'ffi'
-
 if RUBY_VERSION < '2.3.0' && !!(RbConfig::CONFIG['host_os'] =~ /cygwin|mswin|mingw|bccwin|wince|emx/)
   gem "childprocess", "< 1.0.0"
 end

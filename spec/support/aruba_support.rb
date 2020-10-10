@@ -1,6 +1,8 @@
 module ArubaLoader
   extend RSpec::Support::WithIsolatedStdErr
   with_isolated_stderr do
+    # Aruba depends on FFI, but under JRuby it's not loaded for some reason
+    require 'ffi'
     require 'aruba/api'
   end
 end
