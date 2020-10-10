@@ -28,6 +28,10 @@ group :documentation do
   gem 'github-markup', :platform => :mri
 end
 
+if RUBY_VERSION < '2.3.0' && !!(RbConfig::CONFIG['host_os'] =~ /cygwin|mswin|mingw|bccwin|wince|emx/)
+  gem "childprocess", "< 1.0.0"
+end
+
 gem 'simplecov', '~> 0.8'
 
 # No need to run rubocop on earlier versions
