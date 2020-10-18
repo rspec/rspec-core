@@ -140,3 +140,28 @@ Feature: shared context
       """
     When I run `rspec shared_context_example.rb`
     Then the examples should all pass
+
+  Scenario: Declare a shared context under an example group and include it with metadata to child groups
+    Given a file named "shared_context_example.rb" with:
+      """ruby
+      RSpec.describe "group that defines a local shared context" do
+
+        subject { 'this is the group subject' }
+
+        shared_context "local stuff" do
+          subject { 'this is the local context subject' }
+        end
+
+        include_context "local stuff", :include_local => true
+
+        it "does not have access to local shared methods normally" do
+          expect(subject).to eq('this is the group subject')
+        end
+
+        it "has access to local shared methods from examples with matching metadata", :include_local => true do
+          expect(subject).to eq('this is the local context subject')
+        end
+      end
+      """
+    When I run `rspec shared_context_example.rb`
+    Then the examples should all pass
