@@ -60,8 +60,8 @@ Feature: shared context
         group = self
 
         it "inherits metadata from the included context" do |ex|
-          expect(group.metadata).to include(:shared_context => :metadata)
-          expect(ex.metadata).to include(:shared_context => :metadata)
+          expect(group.metadata[:shared_context]).to eq(:metadata)
+          expect(ex.metadata[:shared_context]).to eq(:metadata)
         end
       end
       """
@@ -111,8 +111,8 @@ Feature: shared context
         group = self
 
         it "inherits metadata from the included context" do |ex|
-          expect(group.metadata).to include(:shared_context => :metadata)
-          expect(ex.metadata).to include(:shared_context => :metadata)
+          expect(group.metadata[:shared_context]).to eq(:metadata)
+          expect(ex.metadata[:shared_context]).to eq(:metadata)
         end
       end
       """
@@ -134,7 +134,7 @@ Feature: shared context
         end
 
         it "inherits metadata from the included context due to the matching metadata", :include_shared => true do |ex|
-          expect(ex.metadata).to include(:shared_context => :metadata)
+          expect(ex.metadata[:shared_context]).to eq(:metadata)
         end
       end
       """
