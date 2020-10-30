@@ -59,6 +59,14 @@ module RSpec
       end
 
       # @private
+      # Orders items by modification time (most recent modified first).
+      class ModificationTime
+        def order(list)
+          list.sort_by { |item| -File.mtime(item.metadata[:absolute_file_path]).to_i }
+        end
+      end
+
+      # @private
       # Orders items based on a custom block.
       class Custom
         def initialize(callable)
@@ -78,6 +86,7 @@ module RSpec
           @strategies    = {}
 
           register(:random,  Random.new(configuration))
+          register(:modification_time,  ModificationTime.new)
 
           identity = Identity.new
           register(:defined, identity)
@@ -132,6 +141,8 @@ module RSpec
                             :random
                           elsif order == 'defined'
                             :defined
+                          elsif order == 'modification_time'
+                            :modification_time
                           end
 
           register_ordering(:global, ordering_registry.fetch(ordering_name)) if ordering_name
