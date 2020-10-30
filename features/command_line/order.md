@@ -13,7 +13,8 @@ order of groups at each level is randomized.
 
 With `rand` you can also specify a seed.
 
-The option `modification_time` will run the most recent modified files first. You can combine it with `--next-failure` to find the most recent failing spec.
+Use `modification_time` to run the most recently modified files first. You can
+combine it with `--next-failure` to find the most recent failing spec.
 
 ## Example usage
 
