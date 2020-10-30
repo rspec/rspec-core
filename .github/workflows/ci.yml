@@ -12,6 +12,10 @@ jobs:
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+      - uses: actions/cache@v2
+        with:
+          path: ../bundle
+          key: ${{ runner.os }}-${{ matrix.ruby }}
       - run: |
           script/update_rubygems_and_install_bundler
           script/clone_all_rspec_repos
