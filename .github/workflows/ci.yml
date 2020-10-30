@@ -3,10 +3,10 @@ on: [pull_request, push]
 jobs:
   test:
     name: Ruby ${{ matrix.ruby }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-16.04
     strategy:
       matrix:
-        ruby: [ '2.5', '2.6', '2.7' ]
+        ruby: [ '2.3.0', '2.4.0', '2.5', '2.6', '2.7' ]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-ruby@v1
