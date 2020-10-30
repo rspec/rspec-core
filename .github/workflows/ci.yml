@@ -16,8 +16,7 @@ jobs:
         with:
           path: ../bundle
           key: ${{ runner.os }}-${{ matrix.ruby }}
-      - run: |
-          script/update_rubygems_and_install_bundler
-          script/clone_all_rspec_repos
-          bundle install --binstubs --standalone --without documentation -- path ../bundle
-          script/run_build
+      - run: script/update_rubygems_and_install_bundler
+      - run: script/clone_all_rspec_repos
+      - run: bundle install --binstubs --standalone --without documentation -- path ../bundle
+      - run: script/run_build
