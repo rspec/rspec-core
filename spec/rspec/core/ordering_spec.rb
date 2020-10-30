@@ -82,11 +82,9 @@ module RSpec
       end
 
       RSpec.describe ModificationTime do
-        require 'time'
-
         before do
-          allow(File).to receive(:mtime).with('./file_1.rb').and_return(::Time.parse('18:00'))
-          allow(File).to receive(:mtime).with('./file_2.rb').and_return(::Time.parse('18:01'))
+          allow(File).to receive(:mtime).with('./file_1.rb').and_return(::Time.new)
+          allow(File).to receive(:mtime).with('./file_2.rb').and_return(::Time.new + 1)
         end
 
         it 'orders list by file modification time' do
