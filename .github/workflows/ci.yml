@@ -1,0 +1,19 @@
+name: CI
+on: [pull_request, push]
+jobs:
+  test:
+    name: Ruby ${{ matrix.ruby }}
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        ruby: [ '2.5', '2.6', '2.7' ]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - run: |
+          script/update_rubygems_and_install_bundler
+          script/clone_all_rspec_repos
+          bundle install --binstubs --standalone --without documentation -- path ../bundle
+          script/run_build
