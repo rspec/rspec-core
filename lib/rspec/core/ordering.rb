@@ -85,8 +85,8 @@ module RSpec
           @configuration = configuration
           @strategies    = {}
 
-          register(:random,  Random.new(configuration))
-          register(:modification_time,  ModificationTime.new)
+          register(:random, Random.new(configuration))
+          register(:modification_time, ModificationTime.new)
 
           identity = Identity.new
           register(:defined, identity)
