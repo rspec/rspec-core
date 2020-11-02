@@ -18,7 +18,5 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.ruby }}
       - run: script/update_rubygems_and_install_bundler
       - run: script/clone_all_rspec_repos
-      - run: ls ../**/*
-      - run: cat ../rspec-support/lib/rspec/support/version.rb
-      - run: USE_GIT_REPOS=1 bundle install --binstubs --standalone --without documentation -- path ../bundle
+      - run: bundle install --binstubs --standalone --without documentation -- path ../bundle
       - run: script/run_build
