@@ -61,6 +61,7 @@ RSpec.describe 'Persistence failures' do
           expected_snippets[0] = "WARNING: Could not write"
         end
 
+        p last_cmd_stderr
         expect(last_cmd_stderr).to include(*expected_snippets)
         expect(last_cmd_stdout).to include("1 example")
       end

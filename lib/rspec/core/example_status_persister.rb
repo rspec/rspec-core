@@ -21,7 +21,14 @@ module RSpec
       end
 
       def persist
+        puts "#" * 60
+        puts "lib/rspec/core/example_status_persister.rb:26"
         RSpec::Support::DirectoryMaker.mkdir_p(File.dirname(@file_name))
+        p File::RDWR
+        p File::CREAT
+        p File::RDWR | File::CREAT
+        p File.open(@file_name, File::RDWR | File::CREAT)
+        puts "*" * 60
         File.open(@file_name, File::RDWR | File::CREAT) do |f|
           # lock the file while reading / persisting to avoid a race
           # condition where parallel or unrelated spec runs race to

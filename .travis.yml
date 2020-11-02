@@ -48,7 +48,3 @@ matrix:
     - rvm: ruby-head
     - rvm: rbx-3
   fast_finish: true
-branches:
-  only:
-    - main
-    - /^\d+-\d+-maintenance$/
