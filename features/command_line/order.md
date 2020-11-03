@@ -13,8 +13,9 @@ order of groups at each level is randomized.
 
 With `rand` you can also specify a seed.
 
-Use `modification_time` to run the most recently modified files first. You can
-combine it with `--next-failure` to find the most recent failing spec.
+Use `recently-modified` to run the most recently modified files first. You can
+combine it with `--only-failures` to find the most recent failing specs. Note
+that `recently-modified` and `rand` are mutually exclusives.
 
 ## Example usage
 
@@ -25,5 +26,5 @@ config file (e.g. `.rspec`) and you want to override it from the command line.
 --order rand
 --order rand:123
 --seed 123 # same as --order rand:123
---modification_time
+--order recently-modified
 </code></pre>

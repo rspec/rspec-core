@@ -62,7 +62,7 @@ module RSpec::Core
                   '  [rand]              randomize the order of groups and examples',
                   '  [random]            alias for rand',
                   '  [random:SEED]       e.g. --order random:123',
-                  '  [modification_time] run the most recently modified files first') do |o|
+                  '  [recently-modified] run the most recently modified files first') do |o|
           options[:order] = o
         end
 

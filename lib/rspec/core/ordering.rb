@@ -60,7 +60,7 @@ module RSpec
 
       # @private
       # Orders items by modification time (most recent modified first).
-      class ModificationTime
+      class RecentlyModified
         def order(list)
           list.sort_by { |item| -File.mtime(item.metadata[:absolute_file_path]).to_i }
         end
@@ -86,7 +86,7 @@ module RSpec
           @strategies    = {}
 
           register(:random, Random.new(configuration))
-          register(:modification_time, ModificationTime.new)
+          register(:recently_modified, RecentlyModified.new)
 
           identity = Identity.new
           register(:defined, identity)
@@ -141,8 +141,8 @@ module RSpec
                             :random
                           elsif order == 'defined'
                             :defined
-                          elsif order == 'modification_time'
-                            :modification_time
+                          elsif order == 'recently-modified'
+                            :recently_modified
                           end
 
           register_ordering(:global, ordering_registry.fetch(ordering_name)) if ordering_name

@@ -81,7 +81,7 @@ module RSpec
         end
       end
 
-      RSpec.describe ModificationTime do
+      RSpec.describe RecentlyModified do
         before do
           allow(File).to receive(:mtime).with('./file_1.rb').and_return(::Time.new)
           allow(File).to receive(:mtime).with('./file_2.rb').and_return(::Time.new + 1)
@@ -90,7 +90,7 @@ module RSpec
         it 'orders list by file modification time' do
           file_1 = instance_double(Example, :metadata => { :absolute_file_path => './file_1.rb' })
           file_2 = instance_double(Example, :metadata => { :absolute_file_path => './file_2.rb' })
-          strategy = ModificationTime.new
+          strategy = RecentlyModified.new
 
           expect(strategy.order([file_1, file_2])).to eq([file_2, file_1])
         end
