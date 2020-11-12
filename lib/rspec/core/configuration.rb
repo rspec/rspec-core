@@ -2333,24 +2333,12 @@ module RSpec
         host.__send__(:prepend, mod) unless host < mod
       end
 
-      if RUBY_VERSION.to_f >= 1.9
-        def safe_include(mod, host)
-          host.__send__(:include, mod) unless host < mod
-        end
+      def safe_include(mod, host)
+        host.__send__(:include, mod) unless host < mod
+      end
 
-        def safe_extend(mod, host)
-          host.extend(mod) unless host.singleton_class < mod
-        end
-      else # for 1.8.7
-        # :nocov:
-        def safe_include(mod, host)
-          host.__send__(:include, mod) unless host.included_modules.include?(mod)
-        end
-
-        def safe_extend(mod, host)
-          host.extend(mod) unless (class << host; self; end).included_modules.include?(mod)
-        end
-        # :nocov:
+      def safe_extend(mod, host)
+        host.extend(mod) unless host.singleton_class < mod
       end
 
       def define_mixed_in_module(mod, filters, mod_list, config_method, &block)
