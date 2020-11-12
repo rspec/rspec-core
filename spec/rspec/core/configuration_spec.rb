@@ -997,8 +997,7 @@ module RSpec::Core
       end
     end
 
-    config_methods = %w[ include extend ]
-    config_methods << "prepend" if RSpec::Support::RubyFeatures.module_prepends_supported?
+    config_methods = %w[ include extend prepend ]
     config_methods.each do |config_method|
       it "raises an immediate `TypeError` when you attempt to `config.#{config_method}` with something besides a module" do
         expect {
@@ -1233,7 +1232,7 @@ module RSpec::Core
       end
     end
 
-    describe "#prepend", :if => RSpec::Support::RubyFeatures.module_prepends_supported? do
+    describe "#prepend" do
       include_examples "warning of deprecated `:example_group` during filtering configuration", :prepend, Enumerable
 
       module SomeRandomMod
@@ -2336,8 +2335,7 @@ module RSpec::Core
         config.configure_group(child)
       end
 
-      it "doesn't prepend a module when already present in ancestor chain",
-        :if => RSpec::Support::RubyFeatures.module_prepends_supported? do
+      it "doesn't prepend a module when already present in ancestor chain" do
         config.prepend(IncludeExtendOrPrependMeOnce, :foo => :bar)
 
         group = RSpec.describe("group", :foo => :bar)
