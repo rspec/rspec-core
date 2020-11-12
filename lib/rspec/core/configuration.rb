@@ -2,6 +2,7 @@ RSpec::Support.require_rspec_core "backtrace_formatter"
 RSpec::Support.require_rspec_core "ruby_project"
 RSpec::Support.require_rspec_core "formatters/deprecation_formatter"
 RSpec::Support.require_rspec_core "output_wrapper"
+RSpec::Support.require_rspec_support 'ruby_features'
 
 module RSpec
   module Core

@@ -1,3 +1,5 @@
+RSpec::Support.require_rspec_support 'ruby_features'
+
 module RSpec
   module Core
     module Formatters

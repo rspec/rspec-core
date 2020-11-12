@@ -1,4 +1,5 @@
 RSpec::Support.require_rspec_core "shell_escape"
+RSpec::Support.require_rspec_support 'ruby_features'
 require 'shellwords'
 
 module RSpec
