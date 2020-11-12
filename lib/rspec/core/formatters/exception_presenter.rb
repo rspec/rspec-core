@@ -41,33 +41,25 @@ module RSpec
             formatted_cause(exception)
         end
 
-        if RSpec::Support::RubyFeatures.supports_exception_cause?
-          def formatted_cause(exception)
-            last_cause = final_exception(exception, [exception])
-            cause = []
+        def formatted_cause(exception)
+          last_cause = final_exception(exception, [exception])
+          cause = []
 
-            if exception.cause
-              cause << '------------------'
-              cause << '--- Caused by: ---'
-              cause << "#{exception_class_name(last_cause)}:" unless exception_class_name(last_cause) =~ /RSpec/
+          if exception.cause
+            cause << '------------------'
+            cause << '--- Caused by: ---'
+            cause << "#{exception_class_name(last_cause)}:" unless exception_class_name(last_cause) =~ /RSpec/
 
-              encoded_string(exception_message_string(last_cause)).split("\n").each do |line|
-                cause << "  #{line}"
-              end
-
-              unless last_cause.backtrace.empty?
-                cause << ("  #{backtrace_formatter.format_backtrace(last_cause.backtrace, example.metadata).first}")
-              end
+            encoded_string(exception_message_string(last_cause)).split("\n").each do |line|
+              cause << "  #{line}"
             end
 
-            cause
+            unless last_cause.backtrace.empty?
+              cause << ("  #{backtrace_formatter.format_backtrace(last_cause.backtrace, example.metadata).first}")
+            end
           end
-        else
-          # :nocov:
-          def formatted_cause(_)
-            []
-          end
-          # :nocov:
+
+          cause
         end
 
         def colorized_formatted_backtrace(colorizer=::RSpec::Core::Formatters::ConsoleCodes)

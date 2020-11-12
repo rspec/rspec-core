@@ -60,17 +60,15 @@ module RSpec::Core
           expect(runner).to have_received(:run).with(err, out)
         end
 
-        if RSpec::Support::RubyFeatures.supports_exception_cause?
-          it "prevents the DRb error from being listed as the cause of expectation failures" do
-            allow(RSpec::Core::Runner).to receive(:new) do |configuration_options|
-              raise RSpec::Expectations::ExpectationNotMetError
-            end
+        it "prevents the DRb error from being listed as the cause of expectation failures" do
+          allow(RSpec::Core::Runner).to receive(:new) do |configuration_options|
+            raise RSpec::Expectations::ExpectationNotMetError
+          end
 
-            expect {
-              run_invocation
-            }.to raise_error(RSpec::Expectations::ExpectationNotMetError) do |e|
-              expect(e.cause).to be_nil
-            end
+          expect {
+            run_invocation
+          }.to raise_error(RSpec::Expectations::ExpectationNotMetError) do |e|
+            expect(e.cause).to be_nil
           end
         end
       end

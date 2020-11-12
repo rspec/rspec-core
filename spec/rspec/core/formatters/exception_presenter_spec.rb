@@ -24,9 +24,7 @@ module RSpec::Core
         @cause = cause
       end
       attr_reader :backtrace
-      if RSpec::Support::RubyFeatures.supports_exception_cause?
-        attr_accessor :cause
-      end
+      attr_accessor :cause
     end
 
     describe "#fully_formatted" do
@@ -183,7 +181,7 @@ module RSpec::Core
       caused_by_line_num = __LINE__ + 1
       let(:first_exception) { FakeException.new("Real\nculprit", ["#{__FILE__}:#{__LINE__}"]) }
 
-      it 'includes the first exception that caused the failure', :if => RSpec::Support::RubyFeatures.supports_exception_cause? do
+      it 'includes the first exception that caused the failure' do
         the_presenter = Formatters::ExceptionPresenter.new(the_exception, example)
 
         expect(the_presenter.fully_formatted(1)).to eq(<<-EOS.gsub(/^ +\|/, ''))
@@ -202,7 +200,7 @@ module RSpec::Core
         EOS
       end
 
-      it 'wont produce a stack error when cause is the exception itself', :if => RSpec::Support::RubyFeatures.supports_exception_cause? do
+      it 'wont produce a stack error when cause is the exception itself' do
         allow(the_exception).to receive(:cause) { the_exception }
         the_presenter = Formatters::ExceptionPresenter.new(the_exception, example)
 
@@ -222,7 +220,7 @@ module RSpec::Core
         EOS
       end
 
-      it 'wont produce a stack error when the cause is an older exception', :if => RSpec::Support::RubyFeatures.supports_exception_cause? do
+      it 'wont produce a stack error when the cause is an older exception' do
         allow(the_exception).to receive(:cause) do
           FakeException.new("A loop", the_exception.backtrace, the_exception)
         end
@@ -244,7 +242,7 @@ module RSpec::Core
         EOS
       end
 
-      it 'will work when cause is incorrectly overridden', :if => RSpec::Support::RubyFeatures.supports_exception_cause? do
+      it 'will work when cause is incorrectly overridden' do
         incorrect_cause_exception = FakeException.new("A badly implemented exception", [], "An incorrect cause")
 
         the_presenter = Formatters::ExceptionPresenter.new(incorrect_cause_exception, example)
