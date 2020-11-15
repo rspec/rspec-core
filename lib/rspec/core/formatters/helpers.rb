@@ -86,7 +86,15 @@ module RSpec
         # @param string [String] word to be pluralized
         # @return [String] pluralized word
         def self.pluralize(count, string)
-          "#{count} #{string}#{'s' unless count.to_f == 1}"
+          pluralized_string = if count.to_f == 1
+                                string
+                              elsif string.end_with?('s') # e.g. "process"
+                                "#{string}es" # e.g. "processes"
+                              else
+                                "#{string}s"
+                              end
+
+          "#{count} #{pluralized_string}"
         end
 
         # @api private
