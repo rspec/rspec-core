@@ -71,68 +71,58 @@ module RSpec
 
           # These keyword specs cover all 4 of the keyword / keyword like syntax varients
           # they should be warning free.
-
-          if RSpec::Support::RubyFeatures.required_kw_args_supported?
-            it 'supports required keyword arguments' do
-              binding.eval(<<-CODE, __FILE__, __LINE__)
-              group.__send__ shared_method_name, "shared context expects keywords" do |foo:|
-                it "has an expected value" do
-                  expect(foo).to eq("bar")
-                end
+          it 'supports required keyword arguments' do
+            group.__send__ shared_method_name, "shared context expects keywords" do |foo:|
+              it "has an expected value" do
+                expect(foo).to eq("bar")
               end
-
-              group.__send__ shared_method_name, "shared context expects hash" do |a_hash|
-                it "has an expected value" do
-                  expect(a_hash[:foo]).to eq("bar")
-                end
-              end
-
-              group.it_behaves_like "shared context expects keywords", foo: "bar"
-              group.it_behaves_like "shared context expects keywords", { foo: "bar" }
-
-              group.it_behaves_like "shared context expects hash", foo: "bar"
-              group.it_behaves_like "shared context expects hash", { foo: "bar" }
-              CODE
-              expect(group.run).to eq true
             end
+
+            group.__send__ shared_method_name, "shared context expects hash" do |a_hash|
+              it "has an expected value" do
+                expect(a_hash[:foo]).to eq("bar")
+              end
+            end
+
+            group.it_behaves_like "shared context expects keywords", foo: "bar"
+            group.it_behaves_like "shared context expects keywords", { foo: "bar" }
+
+            group.it_behaves_like "shared context expects hash", foo: "bar"
+            group.it_behaves_like "shared context expects hash", { foo: "bar" }
+
+            expect(group.run).to eq true
           end
 
-          if RSpec::Support::RubyFeatures.kw_args_supported?
-            it 'supports optional keyword arguments' do
-              binding.eval(<<-CODE, __FILE__, __LINE__)
-              group.__send__ shared_method_name, "shared context expects keywords" do |foo: nil|
-                it "has an expected value" do
-                  expect(foo).to eq("bar")
-                end
+          it 'supports optional keyword arguments' do
+            group.__send__ shared_method_name, "shared context expects keywords" do |foo: nil|
+              it "has an expected value" do
+                expect(foo).to eq("bar")
               end
-
-              group.__send__ shared_method_name, "shared context expects hash" do |a_hash|
-                it "has an expected value" do
-                  expect(a_hash[:foo]).to eq("bar")
-                end
-              end
-
-              group.it_behaves_like "shared context expects keywords", foo: "bar"
-              group.it_behaves_like "shared context expects keywords", { foo: "bar" }
-
-              group.it_behaves_like "shared context expects hash", foo: "bar"
-              group.it_behaves_like "shared context expects hash", { foo: "bar" }
-              CODE
-              expect(group.run).to eq true
             end
+
+            group.__send__ shared_method_name, "shared context expects hash" do |a_hash|
+              it "has an expected value" do
+                expect(a_hash[:foo]).to eq("bar")
+              end
+            end
+
+            group.it_behaves_like "shared context expects keywords", foo: "bar"
+            group.it_behaves_like "shared context expects keywords", { foo: "bar" }
+
+            group.it_behaves_like "shared context expects hash", foo: "bar"
+            group.it_behaves_like "shared context expects hash", { foo: "bar" }
+
+            expect(group.run).to eq true
           end
 
-          it "displays a warning when adding an example group without a block", :unless => RUBY_VERSION == '1.8.7' do
+          it "displays a warning when adding an example group without a block" do
             expect_warning_with_call_site(__FILE__, __LINE__ + 1)
             group.send(shared_method_name, 'name but no block')
           end
 
-          it "displays a warning when adding an example group without a block", :if => RUBY_VERSION == '1.8.7' do
-            # In 1.8.7 this spec breaks unless we run it isolated like this
-            in_sub_process do
-              expect_warning_with_call_site(__FILE__, __LINE__ + 1)
-              group.send(shared_method_name, 'name but no block')
-            end
+          it "displays a warning when adding an example group without a block" do
+            expect_warning_with_call_site(__FILE__, __LINE__ + 1)
+            group.send(shared_method_name, 'name but no block')
           end
 
           it 'displays a warning when adding a second shared example group with the same name' do
