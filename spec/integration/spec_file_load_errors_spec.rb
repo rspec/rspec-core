@@ -8,12 +8,8 @@ RSpec.describe 'Spec file load errors' do
   let(:failure_exit_code) { rand(97) + 2 } # 2..99
   let(:error_exit_code) { failure_exit_code + 1 } # 3..100
 
-  if RSpec::Support::Ruby.jruby_9000?
+  if RSpec::Support::Ruby.jruby?
     let(:spec_line_suffix) { ":in `<main>'" }
-  elsif RSpec::Support::Ruby.jruby?
-    let(:spec_line_suffix) { ":in `(root)'" }
-  elsif RUBY_VERSION == "1.8.7"
-    let(:spec_line_suffix) { "" }
   else
     let(:spec_line_suffix) { ":in `<top (required)>'" }
   end
