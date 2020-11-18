@@ -535,9 +535,7 @@ module RSpec::Core
         expect(config.files_to_run).to contain_files("./spec/rspec/core/resources/a_spec.rb")
       end
 
-      it "supports absolute path patterns", :failing_on_appveyor,
-        :pending => false,
-        :skip => (ENV['APPVEYOR'] ? "Failing on AppVeyor but :pending isn't working for some reason" : false) do
+      it "supports absolute path patterns" do
         dir = File.expand_path("../resources", __FILE__)
         config.pattern = File.join(dir, "**/*_spec.rb")
         assign_files_or_directories_to_run "spec"
@@ -618,7 +616,7 @@ module RSpec::Core
           expect(config.files_to_run).to contain_files("C:/path/to/project/spec/sub/foo_spec.rb")
         end
 
-        it "loads files in Windows when directory is specified", :failing_on_appveyor, :if => RSpec::Support::OS.windows? do
+        it "loads files in Windows when directory is specified", :failing_on_windows_ci, :if => RSpec::Support::OS.windows? do
           assign_files_or_directories_to_run "spec\\rspec\\core\\resources"
           expect(config.files_to_run).to contain_files("spec/rspec/core/resources/a_spec.rb")
         end
