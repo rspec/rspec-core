@@ -296,7 +296,7 @@ module RSpec
         RSpec.current_example = nil
       end
 
-      if RSpec::Support::Ruby.jruby? || RUBY_VERSION.to_f < 1.9
+      if RSpec::Support::Ruby.jruby?
         # :nocov:
         # For some reason, rescuing `Support::AllExceptionsExceptOnesWeMustNotRescue`
         # in place of `Exception` above can cause the exit status to be the wrong

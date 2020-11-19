@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module RSpec::Core
   RSpec.describe ExampleGroup do
     it_behaves_like "metadata hash builder" do
@@ -140,16 +138,12 @@ module RSpec::Core
         expect(child).to have_class_const("SomeParentGroup::Hash")
       end
 
-      it 'disambiguates name collisions by appending a number', :unless => RUBY_VERSION == '1.9.2' do
+      it 'disambiguates name collisions by appending a number' do
         groups = 10.times.map { RSpec.describe("Collision") }
         expect(groups[0]).to have_class_const("Collision")
         expect(groups[1]).to have_class_const("Collision_2")
         expect(groups[8]).to have_class_const("Collision_9")
-
-        if RUBY_VERSION.to_f > 1.8 && !(defined?(RUBY_ENGINE) && RUBY_ENGINE == 'rbx')
-          # on 1.8.7, rbx "Collision_9".next => "Collisioo_0"
-          expect(groups[9]).to have_class_const("Collision_10")
-        end
+        expect(groups[9]).to have_class_const("Collision_10")
       end
 
       it 'identifies unnamed groups as "Anonymous"' do
@@ -1333,11 +1327,7 @@ module RSpec::Core
         expect(@before_all_top_level).to eq('before_all_top_level')
       end
 
-      it "can access the before all ivars in the before_all_ivars hash", :ruby => 1.8 do |ex|
-        expect(ex.example_group.before_context_ivars).to include('@before_all_top_level' => 'before_all_top_level')
-      end
-
-      it "can access the before all ivars in the before_all_ivars hash", :ruby => 1.9 do |ex|
+      it "can access the before all ivars in the before_all_ivars hash" do |ex|
         expect(ex.example_group.before_context_ivars).to include(:@before_all_top_level => 'before_all_top_level')
       end
 

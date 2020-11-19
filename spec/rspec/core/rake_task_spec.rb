@@ -160,7 +160,7 @@ module RSpec::Core
     end
 
     context "with_clean_environment is set" do
-      it "removes the environment variables", :if => RUBY_VERSION >= '1.9.0', :unless => RSpec::Support::Ruby.jruby? do
+      it "removes the environment variables", :unless => RSpec::Support::Ruby.jruby? do
         with_env_vars 'MY_ENV' => 'ABC' do
           if RSpec::Support::OS.windows?
             essential_shell_variables = /\["ANSICON", "ANSICON_DEF", "HOME", "TMPDIR", "USER"\]/

@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'rspec/core/formatters/html_formatter'
 
 module RSpec
@@ -46,7 +45,7 @@ module RSpec
             select  {|e| e =~ /formatter_specs\.rb/}
         end
 
-        describe 'produced HTML', :if => RUBY_VERSION <= '2.0.0' do
+        describe 'produced HTML' do
           # Rubies before 2 are a wild west of different outputs, and it's not
           # worth the effort to maintain accurate fixtures for all of them.
           # Since we are verifying fixtures on other rubies, if this code at
@@ -57,19 +56,9 @@ module RSpec
           end
         end
 
-        describe 'produced HTML', :slow, :if => RUBY_VERSION >= '2.0.0' do
+        describe 'produced HTML', :slow do
           it "is identical to the one we designed manually", :pending => (defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby') do
             expect(actual_html).to eq(expected_html)
-          end
-
-          context 'with mathn loaded' do
-            include MathnIntegrationSupport
-
-            it "is identical to the one we designed manually", :slow, :pending => (defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby') do
-              with_mathn_loaded do
-                expect(actual_html).to eq(expected_html)
-              end
-            end
           end
         end
       end

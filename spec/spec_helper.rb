@@ -17,9 +17,7 @@ Dir['./spec/support/**/*.rb'].map do |file|
   # that shell out and run a new process.
   next if file =~ /fake_libs/
 
-  # Ensure requires are relative to `spec`, which is on the
-  # load path. This helps prevent double requires on 1.8.7.
-  require file.gsub("./spec/support", "support")
+  require file
 end
 
 class RaiseOnFailuresReporter < RSpec::Core::NullReporter

@@ -393,16 +393,8 @@ module RSpec
                                 "#{hook_description} did not execute the example")
         end
 
-        if Proc.method_defined?(:source_location)
-          def hook_description
-            "around hook at #{Metadata.relative_path(block.source_location.join(':'))}"
-          end
-        else # for 1.8.7
-          # :nocov:
-          def hook_description
-            "around hook"
-          end
-          # :nocov:
+        def hook_description
+          "around hook at #{Metadata.relative_path(block.source_location.join(':'))}"
         end
       end
 
@@ -629,16 +621,8 @@ module RSpec
           end.call
         end
 
-        if respond_to?(:singleton_class) && singleton_class.ancestors.include?(singleton_class)
-          def owner_parent_groups
-            @owner.parent_groups
-          end
-        else # Ruby < 2.1 (see https://bugs.ruby-lang.org/issues/8035)
-          # :nocov:
-          def owner_parent_groups
-            @owner_parent_groups ||= [@owner] + @owner.parent_groups
-          end
-          # :nocov:
+        def owner_parent_groups
+          @owner.parent_groups
         end
       end
     end

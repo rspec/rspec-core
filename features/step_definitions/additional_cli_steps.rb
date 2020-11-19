@@ -232,13 +232,7 @@ end
 
 module Normalization
   def normalize_failure_output(text)
-    whitespace_normalized = text.lines.map { |line| line.sub(/\s+$/, '').sub(/:in .*$/, '') }.join
-
-    # 1.8.7 and JRuby produce slightly different output for `Hash#fetch` errors, so we
-    # convert it to the same output here to match our expectation.
-    whitespace_normalized.
-      sub("IndexError", "KeyError").
-      sub(/key not found.*$/, "key not found")
+    text.lines.map { |line| line.sub(/\s+$/, '').sub(/:in .*$/, '') }.join
   end
 end
 

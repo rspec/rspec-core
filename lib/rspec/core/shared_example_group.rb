@@ -163,7 +163,6 @@ module RSpec
                                  "symbol or module but got: #{name.inspect}"
           end
 
-          ensure_block_has_source_location(block) { CallerFilter.first_non_rspec_line }
           warn_if_key_taken context, name, block
 
           metadata = Metadata.build_hash_from(metadata_args)
@@ -187,7 +186,6 @@ module RSpec
         # the legacy behavior of shared context metadata, which we do
         # not want to support in RSpec 4.
         def legacy_add(context, name, *metadata_args, &block)
-          ensure_block_has_source_location(block) { CallerFilter.first_non_rspec_line }
           shared_module = SharedExampleGroupModule.new(name, block, {})
 
           if valid_name?(name)
@@ -241,27 +239,8 @@ module RSpec
           end
         end
 
-        if RUBY_VERSION.to_f >= 1.9
-          def formatted_location(block)
-            block.source_location.join(":")
-          end
-        else # 1.8.7
-          # :nocov:
-          def formatted_location(block)
-            block.source_location.join(":").gsub(/:in.*$/, '')
-          end
-          # :nocov:
-        end
-
-        if Proc.method_defined?(:source_location)
-          def ensure_block_has_source_location(_block); end
-        else # for 1.8.7
-          # :nocov:
-          def ensure_block_has_source_location(block)
-            source_location = yield.split(':')
-            block.extend(Module.new { define_method(:source_location) { source_location } })
-          end
-          # :nocov:
+        def formatted_location(block)
+          block.source_location.join(":")
         end
       end
     end

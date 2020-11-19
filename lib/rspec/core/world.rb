@@ -224,17 +224,12 @@ module RSpec
       def descending_declaration_line_numbers_by_file
         @descending_declaration_line_numbers_by_file ||= begin
           declaration_locations = FlatMap.flat_map(example_groups, &:declaration_locations)
-          hash_of_arrays = Hash.new { |h, k| h[k] = [] }
 
-          # TODO: change `inject` to `each_with_object` when we drop 1.8.7 support.
-          line_nums_by_file = declaration_locations.inject(hash_of_arrays) do |hash, (file_name, line_number)|
-            hash[file_name] << line_number
-            hash
-          end
+          declarations_by_file = declaration_locations.group_by(&:first) # by file name
 
-          line_nums_by_file.each_value do |list|
-            list.sort!
-            list.reverse!
+          # Replace with `transform_values` once we drop support for Ruby 2.3
+          declarations_by_file.map.with_object({}) do |(file, lines), hash|
+            hash[file] = lines.map(&:last).sort.reverse
           end
         end
       end

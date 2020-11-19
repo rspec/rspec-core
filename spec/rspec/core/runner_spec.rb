@@ -33,8 +33,7 @@ module RSpec::Core
           if @original_ivars.key?(ivar)
             Runner.instance_variable_set(ivar, @original_ivars[ivar])
           else
-            # send is necessary for 1.8.7
-            Runner.send(:remove_instance_variable, ivar)
+            Runner.remove_instance_variable(ivar)
           end
         end
       end

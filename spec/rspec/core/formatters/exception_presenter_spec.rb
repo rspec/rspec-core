@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'pathname'
 
 module RSpec::Core
@@ -107,7 +106,7 @@ module RSpec::Core
         EOS
       end
 
-      if String.method_defined?(:encoding) && !RSpec::Support::OS.windows?
+      if !RSpec::Support::OS.windows?
         it 'allows the caller to add encoded description' do
           the_presenter = Formatters::ExceptionPresenter.new(exception, example,
                                                              :description => "ジ".encode("CP932"))

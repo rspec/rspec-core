@@ -1,4 +1,3 @@
-# encoding: utf-8
 RSpec::Support.require_rspec_core "formatters/console_codes"
 RSpec::Support.require_rspec_core "formatters/snippet_extractor"
 RSpec::Support.require_rspec_core 'formatters/syntax_highlighter'
@@ -99,23 +98,12 @@ module RSpec
           end
         end
 
-        if String.method_defined?(:encoding)
-          def encoding_of(string)
-            string.encoding
-          end
+        def encoding_of(string)
+          string.encoding
+        end
 
-          def encoded_string(string)
-            RSpec::Support::EncodedString.new(string, Encoding.default_external)
-          end
-        else # for 1.8.7
-          # :nocov:
-          def encoding_of(_string)
-          end
-
-          def encoded_string(string)
-            RSpec::Support::EncodedString.new(string)
-          end
-          # :nocov:
+        def encoded_string(string)
+          RSpec::Support::EncodedString.new(string, Encoding.default_external)
         end
 
         def indent_lines(lines, failure_number)
@@ -249,15 +237,9 @@ module RSpec
           end
         end
 
-        if  String.method_defined?(:encoding)
-          def encoded_description(description)
-            return if description.nil?
-            encoded_string(description)
-          end
-        else # for 1.8.7
-          def encoded_description(description)
-            description
-          end
+        def encoded_description(description)
+          return if description.nil?
+          encoded_string(description)
         end
 
         def exception_backtrace

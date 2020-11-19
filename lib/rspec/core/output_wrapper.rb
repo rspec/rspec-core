@@ -10,8 +10,8 @@ module RSpec
         @output = output
       end
 
-      def respond_to?(name, priv=false)
-        output.respond_to?(name, priv)
+      def respond_to?(*args)
+        output.respond_to?(*args)
       end
 
       def method_missing(name, *args, &block)

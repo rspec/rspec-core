@@ -85,13 +85,10 @@ module RSpec
             expect(er.fetch(:foo) { 3 }).to eq(3)
           end
 
-          # It's IndexError on 1.8.7, KeyError on 1.9+
-          fetch_not_found_error_class = defined?(::KeyError) ? ::KeyError : ::IndexError
-
           specify '#fetch treats unset properties the same as a hash does' do
             allow_deprecation
             er = ExecutionResult.new
-            expect { er.fetch(:pending_message) }.to raise_error(fetch_not_found_error_class)
+            expect { er.fetch(:pending_message) }.to raise_error(KeyError)
             er.pending_message = "some msg"
             expect(er.fetch(:pending_message)).to eq("some msg")
           end
