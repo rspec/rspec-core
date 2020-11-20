@@ -308,9 +308,7 @@ module RSpec::Core
       end
 
       context "that is an absolute path file glob" do
-        it "loads the matching spec files", :failing_on_appveyor,
-        :pending => false,
-        :skip => (ENV['APPVEYOR'] ? "Failing on AppVeyor but :pending isn't working for some reason" : false) do
+        it "loads the matching spec files", :emits_warning_on_windows_on_old_ruby, :pending_on_windows_old_ruby do
           dir = File.expand_path("../resources", __FILE__)
           task.pattern = File.join(dir, "**/*_spec.rb")
 
@@ -443,7 +441,7 @@ module RSpec::Core
     context "with paths with quotes or spaces" do
       include_context "isolated directory"
 
-      it "matches files with quotes and spaces", :failing_on_appveyor do
+      it "matches files with quotes and spaces", :failing_on_windows_ci do
         spec_dir = File.join(Dir.getwd, "spec")
         task.pattern = "spec/*spec.rb"
         FileUtils.mkdir_p(spec_dir)
