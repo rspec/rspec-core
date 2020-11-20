@@ -97,6 +97,16 @@ RSpec.configure do |c|
     with_env_vars('SHELL' => '/usr/local/bin/bash', &ex)
   end
 
+  if ENV['CI'] && RSpec::Support::OS.windows? && RUBY_VERSION.to_f < 2.3
+    c.around(:example, :emits_warning_on_windows_on_old_ruby) do |ex|
+      ignoring_warnings(&ex)
+    end
+
+    c.define_derived_metadata(:pending_on_windows_old_ruby => true) do |metadata|
+      metadata[:pending] = "This example is expected to fail on windows, on ruby older than 2.3"
+    end
+  end
+
   c.filter_run_excluding :ruby => lambda {|version|
     case version.to_s
     when "!jruby"
