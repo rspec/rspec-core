@@ -681,7 +681,7 @@ module RSpec
           expect(value_for(:caller => [ "C:/path/to/file_spec.rb:#{__LINE__}" ])).to eq(__LINE__)
         end
 
-        it "uses the number after the first : for ruby 1.9" do
+        it "uses the number after the first :" do
           expect(value_for(:caller => [ "#{__FILE__}:#{__LINE__}:999" ])).to eq(__LINE__)
         end
       end

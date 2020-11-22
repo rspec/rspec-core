@@ -520,7 +520,7 @@ EOS
       # @private
       #
       # Gets the named constant or yields.
-      # On 1.9, const_defined? / const_get take into account the
+      # const_defined? / const_get take into account the
       # the inheritance by default, and accept an argument to
       # disable this behavior. It's important that we don't
       # consider inheritance here; each example group level that

@@ -120,12 +120,10 @@ module RSpec::Core::Formatters
         lines = ["a = 1", "b = 2"]
         expect(highlighter.highlight(lines)).to eq(lines)
       end
-
     end
 
     def be_highlighted
       include("\e[31m")
     end
-
   end
 end

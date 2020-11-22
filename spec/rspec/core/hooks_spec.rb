@@ -174,16 +174,6 @@ module RSpec::Core
           end
         end
 
-        if RUBY_VERSION.to_f < 1.9
-          def hook_desc(_)
-            "around hook"
-          end
-        else
-          def hook_desc(line)
-            "around hook at #{Metadata.relative_path(__FILE__)}:#{line}"
-          end
-        end
-
         it 'indicates which around hook did not run the example in the pending message' do
           ex = nil
           line = __LINE__ + 3
@@ -196,7 +186,8 @@ module RSpec::Core
           end
 
           group.run
-          expect(ex.execution_result.pending_message).to eq("#{hook_desc(line)} did not execute the example")
+          expect(ex.execution_result.pending_message)
+            .to eq("around hook at #{Metadata.relative_path(__FILE__)}:#{line} did not execute the example")
         end
       end
 

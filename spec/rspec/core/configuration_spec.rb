@@ -390,8 +390,7 @@ module RSpec::Core
 
       context "when rspec-expectations is not installed" do
         def an_anonymous_module
-          name = RUBY_VERSION.to_f < 1.9 ? '' : nil
-          an_object_having_attributes(:class => Module, :name => name)
+          an_object_having_attributes(:class => Module, :name => nil)
         end
 
         it 'gracefully falls back to an anonymous module' do

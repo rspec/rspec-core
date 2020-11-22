@@ -76,24 +76,11 @@ module RSpec::Core
         end
       end
 
-      if RUBY_VERSION == "1.9.2"
-        RSpec::Matchers.define :have_class_const do |class_name|
-          match do |group|
-            class_name.gsub!('::','_::')
-            class_name << '_'
-            group.name == "RSpec::ExampleGroups::#{class_name}" &&
-            group == class_name.split('::').inject(RSpec::ExampleGroups) do |mod, name|
-              mod.const_get(name)
-            end
-          end
-        end
-      else
-        RSpec::Matchers.define :have_class_const do |class_name, _|
-          match do |group|
-            group.name == "RSpec::ExampleGroups::#{class_name}" &&
-            group == class_name.split('::').inject(RSpec::ExampleGroups) do |mod, name|
-              mod.const_get(name)
-            end
+      RSpec::Matchers.define :have_class_const do |class_name, _|
+        match do |group|
+          group.name == "RSpec::ExampleGroups::#{class_name}" &&
+          group == class_name.split('::').inject(RSpec::ExampleGroups) do |mod, name|
+            mod.const_get(name)
           end
         end
       end
@@ -172,7 +159,7 @@ module RSpec::Core
         )
       end
 
-      it 'does not have problems with example groups named "Core"', :unless => RUBY_VERSION == '1.9.2' do
+      it 'does not have problems with example groups named "Core"' do
         RSpec.describe("Core")
         expect(defined?(::RSpec::ExampleGroups::Core)).to be
 
@@ -182,7 +169,7 @@ module RSpec::Core
         expect(group).to have_class_const("AnotherGroup")
       end
 
-      it 'does not have problems with example groups named "RSpec"', :unless => RUBY_VERSION == '1.9.2' do
+      it 'does not have problems with example groups named "RSpec"' do
         RSpec.describe("RSpec")
         expect(defined?(::RSpec::ExampleGroups::RSpec)).to be
 
@@ -1909,7 +1896,7 @@ module RSpec::Core
       }.to raise_error(/not allowed/)
     end
 
-    describe 'inspect output', :unless => RUBY_VERSION == '1.9.2' do
+    describe 'inspect output' do
       context 'when there is no inspect output provided' do
         it "uses '(no description provided)' instead" do
           expect(ExampleGroup.new.inspect).to eq('#<RSpec::Core::ExampleGroup (no description provided)>')

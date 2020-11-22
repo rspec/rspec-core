@@ -1585,14 +1585,14 @@ module RSpec
 
       # @private
       def configure_mock_framework
-        RSpec::Core::ExampleGroup.__send__(:include, mock_framework)
+        RSpec::Core::ExampleGroup.include(mock_framework)
         conditionally_disable_mocks_monkey_patching
       end
 
       # @private
       def configure_expectation_framework
         expectation_frameworks.each do |framework|
-          RSpec::Core::ExampleGroup.__send__(:include, framework)
+          RSpec::Core::ExampleGroup.include(framework)
         end
         conditionally_disable_expectations_monkey_patching
       end

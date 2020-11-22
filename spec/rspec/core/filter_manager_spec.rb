@@ -378,7 +378,7 @@ module RSpec::Core
       it 'cleans up the description' do
         project_dir = File.expand_path('.')
         expect(lambda { }.inspect).to include(project_dir)
-        expect(lambda { }.inspect).to include(' (lambda)') if RUBY_VERSION > '1.9'
+        expect(lambda { }.inspect).to include(' (lambda)')
         expect(lambda { }.inspect).to include('0x')
 
         filter_manager.include :foo => lambda { }
@@ -395,7 +395,7 @@ module RSpec::Core
       it 'cleans up the description' do
         project_dir = File.expand_path('.')
         expect(lambda { }.inspect).to include(project_dir)
-        expect(lambda { }.inspect).to include(' (lambda)') if RUBY_VERSION > '1.9'
+        expect(lambda { }.inspect).to include(' (lambda)')
         expect(lambda { }.inspect).to include('0x')
 
         filter_manager.exclude :foo => lambda { }
