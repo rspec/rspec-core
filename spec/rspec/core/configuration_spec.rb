@@ -534,7 +534,7 @@ module RSpec::Core
         expect(config.files_to_run).to contain_files("./spec/rspec/core/resources/a_spec.rb")
       end
 
-      it "supports absolute path patterns", :emits_warning_on_windows_on_old_ruby do
+      it "supports absolute path patterns" do
         dir = File.expand_path("../resources", __FILE__)
         config.pattern = File.join(dir, "**/*_spec.rb")
         assign_files_or_directories_to_run "spec"

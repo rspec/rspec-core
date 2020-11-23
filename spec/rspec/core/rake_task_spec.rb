@@ -308,7 +308,7 @@ module RSpec::Core
       end
 
       context "that is an absolute path file glob" do
-        it "loads the matching spec files", :emits_warning_on_windows_on_old_ruby, :pending_on_windows_old_ruby do
+        it "loads the matching spec files" do
           dir = File.expand_path("../resources", __FILE__)
           task.pattern = File.join(dir, "**/*_spec.rb")
 
