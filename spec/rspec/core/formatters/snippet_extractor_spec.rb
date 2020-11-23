@@ -39,10 +39,6 @@ module RSpec::Core::Formatters
     end
 
     # We use this helper method to raise an error while allowing any arguments
-    #
-    # Note that MRI 1.9 strangely reports backtrace line as the first argument line instead of the
-    # beginning of the method invocation. It's not SnippetExtractor's fault and even affects to the
-    # simple single line extraction.
     def do_something_fail(*)
       raise
     end
