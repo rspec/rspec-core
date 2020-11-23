@@ -279,7 +279,7 @@ module RSpec::Core::Formatters
         end
       end
 
-      context 'when Ripper cannot parse the source (which can happen on JRuby -- see jruby/jruby#2427)', :isolated_directory do
+      context 'when Ripper cannot parse the source', :isolated_directory do
         let(:file_path) { 'invalid_source.rb' }
 
         let(:line_number) { 1 }

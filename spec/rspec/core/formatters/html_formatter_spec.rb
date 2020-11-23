@@ -57,7 +57,7 @@ module RSpec
         end
 
         describe 'produced HTML', :slow do
-          it "is identical to the one we designed manually", :pending => (defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby') do
+          it "is identical to the one we designed manually", :pending => RSpec::Support::Ruby.jruby? do
             expect(actual_html).to eq(expected_html)
           end
         end

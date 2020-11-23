@@ -64,6 +64,7 @@ module RSpec
       private
 
         include RSpec::Core::ShellEscape
+
         # On JRuby, Open3.popen3 does not handle shellescaped args properly:
         # https://github.com/jruby/jruby/issues/2767
         if RSpec::Support::Ruby.jruby?
