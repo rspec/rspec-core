@@ -514,7 +514,7 @@ EOS
 
       # @private
       def self.define_helpers_on(example_group)
-        example_group.__send__(:include, module_for(example_group))
+        example_group.include(module_for(example_group))
       end
 
       # @private

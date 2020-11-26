@@ -843,8 +843,8 @@ module RSpec
 
             # Tag this exception class so our exception formatting logic knows
             # that it satisfies the `MultipleExceptionError` interface.
-            ::RSpec::Expectations::MultipleExpectationsNotMetError.__send__(
-              :include, MultipleExceptionError::InterfaceTag
+            ::RSpec::Expectations::MultipleExpectationsNotMetError.include(
+              MultipleExceptionError::InterfaceTag
             )
 
             ::RSpec::Matchers
@@ -2331,11 +2331,11 @@ module RSpec
       end
 
       def safe_prepend(mod, host)
-        host.__send__(:prepend, mod) unless host < mod
+        host.prepend(mod) unless host < mod
       end
 
       def safe_include(mod, host)
-        host.__send__(:include, mod) unless host < mod
+        host.include(mod) unless host < mod
       end
 
       def safe_extend(mod, host)
