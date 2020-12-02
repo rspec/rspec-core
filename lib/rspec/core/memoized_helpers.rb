@@ -158,6 +158,12 @@ module RSpec
             end
           end
         end
+
+        def reset
+          @mutex.synchronize do
+            @memoized.clear
+          end
+        end
       end
 
       # @private
@@ -168,6 +174,10 @@ module RSpec
 
         def fetch_or_store(key)
           @memoized.fetch(key) { @memoized[key] = yield }
+        end
+
+        def reset
+          @memoized.clear
         end
       end
 
