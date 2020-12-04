@@ -136,8 +136,8 @@ RSpec.describe 'command line', :ui do
 
       expect(stdout.string).not_to match(/Randomized with seed/)
 
-      top_level_groups      { |first_run, second_run| expect(first_run).to eq(second_run) }
-      nested_groups         { |first_run, second_run| expect(first_run).to eq(second_run) }
+      top_level_groups { |first_run, second_run| expect(first_run).to eq(second_run) }
+      nested_groups { |first_run, second_run| expect(first_run).to eq(second_run) }
     end
   end
 
