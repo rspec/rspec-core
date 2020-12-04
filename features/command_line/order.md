@@ -15,7 +15,7 @@ With `rand` you can also specify a seed.
 
 Use `recently-modified` to run the most recently modified files first. You can
 combine it with `--only-failures` to find the most recent failing specs. Note
-that `recently-modified` and `rand` are mutually exclusives.
+that `recently-modified` and `rand` are mutually exclusive.
 
 ## Example usage
 
