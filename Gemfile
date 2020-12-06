@@ -46,6 +46,9 @@ elsif RUBY_VERSION < '2.0'
   gem 'ffi', '< 1.9.19' # ffi dropped Ruby 1.8 support in 1.9.19
 elsif RUBY_VERSION < '2.3.0'
   gem 'ffi', '~> 1.12.0'
+elsif defined?(RUBY_PLATFORM) && RUBY_PLATFORM == 'java'
+  # Until 1.13.2 is released
+  gem 'ffi', '~> 1.12.0'
 else
   gem 'ffi', '~> 1.13.0'
 end
