@@ -509,7 +509,9 @@ module RSpec::Core
 
         context 'and the line count does not exceed RSpec.configuration.max_displayed_failure_line_count' do
           it 'returns all the lines' do
-            pending 'https://github.com/jruby/jruby/issues/4737' if RSpec::Support::Ruby.jruby_9000?
+            if RSpec::Support::Ruby.jruby_9000? && RSpec::Support::Ruby.jruby_version < '9.2.0.0'
+              pending 'https://github.com/jruby/jruby/issues/4737'
+            end
             expect(read_failed_lines).to eq([
               "            expect('RSpec').to be_a(String).",
               "                           and start_with('R').",
@@ -524,7 +526,9 @@ module RSpec::Core
           end
 
           it 'returns the lines without exceeding the max count' do
-            pending 'https://github.com/jruby/jruby/issues/4737' if RSpec::Support::Ruby.jruby_9000?
+            if RSpec::Support::Ruby.jruby_9000? && RSpec::Support::Ruby.jruby_version < '9.2.0.0'
+              pending 'https://github.com/jruby/jruby/issues/4737'
+            end
             expect(read_failed_lines).to eq([
               "            expect('RSpec').to be_a(String).",
               "                           and start_with('R')."
