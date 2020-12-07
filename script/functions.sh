@@ -103,9 +103,8 @@ function run_spec_suite_for_rspec_rails {
   pushd ../rspec-rails
   unset BUNDLE_GEMFILE
   unset RUBYOPT
-  bundle_install_flags="--binstubs --standalone --without documentation --path ../bundle"
-  travis_retry eval "(unset RUBYOPT; exec bundle install $bundle_install_flags)"
-  run_specs_and_record_done
+  travis_retry eval "(unset RUBYOPT; exec bundle install)"
+  bundle exec rspec spec --backtrace --format progress --profile --format progress --out $SPECS_HAVE_RUN_FILE
   popd
 }
 
