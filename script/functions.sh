@@ -12,8 +12,8 @@ SPECS_HAVE_RUN_FILE=specs.out
 MAINTENANCE_BRANCH=`cat maintenance-branch`
 
 # Don't allow rubygems to pollute what's loaded. Also, things boot faster
-# without the extra load time of rubygems. Only works on MRI Ruby 1.9+
-if is_mri_192_plus; then
+# without the extra load time of rubygems. Only works on MRI.
+if is_mri; then
   export RUBYOPT="--disable=gem"
 fi
 
@@ -96,6 +96,17 @@ function run_spec_suite_for {
       echo ""
     fi;
   fi;
+}
+
+function run_spec_suite_for_rspec_rails {
+  echo "Running specs for rspec-rails"
+  pushd ../rspec-rails
+  unset BUNDLE_GEMFILE
+  unset RUBYOPT
+  bundle_install_flags="--binstubs --standalone --without documentation --path ../bundle"
+  travis_retry eval "(unset RUBYOPT; exec bundle install $bundle_install_flags)"
+  run_specs_and_record_done
+  popd
 }
 
 function check_binstubs {
@@ -188,11 +199,8 @@ function run_all_spec_suites {
   fold "rspec-core specs" run_spec_suite_for "rspec-core"
   fold "rspec-expectations specs" run_spec_suite_for "rspec-expectations"
   fold "rspec-mocks specs" run_spec_suite_for "rspec-mocks"
+  fold "rspec-support specs" run_spec_suite_for "rspec-support"
   if rspec_rails_compatible; then
-    fold "rspec-rails specs" run_spec_suite_for "rspec-rails"
-  fi
-
-  if rspec_support_compatible; then
-    fold "rspec-support specs" run_spec_suite_for "rspec-support"
+    fold "rspec-rails specs" run_spec_suite_for_rspec_rails
   fi
 }
