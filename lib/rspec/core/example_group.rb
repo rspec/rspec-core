@@ -459,7 +459,7 @@ module RSpec
       # @private
       def self.descendant_filtered_examples
         @descendant_filtered_examples ||= filtered_examples +
-          FlatMap.flat_map(children, &:descendant_filtered_examples)
+          children.flat_map(&:descendant_filtered_examples)
       end
 
       # @private
@@ -501,7 +501,7 @@ module RSpec
 
       # @private
       def self.descendants
-        @_descendants ||= [self] + FlatMap.flat_map(children, &:descendants)
+        @_descendants ||= [self] + children.flat_map(&:descendants)
       end
 
       ## @private
@@ -646,7 +646,7 @@ module RSpec
       def self.declaration_locations
         @declaration_locations ||= [Metadata.location_tuple_from(metadata)] +
           examples.map { |e| Metadata.location_tuple_from(e.metadata) } +
-          FlatMap.flat_map(children, &:declaration_locations)
+          children.flat_map(&:declaration_locations)
       end
 
       # @return [String] the unique id of this example group. Pass

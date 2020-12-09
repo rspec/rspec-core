@@ -334,7 +334,7 @@ module RSpec
             common_backtrace_truncater = CommonBacktraceTruncater.new(exception)
 
             lambda do |failure_number, colorizer|
-              FlatMap.flat_map(exception.all_exceptions.each_with_index) do |failure, index|
+              exception.all_exceptions.each_with_index.flat_map do |failure, index|
                 options = with_multiple_error_options_as_needed(
                   failure,
                   :description             => nil,

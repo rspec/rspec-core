@@ -1982,7 +1982,7 @@ module RSpec::Core
         registered_examples = nil
 
         RSpec.configuration.define_derived_metadata(:ex) do |_meta|
-          registered_examples = FlatMap.flat_map(RSpec.world.all_example_groups, &:examples)
+          registered_examples = RSpec.world.all_example_groups.flat_map(&:examples)
         end
 
         example = nil

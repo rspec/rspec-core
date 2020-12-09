@@ -12,7 +12,6 @@ RSpec::Support.define_optimized_require_for_rspec(:core) { |f| require_relative 
   warnings
 
   set
-  flat_map
   filter_manager
   dsl
   notifications

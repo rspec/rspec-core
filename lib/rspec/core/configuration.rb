@@ -2154,7 +2154,7 @@ module RSpec
       end
 
       def get_files_to_run(paths)
-        files = FlatMap.flat_map(paths_to_check(paths)) do |path|
+        files = paths_to_check(paths).flat_map do |path|
           path = path.gsub(File::ALT_SEPARATOR, File::SEPARATOR) if File::ALT_SEPARATOR
           File.directory?(path) ? gather_directories(path) : extract_location(path)
         end.uniq

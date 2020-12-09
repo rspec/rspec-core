@@ -564,7 +564,7 @@ module RSpec
           hooks_to_process = globals.processable_hooks_for(position, scope, host)
           return if hooks_to_process.empty?
 
-          hooks_to_process -= FlatMap.flat_map(parent_groups) do |group|
+          hooks_to_process -= parent_groups.flat_map do |group|
             group.hooks.all_hooks_for(position, scope)
           end
           return if hooks_to_process.empty?
@@ -609,7 +609,7 @@ module RSpec
         end
 
         def run_around_example_hooks_for(example)
-          hooks = FlatMap.flat_map(owner_parent_groups) do |group|
+          hooks = owner_parent_groups.flat_map do |group|
             group.hooks.matching_hooks_for(:around, :example, example)
           end
 
