@@ -33,38 +33,22 @@ module RSpec::Core
     describe "#original_results" do
       let(:original_cli_args) { %w[spec/unit --seed 1234] }
 
-      open3_method = Open3.respond_to?(:capture2e) ? :capture2e : :popen3
-      open3_method = :popen3 if RSpec::Support::Ruby.jruby?
-
       def called_environment
         @called_environment
       end
 
-      if open3_method == :capture2e
-        RSpec::Matchers.define :invoke_command_with_env do |command, environment|
-          match do |block|
-            block.call
+      RSpec::Matchers.define :invoke_command_with_env do |command, environment|
+        match do |block|
+          block.call
 
-            expect(Open3).to have_received(open3_method).with(environment, command)
-          end
-
-          supports_block_expectations
+          expect(Open3).to have_received(:capture2e).with(environment, command)
         end
-      elsif open3_method == :popen3
-        RSpec::Matchers.define :invoke_command_with_env do |command, environment|
-          match do |block|
-            block.call
 
-            expect(Open3).to have_received(open3_method).with(command)
-            expect(called_environment).to include(environment)
-          end
-
-          supports_block_expectations
-        end
+        supports_block_expectations
       end
 
       before do
-        allow(Open3).to receive(open3_method) do
+        allow(Open3).to receive(:capture2e) do
           @called_environment = ENV.to_hash.dup
           [double("Exit Status"), double("Stdout/err")]
         end

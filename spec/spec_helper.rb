@@ -1,5 +1,3 @@
-require 'rubygems' if RUBY_VERSION.to_f < 1.9
-
 require 'rspec/support/spec'
 
 $rspec_core_without_stderr_monkey_patch = RSpec::Core::Configuration.new
@@ -19,9 +17,7 @@ Dir['./spec/support/**/*.rb'].map do |file|
   # that shell out and run a new process.
   next if file =~ /fake_libs/
 
-  # Ensure requires are relative to `spec`, which is on the
-  # load path. This helps prevent double requires on 1.8.7.
-  require file.gsub("./spec/support", "support")
+  require file
 end
 
 class RaiseOnFailuresReporter < RSpec::Core::NullReporter
@@ -96,27 +92,4 @@ RSpec.configure do |c|
   c.around(:example, :simulate_shell_allowing_unquoted_ids) do |ex|
     with_env_vars('SHELL' => '/usr/local/bin/bash', &ex)
   end
-
-  if ENV['CI'] && RSpec::Support::OS.windows? && RUBY_VERSION.to_f < 2.3
-    c.around(:example, :emits_warning_on_windows_on_old_ruby) do |ex|
-      ignoring_warnings(&ex)
-    end
-
-    c.define_derived_metadata(:pending_on_windows_old_ruby => true) do |metadata|
-      metadata[:pending] = "This example is expected to fail on windows, on ruby older than 2.3"
-    end
-  end
-
-  c.filter_run_excluding :ruby => lambda {|version|
-    case version.to_s
-    when "!jruby"
-      RUBY_ENGINE == "jruby"
-    when /^> (.*)/
-      !(RUBY_VERSION.to_s > $1)
-    else
-      !(RUBY_VERSION.to_s =~ /^#{version.to_s}/)
-    end
-  }
-
-  $original_rspec_configuration = c
 end

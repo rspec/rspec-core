@@ -67,17 +67,7 @@ RSpec.describe RSpec do
       'require "rspec/core"',
       # Prevent rspec/autorun from trying to run RSpec.
       disable_autorun_code
-    ], :skip_spec_files => %r{/fake_libs/}, :allowed_loaded_feature_regexps => allowed_loaded_features do
-    if RUBY_VERSION == '1.8.7'
-      before(:example, :description => /(issues no warnings when the spec files are loaded|stdlibs)/) do
-        pending "Not working on #{RUBY_DESCRIPTION}"
-      end
-    elsif RUBY_VERSION == '2.0.0' && RSpec::Support::Ruby.jruby?
-      before(:example) do
-        skip "Not reliably working on #{RUBY_DESCRIPTION}"
-      end
-    end
-  end
+    ], :skip_spec_files => %r{/fake_libs/}, :allowed_loaded_feature_regexps => allowed_loaded_features
 
   describe ".configuration" do
     it "returns the same object every time" do

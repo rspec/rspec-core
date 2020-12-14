@@ -390,8 +390,7 @@ module RSpec::Core
 
       context "when rspec-expectations is not installed" do
         def an_anonymous_module
-          name = RUBY_VERSION.to_f < 1.9 ? '' : nil
-          an_object_having_attributes(:class => Module, :name => name)
+          an_object_having_attributes(:class => Module, :name => nil)
         end
 
         it 'gracefully falls back to an anonymous module' do
@@ -535,7 +534,7 @@ module RSpec::Core
         expect(config.files_to_run).to contain_files("./spec/rspec/core/resources/a_spec.rb")
       end
 
-      it "supports absolute path patterns", :emits_warning_on_windows_on_old_ruby do
+      it "supports absolute path patterns" do
         dir = File.expand_path("../resources", __FILE__)
         config.pattern = File.join(dir, "**/*_spec.rb")
         assign_files_or_directories_to_run "spec"
@@ -997,8 +996,7 @@ module RSpec::Core
       end
     end
 
-    config_methods = %w[ include extend ]
-    config_methods << "prepend" if RSpec::Support::RubyFeatures.module_prepends_supported?
+    config_methods = %w[ include extend prepend ]
     config_methods.each do |config_method|
       it "raises an immediate `TypeError` when you attempt to `config.#{config_method}` with something besides a module" do
         expect {
@@ -1233,7 +1231,7 @@ module RSpec::Core
       end
     end
 
-    describe "#prepend", :if => RSpec::Support::RubyFeatures.module_prepends_supported? do
+    describe "#prepend" do
       include_examples "warning of deprecated `:example_group` during filtering configuration", :prepend, Enumerable
 
       module SomeRandomMod
@@ -1984,7 +1982,7 @@ module RSpec::Core
         registered_examples = nil
 
         RSpec.configuration.define_derived_metadata(:ex) do |_meta|
-          registered_examples = FlatMap.flat_map(RSpec.world.all_example_groups, &:examples)
+          registered_examples = RSpec.world.all_example_groups.flat_map(&:examples)
         end
 
         example = nil
@@ -2336,8 +2334,7 @@ module RSpec::Core
         config.configure_group(child)
       end
 
-      it "doesn't prepend a module when already present in ancestor chain",
-        :if => RSpec::Support::RubyFeatures.module_prepends_supported? do
+      it "doesn't prepend a module when already present in ancestor chain" do
         config.prepend(IncludeExtendOrPrependMeOnce, :foo => :bar)
 
         group = RSpec.describe("group", :foo => :bar)

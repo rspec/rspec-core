@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module RSpec::Core
   RSpec.describe ExampleGroup do
     it_behaves_like "metadata hash builder" do
@@ -78,24 +76,11 @@ module RSpec::Core
         end
       end
 
-      if RUBY_VERSION == "1.9.2"
-        RSpec::Matchers.define :have_class_const do |class_name|
-          match do |group|
-            class_name.gsub!('::','_::')
-            class_name << '_'
-            group.name == "RSpec::ExampleGroups::#{class_name}" &&
-            group == class_name.split('::').inject(RSpec::ExampleGroups) do |mod, name|
-              mod.const_get(name)
-            end
-          end
-        end
-      else
-        RSpec::Matchers.define :have_class_const do |class_name, _|
-          match do |group|
-            group.name == "RSpec::ExampleGroups::#{class_name}" &&
-            group == class_name.split('::').inject(RSpec::ExampleGroups) do |mod, name|
-              mod.const_get(name)
-            end
+      RSpec::Matchers.define :have_class_const do |class_name, _|
+        match do |group|
+          group.name == "RSpec::ExampleGroups::#{class_name}" &&
+          group == class_name.split('::').inject(RSpec::ExampleGroups) do |mod, name|
+            mod.const_get(name)
           end
         end
       end
@@ -140,16 +125,12 @@ module RSpec::Core
         expect(child).to have_class_const("SomeParentGroup::Hash")
       end
 
-      it 'disambiguates name collisions by appending a number', :unless => RUBY_VERSION == '1.9.2' do
+      it 'disambiguates name collisions by appending a number' do
         groups = 10.times.map { RSpec.describe("Collision") }
         expect(groups[0]).to have_class_const("Collision")
         expect(groups[1]).to have_class_const("Collision_2")
         expect(groups[8]).to have_class_const("Collision_9")
-
-        if RUBY_VERSION.to_f > 1.8 && !(defined?(RUBY_ENGINE) && RUBY_ENGINE == 'rbx')
-          # on 1.8.7, rbx "Collision_9".next => "Collisioo_0"
-          expect(groups[9]).to have_class_const("Collision_10")
-        end
+        expect(groups[9]).to have_class_const("Collision_10")
       end
 
       it 'identifies unnamed groups as "Anonymous"' do
@@ -178,7 +159,7 @@ module RSpec::Core
         )
       end
 
-      it 'does not have problems with example groups named "Core"', :unless => RUBY_VERSION == '1.9.2' do
+      it 'does not have problems with example groups named "Core"' do
         RSpec.describe("Core")
         expect(defined?(::RSpec::ExampleGroups::Core)).to be
 
@@ -188,7 +169,7 @@ module RSpec::Core
         expect(group).to have_class_const("AnotherGroup")
       end
 
-      it 'does not have problems with example groups named "RSpec"', :unless => RUBY_VERSION == '1.9.2' do
+      it 'does not have problems with example groups named "RSpec"' do
         RSpec.describe("RSpec")
         expect(defined?(::RSpec::ExampleGroups::RSpec)).to be
 
@@ -1333,11 +1314,7 @@ module RSpec::Core
         expect(@before_all_top_level).to eq('before_all_top_level')
       end
 
-      it "can access the before all ivars in the before_all_ivars hash", :ruby => 1.8 do |ex|
-        expect(ex.example_group.before_context_ivars).to include('@before_all_top_level' => 'before_all_top_level')
-      end
-
-      it "can access the before all ivars in the before_all_ivars hash", :ruby => 1.9 do |ex|
+      it "can access the before all ivars in the before_all_ivars hash" do |ex|
         expect(ex.example_group.before_context_ivars).to include(:@before_all_top_level => 'before_all_top_level')
       end
 
@@ -1919,7 +1896,7 @@ module RSpec::Core
       }.to raise_error(/not allowed/)
     end
 
-    describe 'inspect output', :unless => RUBY_VERSION == '1.9.2' do
+    describe 'inspect output' do
       context 'when there is no inspect output provided' do
         it "uses '(no description provided)' instead" do
           expect(ExampleGroup.new.inspect).to eq('#<RSpec::Core::ExampleGroup (no description provided)>')

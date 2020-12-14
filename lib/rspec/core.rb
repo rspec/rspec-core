@@ -12,7 +12,6 @@ RSpec::Support.define_optimized_require_for_rspec(:core) { |f| require_relative 
   warnings
 
   set
-  flat_map
   filter_manager
   dsl
   notifications
@@ -101,10 +100,9 @@ module RSpec
   # The example being executed.
   #
   # The primary audience for this method is library authors who need access
-  # to the example currently being executed and also want to support all
-  # versions of RSpec 2 and 3.
+  # to the example currently being executed and also want to support RSpec 2.
   #
-  # @example
+  # @example support for RSpec version 2
   #
   #     RSpec.configure do |c|
   #       # context.example is deprecated, but RSpec.current_example is not

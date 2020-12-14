@@ -12,7 +12,7 @@ module RSpec::Core::Formatters
         |./spec/rspec/core/resources/formatter_specs.rb:40:fails twice
         |./spec/rspec/core/resources/formatter_specs.rb:47:fails with a backtrace that has no file
         |./spec/rspec/core/resources/formatter_specs.rb:53:fails with a backtrace containing an erb file
-        |./spec/rspec/core/resources/formatter_specs.rb:71:raises
+        |./spec/rspec/core/resources/formatter_specs.rb:65:raises
       EOS
     end
   end

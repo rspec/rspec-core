@@ -45,10 +45,10 @@ module RSpec
       # A message to print to stderr when there are failures.
       attr_accessor :failure_message
 
-      if RUBY_VERSION < "1.9.0" || Support::Ruby.jruby?
+      if Support::Ruby.jruby?
         # Run RSpec with a clean (empty) environment is not supported
         def with_clean_environment=(_value)
-          raise ArgumentError, "Running in a clean environment is not supported on Ruby versions before 1.9.0"
+          raise ArgumentError, "Running in a clean environment is not supported on JRuby"
         end
 
         # Run RSpec with a clean (empty) environment is not supported

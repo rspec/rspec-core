@@ -51,12 +51,6 @@ lib/rspec/core/example_group.rb:      extend SharedExampleGroup
 lib/rspec/core/memoized_helpers.rb:        mod.extend(ClassMethods)
 lib/rspec/core/shared_example_group.rb:extend RSpec::Core::SharedExampleGroup::TopLevelDSL
 
-# This use of `extend` only happens on 1.8.7, when a shared example group
-# is defined (to provide the Proc#source_location method on the provided
-# block). It should only happen at spec definition time (unless users are
-# defining shared example groups at spec run time).
-lib/rspec/core/shared_example_group.rb:            block.extend Module.new {
-
 # This happens when an example group is defined, not at spec run time.
 lib/rspec/core/example_group.rb:        subclass = Class.new(parent)
 

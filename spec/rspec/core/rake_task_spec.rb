@@ -160,7 +160,7 @@ module RSpec::Core
     end
 
     context "with_clean_environment is set" do
-      it "removes the environment variables", :if => RUBY_VERSION >= '1.9.0', :unless => RSpec::Support::Ruby.jruby? do
+      it "removes the environment variables", :unless => RSpec::Support::Ruby.jruby? do
         with_env_vars 'MY_ENV' => 'ABC' do
           if RSpec::Support::OS.windows?
             essential_shell_variables = /\["ANSICON", "ANSICON_DEF", "HOME", "TMPDIR", "USER"\]/
@@ -308,7 +308,7 @@ module RSpec::Core
       end
 
       context "that is an absolute path file glob" do
-        it "loads the matching spec files", :emits_warning_on_windows_on_old_ruby, :pending_on_windows_old_ruby do
+        it "loads the matching spec files" do
           dir = File.expand_path("../resources", __FILE__)
           task.pattern = File.join(dir, "**/*_spec.rb")
 

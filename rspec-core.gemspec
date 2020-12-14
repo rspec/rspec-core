@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 $LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
 require "rspec/core/version"
 
@@ -29,7 +28,7 @@ Gem::Specification.new do |s|
   s.rdoc_options     = ["--charset=UTF-8"]
   s.require_path     = "lib"
 
-  s.required_ruby_version = '>= 1.8.7'
+  s.required_ruby_version = '>= 2.3.0'
 
   private_key = File.expand_path('~/.gem/rspec-gem-private_key.pem')
   if File.exist?(private_key)
@@ -55,4 +54,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rr",           "~> 1.0.4"
   s.add_development_dependency "flexmock",     "~> 0.9.0"
   s.add_development_dependency "thread_order", "~> 1.1.0"
+
+  s.add_development_dependency "rake", "~> 12.3.2"
 end

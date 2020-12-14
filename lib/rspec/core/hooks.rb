@@ -393,16 +393,8 @@ module RSpec
                                 "#{hook_description} did not execute the example")
         end
 
-        if Proc.method_defined?(:source_location)
-          def hook_description
-            "around hook at #{Metadata.relative_path(block.source_location.join(':'))}"
-          end
-        else # for 1.8.7
-          # :nocov:
-          def hook_description
-            "around hook"
-          end
-          # :nocov:
+        def hook_description
+          "around hook at #{Metadata.relative_path(block.source_location.join(':'))}"
         end
       end
 
@@ -572,7 +564,7 @@ module RSpec
           hooks_to_process = globals.processable_hooks_for(position, scope, host)
           return if hooks_to_process.empty?
 
-          hooks_to_process -= FlatMap.flat_map(parent_groups) do |group|
+          hooks_to_process -= parent_groups.flat_map do |group|
             group.hooks.all_hooks_for(position, scope)
           end
           return if hooks_to_process.empty?
@@ -617,7 +609,7 @@ module RSpec
         end
 
         def run_around_example_hooks_for(example)
-          hooks = FlatMap.flat_map(owner_parent_groups) do |group|
+          hooks = owner_parent_groups.flat_map do |group|
             group.hooks.matching_hooks_for(:around, :example, example)
           end
 
@@ -629,16 +621,8 @@ module RSpec
           end.call
         end
 
-        if respond_to?(:singleton_class) && singleton_class.ancestors.include?(singleton_class)
-          def owner_parent_groups
-            @owner.parent_groups
-          end
-        else # Ruby < 2.1 (see https://bugs.ruby-lang.org/issues/8035)
-          # :nocov:
-          def owner_parent_groups
-            @owner_parent_groups ||= [@owner] + @owner.parent_groups
-          end
-          # :nocov:
+        def owner_parent_groups
+          @owner.parent_groups
         end
       end
     end

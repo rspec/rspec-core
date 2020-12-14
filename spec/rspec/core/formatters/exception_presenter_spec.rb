@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'pathname'
 
 module RSpec::Core
@@ -24,9 +23,7 @@ module RSpec::Core
         @cause = cause
       end
       attr_reader :backtrace
-      if RSpec::Support::RubyFeatures.supports_exception_cause?
-        attr_accessor :cause
-      end
+      attr_accessor :cause
     end
 
     describe "#fully_formatted" do
@@ -109,7 +106,7 @@ module RSpec::Core
         EOS
       end
 
-      if String.method_defined?(:encoding) && !RSpec::Support::OS.windows?
+      if !RSpec::Support::OS.windows?
         it 'allows the caller to add encoded description' do
           the_presenter = Formatters::ExceptionPresenter.new(exception, example,
                                                              :description => "ジ".encode("CP932"))
@@ -183,7 +180,7 @@ module RSpec::Core
       caused_by_line_num = __LINE__ + 1
       let(:first_exception) { FakeException.new("Real\nculprit", ["#{__FILE__}:#{__LINE__}"]) }
 
-      it 'includes the first exception that caused the failure', :if => RSpec::Support::RubyFeatures.supports_exception_cause? do
+      it 'includes the first exception that caused the failure' do
         the_presenter = Formatters::ExceptionPresenter.new(the_exception, example)
 
         expect(the_presenter.fully_formatted(1)).to eq(<<-EOS.gsub(/^ +\|/, ''))
@@ -202,7 +199,7 @@ module RSpec::Core
         EOS
       end
 
-      it 'wont produce a stack error when cause is the exception itself', :if => RSpec::Support::RubyFeatures.supports_exception_cause? do
+      it 'wont produce a stack error when cause is the exception itself' do
         allow(the_exception).to receive(:cause) { the_exception }
         the_presenter = Formatters::ExceptionPresenter.new(the_exception, example)
 
@@ -222,7 +219,7 @@ module RSpec::Core
         EOS
       end
 
-      it 'wont produce a stack error when the cause is an older exception', :if => RSpec::Support::RubyFeatures.supports_exception_cause? do
+      it 'wont produce a stack error when the cause is an older exception' do
         allow(the_exception).to receive(:cause) do
           FakeException.new("A loop", the_exception.backtrace, the_exception)
         end
@@ -244,7 +241,7 @@ module RSpec::Core
         EOS
       end
 
-      it 'will work when cause is incorrectly overridden', :if => RSpec::Support::RubyFeatures.supports_exception_cause? do
+      it 'will work when cause is incorrectly overridden' do
         incorrect_cause_exception = FakeException.new("A badly implemented exception", [], "An incorrect cause")
 
         the_presenter = Formatters::ExceptionPresenter.new(incorrect_cause_exception, example)
@@ -509,7 +506,7 @@ module RSpec::Core
 
         context 'and the line count does not exceed RSpec.configuration.max_displayed_failure_line_count' do
           it 'returns all the lines' do
-            if RSpec::Support::Ruby.jruby_9000? && RSpec::Support::Ruby.jruby_version < '9.2.0.0'
+            if RSpec::Support::Ruby.jruby? && RSpec::Support::Ruby.jruby_version < '9.2.0.0'
               pending 'https://github.com/jruby/jruby/issues/4737'
             end
             expect(read_failed_lines).to eq([
@@ -526,7 +523,7 @@ module RSpec::Core
           end
 
           it 'returns the lines without exceeding the max count' do
-            if RSpec::Support::Ruby.jruby_9000? && RSpec::Support::Ruby.jruby_version < '9.2.0.0'
+            if RSpec::Support::Ruby.jruby? && RSpec::Support::Ruby.jruby_version < '9.2.0.0'
               pending 'https://github.com/jruby/jruby/issues/4737'
             end
             expect(read_failed_lines).to eq([

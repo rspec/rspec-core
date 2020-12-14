@@ -8,14 +8,10 @@ RSpec.describe 'Suite hook errors' do
   let(:failure_exit_code) { rand(97) + 2 } # 2..99
   let(:error_exit_code) { failure_exit_code + 2 } # 4..101
 
-  if RSpec::Support::Ruby.jruby_9000? && RSpec::Support::Ruby.jruby_version > '9.2.0.0'
+  if RSpec::Support::Ruby.jruby? && RSpec::Support::Ruby.jruby_version > '9.2.0.0'
     let(:spec_line_suffix) { ":in `block in <main>'" }
-  elsif RSpec::Support::Ruby.jruby_9000?
-    let(:spec_line_suffix) { ":in `block in (root)'" }
   elsif RSpec::Support::Ruby.jruby?
-    let(:spec_line_suffix) { ":in `(root)'" }
-  elsif RUBY_VERSION == "1.8.7"
-    let(:spec_line_suffix) { "" }
+    let(:spec_line_suffix) { ":in `block in (root)'" }
   else
     let(:spec_line_suffix) { ":in `block (2 levels) in <top (required)>'" }
   end
@@ -100,7 +96,7 @@ RSpec.describe 'Suite hook errors' do
     "
 
     cause =
-      if RSpec::Support::Ruby.jruby_9000? && RSpec::Support::Ruby.jruby_version > '9.2.0.0'
+      if RSpec::Support::Ruby.jruby? && RSpec::Support::Ruby.jruby_version > '9.2.0.0'
         unindent(<<-EOS)
           # ------------------
           # --- Caused by: ---

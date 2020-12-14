@@ -459,7 +459,7 @@ module RSpec
       # @private
       def self.descendant_filtered_examples
         @descendant_filtered_examples ||= filtered_examples +
-          FlatMap.flat_map(children, &:descendant_filtered_examples)
+          children.flat_map(&:descendant_filtered_examples)
       end
 
       # @private
@@ -501,7 +501,7 @@ module RSpec
 
       # @private
       def self.descendants
-        @_descendants ||= [self] + FlatMap.flat_map(children, &:descendants)
+        @_descendants ||= [self] + children.flat_map(&:descendants)
       end
 
       ## @private
@@ -557,28 +557,9 @@ module RSpec
         @currently_executing_a_context_hook = false
       end
 
-      if RUBY_VERSION.to_f >= 1.9
-        # @private
-        def self.superclass_before_context_ivars
-          superclass.before_context_ivars
-        end
-      else # 1.8.7
-        # :nocov:
-        # @private
-        def self.superclass_before_context_ivars
-          if superclass.respond_to?(:before_context_ivars)
-            superclass.before_context_ivars
-          else
-            # `self` must be the singleton class of an ExampleGroup instance.
-            # On 1.8.7, the superclass of a singleton class of an instance of A
-            # is A's singleton class. On 1.9+, it's A. On 1.8.7, the first ancestor
-            # is A, so we can mirror 1.8.7's behavior here. Note that we have to
-            # search for the first that responds to `before_context_ivars`
-            # in case a module has been included in the singleton class.
-            ancestors.find { |a| a.respond_to?(:before_context_ivars) }.before_context_ivars
-          end
-        end
-        # :nocov:
+      # @private
+      def self.superclass_before_context_ivars
+        superclass.before_context_ivars
       end
 
       # @private
@@ -665,7 +646,7 @@ module RSpec
       def self.declaration_locations
         @declaration_locations ||= [Metadata.location_tuple_from(metadata)] +
           examples.map { |e| Metadata.location_tuple_from(e.metadata) } +
-          FlatMap.flat_map(children, &:declaration_locations)
+          children.flat_map(&:declaration_locations)
       end
 
       # @return [String] the unique id of this example group. Pass
@@ -684,20 +665,10 @@ module RSpec
         ivars.each { |name, value| instance.instance_variable_set(name, value) }
       end
 
-      if RUBY_VERSION.to_f < 1.9
-        # :nocov:
-        # @private
-        INSTANCE_VARIABLE_TO_IGNORE = '@__inspect_output'.freeze
-        # :nocov:
-      else
-        # @private
-        INSTANCE_VARIABLE_TO_IGNORE = :@__inspect_output
-      end
-
       # @private
       def self.each_instance_variable_for_example(group)
         group.instance_variables.each do |ivar|
-          yield ivar unless ivar == INSTANCE_VARIABLE_TO_IGNORE
+          yield ivar unless ivar == :@__inspect_output
         end
       end
 
@@ -709,15 +680,6 @@ module RSpec
       # @private
       def inspect
         "#<#{self.class} #{@__inspect_output}>"
-      end
-
-      unless method_defined?(:singleton_class) # for 1.8.7
-        # :nocov:
-        # @private
-        def singleton_class
-          class << self; self; end
-        end
-        # :nocov:
       end
 
       # @private
@@ -874,18 +836,6 @@ module RSpec
       name.gsub!(/\A([^A-Z]|\z)/, 'Nested\1'.freeze)
 
       name
-    end
-
-    if RUBY_VERSION == '1.9.2'
-      # :nocov:
-      class << self
-        alias _base_name_for base_name_for
-        def base_name_for(group)
-          _base_name_for(group) + '_'
-        end
-      end
-      private_class_method :_base_name_for
-      # :nocov:
     end
 
     def self.disambiguate(name, const_scope)

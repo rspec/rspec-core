@@ -27,16 +27,15 @@ module RSpec
           end
 
           before do
-            # `send` is required for 1.8.7...
-            @orig_converter = HtmlSnippetExtractor.send(:class_variable_get, :@@converter)
+            @orig_converter = HtmlSnippetExtractor.class_variable_get(:@@converter)
           end
 
           after do
-            HtmlSnippetExtractor.send(:class_variable_set, :@@converter, @orig_converter)
+            HtmlSnippetExtractor.class_variable_set(:@@converter, @orig_converter)
           end
 
           it 'suggests you install coderay when it cannot be loaded' do
-            HtmlSnippetExtractor.send(:class_variable_set, :@@converter, HtmlSnippetExtractor::NullConverter)
+            HtmlSnippetExtractor.class_variable_set(:@@converter, HtmlSnippetExtractor::NullConverter)
 
             expect(snippet).to include("Install the coderay gem")
           end

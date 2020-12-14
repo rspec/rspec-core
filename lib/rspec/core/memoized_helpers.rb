@@ -514,39 +514,22 @@ EOS
 
       # @private
       def self.define_helpers_on(example_group)
-        example_group.__send__(:include, module_for(example_group))
+        example_group.include(module_for(example_group))
       end
 
-      if Module.method(:const_defined?).arity == 1 # for 1.8
-        # @private
-        #
-        # Gets the named constant or yields.
-        # On 1.8, const_defined? / const_get do not take into
-        # account the inheritance hierarchy.
-        # :nocov:
-        def self.get_constant_or_yield(example_group, name)
-          if example_group.const_defined?(name)
-            example_group.const_get(name)
-          else
-            yield
-          end
-        end
-        # :nocov:
-      else
-        # @private
-        #
-        # Gets the named constant or yields.
-        # On 1.9, const_defined? / const_get take into account the
-        # the inheritance by default, and accept an argument to
-        # disable this behavior. It's important that we don't
-        # consider inheritance here; each example group level that
-        # uses a `let` should get its own `LetDefinitions` module.
-        def self.get_constant_or_yield(example_group, name)
-          if example_group.const_defined?(name, (check_ancestors = false))
-            example_group.const_get(name, check_ancestors)
-          else
-            yield
-          end
+      # @private
+      #
+      # Gets the named constant or yields.
+      # const_defined? / const_get take into account the
+      # the inheritance by default, and accept an argument to
+      # disable this behavior. It's important that we don't
+      # consider inheritance here; each example group level that
+      # uses a `let` should get its own `LetDefinitions` module.
+      def self.get_constant_or_yield(example_group, name)
+        if example_group.const_defined?(name, (check_ancestors = false))
+          example_group.const_get(name, check_ancestors)
+        else
+          yield
         end
       end
     end

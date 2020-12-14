@@ -38,11 +38,7 @@ module RSpec::Core::Formatters
       end
     end
 
-    # We use this helper method to raise an error while allowing any arguments,
-    #
-    # Note that MRI 1.9 strangely reports backtrace line as the first argument line instead of the
-    # beginning of the method invocation. It's not SnippetExtractor's fault and even affects to the
-    # simple single line extraction.
+    # We use this helper method to raise an error while allowing any arguments
     def do_something_fail(*)
       raise
     end
@@ -161,7 +157,7 @@ module RSpec::Core::Formatters
         end
       end
 
-      argument_error_points_invoker = RSpec::Support::Ruby.jruby? && !RUBY_VERSION.start_with?('1.8.')
+      argument_error_points_invoker = RSpec::Support::Ruby.jruby?
       context 'when the expression is a method definition and ends with "end"-only line', :unless => argument_error_points_invoker do
         let(:source) do
           obj = Object.new
@@ -283,7 +279,7 @@ module RSpec::Core::Formatters
         end
       end
 
-      context 'when Ripper cannot parse the source (which can happen on JRuby -- see jruby/jruby#2427)', :isolated_directory do
+      context 'when Ripper cannot parse the source', :isolated_directory do
         let(:file_path) { 'invalid_source.rb' }
 
         let(:line_number) { 1 }

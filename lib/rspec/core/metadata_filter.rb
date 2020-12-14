@@ -121,19 +121,6 @@ module RSpec
                                  MetadataFilter.apply?(@applies_predicate, item_meta, request_meta)
           end
         end
-
-        unless [].respond_to?(:each_with_object) # For 1.8.7
-          # :nocov:
-          undef items_for
-          def items_for(request_meta)
-            @items_and_filters.inject([]) do |to_return, (item, item_meta)|
-              to_return << item if item_meta.empty? ||
-                                   MetadataFilter.apply?(@applies_predicate, item_meta, request_meta)
-              to_return
-            end
-          end
-          # :nocov:
-        end
       end
 
       # This implementation is much more complex, and is optimized for
@@ -236,18 +223,6 @@ module RSpec
           metadata.each_with_object([]) do |(key, value), to_return|
             to_return << key if Proc === value
           end
-        end
-
-        unless [].respond_to?(:each_with_object) # For 1.8.7
-          # :nocov:
-          undef proc_keys_from
-          def proc_keys_from(metadata)
-            metadata.inject([]) do |to_return, (key, value)|
-              to_return << key if Proc === value
-              to_return
-            end
-          end
-          # :nocov:
         end
       end
     end

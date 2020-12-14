@@ -1,3 +1,5 @@
+RSpec::Support.require_rspec_support 'ruby_features'
+
 module RSpec
   module Core
     module Formatters
@@ -68,7 +70,7 @@ module RSpec
           end
 
           def unclosed_tokens_in_line_range(line_range)
-            tokens = FlatMap.flat_map(line_range) do |line_number|
+            tokens = line_range.flat_map do |line_number|
               source.tokens_by_line_number[line_number]
             end
 

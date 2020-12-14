@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 RSpec.describe "::RSpec::Core::ExampleGroup" do
   context "does not cause problems when users reference a top level constant of the same name" do
     file_in_outer_group = File

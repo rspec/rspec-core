@@ -57,16 +57,6 @@ RSpec.describe RSpec::Core::Formatters::Helpers do
         expect(helper.format_duration(70)).to eq("1 minute 10 seconds")
       end
     end
-
-    context 'with mathn loaded' do
-      include MathnIntegrationSupport
-
-      it "returns 'x minutes xx.x seconds' formatted string", :slow do
-        with_mathn_loaded do
-          expect(helper.format_duration(133.7)).to eq("2 minutes 13.7 seconds")
-        end
-      end
-    end
   end
 
   describe "format seconds" do

@@ -49,201 +49,104 @@ module FormatterSupport
     end
   end
 
-  if RUBY_VERSION.to_f < 1.9
-    def expected_summary_output_for_example_specs
-      <<-EOS.gsub(/^\s+\|/, '').chomp
-        |Pending: (Failures listed here are expected and do not affect your suite's status)
-        |
-        |  1) pending spec with no implementation is pending
-        |     # Not yet implemented
-        |     # ./spec/rspec/core/resources/formatter_specs.rb:11
-        |
-        |  2) pending command with block format with content that would fail is pending
-        |     # No reason given
-        |     Failure/Error: expect(1).to eq(2)
-        |
-        |       expected: 2
-        |            got: 1
-        |
-        |       (compared using ==)
-        |     # ./spec/rspec/core/resources/formatter_specs.rb:18
-        |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
-        |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
-        |     # ./spec/support/sandboxing.rb:16
-        |     # ./spec/support/sandboxing.rb:7
-        |
-        |Failures:
-        |
-        |  1) pending command with block format behaves like shared is marked as pending but passes FIXED
-        |     Expected pending 'No reason given' to fail. No error was raised.
-        |     Shared Example Group: "shared" called from ./spec/rspec/core/resources/formatter_specs.rb:22
-        |     # ./spec/rspec/core/resources/formatter_specs.rb:4
-        |
-        |  2) failing spec fails
-        |     Failure/Error: expect(1).to eq(2)
-        |
-        |       expected: 2
-        |            got: 1
-        |
-        |       (compared using ==)
-        |     # ./spec/rspec/core/resources/formatter_specs.rb:37
-        |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
-        |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
-        |     # ./spec/support/sandboxing.rb:16
-        |     # ./spec/support/sandboxing.rb:7
-        |
-        |  3) failing spec fails twice
-        |     Got 2 failures:
-        |
-        |     3.1) Failure/Error: expect(1).to eq(2)
-        |
-        |            expected: 2
-        |                 got: 1
-        |
-        |            (compared using ==)
-        |          # ./spec/rspec/core/resources/formatter_specs.rb:41
-        |
-        |     3.2) Failure/Error: expect(3).to eq(4)
-        |
-        |            expected: 4
-        |                 got: 3
-        |
-        |            (compared using ==)
-        |          # ./spec/rspec/core/resources/formatter_specs.rb:42
-        |
-        |  4) a failing spec with odd backtraces fails with a backtrace that has no file
-        |     Failure/Error: Unable to find (erb) to read failed line
-        |
-        |     RuntimeError:
-        |       foo
-        |     # (erb):1
-        |
-        |  5) a failing spec with odd backtraces fails with a backtrace containing an erb file
-        |     Failure/Error: Unable to find /foo.html.erb to read failed line
-        |
-        |     Exception:
-        |       Exception
-        |     # /foo.html.erb:1:in `<main>': foo (RuntimeError)
-        |
-        |  6) a failing spec with odd backtraces with a `nil` backtrace raises
-        |     Failure/Error: Unable to find matching line from backtrace
-        |
-        |     RuntimeError:
-        |       boom
-        |
-        |Finished in n.nnnn seconds (files took n.nnnn seconds to load)
-        |10 examples, 6 failures, 2 pending
-        |
-        |Failed examples:
-        |
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:4 # pending command with block format behaves like shared is marked as pending but passes
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:36 # failing spec fails
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:40 # failing spec fails twice
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:47 # a failing spec with odd backtraces fails with a backtrace that has no file
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:53 # a failing spec with odd backtraces fails with a backtrace containing an erb file
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:71 # a failing spec with odd backtraces with a `nil` backtrace raises
-      EOS
-    end
-  else
-    def expected_summary_output_for_example_specs
-      <<-EOS.gsub(/^\s+\|/, '').chomp
-        |Pending: (Failures listed here are expected and do not affect your suite's status)
-        |
-        |  1) pending spec with no implementation is pending
-        |     # Not yet implemented
-        |     # ./spec/rspec/core/resources/formatter_specs.rb:11
-        |
-        |  2) pending command with block format with content that would fail is pending
-        |     # No reason given
-        |     Failure/Error: expect(1).to eq(2)
-        |
-        |       expected: 2
-        |            got: 1
-        |
-        |       (compared using ==)
-        |     # ./spec/rspec/core/resources/formatter_specs.rb:18:in `block (3 levels) in <top (required)>'
-        |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
-        |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
-        |     # ./spec/support/sandboxing.rb:16:in `block (3 levels) in <top (required)>'
-        |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
-        |
-        |Failures:
-        |
-        |  1) pending command with block format behaves like shared is marked as pending but passes FIXED
-        |     Expected pending 'No reason given' to fail. No error was raised.
-        |     Shared Example Group: "shared" called from ./spec/rspec/core/resources/formatter_specs.rb:22
-        |     # ./spec/rspec/core/resources/formatter_specs.rb:4
-        |
-        |  2) failing spec fails
-        |     Failure/Error: expect(1).to eq(2)
-        |
-        |       expected: 2
-        |            got: 1
-        |
-        |       (compared using ==)
-        |     # ./spec/rspec/core/resources/formatter_specs.rb:37:in `block (2 levels) in <top (required)>'
-        |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
-        |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
-        |     # ./spec/support/sandboxing.rb:16:in `block (3 levels) in <top (required)>'
-        |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
-        |
-        |  3) failing spec fails twice
-        |     Got 2 failures:
-        |
-        |     3.1) Failure/Error: expect(1).to eq(2)
-        |
-        |            expected: 2
-        |                 got: 1
-        |
-        |            (compared using ==)
-        |          # ./spec/rspec/core/resources/formatter_specs.rb:41:in `block (2 levels) in <top (required)>'
-        |
-        |     3.2) Failure/Error: expect(3).to eq(4)
-        |
-        |            expected: 4
-        |                 got: 3
-        |
-        |            (compared using ==)
-        |          # ./spec/rspec/core/resources/formatter_specs.rb:42:in `block (2 levels) in <top (required)>'
-        |
-        |  4) a failing spec with odd backtraces fails with a backtrace that has no file
-        |     Failure/Error: ERB.new("<%= raise 'foo' %>").result
-        |
-        |     RuntimeError:
-        |       foo
-        |     # (erb):1:in `<main>'
-        |     # ./spec/rspec/core/resources/formatter_specs.rb:50:in `block (2 levels) in <top (required)>'
-        |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
-        |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
-        |     # ./spec/support/sandboxing.rb:16:in `block (3 levels) in <top (required)>'
-        |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
-        |
-        |  5) a failing spec with odd backtraces fails with a backtrace containing an erb file
-        |     Failure/Error: Unable to find /foo.html.erb to read failed line
-        |
-        |     Exception:
-        |       Exception
-        |     # /foo.html.erb:1:in `<main>': foo (RuntimeError)
-        |
-        |  6) a failing spec with odd backtraces with a `nil` backtrace raises
-        |     Failure/Error: Unable to find matching line from backtrace
-        |
-        |     RuntimeError:
-        |       boom
-        |
-        |Finished in n.nnnn seconds (files took n.nnnn seconds to load)
-        |10 examples, 6 failures, 2 pending
-        |
-        |Failed examples:
-        |
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:4 # pending command with block format behaves like shared is marked as pending but passes
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:36 # failing spec fails
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:40 # failing spec fails twice
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:47 # a failing spec with odd backtraces fails with a backtrace that has no file
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:53 # a failing spec with odd backtraces fails with a backtrace containing an erb file
-        |rspec ./spec/rspec/core/resources/formatter_specs.rb:71 # a failing spec with odd backtraces with a `nil` backtrace raises
-      EOS
-    end
+  def expected_summary_output_for_example_specs
+    <<-EOS.gsub(/^\s+\|/, '').chomp
+      |Pending: (Failures listed here are expected and do not affect your suite's status)
+      |
+      |  1) pending spec with no implementation is pending
+      |     # Not yet implemented
+      |     # ./spec/rspec/core/resources/formatter_specs.rb:11
+      |
+      |  2) pending command with block format with content that would fail is pending
+      |     # No reason given
+      |     Failure/Error: expect(1).to eq(2)
+      |
+      |       expected: 2
+      |            got: 1
+      |
+      |       (compared using ==)
+      |     # ./spec/rspec/core/resources/formatter_specs.rb:18:in `block (3 levels) in <top (required)>'
+      |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
+      |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
+      |     # ./spec/support/sandboxing.rb:16:in `block (3 levels) in <top (required)>'
+      |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
+      |
+      |Failures:
+      |
+      |  1) pending command with block format behaves like shared is marked as pending but passes FIXED
+      |     Expected pending 'No reason given' to fail. No error was raised.
+      |     Shared Example Group: "shared" called from ./spec/rspec/core/resources/formatter_specs.rb:22
+      |     # ./spec/rspec/core/resources/formatter_specs.rb:4
+      |
+      |  2) failing spec fails
+      |     Failure/Error: expect(1).to eq(2)
+      |
+      |       expected: 2
+      |            got: 1
+      |
+      |       (compared using ==)
+      |     # ./spec/rspec/core/resources/formatter_specs.rb:37:in `block (2 levels) in <top (required)>'
+      |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
+      |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
+      |     # ./spec/support/sandboxing.rb:16:in `block (3 levels) in <top (required)>'
+      |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
+      |
+      |  3) failing spec fails twice
+      |     Got 2 failures:
+      |
+      |     3.1) Failure/Error: expect(1).to eq(2)
+      |
+      |            expected: 2
+      |                 got: 1
+      |
+      |            (compared using ==)
+      |          # ./spec/rspec/core/resources/formatter_specs.rb:41:in `block (2 levels) in <top (required)>'
+      |
+      |     3.2) Failure/Error: expect(3).to eq(4)
+      |
+      |            expected: 4
+      |                 got: 3
+      |
+      |            (compared using ==)
+      |          # ./spec/rspec/core/resources/formatter_specs.rb:42:in `block (2 levels) in <top (required)>'
+      |
+      |  4) a failing spec with odd backtraces fails with a backtrace that has no file
+      |     Failure/Error: ERB.new("<%= raise 'foo' %>").result
+      |
+      |     RuntimeError:
+      |       foo
+      |     # (erb):1:in `<main>'
+      |     # ./spec/rspec/core/resources/formatter_specs.rb:50:in `block (2 levels) in <top (required)>'
+      |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
+      |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
+      |     # ./spec/support/sandboxing.rb:16:in `block (3 levels) in <top (required)>'
+      |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
+      |
+      |  5) a failing spec with odd backtraces fails with a backtrace containing an erb file
+      |     Failure/Error: Unable to find /foo.html.erb to read failed line
+      |
+      |     Exception:
+      |       Exception
+      |     # /foo.html.erb:1:in `<main>': foo (RuntimeError)
+      |
+      |  6) a failing spec with odd backtraces with a `nil` backtrace raises
+      |     Failure/Error: Unable to find matching line from backtrace
+      |
+      |     RuntimeError:
+      |       boom
+      |
+      |Finished in n.nnnn seconds (files took n.nnnn seconds to load)
+      |10 examples, 6 failures, 2 pending
+      |
+      |Failed examples:
+      |
+      |rspec ./spec/rspec/core/resources/formatter_specs.rb:4 # pending command with block format behaves like shared is marked as pending but passes
+      |rspec ./spec/rspec/core/resources/formatter_specs.rb:36 # failing spec fails
+      |rspec ./spec/rspec/core/resources/formatter_specs.rb:40 # failing spec fails twice
+      |rspec ./spec/rspec/core/resources/formatter_specs.rb:47 # a failing spec with odd backtraces fails with a backtrace that has no file
+      |rspec ./spec/rspec/core/resources/formatter_specs.rb:53 # a failing spec with odd backtraces fails with a backtrace containing an erb file
+      |rspec ./spec/rspec/core/resources/formatter_specs.rb:65 # a failing spec with odd backtraces with a `nil` backtrace raises
+    EOS
   end
 
   def send_notification type, notification
@@ -362,19 +265,17 @@ module FormatterSupport
 
 end
 
-if RSpec::Support::RubyFeatures.module_prepends_supported?
-  module RSpec::Core
-    class Reporter
-      module EnforceRSpecNotificationsListComplete
-        def notify(event, *args)
-          return super if caller_locations(1, 1).first.label =~ /publish/
-          return super if RSPEC_NOTIFICATIONS.include?(event)
+module RSpec::Core
+  class Reporter
+    module EnforceRSpecNotificationsListComplete
+      def notify(event, *args)
+        return super if caller_locations(1, 1).first.label =~ /publish/
+        return super if RSPEC_NOTIFICATIONS.include?(event)
 
-          raise "#{event.inspect} must be added to `RSPEC_NOTIFICATIONS`"
-        end
+        raise "#{event.inspect} must be added to `RSPEC_NOTIFICATIONS`"
       end
-
-      prepend EnforceRSpecNotificationsListComplete
     end
+
+    prepend EnforceRSpecNotificationsListComplete
   end
 end

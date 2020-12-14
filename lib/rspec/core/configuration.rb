@@ -2,6 +2,7 @@ RSpec::Support.require_rspec_core "backtrace_formatter"
 RSpec::Support.require_rspec_core "ruby_project"
 RSpec::Support.require_rspec_core "formatters/deprecation_formatter"
 RSpec::Support.require_rspec_core "output_wrapper"
+RSpec::Support.require_rspec_support 'ruby_features'
 
 module RSpec
   module Core
@@ -842,8 +843,8 @@ module RSpec
 
             # Tag this exception class so our exception formatting logic knows
             # that it satisfies the `MultipleExceptionError` interface.
-            ::RSpec::Expectations::MultipleExpectationsNotMetError.__send__(
-              :include, MultipleExceptionError::InterfaceTag
+            ::RSpec::Expectations::MultipleExpectationsNotMetError.include(
+              MultipleExceptionError::InterfaceTag
             )
 
             ::RSpec::Matchers
@@ -1495,43 +1496,41 @@ module RSpec
         end
       end
 
-      if RSpec::Support::RubyFeatures.module_prepends_supported?
-        # Tells RSpec to prepend example groups with `mod`. Methods defined in
-        # `mod` are exposed to examples (not example groups). Use `filters` to
-        # constrain the groups in which to prepend the module.
-        #
-        # Similar to `include`, but module is included before the example group's class
-        # in the ancestor chain.
-        #
-        # @example
-        #
-        #     module OverrideMod
-        #       def override_me
-        #         "overridden"
-        #       end
-        #     end
-        #
-        #     RSpec.configure do |config|
-        #       config.prepend(OverrideMod, :method => :prepend)
-        #     end
-        #
-        #     describe "overriding example's class", :method => :prepend do
-        #       it "finds the user" do
-        #         self.class.class_eval do
-        #           def override_me
-        #           end
-        #         end
-        #         override_me # => "overridden"
-        #         # ...
-        #       end
-        #     end
-        #
-        # @see #include
-        # @see #extend
-        def prepend(mod, *filters)
-          define_mixed_in_module(mod, filters, @prepend_modules, :prepend) do |group|
-            safe_prepend(mod, group)
-          end
+      # Tells RSpec to prepend example groups with `mod`. Methods defined in
+      # `mod` are exposed to examples (not example groups). Use `filters` to
+      # constrain the groups in which to prepend the module.
+      #
+      # Similar to `include`, but module is included before the example group's class
+      # in the ancestor chain.
+      #
+      # @example
+      #
+      #     module OverrideMod
+      #       def override_me
+      #         "overridden"
+      #       end
+      #     end
+      #
+      #     RSpec.configure do |config|
+      #       config.prepend(OverrideMod, :method => :prepend)
+      #     end
+      #
+      #     describe "overriding example's class", :method => :prepend do
+      #       it "finds the user" do
+      #         self.class.class_eval do
+      #           def override_me
+      #           end
+      #         end
+      #         override_me # => "overridden"
+      #         # ...
+      #       end
+      #     end
+      #
+      # @see #include
+      # @see #extend
+      def prepend(mod, *filters)
+        define_mixed_in_module(mod, filters, @prepend_modules, :prepend) do |group|
+          safe_prepend(mod, group)
         end
       end
 
@@ -1586,14 +1585,14 @@ module RSpec
 
       # @private
       def configure_mock_framework
-        RSpec::Core::ExampleGroup.__send__(:include, mock_framework)
+        RSpec::Core::ExampleGroup.include(mock_framework)
         conditionally_disable_mocks_monkey_patching
       end
 
       # @private
       def configure_expectation_framework
         expectation_frameworks.each do |framework|
-          RSpec::Core::ExampleGroup.__send__(:include, framework)
+          RSpec::Core::ExampleGroup.include(framework)
         end
         conditionally_disable_expectations_monkey_patching
       end
@@ -2155,7 +2154,7 @@ module RSpec
       end
 
       def get_files_to_run(paths)
-        files = FlatMap.flat_map(paths_to_check(paths)) do |path|
+        files = paths_to_check(paths).flat_map do |path|
           path = path.gsub(File::ALT_SEPARATOR, File::SEPARATOR) if File::ALT_SEPARATOR
           File.directory?(path) ? gather_directories(path) : extract_location(path)
         end.uniq
@@ -2331,30 +2330,16 @@ module RSpec
         meta.empty? || MetadataFilter.apply?(:any?, meta, group.metadata)
       end
 
-      if RSpec::Support::RubyFeatures.module_prepends_supported?
-        def safe_prepend(mod, host)
-          host.__send__(:prepend, mod) unless host < mod
-        end
+      def safe_prepend(mod, host)
+        host.prepend(mod) unless host < mod
       end
 
-      if RUBY_VERSION.to_f >= 1.9
-        def safe_include(mod, host)
-          host.__send__(:include, mod) unless host < mod
-        end
+      def safe_include(mod, host)
+        host.include(mod) unless host < mod
+      end
 
-        def safe_extend(mod, host)
-          host.extend(mod) unless host.singleton_class < mod
-        end
-      else # for 1.8.7
-        # :nocov:
-        def safe_include(mod, host)
-          host.__send__(:include, mod) unless host.included_modules.include?(mod)
-        end
-
-        def safe_extend(mod, host)
-          host.extend(mod) unless (class << host; self; end).included_modules.include?(mod)
-        end
-        # :nocov:
+      def safe_extend(mod, host)
+        host.extend(mod) unless host.singleton_class < mod
       end
 
       def define_mixed_in_module(mod, filters, mod_list, config_method, &block)
