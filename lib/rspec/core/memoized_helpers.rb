@@ -78,6 +78,7 @@ module RSpec
       # @note If you are using RSpec's newer expect-based syntax you may
       #       want to use `is_expected.to` instead of `should`.
       def should(matcher=nil, message=nil)
+        enforce_value_expectation(matcher, 'should')
         RSpec::Expectations::PositiveExpectationHandler.handle_matcher(subject, matcher, message)
       end
 
@@ -97,6 +98,7 @@ module RSpec
       # @note If you are using RSpec's newer expect-based syntax you may
       #       want to use `is_expected.to_not` instead of `should_not`.
       def should_not(matcher=nil, message=nil)
+        enforce_value_expectation(matcher, 'should_not')
         RSpec::Expectations::NegativeExpectationHandler.handle_matcher(subject, matcher, message)
       end
 
@@ -142,6 +144,26 @@ module RSpec
                       else
                         NonThreadSafeMemoized.new
                       end
+      end
+
+      # @private
+      def enforce_value_expectation(matcher, method_name)
+        return if matcher_supports_value_expectations?(matcher)
+
+        RSpec.deprecate(
+          "#{method_name} #{RSpec::Support::ObjectFormatter.format(matcher)}",
+          :message =>
+            "The implicit block expectation syntax is deprecated, you should pass " \
+            "a block to `expect` to use the provided block expectation matcher " \
+            "(#{RSpec::Support::ObjectFormatter.format(matcher)}), " \
+            "or the matcher must implement `supports_value_expectations?`."
+        )
+      end
+
+      def matcher_supports_value_expectations?(matcher)
+        matcher.supports_value_expectations?
+      rescue
+        true
       end
 
       # @private
