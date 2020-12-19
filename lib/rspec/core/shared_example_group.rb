@@ -114,35 +114,6 @@ module RSpec
             alias shared_examples_for shared_examples
           end
         end
-
-        # @private
-        def self.exposed_globally?
-          @exposed_globally ||= false
-        end
-
-        # @api private
-        #
-        # Adds the top level DSL methods to Module and the top level binding.
-        def self.expose_globally!
-          return if exposed_globally?
-          Core::DSL.change_global_dsl(&definitions)
-          @exposed_globally = true
-        end
-
-        # @api private
-        #
-        # Removes the top level DSL methods to Module and the top level binding.
-        def self.remove_globally!
-          return unless exposed_globally?
-
-          Core::DSL.change_global_dsl do
-            undef shared_examples
-            undef shared_context
-            undef shared_examples_for
-          end
-
-          @exposed_globally = false
-        end
       end
 
       # @private

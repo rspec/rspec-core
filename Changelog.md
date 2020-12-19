@@ -3,6 +3,7 @@
 Breaking Changes:
 
 * Ruby < 2.3 is no longer supported. (Phil Pirozhkov, #2787)
+* Remove monkey-patching syntax. (Phil Pirozhkov, #2803)
 
 Enhancements:
 

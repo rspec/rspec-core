@@ -1,9 +1,7 @@
 module RSpec
   module Core
     # DSL defines methods to group examples, most notably `describe`,
-    # and exposes them as class methods of {RSpec}. They can also be
-    # exposed globally (on `main` and instances of `Module`) through
-    # the {Configuration} option `expose_dsl_globally`.
+    # and exposes them as class methods of {RSpec}.
     #
     # By default the methods `describe`, `context` and `example_group`
     # are exposed. These methods define a named context for one or
@@ -29,11 +27,6 @@ module RSpec
       end
 
       # @private
-      def self.exposed_globally?
-        @exposed_globally ||= false
-      end
-
-      # @private
       def self.expose_example_group_alias(name)
         return if example_group_aliases.include?(name)
 
@@ -44,51 +37,11 @@ module RSpec
           RSpec.world.record(group)
           group
         end
-
-        expose_example_group_alias_globally(name) if exposed_globally?
       end
 
       class << self
         # @private
         attr_accessor :top_level
-      end
-
-      # Adds the describe method to Module and the top level binding.
-      # @api private
-      def self.expose_globally!
-        return if exposed_globally?
-
-        example_group_aliases.each do |method_name|
-          expose_example_group_alias_globally(method_name)
-        end
-
-        @exposed_globally = true
-      end
-
-      # Removes the describe method from Module and the top level binding.
-      # @api private
-      def self.remove_globally!
-        return unless exposed_globally?
-
-        example_group_aliases.each do |method_name|
-          change_global_dsl { undef_method method_name }
-        end
-
-        @exposed_globally = false
-      end
-
-      # @private
-      def self.expose_example_group_alias_globally(method_name)
-        change_global_dsl do
-          remove_method(method_name) if method_defined?(method_name)
-          define_method(method_name) { |*a, &b| ::RSpec.__send__(method_name, *a, &b) }
-        end
-      end
-
-      # @private
-      def self.change_global_dsl(&changes)
-        (class << top_level; self; end).class_exec(&changes)
-        Module.class_exec(&changes)
       end
     end
   end

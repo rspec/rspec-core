@@ -1,4 +1,3 @@
-@oneliner-should
 Feature: One-liner syntax
 
   RSpec supports a one-liner syntax for setting an expectation on the
@@ -14,9 +13,7 @@ Feature: One-liner syntax
     * `is_expected` is defined simply as `expect(subject)` and is designed for
       when you are using rspec-expectations with its newer expect-based syntax.
     * `should` was designed back when rspec-expectations only had a should-based
-      syntax. However, it continues to be available and work even if the
-      `:should` syntax is disabled (since that merely removes `Object#should`
-      but this is `RSpec::Core::ExampleGroup#should`).
+      syntax.
 
   Notes:
 
@@ -29,11 +26,6 @@ Feature: One-liner syntax
       """ruby
       RSpec.describe Array do
         describe "when first created" do
-          # Rather than:
-          # it "should be empty" do
-          #   subject.should be_empty
-          # end
-
           it { should be_empty }
           # or
           it { is_expected.to be_empty }

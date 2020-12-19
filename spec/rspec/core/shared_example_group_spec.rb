@@ -56,16 +56,7 @@ module RSpec
             registry.find([scope], name).definition
           end
 
-          it "is exposed to the global namespace when expose_dsl_globally is enabled" do
-            in_sub_process do
-              RSpec.configuration.expose_dsl_globally = true
-              expect(Kernel).to respond_to(shared_method_name)
-            end
-          end
-
-          it "is not exposed to the global namespace when monkey patching is disabled" do
-            RSpec.configuration.expose_dsl_globally = false
-            expect(RSpec.configuration.expose_dsl_globally?).to eq(false)
+          it "is not exposed to the global namespace" do
             expect(Kernel).to_not respond_to(shared_method_name)
           end
 

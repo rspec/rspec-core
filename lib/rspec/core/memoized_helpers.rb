@@ -26,16 +26,14 @@ module RSpec
       #   RSpec.describe Person do
       #     subject { Person.new(:birthdate => 19.years.ago) }
       #     it "should be eligible to vote" do
-      #       subject.should be_eligible_to_vote
-      #       # ^ ^ explicit reference to subject not recommended
+      #       should be_eligible_to_vote
       #     end
       #   end
       #
       #   # Implicit subject => { Person.new }.
       #   RSpec.describe Person do
       #     it "should be eligible to vote" do
-      #       subject.should be_eligible_to_vote
-      #       # ^ ^ explicit reference to subject not recommended
+      #       should be_eligible_to_vote
       #     end
       #   end
       #
@@ -278,7 +276,7 @@ EOS
         #       thing.do_something
         #
         #       # Second invocation, returns the memoized value.
-        #       thing.should be_something
+        #       expect(thing).to be_something
         #     end
         #   end
         def let(name, &block)
@@ -349,12 +347,12 @@ EOS
         #       let(:thing) { Thing.new }
         #
         #       it "is not invoked implicitly" do
-        #         Thing.count.should eq(0)
+        #         expect(Thing.count).to eq(0)
         #       end
         #
         #       it "can be invoked explicitly" do
         #         thing
-        #         Thing.count.should eq(1)
+        #         expect(Thing.count).to eq(1)
         #       end
         #     end
         #
@@ -362,12 +360,12 @@ EOS
         #       let!(:thing) { Thing.new }
         #
         #       it "is invoked implicitly" do
-        #         Thing.count.should eq(1)
+        #         expect(Thing.count).to eq(1)
         #       end
         #
         #       it "returns memoized version on first invocation" do
         #         thing
-        #         Thing.count.should eq(1)
+        #         expect(Thing.count).to eq(1)
         #       end
         #     end
         #   end
@@ -408,7 +406,7 @@ EOS
         #     subject(:account) { CheckingAccount.new(Money.new(50, :USD)) }
         #     it { is_expected.not_to be_overdrawn }
         #     it "has a balance equal to the starting balance" do
-        #       account.balance.should eq(Money.new(50, :USD))
+        #       expect(account.balance).to eq(Money.new(50, :USD))
         #     end
         #   end
         #
@@ -459,12 +457,12 @@ EOS
         #       subject { Thing.new }
         #
         #       it "is not invoked implicitly" do
-        #         Thing.count.should eq(0)
+        #         expect(Thing.count).to eq(0)
         #       end
         #
         #       it "can be invoked explicitly" do
         #         subject
-        #         Thing.count.should eq(1)
+        #         expect(Thing.count).to eq(1)
         #       end
         #     end
         #
@@ -472,12 +470,12 @@ EOS
         #       subject!(:thing) { Thing.new }
         #
         #       it "is invoked implicitly" do
-        #         Thing.count.should eq(1)
+        #         expect(Thing.count).to eq(1)
         #       end
         #
         #       it "returns memoized version on first invocation" do
         #         subject
-        #         Thing.count.should eq(1)
+        #         expect(Thing.count).to eq(1)
         #       end
         #     end
         #   end
