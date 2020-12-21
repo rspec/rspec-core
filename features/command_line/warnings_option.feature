@@ -7,7 +7,7 @@ Feature: `--warnings` option (run with warnings enabled)
       """ruby
       RSpec.describe do
         it 'generates warning' do
-          @undefined
+          $undefined
         end
       end
       """
@@ -19,7 +19,7 @@ Feature: `--warnings` option (run with warnings enabled)
       """ruby
       RSpec.describe do
         it 'generates warning' do
-          @undefined
+          $undefined
         end
       end
       """
