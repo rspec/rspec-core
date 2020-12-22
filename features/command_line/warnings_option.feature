@@ -14,6 +14,23 @@ Feature: `--warnings` option (run with warnings enabled)
     When I run `rspec --warnings example_spec.rb`
     Then the output should contain "warning"
 
+  @ruby-2-7
+  Scenario:
+    Given a file named "example_spec.rb" with:
+      """ruby
+      def foo(**kwargs)
+        kwargs
+      end
+
+      RSpec.describe do
+       it "should warn about keyword arguments with 'rspec -w'" do
+         expect(foo({a: 1})).to eq({a: 1})
+        end
+      end
+      """
+    When I run `rspec -w example_spec.rb`
+    Then the output should contain "warning"
+
   Scenario:
     Given a file named "example_spec.rb" with:
       """ruby

@@ -184,6 +184,9 @@ module RSpec::Core
         end
 
         parser.on('-w', '--warnings', 'Enable ruby warnings') do
+          if Object.const_defined?(:Warning) && Warning.respond_to?(:[]=)
+            Warning[:deprecated] = true
+          end
           $VERBOSE = true
         end
 
