@@ -26,7 +26,7 @@ module RSpec
           expect([nil, "."]).to include(value)
         end
 
-        it 'should not transform directories beginning with the same prefix' do
+        it 'does not transform directories beginning with the same prefix' do
           #E.g. /foo/bar_baz is not relative to /foo/bar !!
 
           similar_directory = "#{File.expand_path(".")}_similar"
