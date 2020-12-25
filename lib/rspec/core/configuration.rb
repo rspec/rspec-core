@@ -2264,13 +2264,14 @@ module RSpec
         return unless disable_monkey_patching && rspec_mocks_loaded?
 
         RSpec::Mocks.configuration.tap do |config|
-          config.syntax = :expect
+          config.syntax = :expect if config.respond_to?(:syntax)
           config.patch_marshal_to_support_partial_doubles = false
         end
       end
 
       def conditionally_disable_expectations_monkey_patching
         return unless disable_monkey_patching && rspec_expectations_loaded?
+        return unless RSpec::Expectations.configuration.respond_to?(:syntax=)
 
         RSpec::Expectations.configuration.syntax = :expect
       end
