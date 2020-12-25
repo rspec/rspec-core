@@ -3,6 +3,7 @@
 Enhancements:
 
 * Improve pluralisation of words ending with `s` (like process). (Joshua Pinter, #2779)
+* Add ordering by file modification time (most recent first). (Matheus Richard, #2778)
 
 ### 3.10.0 / 2020-10-30
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.3...v3.10.0)
