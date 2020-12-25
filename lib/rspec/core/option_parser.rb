@@ -58,10 +58,11 @@ module RSpec::Core
         end
 
         parser.on('--order TYPE[:SEED]', 'Run examples by the specified order type.',
-                  '  [defined] examples and groups are run in the order they are defined',
-                  '  [rand]    randomize the order of groups and examples',
-                  '  [random]  alias for rand',
-                  '  [random:SEED] e.g. --order random:123') do |o|
+                  '  [defined]           examples and groups are run in the order they are defined',
+                  '  [rand]              randomize the order of groups and examples',
+                  '  [random]            alias for rand',
+                  '  [random:SEED]       e.g. --order random:123',
+                  '  [recently-modified] run the most recently modified files first') do |o|
           options[:order] = o
         end
 
