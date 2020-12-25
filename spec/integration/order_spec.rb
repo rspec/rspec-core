@@ -130,6 +130,17 @@ RSpec.describe 'command line', :ui do
     end
   end
 
+  describe '--order rand --order recently-modified' do
+    it 'overrides random ordering with recently-modified option' do
+      2.times { run_command 'spec/order_spec.rb --order rand --order recently-modified -f doc' }
+
+      expect(stdout.string).not_to match(/Randomized with seed/)
+
+      top_level_groups { |first_run, second_run| expect(first_run).to eq(second_run) }
+      nested_groups { |first_run, second_run| expect(first_run).to eq(second_run) }
+    end
+  end
+
   describe '--order defined on CLI with --order rand in .rspec' do
     after { remove '.rspec' }
 
