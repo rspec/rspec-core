@@ -12,8 +12,6 @@ module RSpec
       #
       #       RSpec.describe Widget do
       #         it { is_expected.to validate_presence_of(:name) }
-      #         # or
-      #         it { should validate_presence_of(:name) }
       #       end
       #
       #   While the examples below demonstrate how to use `subject`
@@ -25,25 +23,21 @@ module RSpec
       #   # Explicit declaration of subject.
       #   RSpec.describe Person do
       #     subject { Person.new(:birthdate => 19.years.ago) }
-      #     it "should be eligible to vote" do
-      #       subject.should be_eligible_to_vote
-      #       # ^ ^ explicit reference to subject not recommended
+      #     it "is eligible to vote" do
+      #       is_expected.to be_eligible_to_vote
       #     end
       #   end
       #
       #   # Implicit subject => { Person.new }.
       #   RSpec.describe Person do
-      #     it "should be eligible to vote" do
-      #       subject.should be_eligible_to_vote
-      #       # ^ ^ explicit reference to subject not recommended
+      #     it "is eligible to vote" do
+      #       is_expected.to be_eligible_to_vote
       #     end
       #   end
       #
       #   # One-liner syntax - expectation is set on the subject.
       #   RSpec.describe Person do
       #     it { is_expected.to be_eligible_to_vote }
-      #     # or
-      #     it { should be_eligible_to_vote }
       #   end
       #
       # @note Because `subject` is designed to create state that is reset
@@ -51,53 +45,12 @@ module RSpec
       #   state that is shared across _all_ examples in an example group,
       #   `subject` is _not_ intended to be used in a `before(:context)` hook.
       #
-      # @see #should
-      # @see #should_not
       # @see #is_expected
       def subject
         __memoized.fetch_or_store(:subject) do
           described = described_class || self.class.metadata.fetch(:description_args).first
           Class === described ? described.new : described
         end
-      end
-
-      # When `should` is called with no explicit receiver, the call is
-      # delegated to the object returned by `subject`. Combined with an
-      # implicit subject this supports very concise expressions.
-      #
-      # @example
-      #
-      #   RSpec.describe Person do
-      #     it { should be_eligible_to_vote }
-      #   end
-      #
-      # @see #subject
-      # @see #is_expected
-      #
-      # @note This only works if you are using rspec-expectations.
-      # @note If you are using RSpec's newer expect-based syntax you may
-      #       want to use `is_expected.to` instead of `should`.
-      def should(matcher=nil, message=nil)
-        RSpec::Expectations::PositiveExpectationHandler.handle_matcher(subject, matcher, message)
-      end
-
-      # Just like `should`, `should_not` delegates to the subject (implicit or
-      # explicit) of the example group.
-      #
-      # @example
-      #
-      #   RSpec.describe Person do
-      #     it { should_not be_eligible_to_vote }
-      #   end
-      #
-      # @see #subject
-      # @see #is_expected
-      #
-      # @note This only works if you are using rspec-expectations.
-      # @note If you are using RSpec's newer expect-based syntax you may
-      #       want to use `is_expected.to_not` instead of `should_not`.
-      def should_not(matcher=nil, message=nil)
-        RSpec::Expectations::NegativeExpectationHandler.handle_matcher(subject, matcher, message)
       end
 
       # Wraps the `subject` in `expect` to make it the target of an expectation.
@@ -111,8 +64,6 @@ module RSpec
       #   end
       #
       # @see #subject
-      # @see #should
-      # @see #should_not
       #
       # @note This only works if you are using rspec-expectations.
       def is_expected
@@ -278,7 +229,7 @@ EOS
         #       thing.do_something
         #
         #       # Second invocation, returns the memoized value.
-        #       thing.should be_something
+        #       expect(thing).to be_something
         #     end
         #   end
         def let(name, &block)
@@ -349,12 +300,12 @@ EOS
         #       let(:thing) { Thing.new }
         #
         #       it "is not invoked implicitly" do
-        #         Thing.count.should eq(0)
+        #         expect(Thing.count).to eq(0)
         #       end
         #
         #       it "can be invoked explicitly" do
         #         thing
-        #         Thing.count.should eq(1)
+        #         expect(Thing.count).to eq(1)
         #       end
         #     end
         #
@@ -362,12 +313,12 @@ EOS
         #       let!(:thing) { Thing.new }
         #
         #       it "is invoked implicitly" do
-        #         Thing.count.should eq(1)
+        #         expect(Thing.count).to eq(1)
         #       end
         #
         #       it "returns memoized version on first invocation" do
         #         thing
-        #         Thing.count.should eq(1)
+        #         expect(Thing.count).to eq(1)
         #       end
         #     end
         #   end
@@ -408,12 +359,10 @@ EOS
         #     subject(:account) { CheckingAccount.new(Money.new(50, :USD)) }
         #     it { is_expected.not_to be_overdrawn }
         #     it "has a balance equal to the starting balance" do
-        #       account.balance.should eq(Money.new(50, :USD))
+        #       expect(account.balance).to eq(Money.new(50, :USD))
         #     end
         #   end
         #
-        # @see MemoizedHelpers#should
-        # @see MemoizedHelpers#should_not
         # @see MemoizedHelpers#is_expected
         def subject(name=nil, &block)
           if name
@@ -459,12 +408,12 @@ EOS
         #       subject { Thing.new }
         #
         #       it "is not invoked implicitly" do
-        #         Thing.count.should eq(0)
+        #         expect(Thing.count).to eq(0)
         #       end
         #
         #       it "can be invoked explicitly" do
         #         subject
-        #         Thing.count.should eq(1)
+        #         expect(Thing.count).to eq(1)
         #       end
         #     end
         #
@@ -472,12 +421,12 @@ EOS
         #       subject!(:thing) { Thing.new }
         #
         #       it "is invoked implicitly" do
-        #         Thing.count.should eq(1)
+        #         expect(Thing.count).to eq(1)
         #       end
         #
         #       it "returns memoized version on first invocation" do
         #         subject
-        #         Thing.count.should eq(1)
+        #         expect(Thing.count).to eq(1)
         #       end
         #     end
         #   end

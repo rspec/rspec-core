@@ -177,7 +177,7 @@ module RSpec::Core
           instance_double(::DRb::DRbServer, :uri => "druby://127.0.0.1:0000/", :alive? => true)
         end
 
-        it { should be_truthy }
+        it { is_expected.to be_truthy }
       end
 
       context "when drb server is started with localhost" do
@@ -185,7 +185,7 @@ module RSpec::Core
           instance_double(::DRb::DRbServer, :uri => "druby://localhost:0000/", :alive? => true)
         end
 
-        it { should be_truthy }
+        it { is_expected.to be_truthy }
       end
 
       context "when drb server is started with another local ip address" do
@@ -197,7 +197,7 @@ module RSpec::Core
           allow(::IPSocket).to receive(:getaddress).and_return("192.168.0.1")
         end
 
-        it { should be_truthy }
+        it { is_expected.to be_truthy }
       end
 
       context "when drb server is started with 127.0.0.1 but not alive" do
@@ -205,7 +205,7 @@ module RSpec::Core
           instance_double(::DRb::DRbServer, :uri => "druby://127.0.0.1:0000/", :alive? => false)
         end
 
-        it { should be_falsey }
+        it { is_expected.to be_falsey }
       end
 
       context "when IPSocket cannot resolve the current hostname" do
@@ -219,7 +219,7 @@ module RSpec::Core
           )
         end
 
-        it { should be_falsey }
+        it { is_expected.to be_falsey }
       end
 
       context "when no drb server is running" do
@@ -227,7 +227,7 @@ module RSpec::Core
           raise ::DRb::DRbServerNotFound
         end
 
-        it { should be_falsey }
+        it { is_expected.to be_falsey }
       end
     end
 

@@ -36,7 +36,7 @@ module RSpec
     #     shared_examples "auditable" do
     #       it "does something" do
     #         log "#{example.full_description}: #{auditable.inspect}"
-    #         auditable.should do_something
+    #         expect(auditable).to do_something
     #       end
     #     end
     #

@@ -138,27 +138,6 @@ module RSpec
       # Default: `$stderr`.
       add_setting :error_stream
 
-      # Indicates if the DSL has been exposed off of modules and `main`.
-      # Default: true
-      # @return [Boolean]
-      def expose_dsl_globally?
-        Core::DSL.exposed_globally?
-      end
-
-      # Use this to expose the core RSpec DSL via `Module` and the `main`
-      # object. It will be set automatically but you can override it to
-      # remove the DSL.
-      # Default: true
-      def expose_dsl_globally=(value)
-        if value
-          Core::DSL.expose_globally!
-          Core::SharedExampleGroup::TopLevelDSL.expose_globally!
-        else
-          Core::DSL.remove_globally!
-          Core::SharedExampleGroup::TopLevelDSL.remove_globally!
-        end
-      end
-
       # Determines where deprecation warnings are printed.
       # Defaults to `$stderr`.
       # @return [IO, String] IO or filename to write to
@@ -1179,11 +1158,7 @@ module RSpec
       #   RSpec.describe User, :type => :model do
       #   end
       #
-      # @note The defined aliased will also be added to the top level
-      #       (e.g. `main` and from within modules) if
-      #       `expose_dsl_globally` is set to true.
       # @see #alias_example_to
-      # @see #expose_dsl_globally=
       def alias_example_group_to(new_name, *args)
         extra_options = Metadata.build_hash_from(args)
         RSpec::Core::ExampleGroup.define_example_group_method(new_name, extra_options)
@@ -1586,7 +1561,6 @@ module RSpec
       # @private
       def configure_mock_framework
         RSpec::Core::ExampleGroup.include(mock_framework)
-        conditionally_disable_mocks_monkey_patching
       end
 
       # @private
@@ -1594,7 +1568,6 @@ module RSpec
         expectation_frameworks.each do |framework|
           RSpec::Core::ExampleGroup.include(framework)
         end
-        conditionally_disable_expectations_monkey_patching
       end
 
       # @private
@@ -1803,52 +1776,6 @@ module RSpec
       def raise_errors_for_deprecations!
         self.deprecation_stream = Formatters::DeprecationFormatter::RaiseErrorStream.new
       end
-
-      # Enables zero monkey patching mode for RSpec. It removes monkey
-      # patching of the top-level DSL methods (`describe`,
-      # `shared_examples_for`, etc) onto `main` and `Module`, instead
-      # requiring you to prefix these methods with `RSpec.`. It enables
-      # expect-only syntax for rspec-mocks and rspec-expectations. It
-      # simply disables monkey patching on whatever pieces of RSpec
-      # the user is using.
-      #
-      # @note It configures rspec-mocks and rspec-expectations only
-      #   if the user is using those (either explicitly or implicitly
-      #   by not setting `mock_with` or `expect_with` to anything else).
-      #
-      # @note If the user uses this options with `mock_with :mocha`
-      #   (or similiar) they will still have monkey patching active
-      #   in their test environment from mocha.
-      #
-      # @example
-      #
-      #   # It disables all monkey patching.
-      #   RSpec.configure do |config|
-      #     config.disable_monkey_patching!
-      #   end
-      #
-      #   # Is an equivalent to
-      #   RSpec.configure do |config|
-      #     config.expose_dsl_globally = false
-      #
-      #     config.mock_with :rspec do |mocks|
-      #       mocks.syntax = :expect
-      #       mocks.patch_marshal_to_support_partial_doubles = false
-      #     end
-      #
-      #     config.expect_with :rspec do |expectations|
-      #       expectations.syntax = :expect
-      #     end
-      #   end
-      def disable_monkey_patching!
-        self.expose_dsl_globally = false
-        self.disable_monkey_patching = true
-        conditionally_disable_mocks_monkey_patching
-        conditionally_disable_expectations_monkey_patching
-      end
-
-      # @private
-      attr_accessor :disable_monkey_patching
 
       # Defines a callback that can assign derived metadata values.
       #
@@ -2258,22 +2185,6 @@ module RSpec
 
       def output_to_tty?(output=output_stream)
         output.respond_to?(:tty?) && output.tty?
-      end
-
-      def conditionally_disable_mocks_monkey_patching
-        return unless disable_monkey_patching && rspec_mocks_loaded?
-
-        RSpec::Mocks.configuration.tap do |config|
-          config.syntax = :expect if config.respond_to?(:syntax)
-          config.patch_marshal_to_support_partial_doubles = false
-        end
-      end
-
-      def conditionally_disable_expectations_monkey_patching
-        return unless disable_monkey_patching && rspec_expectations_loaded?
-        return unless RSpec::Expectations.configuration.respond_to?(:syntax=)
-
-        RSpec::Expectations.configuration.syntax = :expect
       end
 
       def rspec_mocks_loaded?

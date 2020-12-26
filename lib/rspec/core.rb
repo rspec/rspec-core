@@ -178,7 +178,4 @@ module RSpec
     require MODULES_TO_AUTOLOAD.fetch(name) { return super }
     ::RSpec.const_get(name)
   end
-
-  Core::DSL.expose_globally!
-  Core::SharedExampleGroup::TopLevelDSL.expose_globally!
 end

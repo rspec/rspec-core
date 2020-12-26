@@ -73,7 +73,6 @@ RSpec.configure do |c|
   # structural
   c.alias_it_behaves_like_to 'it_has_behavior'
   c.include(RSpecHelpers)
-  c.disable_monkey_patching!
 
   # runtime options
   c.raise_errors_for_deprecations!
