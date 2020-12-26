@@ -312,6 +312,7 @@ module RSpec::Core
       it_behaves_like "a configurable framework adapter", :mock_with
 
       it "allows rspec-mocks to be configured with a provided block" do
+        skip unless RSpec::Mocks.configuration.respond_to?(:add_stub_and_should_receive_to)
         mod = Module.new
 
         expect(RSpec::Mocks.configuration).to receive(:add_stub_and_should_receive_to).with(mod)
@@ -2724,9 +2725,13 @@ module RSpec::Core
       def in_fully_monkey_patched_rspec_environment
         in_sub_process do
           config.expose_dsl_globally = true
-          mocks.configuration.syntax = [:expect, :should]
+          if mocks.configuration.respond_to?(:syntax)
+            mocks.configuration.syntax = [:expect, :should]
+          end
           mocks.configuration.patch_marshal_to_support_partial_doubles = true
-          expectations.configuration.syntax = [:expect, :should]
+          if expectations.configuration.respond_to?(:syntax)
+            expectations.configuration.syntax = [:expect, :should]
+          end
 
           yield
         end
@@ -2742,6 +2747,7 @@ module RSpec::Core
       end
 
       it 'stops using should syntax for expectations' do
+        skip unless expectations.configuration.respond_to?(:syntax)
         in_fully_monkey_patched_rspec_environment do
           obj = Object.new
           config.expect_with :rspec
@@ -2752,6 +2758,7 @@ module RSpec::Core
       end
 
       it 'stops using should syntax for mocks' do
+        skip unless mocks.configuration.respond_to?(:syntax)
         in_fully_monkey_patched_rspec_environment do
           obj = Object.new
           config.mock_with :rspec
@@ -2781,6 +2788,7 @@ module RSpec::Core
         end
 
         it 'disables monkey patching after example groups being configured' do
+          skip unless mocks.configuration.respond_to?(:syntax)
           emulate_not_configured_mock_framework do
             obj = Object.new
             config.disable_monkey_patching!
@@ -2804,6 +2812,7 @@ module RSpec::Core
         end
 
         it 'disables monkey patching after example groups being configured' do
+          skip unless expectations.configuration.respond_to?(:syntax)
           emulate_not_configured_expectation_framework do
             obj = Object.new
             config.disable_monkey_patching!
