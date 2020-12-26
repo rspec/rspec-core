@@ -196,7 +196,7 @@ module RSpec
           end
 
           return if metadata_args.empty?
-          RSpec.configuration.include shared_module, *metadata_args
+          RSpec.configuration.shared_group shared_module, *metadata_args
         end
 
         def shared_example_groups

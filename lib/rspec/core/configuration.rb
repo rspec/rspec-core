@@ -512,6 +512,7 @@ module RSpec
         # rubocop:enable Style/GlobalVars
         @expectation_frameworks = []
         @include_modules = FilterableItemRepository::QueryOptimized.new(:any?)
+        @shared_groups = FilterableItemRepository::QueryOptimized.new(:any?)
         @extend_modules  = FilterableItemRepository::QueryOptimized.new(:any?)
         @prepend_modules = FilterableItemRepository::QueryOptimized.new(:any?)
 
@@ -1406,6 +1407,12 @@ module RSpec
         end
       end
 
+      def shared_group(mod, *filters)
+        define_mixed_in_module(mod, filters, @shared_groups, :include) do |group|
+          safe_include(mod, group)
+        end
+      end
+
       # Tells RSpec to include the named shared example group in example groups.
       # Use `filters` to constrain the groups or examples in which to include
       # the example group.
@@ -1542,6 +1549,10 @@ module RSpec
         group.hooks.register_globals(group, hooks)
 
         configure_group_with group, @include_modules, :safe_include
+        # configure_group_with group, @shared_groups, :safe_include
+        @shared_groups.items_for(group.metadata, group).each do |mod|
+          __send__(:safe_include, mod, group)
+        end
         configure_group_with group, @extend_modules,  :safe_extend
         configure_group_with group, @prepend_modules, :safe_prepend
       end

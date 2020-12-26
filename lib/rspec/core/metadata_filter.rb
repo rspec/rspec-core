@@ -163,7 +163,7 @@ module RSpec
           reconstruct_caches
         end
 
-        def items_for(metadata)
+        def items_for(metadata, group = nil)
           # The filtering of `metadata` to `applicable_metadata` is the key thing
           # that makes the memoization actually useful in practice, since each
           # example and example group have different metadata (e.g. location and
@@ -176,12 +176,24 @@ module RSpec
           # constant time lookups when they call this method.
           applicable_metadata = applicable_metadata_from(metadata)
 
-          if applicable_metadata.any? { |k, _| @proc_keys.include?(k) }
+          mods = if applicable_metadata.any? { |k, _| @proc_keys.include?(k) }
             # It's unsafe to memoize lookups involving procs (since they can
             # be non-deterministic), so we skip the memoization in this case.
             find_items_for(applicable_metadata)
           else
             @memoized_lookups[applicable_metadata]
+          end
+
+          if group
+            shared_example_groups = RSpec.world.shared_example_group_registry
+              .instance_variable_get(:@shared_example_groups)
+            mods.select do |mod|
+              description = mod.instance_variable_get(:@description)
+              shared_group_host = shared_example_groups.find { |klass, shared_groups| shared_groups.key?(description) }.first
+              group.ancestors.include?(shared_group_host)
+            end
+          else
+            mods
           end
         end
 
