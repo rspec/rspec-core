@@ -64,28 +64,6 @@ Feature: Zero monkey patching mode
       end
       """
 
-  Scenario: By default RSpec allows monkey patching
-    Given a file named "spec/spec_helper.rb" with:
-      """ruby
-      # Empty spec_helper
-      """
-    When I run `rspec`
-    Then the examples should all pass
-
-  Scenario: Monkey patched methods are undefined with `disable_monkey_patching!`
-    Given a file named "spec/spec_helper.rb" with:
-      """ruby
-      RSpec.configure do |config|
-        config.disable_monkey_patching!
-      end
-      """
-    When I run `rspec spec/example_should_spec.rb`
-    Then the output should contain all of these:
-      | undefined method `should'   |
-      | unexpected message :stub    |
-    When I run `rspec spec/example_describe_spec.rb`
-    Then the output should contain "undefined method `describe'"
-
   Scenario: `allow` and `expect` syntax works with monkey patching
     Given a file named "spec/spec_helper.rb" with:
       """ruby
