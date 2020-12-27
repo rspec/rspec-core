@@ -128,7 +128,7 @@ module RSpec
       # @note This is not intended to be used externally. Use
       #       the APIs provided by `RSpec::Core::Configuration` instead.
       class ConfigurationManager
-        attr_reader :seed, :ordering_registry, :files
+        attr_reader :seed, :ordering_registry
 
         def initialize
           @ordering_registry = Registry.new(self)
