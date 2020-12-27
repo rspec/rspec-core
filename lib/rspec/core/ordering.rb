@@ -135,7 +135,6 @@ module RSpec
           @seed = rand(0xFFFF)
           @seed_forced = false
           @order_forced = false
-          @files_set = false
         end
 
         def seed_used?
