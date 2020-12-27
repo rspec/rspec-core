@@ -1,4 +1,6 @@
-### Development
+### 3.10.1 / 2020-12-27
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.10.0...v3.10.1)
+
 
 Bug fixes:
 
