@@ -90,7 +90,7 @@ module RSpec
         # These must be set before `requires` to support checking
         # `config.files_to_run` from within `spec_helper.rb` when a
         # `-rspec_helper` option is used.
-        :files_or_directories_to_run, :pattern, :exclude_pattern,
+        :files_or_directories_to_run, :pattern, :exclude_pattern, :files_to_run_first,
 
         # Necessary so that the `--seed` option is applied before requires,
         # in case required files do something with the provided seed.

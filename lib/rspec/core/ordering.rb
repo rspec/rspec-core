@@ -66,6 +66,20 @@ module RSpec
         end
       end
 
+      class Priority
+        def initialize(files=[])
+          @files = files
+        end
+
+        def order(list)
+          priority_files = list.select do |item|
+            @files.any? { |file| File.realpath(file) == File.realpath(item.metadata[:file_path]) }
+          end
+
+          priority_files + (list - priority_files)
+        end
+      end
+
       # @private
       # Orders items based on a custom block.
       class Custom
@@ -114,13 +128,14 @@ module RSpec
       # @note This is not intended to be used externally. Use
       #       the APIs provided by `RSpec::Core::Configuration` instead.
       class ConfigurationManager
-        attr_reader :seed, :ordering_registry
+        attr_reader :seed, :ordering_registry, :files
 
         def initialize
           @ordering_registry = Registry.new(self)
           @seed = rand(0xFFFF)
           @seed_forced = false
           @order_forced = false
+          @files_set = false
         end
 
         def seed_used?
@@ -155,6 +170,9 @@ module RSpec
             @order_forced = true
           elsif hash.key?(:order)
             self.order = hash[:order]
+            @order_forced = true
+          elsif hash.key?(:files_to_run_first)
+            register_ordering(:global, Priority.new(hash[:files_to_run_first]))
             @order_forced = true
           end
         end

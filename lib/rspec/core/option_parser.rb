@@ -57,6 +57,10 @@ module RSpec::Core
           options[:custom_options_file] = path
         end
 
+        parser.on('--priority-files fName1,fName2,fNameN', Array, 'Specify the files with higher priority.') do |files|
+          options[:files_to_run_first] = files
+        end
+
         parser.on('--order TYPE[:SEED]', 'Run examples by the specified order type.',
                   '  [defined]           examples and groups are run in the order they are defined',
                   '  [rand]              randomize the order of groups and examples',
