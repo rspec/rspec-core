@@ -72,11 +72,9 @@ module RSpec
         end
 
         def order(list)
-          priority_files = list.select do |item|
+          list.partition do |item|
             @files.any? { |file| File.realpath(file) == File.realpath(item.metadata[:file_path]) }
-          end
-
-          priority_files + (list - priority_files)
+          end.flatten
         end
       end
 
