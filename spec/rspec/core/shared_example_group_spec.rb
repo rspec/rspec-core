@@ -40,10 +40,6 @@ module RSpec
         describe shared_method_name do
           let(:group) { RSpec.describe('example group') }
 
-          before do
-            RSpec.configuration.shared_context_metadata_behavior = :apply_to_host_groups
-          end
-
           define_method :define_shared_group do |*args, &block|
             group.send(shared_method_name, *args, &block)
           end
@@ -179,62 +175,7 @@ module RSpec
             end
           end
 
-          context "when `config.shared_context_metadata_behavior == :trigger_inclusion`" do
-            before do
-              RSpec.configuration.shared_context_metadata_behavior = :trigger_inclusion
-            end
-
-            context "given a hash" do
-              it "includes itself in matching example groups" do
-                implementation = Proc.new { def self.bar; 'bar'; end }
-                define_shared_group(:foo => :bar, &implementation)
-
-                matching_group = RSpec.describe "Group", :foo => :bar
-                non_matching_group = RSpec.describe "Group"
-
-                expect(matching_group.bar).to eq("bar")
-                expect(non_matching_group).not_to respond_to(:bar)
-              end
-            end
-
-            context "given a string and a hash" do
-              it "captures the given string and block in the World's collection of shared example groups" do
-                implementation = lambda { }
-                define_shared_group("name", :foo => :bar, &implementation)
-                expect(find_implementation_block(registry, group, "name")).to eq implementation
-              end
-
-              it "delegates include on configuration" do
-                implementation = Proc.new { def self.bar; 'bar'; end }
-                define_shared_group("name", :foo => :bar, &implementation)
-
-                matching_group = RSpec.describe "Group", :foo => :bar
-                non_matching_group = RSpec.describe "Group"
-
-                expect(matching_group.bar).to eq("bar")
-                expect(non_matching_group).not_to respond_to(:bar)
-              end
-            end
-
-            it "displays a warning when adding a second shared example group with the same name" do
-              group.send(shared_method_name, 'some shared group') {}
-              original_declaration = [__FILE__, __LINE__ - 1].join(':')
-
-              warning = nil
-              allow(::Kernel).to receive(:warn) { |msg| warning = msg }
-
-              group.send(shared_method_name, 'some shared group') {}
-              second_declaration = [__FILE__, __LINE__ - 1].join(':')
-              expect(warning).to include('some shared group', original_declaration, second_declaration)
-              expect(warning).to_not include 'Called from'
-            end
-          end
-
-          context "when `config.shared_context_metadata_behavior == :apply_to_host_groups`" do
-            before do
-              RSpec.configuration.shared_context_metadata_behavior = :apply_to_host_groups
-            end
-
+          describe "metadata" do
             it "does not auto-include the shared group based on passed metadata" do
               define_top_level_shared_group("name", :foo => :bar) do
                 def self.bar; 'bar'; end
@@ -338,12 +279,6 @@ module RSpec
           end
 
           context "when the group is included via `config.include_context` and matching metadata" do
-            before do
-              # To ensure we don't accidentally include shared contexts the
-              # old way in this context, we disable the option here.
-              RSpec.configuration.shared_context_metadata_behavior = :apply_to_host_groups
-            end
-
             describe "when it has a `let` and applies to an individual example via metadata" do
               it 'defines the `let` method correctly' do
                 define_top_level_shared_group("name") do

@@ -362,59 +362,6 @@ module RSpec
         )
       end
 
-      # @macro define_reader
-      # Configures how RSpec treats metadata passed as part of a shared example
-      # group definition. For example, given this shared example group definition:
-      #
-      #     RSpec.shared_context "uses DB", :db => true do
-      #       around(:example) do |ex|
-      #         MyORM.transaction(:rollback => true, &ex)
-      #       end
-      #     end
-      #
-      # ...there are two ways RSpec can treat the `:db => true` metadata, each
-      # of which has a corresponding config option:
-      #
-      # 1. `:trigger_inclusion`: this shared context will be implicitly included
-      #    in any groups (or examples) that have `:db => true` metadata.
-      # 2. `:apply_to_host_groups`: the metadata will be inherited by the metadata
-      #    hash of all host groups and examples.
-      #
-      # `:trigger_inclusion` is the legacy behavior from before RSpec 3.5 but should
-      # be considered deprecated. Instead, you can explicitly include a group with
-      # `include_context`:
-      #
-      #     RSpec.describe "My model" do
-      #       include_context "uses DB"
-      #     end
-      #
-      # ...or you can configure RSpec to include the context based on matching metadata
-      # using an API that mirrors configured module inclusion:
-      #
-      #     RSpec.configure do |rspec|
-      #       rspec.include_context "uses DB", :db => true
-      #     end
-      #
-      # `:apply_to_host_groups` is a new feature of RSpec 3.5 and will be the only
-      # supported behavior in RSpec 4.
-      #
-      # @overload shared_context_metadata_behavior
-      #   @return [:trigger_inclusion, :apply_to_host_groups] the configured behavior
-      # @overload shared_context_metadata_behavior=(value)
-      #   @param value [:trigger_inclusion, :apply_to_host_groups] sets the configured behavior
-      define_reader :shared_context_metadata_behavior
-      # @see shared_context_metadata_behavior
-      def shared_context_metadata_behavior=(value)
-        case value
-        when :trigger_inclusion, :apply_to_host_groups
-          @shared_context_metadata_behavior = value
-        else
-          raise ArgumentError, "Cannot set `RSpec.configuration." \
-            "shared_context_metadata_behavior` to `#{value.inspect}`. Only " \
-            "`:trigger_inclusion` and `:apply_to_host_groups` are valid values."
-        end
-      end
-
       # Record the start time of the spec suite to measure load time.
       # return [Time]
       add_setting :start_time
@@ -530,7 +477,6 @@ module RSpec
         @threadsafe = true
         @max_displayed_failure_line_count = 10
         @world = World::Null
-        @shared_context_metadata_behavior = :trigger_inclusion
 
         define_built_in_hooks
       end

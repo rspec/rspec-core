@@ -36,15 +36,17 @@ RSpec.describe RSpec::SharedContext do
 
   it "runs the before each hooks in configuration before those of the shared context" do
     ordered_hooks = []
-    RSpec.configure do |c|
-      c.before(:each) { ordered_hooks << "config" }
-    end
 
-    RSpec.shared_context("before each stuff", :example => :before_each_hook_order) do
+    RSpec.shared_context("before each stuff") do
       before(:each) { ordered_hooks << "shared_context"}
     end
 
-    group = RSpec.describe "description", :example => :before_each_hook_order do
+    RSpec.configure do |c|
+      c.before(:each) { ordered_hooks << "config" }
+      c.include_context "before each stuff"
+    end
+
+    group = RSpec.describe "description" do
       before(:each) { ordered_hooks << "example_group" }
       example {}
     end
