@@ -12,12 +12,6 @@ branch = File.read(File.expand_path("../maintenance-branch", __FILE__)).chomp
   end
 end
 
-if ENV['DIFF_LCS_VERSION']
-  gem 'diff-lcs', ENV['DIFF_LCS_VERSION']
-else
-  gem 'diff-lcs', '~> 1.4', '>= 1.4.3'
-end
-
 gem 'yard', '~> 0.9.24', :require => false
 
 ### deps for rdoc.info
