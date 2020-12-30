@@ -41,6 +41,7 @@ module RSpec
         (class << self; self; end).module_exec do
           remove_method(name) if method_defined?(name) && instance_method(name).owner == self
           define_method(name, &definition)
+          ruby2_keywords name if respond_to?(:ruby2_keywords, true)
         end
       end
 
@@ -268,7 +269,7 @@ module RSpec
             combined_metadata.merge!(args.pop) if args.last.is_a? Hash
             args << combined_metadata
 
-            subclass(self, description, args, registration_collection, &example_group_block)
+            subclass(self, description, registration_collection, *args, &example_group_block)
           ensure
             thread_data.delete(:in_example_group) if top_level
           end
@@ -340,8 +341,11 @@ module RSpec
       # context.
       #
       # @see SharedExampleGroup
-      def self.include_context(name, *args, &block)
-        find_and_eval_shared("context", name, caller.first, *args, &block)
+      class << self
+        def include_context(name, *args, &block)
+          find_and_eval_shared("context", name, caller.first, *args, &block)
+        end
+        ruby2_keywords :include_context if respond_to?(:ruby2_keywords, true)
       end
 
       # Includes shared content mapped to `name` directly in the group in which
@@ -350,8 +354,11 @@ module RSpec
       # context.
       #
       # @see SharedExampleGroup
-      def self.include_examples(name, *args, &block)
-        find_and_eval_shared("examples", name, caller.first, *args, &block)
+      class << self
+        def include_examples(name, *args, &block)
+          find_and_eval_shared("examples", name, caller.first, *args, &block)
+        end
+        ruby2_keywords :include_examples if respond_to?(:ruby2_keywords, true)
       end
 
       # Clear memoized values when adding/removing examples
@@ -376,74 +383,83 @@ module RSpec
       end
 
       # @private
-      def self.find_and_eval_shared(label, name, inclusion_location, *args, &customization_block)
-        shared_module = RSpec.world.shared_example_group_registry.find(parent_groups, name)
+      class << self
+        def find_and_eval_shared(label, name, inclusion_location, *args, &customization_block)
+          shared_module = RSpec.world.shared_example_group_registry.find(parent_groups, name)
 
-        unless shared_module
-          raise ArgumentError, "Could not find shared #{label} #{name.inspect}"
+          unless shared_module
+            raise ArgumentError, "Could not find shared #{label} #{name.inspect}"
+          end
+
+          shared_module.include_in(
+            self, Metadata.relative_path(inclusion_location),
+            args, customization_block
+          )
         end
-
-        shared_module.include_in(
-          self, Metadata.relative_path(inclusion_location),
-          args, customization_block
-        )
+        ruby2_keywords :find_and_eval_shared if respond_to?(:ruby2_keywords, true)
       end
 
       # @!endgroup
 
       # @private
-      def self.subclass(parent, description, args, registration_collection, &example_group_block)
-        subclass = Class.new(parent)
-        subclass.set_it_up(description, args, registration_collection, &example_group_block)
-        subclass.module_exec(&example_group_block) if example_group_block
+      class << self
+        def subclass(parent, description, registration_collection, *args, &example_group_block)
+          subclass = Class.new(parent)
+          subclass.set_it_up(description, args, registration_collection, &example_group_block)
+          subclass.module_exec(&example_group_block) if example_group_block
 
-        # The LetDefinitions module must be included _after_ other modules
-        # to ensure that it takes precedence when there are name collisions.
-        # Thus, we delay including it until after the example group block
-        # has been eval'd.
-        MemoizedHelpers.define_helpers_on(subclass)
+          # The LetDefinitions module must be included _after_ other modules
+          # to ensure that it takes precedence when there are name collisions.
+          # Thus, we delay including it until after the example group block
+          # has been eval'd.
+          MemoizedHelpers.define_helpers_on(subclass)
 
-        subclass
+          subclass
+        end
+        ruby2_keywords :subclass if respond_to?(:ruby2_keywords, true)
       end
 
       # @private
-      def self.set_it_up(description, args, registration_collection, &example_group_block)
-        # Ruby 1.9 has a bug that can lead to infinite recursion and a
-        # SystemStackError if you include a module in a superclass after
-        # including it in a subclass: https://gist.github.com/845896
-        # To prevent this, we must include any modules in
-        # RSpec::Core::ExampleGroup before users create example groups and have
-        # a chance to include the same module in a subclass of
-        # RSpec::Core::ExampleGroup. So we need to configure example groups
-        # here.
-        ensure_example_groups_are_configured
+      class << self
+        def set_it_up(description, args, registration_collection, &example_group_block)
+          # Ruby 1.9 has a bug that can lead to infinite recursion and a
+          # SystemStackError if you include a module in a superclass after
+          # including it in a subclass: https://gist.github.com/845896
+          # To prevent this, we must include any modules in
+          # RSpec::Core::ExampleGroup before users create example groups and have
+          # a chance to include the same module in a subclass of
+          # RSpec::Core::ExampleGroup. So we need to configure example groups
+          # here.
+          ensure_example_groups_are_configured
 
-        # Register the example with the group before creating the metadata hash.
-        # This is necessary since creating the metadata hash triggers
-        # `when_first_matching_example_defined` callbacks, in which users can
-        # load RSpec support code which defines hooks. For that to work, the
-        # examples and example groups must be registered at the time the
-        # support code is called or be defined afterwards.
-        # Begin defined beforehand but registered afterwards causes hooks to
-        # not be applied where they should.
-        registration_collection << self
+          # Register the example with the group before creating the metadata hash.
+          # This is necessary since creating the metadata hash triggers
+          # `when_first_matching_example_defined` callbacks, in which users can
+          # load RSpec support code which defines hooks. For that to work, the
+          # examples and example groups must be registered at the time the
+          # support code is called or be defined afterwards.
+          # Begin defined beforehand but registered afterwards causes hooks to
+          # not be applied where they should.
+          registration_collection << self
 
-        @user_metadata = Metadata.build_hash_from(args)
+          @user_metadata = Metadata.build_hash_from(args)
 
-        @metadata = Metadata::ExampleGroupHash.create(
-          superclass_metadata, @user_metadata,
-          superclass.method(:next_runnable_index_for),
-          description, *args, &example_group_block
-        )
+          @metadata = Metadata::ExampleGroupHash.create(
+            superclass_metadata, @user_metadata,
+            superclass.method(:next_runnable_index_for),
+            description, *args, &example_group_block
+          )
 
-        config = RSpec.configuration
-        config.apply_derived_metadata_to(@metadata)
+          config = RSpec.configuration
+          config.apply_derived_metadata_to(@metadata)
 
-        ExampleGroups.assign_const(self)
+          ExampleGroups.assign_const(self)
 
-        @currently_executing_a_context_hook = false
+          @currently_executing_a_context_hook = false
 
-        config.configure_group(self)
+          config.configure_group(self)
+        end
+        ruby2_keywords :set_it_up if respond_to?(:ruby2_keywords, true)
       end
 
       # @private

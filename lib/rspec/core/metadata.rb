@@ -245,17 +245,20 @@ module RSpec
 
       # @private
       class ExampleGroupHash < HashPopulator
-        def self.create(parent_group_metadata, user_metadata, example_group_index, *args, &block)
-          group_metadata = hash_with_backwards_compatibility_default_proc
+        class << self
+          def create(parent_group_metadata, user_metadata, example_group_index, *args, &block)
+            group_metadata = hash_with_backwards_compatibility_default_proc
 
-          if parent_group_metadata
-            group_metadata.update(parent_group_metadata)
-            group_metadata[:parent_example_group] = parent_group_metadata
+            if parent_group_metadata
+              group_metadata.update(parent_group_metadata)
+              group_metadata[:parent_example_group] = parent_group_metadata
+            end
+
+            hash = new(group_metadata, user_metadata, example_group_index, args, block)
+            hash.populate
+            hash.metadata
           end
-
-          hash = new(group_metadata, user_metadata, example_group_index, args, block)
-          hash.populate
-          hash.metadata
+          ruby2_keywords :create if respond_to?(:ruby2_keywords, true)
         end
 
         def self.hash_with_backwards_compatibility_default_proc
