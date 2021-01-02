@@ -39,7 +39,7 @@ module RSpec
           bt       = exception.backtrace or return
           exclude  = backtrace_exclusion_patterns
           bt_line  = bt.find { |l| exclude !~ l } or return
-          md       = bt_line.match(/([^:]+):(\d+)/) or return
+          md       = bt_line.match(/^(.+?):(\d+):/) or return
           path, nr = Pathname.new(md[1]), md[2]
 
           if path.absolute? && path.to_s.start_with?(Dir.pwd)
