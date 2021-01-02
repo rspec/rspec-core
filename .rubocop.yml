@@ -46,6 +46,9 @@ Lint/LiteralInInterpolation:
 Lint/NonLocalExitFromIterator:
   Enabled: false
 
+Style/AndOr:
+  EnforcedStyle: conditionals
+
 # We don't care about single vs double qoutes.
 Style/StringLiteralsInInterpolation:
   Enabled: false
