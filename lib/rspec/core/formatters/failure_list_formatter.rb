@@ -18,7 +18,7 @@ module RSpec
             reason   = exception.message.lines.map(&:strip).reject(&:empty?).join ' '
             location = find_location(exception) || failure.example.location
 
-            output.puts "#{location}:#{reason}"
+            output.puts "#{location}:E:#{reason}"
           end
         end
 
