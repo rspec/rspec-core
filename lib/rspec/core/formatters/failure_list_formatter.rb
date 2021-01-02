@@ -37,7 +37,8 @@ module RSpec
           require 'pathname'
 
           bt       = exception.backtrace or return
-          bt_line  = bt.find { |l| backtrace_exclusion_patterns !~ l } or return
+          exclude  = backtrace_exclusion_patterns
+          bt_line  = bt.find { |l| exclude !~ l } or return
           md       = bt_line.match(/([^:]+):(\d+)/) or return
           path, nr = Pathname.new(md[1]), md[2]
 
@@ -51,7 +52,7 @@ module RSpec
         end
 
         def backtrace_exclusion_patterns
-          @backtrace_exclusion_patterns ||= Regexp.union(
+          Regexp.union(
             *RSpec.configuration.backtrace_exclusion_patterns,
             /^\(\w+\):/ # also exclude ERB/eval lines
           )
