@@ -1,4 +1,3 @@
-require 'pathname'
 RSpec::Support.require_rspec_core "formatters/base_formatter"
 
 module RSpec
@@ -35,6 +34,8 @@ module RSpec
         # @return [String] relevant location with relative path, if possible
         # @return [nil] if no location could be found
         def find_location(exception)
+          require 'pathname'
+
           bt       = exception.backtrace or return
           bt_line  = bt.find { |l| backtrace_exclusion_patterns !~ l } or return
           md       = bt_line.match(/([^:]+):(\d+)/) or return
