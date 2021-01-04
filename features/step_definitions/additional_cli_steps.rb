@@ -178,6 +178,10 @@ Then(/^bisect should (succeed|fail) with output like:$/) do |succeed, expected_o
   expected = normalize_durations(expected_output)
   actual   = normalize_durations(last_process.stdout).sub(/\n+\Z/, '')
 
+  if !RSpec::Support::RubyFeatures.fork_supported?
+    expected.gsub!('runner: :fork', 'runner: :shell')
+  end
+
   if expected.include?("# ...")
     expected_start, expected_end = expected.split("# ...")
     expect(actual).to start_with(expected_start).and end_with(expected_end)
