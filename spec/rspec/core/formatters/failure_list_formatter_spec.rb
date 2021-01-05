@@ -9,7 +9,7 @@ module RSpec::Core::Formatters
         allow(RSpec.configuration).to receive(:full_backtrace?) { false }
       end
 
-      it 'produces the expected full output' do
+      it 'produces the expected full output', skip: RSpec::Support::Ruby.jruby_9000? && RSpec::Support::Ruby.jruby_version < '9.2.0.0' do
         output = run_example_specs_with_formatter('failures')
         expect(output).to eq(<<-EOS.gsub(/^\s+\|/, ''))
           |./spec/rspec/core/resources/formatter_specs.rb:4:E:Expected example to fail since it is pending, but it passed.
@@ -28,7 +28,7 @@ module RSpec::Core::Formatters
         allow(RSpec.configuration).to receive(:full_backtrace?) { true }
       end
 
-      it 'produces the expected full output' do
+      it 'produces the expected full output', skip: RSpec::Support::Ruby.jruby_9000? && RSpec::Support::Ruby.jruby_version < '9.2.0.0' do
         output = run_example_specs_with_formatter('failures')
         output.gsub!(/`.*?'$/, "`...'") # JRuby dumps block nesting slightly differently
         expect(output).to eq(<<-EOS.gsub(/^\s+\|/, ''))
