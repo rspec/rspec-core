@@ -6,6 +6,7 @@ Breaking Changes:
 * Extract `should` syntax (including the non-monkey-patching one liner). (Phil Pirozhkov, #2803)
 * Remove globally-exposed DSL (example and shared group methods
   in the root scope and on Module). (Phil Pirozhkov, #2803)
+* Remove `run_all_when_everything_filtered` configuration option. (Phil Pirozhkov, #2845)
 
 Enhancements:
 
