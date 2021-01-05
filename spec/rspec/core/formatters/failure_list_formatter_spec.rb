@@ -30,7 +30,7 @@ module RSpec::Core::Formatters
 
       it 'produces the expected full output' do
         output = run_example_specs_with_formatter('failures')
-        output.gsub!(/:in `.*'$/, ":in `...'") # JRuby dumps block nesting slightly differently
+        output.gsub!(/`.*?'$/, "`...'") # JRuby dumps block nesting slightly differently
         expect(output).to eq(<<-EOS.gsub(/^\s+\|/, ''))
         |./spec/rspec/core/resources/formatter_specs.rb:4:E:Expected example to fail since it is pending, but it passed.
         |./spec/rspec/core/resources/formatter_specs.rb:37:E:expected: 2 got: 1 (compared using ==)
