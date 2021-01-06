@@ -175,12 +175,6 @@ module RSpec
           end
         end
 
-        if @configuration.run_all_when_everything_filtered? && example_count.zero? && !@configuration.only_failures?
-          report_filter_message("#{everything_filtered_message}; ignoring #{inclusion_filter.description}")
-          filtered_examples.clear
-          inclusion_filter.clear
-        end
-
         return unless example_count.zero?
 
         example_groups.clear

@@ -111,12 +111,6 @@ module RSpec
               c.load_spec_files
             end
 
-            # `announce_filters` has the side effect of implementing the logic
-            # that honors `config.run_all_when_everything_filtered` so we need
-            # to call it here. When we remove `run_all_when_everything_filtered`
-            # (slated for RSpec 4), we can remove this call to `announce_filters`.
-            @runner.world.announce_filters
-
             @runner.run_specs(@runner.world.ordered_example_groups)
             latest_run_results = formatter.results
 

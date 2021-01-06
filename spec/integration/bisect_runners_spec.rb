@@ -50,27 +50,6 @@ module RSpec::Core
       end
     end
 
-    it 'honors `run_all_when_everything_filtered`' do
-      write_file 'spec/a_spec.rb', "
-        RSpec.configure do |c|
-          c.filter_run :focus
-          c.run_all_when_everything_filtered = true
-        end
-
-        RSpec.describe 'A group' do
-          it('passes') { expect(1).to eq 1 }
-          it('fails')  { expect(1).to eq 2 }
-        end
-      "
-
-      with_runner do |runner|
-        expect(runner.original_results).to have_attributes(
-          :all_example_ids => %w[ ./spec/a_spec.rb[1:1] ./spec/a_spec.rb[1:2] ],
-          :failed_example_ids => %w[ ./spec/a_spec.rb[1:2] ]
-        )
-      end
-    end
-
     it 'raises BisectFailedError with all run output when it encounters an error loading spec files' do
       write_file 'spec/a_spec.rb', "
         puts 'stdout in a_spec'

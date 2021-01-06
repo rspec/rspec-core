@@ -303,13 +303,6 @@ module RSpec
       define_predicate :profile_examples
 
       # @macro add_setting
-      # Run all examples if none match the configured filters
-      # (default: `false`).
-      # @deprecated Use {#filter_run_when_matching} instead for the specific
-      #   filters that you want to be ignored if none match.
-      add_setting :run_all_when_everything_filtered
-
-      # @macro add_setting
       # Color to use to indicate success.  Defaults to `:green` but can be set
       # to one of the following: `[:black, :white, :red, :green, :yellow,
       # :blue, :magenta, :cyan]`
