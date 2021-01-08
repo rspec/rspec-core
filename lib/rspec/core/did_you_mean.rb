@@ -19,9 +19,8 @@ module RSpec
           formats probables
         end
       else
-        # return a hint if API for ::DidYouMean::SpellChecker not supported
         def call
-          "\nHint: Install the `did_you_mean` gem in order to provide suggestions for similarly named files."
+          ""
         end
       end
 

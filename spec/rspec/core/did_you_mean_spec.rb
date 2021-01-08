@@ -27,7 +27,7 @@ module RSpec
           describe 'Success' do
             let(:name) { './spec/rspec/core/did_you_mean_spec.rb' }
             it 'returns a hint' do
-              expect(DidYouMean.new(name[0..-2]).call).to include 'Hint:'
+              expect(DidYouMean.new(name[0..-2]).call).to eq('')
             end
           end
         end
