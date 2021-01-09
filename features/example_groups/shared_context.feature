@@ -2,21 +2,9 @@ Feature: shared context
 
   Use `shared_context` to define a block that will be evaluated in the context of example groups either locally, using `include_context` in an example group, or globally using `config.include_context`.
 
-  When implicitly including shared contexts via matching metadata, the normal way is to define matching metadata on an example group, in which case the context is included in the entire group. However, you also have the option to include it in an individual example instead. RSpec treats every example as having a singleton example group (analogous to Ruby's singleton classes) containing just the one example.
-
   Background:
     Given a file named "shared_stuff.rb" with:
       """ruby
-      RSpec.configure do |rspec|
-        # This config option will be enabled by default on RSpec 4,
-        # but for reasons of backwards compatibility, you have to
-        # set it on RSpec 3.
-        #
-        # It causes the host group and examples to inherit metadata
-        # from the shared context.
-        rspec.shared_context_metadata_behavior = :apply_to_host_groups
-      end
-
       RSpec.shared_context "shared stuff", :shared_context => :metadata do
         before { @some_var = :some_value }
         def shared_method

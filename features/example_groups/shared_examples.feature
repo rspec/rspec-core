@@ -257,23 +257,6 @@ Feature: shared examples
           responds to <=>
       """
 
-  Scenario: Sharing metadata automatically includes shared example groups
-    Given a file named "shared_example_metadata_spec.rb" with:
-      """ruby
-      RSpec.shared_examples "shared stuff", :a => :b do
-        it 'runs wherever the metadata is shared' do
-        end
-      end
-
-      RSpec.describe String, :a => :b do
-      end
-      """
-    When I run `rspec shared_example_metadata_spec.rb`
-    Then the output should contain:
-      """
-      1 example, 0 failures
-      """
-
   Scenario: Shared examples are nestable by context
     Given a file named "context_specific_examples_spec.rb" with:
       """Ruby
