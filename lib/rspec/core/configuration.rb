@@ -203,11 +203,9 @@ module RSpec
           @fail_fast = value.to_i
 
           if value.to_i == 0
-            # TODO: in RSpec 4, consider raising an error here.
-            RSpec.warning "Cannot set `RSpec.configuration.fail_fast`" \
+            raise ArgumentError, "Cannot set `RSpec.configuration.fail_fast`" \
               " to `#{value.inspect}`. Only `true`, `false`, `nil` and integers" \
               " are valid values."
-            @fail_fast = true
           end
         end
       end

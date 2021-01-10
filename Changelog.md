@@ -11,6 +11,8 @@ Breaking Changes:
 * Remove `run_all_when_everything_filtered` configuration option. (Phil Pirozhkov, #2845)
 * Raise on unsupported hook scope usage. (Phil Pirozhkov, #2849)
 * Raise on usage of metadata on suite-level scopes. (Phil Pirozhkov, #2849)
+* Raise an error when `fail_fast` is configured with
+  an unsupported value. (Phil Pirozhkov, #2849)
 
 Enhancements:
 

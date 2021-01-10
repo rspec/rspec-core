@@ -110,14 +110,10 @@ module RSpec::Core
           allow(RSpec).to receive(:warning)
         end
 
-        it 'prints warning' do
-          config.fail_fast = 'yes'
-          expect(RSpec).to have_received(:warning).with(/Cannot set `RSpec.configuration.fail_fast`/i)
-        end
-
-        it 'is set to true' do
-          config.fail_fast = 'yes'
-          expect(config.fail_fast).to eq true
+        it 'raises an error' do
+          expect {
+            config.fail_fast = 'yes'
+          }.to raise_error(ArgumentError, /Cannot set `RSpec.configuration.fail_fast`/i)
         end
       end
     end
