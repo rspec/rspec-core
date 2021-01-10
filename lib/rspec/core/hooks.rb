@@ -442,18 +442,13 @@ module RSpec
           scope, options = scope_and_options_from(*args)
 
           if scope == :suite
-            # TODO: consider making this an error in RSpec 4. For SemVer reasons,
-            # we are only warning in RSpec 3.
-            RSpec.warn_with "WARNING: `#{position}(:suite)` hooks are only supported on " \
-                            "the RSpec configuration object. This " \
-                            "`#{position}(:suite)` hook, registered on an example " \
-                            "group, will be ignored."
-            return
+            raise ArgumentError, "`#{position}(:suite)` hooks are only " \
+              "supported on the RSpec configuration object. This " \
+              "`#{position}(:suite)` hook, registered on an example " \
+              "group, will be ignored."
           elsif scope == :context && position == :around
-            # TODO: consider making this an error in RSpec 4. For SemVer reasons,
-            # we are only warning in RSpec 3.
-            RSpec.warn_with "WARNING: `around(:context)` hooks are not supported and " \
-                            "behave like `around(:example)."
+            raise ArgumentError, "`around(:context)` hooks are not supported " \
+              "and behave like `around(:example)`."
           end
 
           hook = HOOK_TYPES[position][scope].new(block, options)

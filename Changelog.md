@@ -9,6 +9,7 @@ Breaking Changes:
 * Change the default `shared_context_metadata_behavior` to `apply_to_host_groups`
   and remove the configuration option. (Phil Pirozhkov, #2834)
 * Remove `run_all_when_everything_filtered` configuration option. (Phil Pirozhkov, #2845)
+* Raise on unsupported hook scope usage. (Phil Pirozhkov, #2849)
 
 Enhancements:
 

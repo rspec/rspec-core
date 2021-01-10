@@ -66,16 +66,12 @@ module RSpec::Core
         end
 
         context "registered on an example group" do
-          it "is ignored with a clear warning" do
-            sequence = []
-
+          it "raises an error with a clear message" do
             expect {
               RSpec.describe "Group" do
-                __send__(registration_method, :suite) { sequence << :suite_hook }
-                example { sequence << :example }
-              end.run
-            }.to change { sequence }.to([:example]).
-              and output(a_string_including("#{type}(:suite)")).to_stderr
+                __send__(registration_method, :suite) { }
+              end
+            }.to raise_error(a_string_including("#{type}(:suite)"))
           end
         end
 
