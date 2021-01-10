@@ -10,6 +10,7 @@ Breaking Changes:
   and remove the configuration option. (Phil Pirozhkov, #2834)
 * Remove `run_all_when_everything_filtered` configuration option. (Phil Pirozhkov, #2845)
 * Raise on unsupported hook scope usage. (Phil Pirozhkov, #2849)
+* Raise on usage of metadata on suite-level scopes. (Phil Pirozhkov, #2849)
 
 Enhancements:
 

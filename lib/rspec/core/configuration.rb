@@ -1990,9 +1990,7 @@ module RSpec
         return nil unless scope == :suite
 
         unless meta.empty?
-          # TODO: in RSpec 4, consider raising an error here.
-          # We warn only for backwards compatibility.
-          RSpec.warn_with "WARNING: `:suite` hooks do not support metadata since " \
+          raise ArgumentError, "WARNING: `:suite` hooks do not support metadata since " \
                           "they apply to the suite as a whole rather than " \
                           "any individual example or example group that has metadata. " \
                           "The metadata you have provided (#{meta.inspect}) will be ignored."
