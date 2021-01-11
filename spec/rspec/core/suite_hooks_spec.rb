@@ -66,26 +66,22 @@ module RSpec::Core
         end
 
         context "registered on an example group" do
-          it "is ignored with a clear warning" do
-            sequence = []
-
+          it "raises an error with a clear message" do
             expect {
               RSpec.describe "Group" do
-                __send__(registration_method, :suite) { sequence << :suite_hook }
-                example { sequence << :example }
-              end.run
-            }.to change { sequence }.to([:example]).
-              and output(a_string_including("#{type}(:suite)")).to_stderr
+                __send__(registration_method, :suite) { }
+              end
+            }.to raise_error(a_string_including("#{type}(:suite)"))
           end
         end
 
         context "registered with metadata" do
-          it "explicitly warns that the metadata is ignored" do
+          it "raises an error" do
             expect {
               RSpec.configure do |c|
                 c.__send__(registration_method, :suite, :some => :metadata)
               end
-            }.to output(a_string_including(":suite", "metadata")).to_stderr
+            }.to raise_error(ArgumentError, a_string_including(":suite", "metadata"))
           end
         end
       end
@@ -110,17 +106,6 @@ module RSpec::Core
 
         runner = build_runner
         runner.run err, out
-      end
-
-      it "still runs :suite hooks with metadata even though the metadata is ignored" do
-        sequence = []
-        allow(RSpec).to receive(:warn_with)
-
-        config.before(:suite, :foo)  { sequence << :before_suite   }
-        config.after(:suite, :foo)   { sequence << :after_suite    }
-        define_and_run_example_group { sequence << :example_groups }
-
-        expect(sequence).to eq([ :before_suite, :example_groups, :after_suite ])
       end
 
       it "runs :suite hooks before and after example groups in the correct order" do
