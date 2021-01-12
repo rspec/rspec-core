@@ -41,7 +41,7 @@ Gem::Specification.new do |s|
     s.add_runtime_dependency "rspec-support", "= #{RSpec::Core::Version::STRING}"
   else
     # rspec-support must otherwise match our major/minor version
-    s.add_runtime_dependency "rspec-support", "~> #{RSpec::Core::Version::STRING.split('.')[0..1].concat(['3']).join('.')}"
+    s.add_runtime_dependency "rspec-support", "~> #{RSpec::Core::Version::STRING.split('.')[0..1].concat(['0']).join('.')}"
   end
 
   s.add_development_dependency 'cucumber', '>= 3.2'
