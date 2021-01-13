@@ -4,7 +4,7 @@ module RSpec::Core::Formatters
   RSpec.describe FailureListFormatter do
     include FormatterSupport
 
-    it 'produces the expected full output', skip: RSpec::Support::Ruby.jruby_9000? && RSpec::Support::Ruby.jruby_version < '9.2.0.0' do
+    it 'produces the expected full output', skip: RSpec::Support::Ruby.jruby? && !(RSpec::Support::Ruby.jruby_9000? && RSpec::Support::Ruby.jruby_version >= '9.2.0.0') do
       output = run_example_specs_with_formatter('failures')
       output.gsub!(/`.*?'$/, "`...'") # JRuby dumps block nesting slightly differently
       expect(output).to eq(<<-EOS.gsub(/^\s+\|/, ''))
