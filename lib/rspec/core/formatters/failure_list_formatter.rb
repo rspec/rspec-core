@@ -11,12 +11,12 @@ module RSpec
           exceptions(failure).each do |ex|
             locations = find_locations ex
 
-            if locations.empty?
-              output.puts "#{failure.example.location}:E:#{one_line ex}"
-            else
+            if locations
               locations.each do |location|
                 output.puts location
               end
+            else
+              output.puts "#{failure.example.location}:E:#{one_line ex}"
             end
           end
         end
@@ -44,14 +44,14 @@ module RSpec
           exception.message.lines.map(&:strip).reject(&:empty?).join ' '
         end
 
-        # @return [Array<String>] relevant location with relative path, if any
+        # @return [Array<String>, nil] relevant location with relative path, if any
         def find_locations(exception)
           require 'pathname'
 
-          bt        = exception.backtrace or return []
+          bt        = exception.backtrace or return
           exclude   = backtrace_exclusion_patterns
-          bt_lines  = bt.reject { |l| exclude =~ l } or return []
-          locations = []
+          bt_lines  = bt.reject { |l| exclude =~ l } or return
+          locations = nil
 
           bt_lines.each do |bt_line|
             md            = bt_line.match(/^(.+?):(\d+):(.*)/) or next
@@ -62,13 +62,8 @@ module RSpec
               path = './' + path unless path =~ %r{^\.\.?/}
             end
 
-            if locations.empty?
-              locations << "#{path}:#{nr}:E:#{one_line exception}"
-            else
-              locations << "#{path}:#{nr}:I:#{loc}"
-            end
-
-            break unless RSpec.configuration.full_backtrace?
+            locations ||= ["#{path}:#{nr}:E:#{one_line exception}"]
+            locations <<   "#{path}:#{nr}:I:#{loc}"
           end
 
           locations
