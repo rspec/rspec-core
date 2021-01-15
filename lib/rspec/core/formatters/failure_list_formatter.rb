@@ -48,13 +48,13 @@ module RSpec
 
         # @return [Array<String>, nil] relevant location with relative path, if any
         def find_locations(exception)
-          bt        = exception.backtrace or return
+          bt        = exception.backtrace || return
           exclude   = backtrace_exclusion_patterns
-          bt_lines  = bt.reject { |l| exclude =~ l } or return
+          bt_lines  = bt.reject { |l| exclude =~ l } || return
           locations = nil
 
           bt_lines.each do |bt_line|
-            md            = bt_line.match(/^(.+?):(\d+):(.*)/) or next
+            md            = bt_line.match(/^(.+?):(\d+):(.*)/) || next
             path, nr, loc = Pathname.new(md[1]), md[2], md[3]
 
             if path.absolute? && path.to_s.start_with?(Dir.pwd)
