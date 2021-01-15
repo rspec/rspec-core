@@ -1,4 +1,6 @@
 RSpec::Support.require_rspec_core "formatters/base_formatter"
+require 'pathname'
+
 
 module RSpec
   module Core
@@ -46,8 +48,6 @@ module RSpec
 
         # @return [Array<String>, nil] relevant location with relative path, if any
         def find_locations(exception)
-          require 'pathname'
-
           bt        = exception.backtrace or return
           exclude   = backtrace_exclusion_patterns
           bt_lines  = bt.reject { |l| exclude =~ l } or return
