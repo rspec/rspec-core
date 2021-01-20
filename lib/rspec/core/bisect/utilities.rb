@@ -29,11 +29,22 @@ module RSpec
       end
 
       # Wraps a pipe to support sending objects between a child and
-      # parent process.
+      # parent process. Where supported, encoding is explicitly
+      # set to ensure binary data is able to pass from child to
+      # parent.
       # @private
       class Channel
+        if String.method_defined?(:encoding)
+          MARSHAL_DUMP_ENCODING = Marshal.dump("").encoding
+        end
+
         def initialize
           @read_io, @write_io = IO.pipe
+
+          if defined?(MARSHAL_DUMP_ENCODING) && IO.method_defined?(:set_encoding)
+            # Ensure the pipe can send any content produced by Marshal.dump
+            @write_io.set_encoding MARSHAL_DUMP_ENCODING
+          end
         end
 
         def send(message)
