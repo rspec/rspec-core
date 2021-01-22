@@ -18,6 +18,7 @@ gem 'yard', '~> 0.9.24', :require => false
 group :documentation do
   gem 'redcarpet', :platform => :mri
   gem 'github-markup', :platform => :mri
+  gem 'yard', '~> 0.9.24', :require => false
 end
 
 if RUBY_VERSION < '2.4.0' && !!(RbConfig::CONFIG['host_os'] =~ /cygwin|mswin|mingw|bccwin|wince|emx/)
