@@ -73,7 +73,9 @@ platforms :jruby do
   end
 end
 
-gem 'simplecov', '~> 0.8'
+group :coverage do
+  gem 'simplecov', '~> 0.8'
+end
 
 # No need to run rubocop on earlier versions
 if RUBY_VERSION >= '2.4' && RUBY_ENGINE == 'ruby'
@@ -86,7 +88,6 @@ gem 'test-unit', '~> 3.0' if RUBY_VERSION.to_f >= 2.2
 if RUBY_VERSION < '2.4.0'
   gem 'minitest', '< 5.12.0'
 end
-
 
 gem 'contracts', '< 0.16' if RUBY_VERSION < '1.9.0'
 
