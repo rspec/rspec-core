@@ -33,6 +33,12 @@ group :documentation do
   gem 'yard', '~> 0.9.24', :require => false
 end
 
+if RUBY_VERSION < '2.0.0'
+  gem 'thor', '< 1.0.0'
+else
+  gem 'thor', '> 1.0.0'
+end
+
 if RUBY_VERSION < '2.0.0' || RUBY_ENGINE == 'java'
   gem 'json', '< 2.0.0'
 else
