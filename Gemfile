@@ -29,7 +29,9 @@ end
 
 gem "jruby-openssl", platforms: :jruby
 
-gem 'simplecov', '~> 0.8'
+group :coverage do
+  gem 'simplecov', '~> 0.8'
+end
 
 # No need to run rubocop on earlier versions
 if RUBY_VERSION >= '2.4' && RUBY_ENGINE == 'ruby'
