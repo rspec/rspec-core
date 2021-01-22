@@ -26,12 +26,17 @@ else
   gem 'diff-lcs', '~> 1.4', '>= 1.4.3'
 end
 
-gem 'yard', '~> 0.9.24', :require => false
-
 ### deps for rdoc.info
 group :documentation do
   gem 'redcarpet', :platform => :mri
   gem 'github-markup', :platform => :mri
+  gem 'yard', '~> 0.9.24', :require => false
+end
+
+if RUBY_VERSION < '2.0.0'
+  gem 'thor', '< 1.0.0'
+else
+  gem 'thor', '> 1.0.0'
 end
 
 if RUBY_VERSION < '2.0.0' || RUBY_ENGINE == 'java'
@@ -53,20 +58,24 @@ end
 
 if RUBY_VERSION < '2.3.0' && !!(RbConfig::CONFIG['host_os'] =~ /cygwin|mswin|mingw|bccwin|wince|emx/)
   gem "childprocess", "< 1.0.0"
+elsif RUBY_VERSION < '2.0.0'
+  gem "childprocess", "< 1.0.0"
+else
+  gem "childprocess", "> 1.0.0"
 end
 
 platforms :jruby do
   if RUBY_VERSION < '1.9.0'
     # Pin jruby-openssl on older J Ruby
     gem "jruby-openssl", "< 0.10.0"
-    # Pin child-process on older J Ruby
-    gem "childprocess", "< 1.0.0"
   else
     gem "jruby-openssl"
   end
 end
 
-gem 'simplecov', '~> 0.8'
+group :coverage do
+  gem 'simplecov', '~> 0.8'
+end
 
 # No need to run rubocop on earlier versions
 if RUBY_VERSION >= '2.4' && RUBY_ENGINE == 'ruby'
@@ -79,7 +88,6 @@ gem 'test-unit', '~> 3.0' if RUBY_VERSION.to_f >= 2.2
 if RUBY_VERSION < '2.4.0'
   gem 'minitest', '< 5.12.0'
 end
-
 
 gem 'contracts', '< 0.16' if RUBY_VERSION < '1.9.0'
 
