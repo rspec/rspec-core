@@ -26,12 +26,11 @@ else
   gem 'diff-lcs', '~> 1.4', '>= 1.4.3'
 end
 
-gem 'yard', '~> 0.9.24', :require => false
-
 ### deps for rdoc.info
 group :documentation do
   gem 'redcarpet', :platform => :mri
   gem 'github-markup', :platform => :mri
+  gem 'yard', '~> 0.9.24', :require => false
 end
 
 if RUBY_VERSION < '2.0.0' || RUBY_ENGINE == 'java'
