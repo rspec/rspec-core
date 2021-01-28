@@ -319,8 +319,8 @@ module RSpec::Core
           |
           |ZeroDivisionError:
           |  divided by 0
-          |# #{Metadata.relative_path(__FILE__)}:#{line}
         EOS
+        expect(formatter_out.string).to match(/# #{Metadata.relative_path(__FILE__)}:#{line}/)
       end
 
       it "records the fact that a non example failure has occurred" do
