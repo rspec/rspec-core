@@ -41,7 +41,7 @@ module RSpec
         has_matched = false
 
         filtered = backtrace.map do |line|
-          if !exclude?(line)
+          unless exclude?(line)
             has_matched = true
             backtrace_line(line)
           else
