@@ -1,9 +1,10 @@
 module RSpec::Core
   RSpec.describe BacktraceFormatter do
-    def make_backtrace_formatter(exclusion_patterns=nil, inclusion_patterns=nil)
+    def make_backtrace_formatter(exclusion_patterns=nil, inclusion_patterns=nil, preexclusion_patterns=nil)
       BacktraceFormatter.new.tap do |bc|
         bc.exclusion_patterns = exclusion_patterns if exclusion_patterns
         bc.inclusion_patterns = inclusion_patterns if inclusion_patterns
+        bc.preexclusion_patterns = preexclusion_patterns if preexclusion_patterns
       end
     end
 
@@ -113,6 +114,55 @@ module RSpec::Core
         expect(BacktraceFormatter.new.format_backtrace(backtrace)).to eq(["./my_spec.rb:5"])
       end
 
+      it "excludes lines from calls into rubygems by rspec libs by default" do
+        backtrace = [
+          "/path/to/lib/ruby/3.0.0/rubygems/specification.rb:37",
+          "/path/to/rspec-expectations/lib/rspec/expectations/foo.rb:37",
+          "/path/to/rspec-expectations/lib/rspec/matchers/foo.rb:37",
+          "./my_spec.rb:5",
+          "/path/to/rspec-mocks/lib/rspec/mocks/foo.rb:37",
+          "/path/to/rspec-core/lib/rspec/core/foo.rb:37"
+        ]
+
+        expect(BacktraceFormatter.new.format_backtrace(backtrace)).to eq(["./my_spec.rb:5"])
+      end
+
+      it "includes lines from calls into rubygems that precede included user code" do
+        backtrace = [
+          "/path/to/lib/ruby/3.0.0/rubygems/specification.rb:37",
+          "./my_spec.rb:5",
+          "/path/to/rspec-mocks/lib/rspec/mocks/foo.rb:37",
+          "/path/to/rspec-core/lib/rspec/core/foo.rb:37"
+        ]
+
+        expect(BacktraceFormatter.new.format_backtrace(backtrace)).to eq(["/path/to/lib/ruby/3.0.0/rubygems/specification.rb:37", "./my_spec.rb:5"])
+      end
+
+      it "excludes lines from calls into gems by rspec libs by default" do
+        backtrace = [
+          "/path/to/lib/ruby/gems/3.0.0/gems/tty-color-0.6.0/lib/tty-color.rb:37",
+          "/path/to/rspec-expectations/lib/rspec/expectations/foo.rb:37",
+          "/path/to/rspec-expectations/lib/rspec/matchers/foo.rb:37",
+          "./my_spec.rb:5",
+          "/path/to/rspec-mocks/lib/rspec/mocks/foo.rb:37",
+          "/path/to/rspec-core/lib/rspec/core/foo.rb:37"
+        ]
+
+        expect(BacktraceFormatter.new.format_backtrace(backtrace)).to eq(["./my_spec.rb:5"])
+      end
+
+      it "includes lines from calls into gems that precede included user code" do
+        backtrace = [
+          "/path/to/lib/ruby/gems/3.0.0/gems/tty-color-0.6.0/lib/tty-color.rb:37",
+          "./my_spec.rb:5",
+          "/path/to/rspec-mocks/lib/rspec/mocks/foo.rb:37",
+          "/path/to/rspec-core/lib/rspec/core/foo.rb:37"
+        ]
+
+        expect(BacktraceFormatter.new.format_backtrace(backtrace)).to eq(["/path/to/lib/ruby/gems/3.0.0/gems/tty-color-0.6.0/lib/tty-color.rb:37", "./my_spec.rb:5"])
+      end
+
+
       it "excludes lines from bundler by default, since Bundler 1.12 now includes its stackframes in all stacktraces when you `bundle exec`" do
         bundler_trace = [
           "/some/other/file.rb:13",
@@ -151,6 +201,23 @@ module RSpec::Core
 
         it "adds a message explaining everything was filtered" do
           expect(BacktraceFormatter.new.format_backtrace(self.backtrace).drop(4).join).to match(/Showing full backtrace/)
+        end
+      end
+
+      context "when every line is filtered out, but no lines match the preexcludes" do
+        let(:backtrace) do
+          [
+            "/path/to/lib/ruby/gems/3.0.0/gems/tty-color-0.6.0/lib/tty-color.rb:37",
+            "/path/to/lib/ruby/3.0.0/rubygems/specification.rb:37",
+          ]
+        end
+
+        it "includes full backtrace" do
+          expect(BacktraceFormatter.new.format_backtrace(self.backtrace).take(2)).to eq self.backtrace
+        end
+
+        it "adds a message explaining everything was filtered" do
+          expect(BacktraceFormatter.new.format_backtrace(self.backtrace).drop(2).join).to match(/Showing full backtrace/)
         end
       end
 
@@ -193,17 +260,24 @@ module RSpec::Core
         expect(formatter.full_backtrace?).to be true
       end
 
-      it "preserves exclusion and inclusion patterns" do
-        formatter = make_backtrace_formatter([/discard/],[/keep/])
+      it "preserves exclusion, inclusion and preexclusion patterns" do
+        formatter = make_backtrace_formatter([/discard/],[/keep/],[/preexclude/])
         formatter.full_backtrace = true
         expect(formatter.exclusion_patterns).to eq [/discard/]
         expect(formatter.inclusion_patterns).to eq [/keep/]
+        expect(formatter.preexclusion_patterns).to eq [/preexclude/]
       end
 
       it "keeps all lines, even those that match exclusions" do
         formatter = make_backtrace_formatter([/discard/],[/keep/])
         formatter.full_backtrace = true
         expect(formatter.exclude? "discard").to be false
+      end
+
+      it "keeps all lines, even those that match preeclusion" do
+        formatter = make_backtrace_formatter([/discard/],[/keep/],[/preexclude/])
+        formatter.full_backtrace = true
+        expect(formatter.send(:preexclude?, "preexclude")).to be false
       end
     end
 

@@ -21,6 +21,7 @@ module RSpec
 
             # This is to minimize churn on backtrace lines
             runner.configuration.backtrace_exclusion_patterns << /.*/
+            runner.configuration.backtrace_preexclusion_patterns << /.*/
             runner.configuration.backtrace_inclusion_patterns << /formatter_specs\.rb/
           end
         end

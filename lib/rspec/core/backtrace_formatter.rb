@@ -3,7 +3,7 @@ module RSpec
     # @private
     class BacktraceFormatter
       # @private
-      attr_accessor :exclusion_patterns, :inclusion_patterns
+      attr_accessor :exclusion_patterns, :inclusion_patterns, :preexclusion_patterns
 
       def initialize
         @full_backtrace = false
@@ -12,6 +12,9 @@ module RSpec
         patterns << "org/jruby/" if RUBY_PLATFORM == 'java'
         patterns.map! { |s| Regexp.new(s.gsub("/", File::SEPARATOR)) }
 
+        rspec_patterns = %w[ rspec-expectations rspec-mocks rspec-core rspec-its rspec-support ]
+
+        @preexclusion_patterns = [Regexp.union(RSpec::CallerFilter::IGNORE_REGEX, *rspec_patterns)]
         @exclusion_patterns = [Regexp.union(RSpec::CallerFilter::IGNORE_REGEX, *patterns)]
         @inclusion_patterns = []
 
@@ -34,20 +37,41 @@ module RSpec
         return [] unless backtrace
         return backtrace if options[:full_backtrace] || backtrace.empty?
 
-        backtrace.map { |l| backtrace_line(l) }.compact.
-          tap do |filtered|
-            if filtered.empty?
-              filtered.concat backtrace
-              filtered << ""
-              filtered << "  Showing full backtrace because every line was filtered out."
-              filtered << "  See docs for RSpec::Configuration#backtrace_exclusion_patterns and"
-              filtered << "  RSpec::Configuration#backtrace_inclusion_patterns for more information."
+        prelines = []
+        has_matched = false
+
+        filtered = backtrace.map do |line|
+          if !exclude?(line)
+            has_matched = true
+            backtrace_line(line)
+          else
+            if !has_matched
+              if !preexclude?(line)
+                prelines << raw_backtrace_line(line)
+              else
+                prelines = []
+                has_matched = true
+              end
+              nil
             end
           end
+        end.compact
+
+        filtered = prelines + filtered if has_matched
+
+        if filtered.empty?
+          filtered.concat backtrace
+          filtered << ""
+          filtered << "  Showing full backtrace because every line was filtered out."
+          filtered << "  See docs for RSpec::Configuration#backtrace_exclusion_patterns and"
+          filtered << "  RSpec::Configuration#backtrace_inclusion_patterns for more information."
+        end
+
+        filtered
       end
 
       def backtrace_line(line)
-        Metadata.relative_path(line) unless exclude?(line)
+        raw_backtrace_line(line) unless exclude?(line)
       end
 
       def exclude?(line)
@@ -56,6 +80,15 @@ module RSpec
       end
 
     private
+
+      def preexclude?(line)
+        return false if @full_backtrace
+        matches?(preexclusion_patterns, line) && !matches?(inclusion_patterns, line)
+      end
+
+      def raw_backtrace_line(line)
+        Metadata.relative_path(line)
+      end
 
       def matches?(patterns, line)
         patterns.any? { |p| line =~ p }

@@ -681,6 +681,27 @@ module RSpec
         @backtrace_formatter.exclusion_patterns = patterns
       end
 
+      # Regexps used to exclude lines from the top section of backtraces.
+      #
+      # Excludes only RSpec libs by default.  Any lines called by matching lines
+      # will also be excluded.
+      #
+      # You can modify the list via the getter, or replace it with the setter.
+      #
+      # To override this behaviour and display a full backtrace, use
+      # `--backtrace` on the command line, in a `.rspec` file, or in the
+      # `rspec_options` attribute of RSpec's rake task.
+      # @return [Array<Regexp>]
+      def backtrace_preexclusion_patterns
+        @backtrace_formatter.preexclusion_patterns
+      end
+
+      # Set regular expressions used to exclude lines in backtrace.
+      # @param patterns [Array<Regexp>] set backtrace_formatter exlusion_patterns
+      def backtrace_preexclusion_patterns=(patterns)
+        @backtrace_formatter.preexclusion_patterns = patterns
+      end
+
       # Regexps used to include lines in backtraces.
       #
       # Defaults to [Regexp.new Dir.getwd].
