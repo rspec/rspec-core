@@ -36,5 +36,41 @@ module RSpec::Core
 
       expect(channel.receive).to eq :value_from_child
     end
+
+    describe "in a UTF-8 encoding context (where possible)" do
+      if defined?(Encoding)
+        around(:each) do |example|
+          old_external = old_internal = nil
+
+          ignoring_warnings do
+            old_external, Encoding.default_external = Encoding.default_external, Encoding::UTF_8
+            old_internal, Encoding.default_internal = Encoding.default_internal, Encoding::UTF_8
+          end
+
+          example.run
+
+          ignoring_warnings do
+            Encoding.default_external = old_external
+            Encoding.default_internal = old_internal
+          end
+        end
+      end
+
+      it "successfully sends binary data within a process" do
+        channel = Bisect::Channel.new
+        expect { channel.send("\xF8") }.not_to raise_error
+      end
+
+      it "successfully sends binary data from a child process to its parent process" do
+        channel = Bisect::Channel.new
+
+        in_sub_process do
+          channel.send("\xF8")
+        end
+
+        expect(channel.receive).to eq("\xF8")
+      end
+    end
+
   end
 end
