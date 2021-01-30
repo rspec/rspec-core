@@ -20,6 +20,13 @@ Enhancements:
 
 Bug fixes:
 
+* Ensure bisect communication uses consistent encoding. (Mike Jarema, #2852)
+
+### 3.10.1 / 2020-12-27
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.10.0...v3.10.1)
+
+Bug fixes:
+
 * RSpec warning output was missing deprecations from Ruby, these are now included.
   (Jon Rowe, #2811)
 
