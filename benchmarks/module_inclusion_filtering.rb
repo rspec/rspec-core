@@ -14,7 +14,7 @@ module RSpecConfigurationOverrides
   end
 
   def include(mod, *filters)
-    meta = RSpec::Core::Metadata.build_hash_from(filters, :warn_about_example_group_filtering)
+    meta = RSpec::Core::Metadata.build_hash_from(filters)
     @include_extend_or_prepend_modules << [:include, mod, meta]
     super
   end

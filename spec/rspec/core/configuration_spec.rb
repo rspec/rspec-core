@@ -11,14 +11,6 @@ module RSpec::Core
 
     before { config.world = RSpec.world }
 
-    shared_examples_for "warning of deprecated `:example_group` during filtering configuration" do |method, *args|
-      it "issues a deprecation warning when filtering by `:example_group`" do
-        args << { :example_group => { :file_location => /spec\/unit/ } }
-        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /:example_group/)
-        config.__send__(method, *args)
-      end
-    end
-
     describe '#on_example_group_definition' do
       before do
         RSpec.configure do |c|
@@ -1043,8 +1035,6 @@ module RSpec::Core
     end
 
     describe "#include" do
-      include_examples "warning of deprecated `:example_group` during filtering configuration", :include, Enumerable
-
       module InstanceLevelMethods
         def you_call_this_a_blt?
           "egad man, where's the mayo?!?!?"
@@ -1088,16 +1078,6 @@ module RSpec::Core
           end
 
           group = RSpec.describe('does like, stuff and junk', :magic_key => :include) { }
-          expect(group).not_to respond_to(:you_call_this_a_blt?)
-          expect(group.new.you_call_this_a_blt?).to eq("egad man, where's the mayo?!?!?")
-        end
-
-        it "includes in example groups that match a deprecated `:example_group` filter" do
-          RSpec.configure do |c|
-            c.include(InstanceLevelMethods, :example_group => { :file_path => /./ })
-          end
-
-          group = RSpec.describe('does like, stuff and junk')
           expect(group).not_to respond_to(:you_call_this_a_blt?)
           expect(group.new.you_call_this_a_blt?).to eq("egad man, where's the mayo?!?!?")
         end
@@ -1187,8 +1167,6 @@ module RSpec::Core
     end
 
     describe "#extend" do
-      include_examples "warning of deprecated `:example_group` during filtering configuration", :extend, Enumerable
-
       module ThatThingISentYou
         def that_thing
         end
@@ -1226,8 +1204,6 @@ module RSpec::Core
     end
 
     describe "#prepend" do
-      include_examples "warning of deprecated `:example_group` during filtering configuration", :prepend, Enumerable
-
       module SomeRandomMod
         def foo
           "foobar"
@@ -1672,8 +1648,6 @@ module RSpec::Core
         end
       end
 
-      include_examples "warning of deprecated `:example_group` during filtering configuration", :filter_run_including
-
       it "sets the filter with a hash" do
         config.filter_run_including :foo => true
         expect(inclusion_filter).to eq( {:foo => true} )
@@ -1698,8 +1672,6 @@ module RSpec::Core
           config.exclusion_filter.rules
         end
       end
-
-      include_examples "warning of deprecated `:example_group` during filtering configuration", :filter_run_excluding
 
       it "sets the filter" do
         config.filter_run_excluding :foo => true
@@ -1737,8 +1709,6 @@ module RSpec::Core
           config.send("#{type}=", {:want => :this})
           expect(send(type)).to eq( {:want => :this} )
         end
-
-        include_examples "warning of deprecated `:example_group` during filtering configuration", :"#{type}="
       end
     end
     it_behaves_like "a spec filter", :inclusion_filter
@@ -1848,8 +1818,6 @@ module RSpec::Core
     end
 
     describe "#define_derived_metadata" do
-      include_examples "warning of deprecated `:example_group` during filtering configuration", :define_derived_metadata
-
       it 'allows the provided block to mutate example group metadata' do
         RSpec.configuration.define_derived_metadata do |metadata|
           metadata[:reverse_description] = metadata[:description].reverse
@@ -2031,8 +1999,6 @@ module RSpec::Core
     end
 
     describe "#when_first_matching_example_defined" do
-      include_examples "warning of deprecated `:example_group` during filtering configuration", :when_first_matching_example_defined
-
       it "runs the block when the first matching example is defined" do
         sequence = []
         RSpec.configuration.when_first_matching_example_defined(:foo) do
@@ -2701,10 +2667,6 @@ module RSpec::Core
         config.start_time = 42
         expect(config.start_time).to eq 42
       end
-    end
-
-    describe "hooks" do
-      include_examples "warning of deprecated `:example_group` during filtering configuration", :before, :each
     end
 
     describe '#threadsafe', :threadsafe => true do

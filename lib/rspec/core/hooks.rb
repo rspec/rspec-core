@@ -571,7 +571,7 @@ module RSpec
         def scope_and_options_from(*args)
           return :suite if args.first == :suite
           scope = extract_scope_from(args)
-          meta  = Metadata.build_hash_from(args, :warn_about_example_group_filtering)
+          meta  = Metadata.build_hash_from(args)
           return scope, meta
         end
 

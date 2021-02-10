@@ -14,27 +14,17 @@ module RSpec
 
         # @private
         def filter_applies?(key, filter_value, metadata)
-          silence_metadata_example_group_deprecations do
-            return location_filter_applies?(filter_value, metadata) if key == :locations
-            return id_filter_applies?(filter_value, metadata)       if key == :ids
-            return filters_apply?(key, filter_value, metadata)      if Hash === filter_value
+          return location_filter_applies?(filter_value, metadata) if key == :locations
+          return id_filter_applies?(filter_value, metadata)       if key == :ids
+          return filters_apply?(key, filter_value, metadata)      if Hash === filter_value
 
-            meta_value = metadata.fetch(key) { return false }
+          meta_value = metadata.fetch(key) { return false }
 
-            return true if TrueClass === filter_value && meta_value
-            return proc_filter_applies?(key, filter_value, metadata) if Proc === filter_value
-            return filter_applies_to_any_value?(key, filter_value, metadata) if Array === meta_value
+          return true if TrueClass === filter_value && meta_value
+          return proc_filter_applies?(key, filter_value, metadata) if Proc === filter_value
+          return filter_applies_to_any_value?(key, filter_value, metadata) if Array === meta_value
 
-            filter_value === meta_value || filter_value.to_s == meta_value.to_s
-          end
-        end
-
-        # @private
-        def silence_metadata_example_group_deprecations
-          RSpec::Support.thread_local_data[:silence_metadata_example_group_deprecations] = true
-          yield
-        ensure
-          RSpec::Support.thread_local_data.delete(:silence_metadata_example_group_deprecations)
+          filter_value === meta_value || filter_value.to_s == meta_value.to_s
         end
 
       private
@@ -72,7 +62,7 @@ module RSpec
 
         def filters_apply?(key, value, metadata)
           subhash = metadata[key]
-          return false unless Hash === subhash || HashImitatable === subhash
+          return false unless Hash === subhash
           value.all? { |k, v| filter_applies?(k, v, subhash) }
         end
       end
@@ -201,21 +191,10 @@ module RSpec
           @memoized_lookups.clear
         end
 
+        # Ruby 2.3 and 2.4 do not have `Hash#slice`
         def applicable_metadata_from(metadata)
-          MetadataFilter.silence_metadata_example_group_deprecations do
-            @applicable_keys.inject({}) do |hash, key|
-              # :example_group is treated special here because...
-              # - In RSpec 2, example groups had an `:example_group` key
-              # - In RSpec 3, that key is deprecated (it was confusing!).
-              # - The key is not technically present in an example group metadata hash
-              #   (and thus would fail the `metadata.key?(key)` check) but a value
-              #   is provided when accessed via the hash's `default_proc`
-              # - Thus, for backwards compatibility, we have to explicitly check
-              #   for `:example_group` here if it is one of the keys being used to
-              #   filter.
-              hash[key] = metadata[key] if metadata.key?(key) || key == :example_group
-              hash
-            end
+          @applicable_keys.each_with_object({}) do |key, hash|
+            hash[key] = metadata[key] if metadata.key?(key)
           end
         end
 

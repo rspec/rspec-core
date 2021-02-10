@@ -136,7 +136,6 @@ module RSpec
 
           a[:description] = "new description"
 
-          pending "Cannot maintain this and provide full `:example_group` backwards compatibility (see GH #1490):("
           expect(b[:description]).to eq("new description")
         end
 
@@ -686,189 +685,14 @@ module RSpec
         expect(meta).not_to include(:parent_example_group)
       end
 
-      describe "backwards compatibility" do
-        before { allow_deprecation }
+      it "doesn't provide example group metadata via `:example_group` key" do
+        group_metadata = nil
 
-        describe ":example_group" do
-          it 'issues a deprecation warning when the `:example_group` key is accessed' do
-            expect_deprecation_with_call_site(__FILE__, __LINE__ + 2, /:example_group/)
-            RSpec.describe(Object, "group") do
-              metadata[:example_group]
-            end
-          end
-
-          it 'does not issue a deprecation warning when :example_group is accessed while applying configured filterings' do
-            RSpec.configuration.include Module.new, :example_group => { :file_path => /.*/ }
-            expect_no_deprecation
-            RSpec.describe(Object, "group")
-          end
-
-          it 'can still access the example group attributes via [:example_group]' do
-            meta = nil
-            RSpec.describe(Object, "group") { meta = metadata }
-
-            expect(meta[:example_group][:line_number]).to eq(__LINE__ - 2)
-            expect(meta[:example_group][:description]).to eq("Object group")
-          end
-
-          it 'can access the parent example group attributes via [:example_group][:example_group]' do
-            child = nil
-            parent_line = __LINE__ + 1
-            RSpec.describe(Object, "group", :foo => 3) do
-              describe("nested") { child = metadata }
-            end
-
-            expect(child[:example_group][:example_group].to_h).to include(
-              :foo => 3,
-              :description => "Object group",
-              :line_number => parent_line
-            )
-          end
-
-          it "works properly with deep nesting" do
-            inner_metadata = nil
-
-            RSpec.describe "Level 1" do
-              describe "Level 2" do
-                describe "Level 3" do
-                  inner_metadata = example("Level 4").metadata
-                end
-              end
-            end
-
-            expect(inner_metadata[:description]).to eq("Level 4")
-            expect(inner_metadata[:example_group][:description]).to eq("Level 3")
-            expect(inner_metadata[:example_group][:example_group][:description]).to eq("Level 2")
-            expect(inner_metadata[:example_group][:example_group][:example_group][:description]).to eq("Level 1")
-            expect(inner_metadata[:example_group][:example_group][:example_group][:example_group]).to be_nil
-          end
-
-          it "works properly with shallow nesting" do
-            inner_metadata = nil
-
-            RSpec.describe "Level 1" do
-              inner_metadata = example("Level 2").metadata
-            end
-
-            expect(inner_metadata[:description]).to eq("Level 2")
-            expect(inner_metadata[:example_group][:description]).to eq("Level 1")
-            expect(inner_metadata[:example_group][:example_group]).to be_nil
-          end
-
-          it 'allows integration libraries like VCR to infer a fixture name from the example description by walking up nesting structure' do
-            fixture_name_for = lambda do |meta|
-              description = meta[:description]
-
-              if example_group = meta[:example_group]
-                [fixture_name_for[example_group], description].join('/')
-              else
-                description
-              end
-            end
-
-            ex = inferred_fixture_name = nil
-
-            RSpec.configure do |config|
-              config.before(:example, :infer_fixture) { |e| inferred_fixture_name = fixture_name_for[e.metadata] }
-            end
-
-            RSpec.describe "Group", :infer_fixture do
-              ex = example("ex") { }
-            end.run
-
-            raise ex.execution_result.exception if ex.execution_result.exception
-
-            expect(inferred_fixture_name).to eq("Group/ex")
-          end
-
-          it 'can mutate attributes when accessing them via [:example_group]' do
-            meta = nil
-
-            RSpec.describe(String) do
-              describe "sub context" do
-                meta = metadata
-              end
-            end
-
-            expect {
-              meta[:example_group][:described_class] = Hash
-            }.to change { meta[:described_class] }.from(String).to(Hash)
-          end
-
-          it 'can still be filtered via a nested key under [:example_group] as before' do
-            meta = nil
-
-            line = __LINE__ + 1
-            RSpec.describe("group") { meta = metadata }
-
-            applies = MetadataFilter.apply?(
-              :any?,
-              { :example_group => { :line_number => line } },
-              meta
-            )
-
-            expect(applies).to be true
-          end
+        RSpec.describe(Object, "group") do
+          group_metadata = metadata[:example_group]
         end
 
-        describe ":example_group_block" do
-          it 'returns the block' do
-            meta = nil
-
-            RSpec.describe "group" do
-              meta = metadata
-            end
-
-            expect(meta[:example_group_block]).to be_a(Proc).and eq(meta[:block])
-          end
-
-          it 'issues a deprecation warning' do
-            expect_deprecation_with_call_site(__FILE__, __LINE__ + 2, /:example_group_block/)
-            RSpec.describe "group" do
-              metadata[:example_group_block]
-            end
-          end
-        end
-
-        describe ":describes" do
-          context "on an example group metadata hash" do
-            it 'returns the described_class' do
-              meta = nil
-
-              RSpec.describe Hash do
-                meta = metadata
-              end
-
-              expect(meta[:describes]).to be(Hash).and eq(meta[:described_class])
-            end
-
-            it 'issues a deprecation warning' do
-              expect_deprecation_with_call_site(__FILE__, __LINE__ + 2, /:describes/)
-              RSpec.describe "group" do
-                metadata[:describes]
-              end
-            end
-          end
-
-          context "an an example metadata hash" do
-            it 'returns the described_class' do
-              meta = nil
-
-              RSpec.describe Hash do
-                meta = example("ex").metadata
-              end
-
-              expect(meta[:describes]).to be(Hash).and eq(meta[:described_class])
-            end
-
-            it 'issues a deprecation warning' do
-              expect_deprecation_with_call_site(__FILE__, __LINE__ + 2, /:describes/)
-              RSpec.describe "group" do
-                example("ex").metadata[:describes]
-              end
-            end
-          end
-        end
+        expect(group_metadata).to be nil
       end
     end
   end
