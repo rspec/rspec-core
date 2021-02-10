@@ -102,7 +102,9 @@ module RSpec
         end
 
         it "creates an empty execution result" do
-          expect(example_metadata[:execution_result].to_h.reject { |_, v| v.nil? } ).to eq({})
+          expect(example_metadata[:execution_result])
+            .to be_an(Example::ExecutionResult)
+            .and have_attributes(:status => nil)
         end
 
         it "extracts file path from caller" do

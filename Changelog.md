@@ -15,6 +15,8 @@ Breaking Changes:
   an unsupported value. (Phil Pirozhkov, #2849)
 * Remove deprecated access to an example group's metadata through the example.
   (Phil Pirozhkov, #2851)
+* Remove deprecated Hash-like behavior from example
+  execution result. (Phil Pirozhkov, #2862)
 
 Enhancements:
 
