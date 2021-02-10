@@ -1163,7 +1163,7 @@ module RSpec
       #
       #     filter_run_including :foo # same as filter_run_including :foo => true
       def filter_run_including(*args)
-        meta = Metadata.build_hash_from(args, :warn_about_example_group_filtering)
+        meta = Metadata.build_hash_from(args)
         filter_manager.include_with_low_priority meta
         static_config_filter_manager.include_with_low_priority Metadata.deep_hash_dup(meta)
       end
@@ -1192,7 +1192,7 @@ module RSpec
       # This overrides any inclusion filters/tags set on the command line or in
       # configuration files.
       def inclusion_filter=(filter)
-        meta = Metadata.build_hash_from([filter], :warn_about_example_group_filtering)
+        meta = Metadata.build_hash_from([filter])
         filter_manager.include_only meta
       end
 
@@ -1237,7 +1237,7 @@ module RSpec
       #
       #     filter_run_excluding :foo # same as filter_run_excluding :foo => true
       def filter_run_excluding(*args)
-        meta = Metadata.build_hash_from(args, :warn_about_example_group_filtering)
+        meta = Metadata.build_hash_from(args)
         filter_manager.exclude_with_low_priority meta
         static_config_filter_manager.exclude_with_low_priority Metadata.deep_hash_dup(meta)
       end
@@ -1250,7 +1250,7 @@ module RSpec
       # This overrides any exclusion filters/tags set on the command line or in
       # configuration files.
       def exclusion_filter=(filter)
-        meta = Metadata.build_hash_from([filter], :warn_about_example_group_filtering)
+        meta = Metadata.build_hash_from([filter])
         filter_manager.exclude_only meta
       end
 
@@ -1732,7 +1732,7 @@ module RSpec
       #     end
       #   end
       def define_derived_metadata(*filters, &block)
-        meta = Metadata.build_hash_from(filters, :warn_about_example_group_filtering)
+        meta = Metadata.build_hash_from(filters)
         @derived_metadata_blocks.append(block, meta)
       end
 
@@ -1755,7 +1755,7 @@ module RSpec
       #     end
       #   end
       def when_first_matching_example_defined(*filters)
-        specified_meta = Metadata.build_hash_from(filters, :warn_about_example_group_filtering)
+        specified_meta = Metadata.build_hash_from(filters)
 
         callback = lambda do |example_or_group_meta|
           # Example groups do not have `:example_group` metadata
@@ -2194,7 +2194,7 @@ module RSpec
           raise TypeError, "`RSpec.configuration.#{config_method}` expects a module but got: #{mod.inspect}"
         end
 
-        meta = Metadata.build_hash_from(filters, :warn_about_example_group_filtering)
+        meta = Metadata.build_hash_from(filters)
         mod_list.append(mod, meta)
         on_existing_matching_groups(meta, &block)
       end

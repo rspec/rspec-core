@@ -77,15 +77,10 @@ module RSpec
       # Symbols are converted into hash keys with a value of `true`.
       # This is done to support simple tagging using a symbol, rather
       # than needing to do `:symbol => true`.
-      def self.build_hash_from(args, warn_about_example_group_filtering=false)
+      def self.build_hash_from(args)
         hash = args.last.is_a?(Hash) ? args.pop : {}
 
         hash[args.pop] = true while args.last.is_a?(Symbol)
-
-        if warn_about_example_group_filtering && hash.key?(:example_group)
-          RSpec.deprecate("Filtering by an `:example_group` subhash",
-                          :replacement => "the subhash to filter directly")
-        end
 
         hash
       end
@@ -213,11 +208,6 @@ module RSpec
       class ExampleHash < HashPopulator
         def self.create(group_metadata, user_metadata, index_provider, description, block)
           example_metadata = group_metadata.dup
-          group_metadata = Hash.new(&ExampleGroupHash.backwards_compatibility_default_proc do |hash|
-            hash[:parent_example_group]
-          end)
-          group_metadata.update(example_metadata)
-
           example_metadata[:execution_result] = Example::ExecutionResult.new
           example_metadata[:example_group] = group_metadata
           example_metadata[:shared_group_inclusion_backtrace] = SharedExampleGroupInclusionStackFrame.current_backtrace
@@ -246,57 +236,16 @@ module RSpec
       # @private
       class ExampleGroupHash < HashPopulator
         def self.create(parent_group_metadata, user_metadata, example_group_index, *args, &block)
-          group_metadata = hash_with_backwards_compatibility_default_proc
-
-          if parent_group_metadata
-            group_metadata.update(parent_group_metadata)
-            group_metadata[:parent_example_group] = parent_group_metadata
-          end
+          group_metadata =
+            if parent_group_metadata
+              { **parent_group_metadata, :parent_example_group => parent_group_metadata }
+            else
+              {}
+            end
 
           hash = new(group_metadata, user_metadata, example_group_index, args, block)
           hash.populate
           hash.metadata
-        end
-
-        def self.hash_with_backwards_compatibility_default_proc
-          Hash.new(&backwards_compatibility_default_proc { |hash| hash })
-        end
-
-        def self.backwards_compatibility_default_proc(&example_group_selector)
-          Proc.new do |hash, key|
-            case key
-            when :example_group
-              # We commonly get here when rspec-core is applying a previously
-              # configured filter rule, such as when a gem configures:
-              #
-              #   RSpec.configure do |c|
-              #     c.include MyGemHelpers, :example_group => { :file_path => /spec\/my_gem_specs/ }
-              #   end
-              #
-              # It's confusing for a user to get a deprecation at this point in
-              # the code, so instead we issue a deprecation from the config APIs
-              # that take a metadata hash, and MetadataFilter sets this thread
-              # local to silence the warning here since it would be so
-              # confusing.
-              unless RSpec::Support.thread_local_data[:silence_metadata_example_group_deprecations]
-                RSpec.deprecate("The `:example_group` key in an example group's metadata hash",
-                                :replacement => "the example group's hash directly for the " \
-                                "computed keys and `:parent_example_group` to access the parent " \
-                                "example group metadata")
-              end
-
-              group_hash = example_group_selector.call(hash)
-              LegacyExampleGroupHash.new(group_hash) if group_hash
-            when :example_group_block
-              RSpec.deprecate("`metadata[:example_group_block]`",
-                              :replacement => "`metadata[:block]`")
-              hash[:block]
-            when :describes
-              RSpec.deprecate("`metadata[:describes]`",
-                              :replacement => "`metadata[:described_class]`")
-              hash[:described_class]
-            end
-          end
         end
 
       private
@@ -441,57 +390,6 @@ module RSpec
           hash_attribute_names.concat(names)
           super
         end
-      end
-    end
-
-    # @private
-    # Together with the example group metadata hash default block,
-    # provides backwards compatibility for the old `:example_group`
-    # key. In RSpec 2.x, the computed keys of a group's metadata
-    # were exposed from a nested subhash keyed by `[:example_group]`, and
-    # then the parent group's metadata was exposed by sub-subhash
-    # keyed by `[:example_group][:example_group]`.
-    #
-    # In RSpec 3, we reorganized this to that the computed keys are
-    # exposed directly of the group metadata hash (no nesting), and
-    # `:parent_example_group` returns the parent group's metadata.
-    #
-    # Maintaining backwards compatibility was difficult: we wanted
-    # `:example_group` to return an object that:
-    #
-    #   * Exposes the top-level metadata keys that used to be nested
-    #     under `:example_group`.
-    #   * Supports mutation (rspec-rails, for example, assigns
-    #     `metadata[:example_group][:described_class]` when you use
-    #     anonymous controller specs) such that changes are written
-    #     back to the top-level metadata hash.
-    #   * Exposes the parent group metadata as
-    #     `[:example_group][:example_group]`.
-    class LegacyExampleGroupHash
-      include HashImitatable
-
-      def initialize(metadata)
-        @metadata = metadata
-        parent_group_metadata = metadata.fetch(:parent_example_group) { {} }[:example_group]
-        self[:example_group] = parent_group_metadata if parent_group_metadata
-      end
-
-      def to_h
-        super.merge(@metadata)
-      end
-
-    private
-
-      def directly_supports_attribute?(name)
-        name != :example_group
-      end
-
-      def get_value(name)
-        @metadata[name]
-      end
-
-      def set_value(name, value)
-        @metadata[name] = value
       end
     end
   end
