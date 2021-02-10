@@ -78,10 +78,8 @@ the inheritance semantics you'd want for free.
 ## Aliases
 
 You can declare example groups using either `describe` or `context`.
-For a top level example group, `describe` and `context` are available
-off of `RSpec`. For backwards compatibility, they are also available
-off of the `main` object and `Module` unless you disable monkey
-patching.
+For a top-level example group, `describe` and `context` are available
+off of `RSpec`.
 
 You can declare examples within a group using any of `it`, `specify`, or
 `example`.
