@@ -1138,8 +1138,8 @@ module RSpec::Core
           end
           group.run
 
-          expect(extract_execution_results(group).map(&:to_h)).to match([
-            a_hash_including(
+          expect(extract_execution_results(group)).to match([
+            have_attributes(
               :status => :pending,
               :pending_message => "Temporarily skipped with #{method_name}"
             )
@@ -1190,12 +1190,12 @@ module RSpec::Core
         end
         group.run
 
-        expect(extract_execution_results(group).map(&:to_h)).to match([
-          a_hash_including(
+        expect(extract_execution_results(group)).to match([
+          have_attributes(
             :status => :failed,
             :pending_message => "No reason given"
           ),
-          a_hash_including(
+          have_attributes(
             :status => :pending,
             :pending_message => "unimplemented"
           )

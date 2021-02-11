@@ -551,10 +551,7 @@ module RSpec
       end
 
       # Represents the result of executing an example.
-      # Behaves like a hash for backwards compatibility.
       class ExecutionResult
-        include HashImitatable
-
         # @return [Symbol] `:passed`, `:failed` or `:pending`.
         attr_accessor :status
 
@@ -615,32 +612,6 @@ module RSpec
         def calculate_run_time(finished_at)
           self.finished_at = finished_at
           self.run_time    = (finished_at - started_at).to_f
-        end
-
-        # For backwards compatibility we present `status` as a string
-        # when presenting the legacy hash interface.
-        def hash_for_delegation
-          super.tap do |hash|
-            hash[:status] &&= status.to_s
-          end
-        end
-
-        def set_value(name, value)
-          value &&= value.to_sym if name == :status
-          super(name, value)
-        end
-
-        def get_value(name)
-          if name == :status
-            status.to_s if status
-          else
-            super
-          end
-        end
-
-        def issue_deprecation(_method_name, *_args)
-          RSpec.deprecate("Treating `metadata[:execution_result]` as a hash",
-                          :replacement => "the attributes methods to access the data")
         end
       end
     end
