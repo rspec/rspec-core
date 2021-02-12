@@ -348,18 +348,6 @@ module RSpec
       # return [Boolean]
       add_setting :silence_filter_announcements
 
-      # @deprecated This config option was added in RSpec 2 to pave the way
-      #   for this being the default behavior in RSpec 3. Now this option is
-      #   a no-op.
-      def treat_symbols_as_metadata_keys_with_true_values=(_value)
-        RSpec.deprecate(
-          "RSpec::Core::Configuration#treat_symbols_as_metadata_keys_with_true_values=",
-          :message => "RSpec::Core::Configuration#treat_symbols_as_metadata_keys_with_true_values= " \
-                      "is deprecated, it is now set to true as default and " \
-                      "setting it to false has no effect."
-        )
-      end
-
       # Record the start time of the spec suite to measure load time.
       # return [Time]
       add_setting :start_time
