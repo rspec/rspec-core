@@ -1583,13 +1583,6 @@ module RSpec::Core
     it_behaves_like "a spec filter", :inclusion_filter
     it_behaves_like "a spec filter", :exclusion_filter
 
-    describe "#treat_symbols_as_metadata_keys_with_true_values=" do
-      it 'is deprecated' do
-        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1)
-        config.treat_symbols_as_metadata_keys_with_true_values = true
-      end
-    end
-
     describe "#full_backtrace=" do
       it "doesn't impact other instances of config" do
         config_1 = Configuration.new
