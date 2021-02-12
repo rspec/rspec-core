@@ -357,7 +357,7 @@ module RSpec::Core
       end
 
       it "assigns submitted ConfigurationOptions to @options" do
-        config_options = ConfigurationOptions.new(%w[--color])
+        config_options = ConfigurationOptions.new(%w[--no-color])
         runner         = Runner.new(config_options)
         expect(runner.instance_exec { @options }).to be(config_options)
       end

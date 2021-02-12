@@ -19,6 +19,8 @@ Breaking Changes:
   execution result. (Phil Pirozhkov, #2862)
 * Skip setting the default pattern from Rake task. (Phil Pirozhkov, #2868)
 * Remove special `:if`/`:unless` filtering metadata. (Phil Pirozhkov, #2870)
+* Remove deprecated `color` configuration option and `--color` command line
+  option. (Phil Pirozhkov, #2864)
 
 Enhancements:
 
