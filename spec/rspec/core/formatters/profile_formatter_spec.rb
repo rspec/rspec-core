@@ -46,7 +46,7 @@ RSpec.describe RSpec::Core::Formatters::ProfileFormatter do
         end)
       end
 
-      it_should_behave_like "profiles examples"
+      it_behaves_like "profiles examples"
 
       it "doesn't profile a single example group" do
         expect(formatter_output.string).not_to match(/slowest example groups/)
@@ -72,7 +72,7 @@ RSpec.describe RSpec::Core::Formatters::ProfileFormatter do
         profile group1, group2
       end
 
-      it_should_behave_like "profiles examples"
+      it_behaves_like "profiles examples"
 
       it "prints the slowest example groups" do
         expect(formatter_output.string).to match(/slowest example groups/)

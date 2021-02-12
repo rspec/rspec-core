@@ -19,6 +19,8 @@ Breaking Changes:
   execution result. (Phil Pirozhkov, #2862)
 * Remove deprecated `color` configuration option and `--color` command line
   option. (Phil Pirozhkov, #2864)
+* Remove `it_should_behave_like` nested shared group method and
+  `alias_it_should_behave_like_to` configuration option. (Phil Pirozhkov, #2864)
 
 Enhancements:
 

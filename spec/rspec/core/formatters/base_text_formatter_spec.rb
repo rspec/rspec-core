@@ -212,7 +212,7 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
       end
     end
 
-    %w[ include_examples it_should_behave_like ].each do |inclusion_method|
+    %w[ include_examples it_behaves_like ].each do |inclusion_method|
       context "for #shared_examples included using #{inclusion_method}" do
         it 'outputs the name and location' do
           group.shared_examples 'foo bar' do
