@@ -17,6 +17,8 @@ Breaking Changes:
   (Phil Pirozhkov, #2851)
 * Remove deprecated Hash-like behavior from example
   execution result. (Phil Pirozhkov, #2862)
+* Remove deprecated `color` configuration option and `--color` command line
+  option. (Phil Pirozhkov, #2864)
 
 Enhancements:
 

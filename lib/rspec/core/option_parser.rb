@@ -18,7 +18,7 @@ module RSpec::Core
       return { :files_or_directories_to_run => [] } if original_args.empty?
       args = original_args.dup
 
-      options = args.delete('--tty') ? { :tty => true } : {}
+      options = {}
       begin
         parser(options).parse!(args)
       rescue OptionParser::InvalidOption => e
@@ -138,12 +138,6 @@ module RSpec::Core
 
         parser.on('-b', '--backtrace', 'Enable full backtrace.') do |_o|
           options[:full_backtrace] = true
-        end
-
-        parser.on('-c', '--color', '--colour', '') do |_o|
-          # flag will be excluded from `--help` output because it is deprecated
-          options[:color] = true
-          options[:color_mode] = :automatic
         end
 
         parser.on('--force-color', '--force-colour', 'Force the output to be in color, even if the output is not a TTY') do |_o|

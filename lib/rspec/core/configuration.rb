@@ -409,9 +409,6 @@ module RSpec
       end
 
       # @private
-      # @deprecated Use {#color_mode} = :on, instead of {#color} with {#tty}
-      add_setting :tty
-      # @private
       attr_writer :files_to_run
       # @private
       attr_accessor :filter_manager, :world
@@ -441,7 +438,6 @@ module RSpec
         @mock_framework = nil
         @files_or_directories_to_run = []
         @loaded_spec_files = Set.new
-        @color = false
         @color_mode = :automatic
         @pattern = '**{,/*/**}/*_spec.rb'
         @exclude_pattern = ''
@@ -803,20 +799,6 @@ module RSpec
         @backtrace_formatter.full_backtrace = true_or_false
       end
 
-      # Enables color output if the output is a TTY.  As of RSpec 3.6, this is
-      # the default behavior and this option is retained only for backwards
-      # compatibility.
-      #
-      # @deprecated No longer recommended because of complex behavior. Instead,
-      #   rely on the fact that TTYs will display color by default, or set
-      #   {#color_mode} to :on to display color on a non-TTY output.
-      # @see color_mode
-      # @see color_enabled?
-      # @return [Boolean]
-      def color
-        value_for(:color) { @color }
-      end
-
       # The mode for determining whether to display output in color. One of:
       #
       # - :automatic - the output will be in color if the output is a TTY (the
@@ -839,19 +821,12 @@ module RSpec
         when :on then true
         when :off then false
         else # automatic
-          output_to_tty?(output) || (color && tty?)
+          output_to_tty?(output)
         end
       end
 
       # Set the color mode.
       attr_writer :color_mode
-
-      # Toggle output color.
-      #
-      # @deprecated No longer recommended because of complex behavior. Instead,
-      #   rely on the fact that TTYs will display color by default, or set
-      #   {:color_mode} to :on to display color on a non-TTY output.
-      attr_writer :color
 
       # @private
       def libs=(libs)
