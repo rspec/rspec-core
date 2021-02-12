@@ -1723,11 +1723,11 @@ module RSpec::Core
       end
     end
 
-    describe "#it_should_behave_like" do
+    describe "#it_behaves_like" do
       it "creates a nested group" do
         group = RSpec.describe('fake group')
         group.shared_examples_for("thing") {}
-        group.it_should_behave_like("thing")
+        group.it_behaves_like("thing")
         expect(group.children.count).to eq(1)
       end
 
@@ -1735,7 +1735,7 @@ module RSpec::Core
         klass = Class.new
         group = RSpec.describe('fake group')
         group.shared_examples_for(klass) {}
-        group.it_should_behave_like(klass)
+        group.it_behaves_like(klass)
         expect(group.children.count).to eq(1)
       end
 
@@ -1744,7 +1744,7 @@ module RSpec::Core
         group.shared_examples_for("thing") do
           it("does something")
         end
-        shared_group = group.it_should_behave_like("thing")
+        shared_group = group.it_behaves_like("thing")
         expect(shared_group.examples.count).to eq(1)
       end
 
@@ -1753,7 +1753,7 @@ module RSpec::Core
         group.shared_examples_for("thing") do
           def foo; end
         end
-        shared_group = group.it_should_behave_like("thing")
+        shared_group = group.it_behaves_like("thing")
         expect(shared_group.public_instance_methods.map{|m| m.to_s}).to include("foo")
       end
 
@@ -1762,7 +1762,7 @@ module RSpec::Core
         group.shared_examples_for("thing") do
           def self.foo; end
         end
-        shared_group = group.it_should_behave_like("thing")
+        shared_group = group.it_behaves_like("thing")
         expect(shared_group.methods.map{|m| m.to_s}).to include("foo")
       end
 
@@ -1777,7 +1777,7 @@ module RSpec::Core
             end
           end
 
-          it_should_behave_like "thing", :value1, :value2
+          it_behaves_like "thing", :value1, :value2
         end
 
         group.run
@@ -1790,7 +1790,7 @@ module RSpec::Core
         group.shared_examples_for("thing") do |param1|
           def foo; end
         end
-        shared_group = group.it_should_behave_like("thing", :a)
+        shared_group = group.it_behaves_like("thing", :a)
         expect(shared_group.public_instance_methods.map{|m| m.to_s}).to include("foo")
       end
 
@@ -1798,7 +1798,7 @@ module RSpec::Core
         eval_count = 0
         group = RSpec.describe('fake group')
         group.shared_examples_for("thing") { |p| eval_count += 1 }
-        group.it_should_behave_like("thing", :a)
+        group.it_behaves_like("thing", :a)
         expect(eval_count).to eq(1)
       end
 
@@ -1811,7 +1811,7 @@ module RSpec::Core
                 scopes << self.class
               end
             end
-            it_should_behave_like "thing" do
+            it_behaves_like "thing" do
               it("gets run in the same nested group") do
                 scopes << self.class
               end
@@ -1826,7 +1826,7 @@ module RSpec::Core
       it "raises a helpful error message when shared context is not found" do
         expect do
           RSpec.describe do
-            it_should_behave_like "shared stuff"
+            it_behaves_like "shared stuff"
           end
         end.to raise_error(ArgumentError,%q|Could not find shared examples "shared stuff"|)
       end
@@ -1835,7 +1835,7 @@ module RSpec::Core
         expect {
           RSpec.describe do
             shared_examples_for("stuff") { }
-            it_should_behave_like "stuff"
+            it_behaves_like "stuff"
           end
         }.to avoid_changing(RSpec::Support, :thread_local_data)
       end
@@ -1844,7 +1844,7 @@ module RSpec::Core
         expect {
           RSpec.describe do
             shared_examples_for("stuff") { }
-            it_should_behave_like "stuff" do
+            it_behaves_like "stuff" do
               raise "boom"
             end
           end

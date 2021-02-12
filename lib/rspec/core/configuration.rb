@@ -1076,8 +1076,8 @@ module RSpec
         RSpec::Core::ExampleGroup.define_example_group_method(new_name, extra_options)
       end
 
-      # Define an alias for it_should_behave_like that allows different
-      # language (like "it_has_behavior" or "it_behaves_like") to be
+      # Define an alias for it_behaves_like that allows different
+      # language (like "it_has_behavior" or "it_is_able_to") to be
       # employed when including shared examples.
       #
       # @example
@@ -1099,13 +1099,10 @@ module RSpec
       #   #     ...sortability examples here
       #
       # @note Use with caution. This extends the language used in your
-      #   specs, but does not add any additional documentation. We use this
-      #   in RSpec to define `it_should_behave_like` (for backward
-      #   compatibility), but we also add docs for that method.
+      #   specs, but does not add any additional documentation.
       def alias_it_behaves_like_to(new_name, report_label='')
         RSpec::Core::ExampleGroup.define_nested_shared_group_method(new_name, report_label)
       end
-      alias_method :alias_it_should_behave_like_to, :alias_it_behaves_like_to
 
       # Adds key/value pairs to the `inclusion_filter`. If `args`
       # includes any symbols that are not part of the hash, each symbol
