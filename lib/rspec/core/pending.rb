@@ -72,15 +72,7 @@ module RSpec
 
         if block_given?
           raise ArgumentError, <<-EOS.gsub(/^\s+\|/, '')
-            |The semantics of `RSpec::Core::Pending#pending` have changed in
-            |RSpec 3. In RSpec 2.x, it caused the example to be skipped. In
-            |RSpec 3, the rest of the example is still run but is expected to
-            |fail, and will be marked as a failure (rather than as pending) if
-            |the example passes.
-            |
-            |Passing a block within an example is now deprecated. Marking the
-            |example as pending provides the same behavior in RSpec 3 which was
-            |provided only by the block in RSpec 2.x.
+            |Passing a block within an example is not supported.
             |
             |Move the code in the block provided to `pending` into the rest of
             |the example body.
