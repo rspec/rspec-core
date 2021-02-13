@@ -105,15 +105,6 @@ module RSpec
         end
       end
 
-      # Returns the location-based argument that can be passed to the `rspec` command to rerun this example.
-      #
-      # @deprecated Use {#location_rerun_argument} instead.
-      # @note If there are multiple examples identified by this location, they will use {#id}
-      #   to rerun instead, but this method will still return the location (that's why it is deprecated!).
-      def rerun_argument
-        location_rerun_argument
-      end
-
       # @return [String] the unique id of this example. Pass
       #   this at the command line to re-run this exact example.
       def id
