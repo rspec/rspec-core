@@ -23,6 +23,7 @@ Breaking Changes:
   `alias_it_should_behave_like_to` configuration option. (Phil Pirozhkov, #2864)
 * Remove deprecated `treat_symbols_as_metadata_keys_with_true_values` configuration
   option. (Phil Pirozhkov, #2864)
+* Remove support for Mocha version < 1.0. (Phil Pirozhkov, #2864)
 
 Enhancements:
 
