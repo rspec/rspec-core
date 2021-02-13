@@ -744,7 +744,7 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
         group.run
         expect(example).to fail_with ArgumentError
         expect(example.exception.message).to match(
-          /Passing a block within an example is now deprecated./
+          /Passing a block within an example is not supported./
         )
       end
     end
