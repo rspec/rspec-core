@@ -136,13 +136,6 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
       expect(config.exclusion_filter.rules).to have_key(:slow)
     end
 
-    it "forces color" do
-      opts = config_options_object(*%w[--color])
-      expect(config).to receive(:force).with(:color => true)
-      expect(config).to receive(:force).with(:color_mode => :automatic)
-      opts.configure(config)
-    end
-
     it "forces force_color" do
       opts = config_options_object(*%w[--force-color])
       expect(config).to receive(:force).with(:color_mode => :on)
@@ -204,25 +197,13 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
     end
   end
 
-  describe "-c, --color, and --colour" do
-    it "sets :color_mode => :automatic" do
-      expect(parse_options('-c')).to include(:color_mode => :automatic)
-      expect(parse_options('--color')).to include(:color_mode => :automatic)
-      expect(parse_options('--colour')).to include(:color_mode => :automatic)
-    end
-
-    it "overrides previous color flag" do
-      expect(parse_options('--no-color', '--color')).to include(:color_mode => :automatic)
-    end
-  end
-
   describe "--no-color" do
     it "sets :color_mode => :off" do
       expect(parse_options('--no-color')).to include(:color_mode => :off)
     end
 
     it "overrides previous color flag" do
-      expect(parse_options('--color', '--no-color')).to include(:color_mode => :off)
+      expect(parse_options('--force-color', '--no-color')).to include(:color_mode => :off)
     end
   end
 
@@ -232,7 +213,7 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
     end
 
     it "overrides previous color flag" do
-      expect(parse_options('--color', '--force-color')).to include(:color_mode => :on)
+      expect(parse_options('--no-color', '--force-color')).to include(:color_mode => :on)
     end
   end
 
