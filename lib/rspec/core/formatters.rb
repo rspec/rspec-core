@@ -164,7 +164,7 @@ module RSpec::Core::Formatters
 
         RSpec.warn_deprecation <<-WARNING.gsub(/\s*\|/, ' ')
           |The #{formatter_class} formatter uses the deprecated formatter
-          |interface not supported directly by RSpec 3.
+          |interface not supported directly by RSpec 4.
           |
           |To continue to use this formatter you must install the
           |`rspec-legacy_formatters` gem, which provides support
