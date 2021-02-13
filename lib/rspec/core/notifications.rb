@@ -42,17 +42,9 @@ module RSpec::Core
         execution_result = example.execution_result
 
         return SkippedExampleNotification.new(example) if execution_result.example_skipped?
-        return new(example) unless execution_result.status == :pending || execution_result.status == :failed
+        return FailedExampleNotification.new(example) if execution_result.status == :pending || execution_result.status == :failed
 
-        klass = if execution_result.pending_fixed?
-                  PendingExampleFixedNotification
-                elsif execution_result.status == :pending
-                  PendingExampleFailedAsExpectedNotification
-                else
-                  FailedExampleNotification
-                end
-
-        klass.new(example)
+        new(example)
       end
 
       private_class_method :new
@@ -213,12 +205,6 @@ module RSpec::Core
         super(example)
       end
     end
-
-    # @deprecated Use {FailedExampleNotification} instead.
-    class PendingExampleFixedNotification < FailedExampleNotification; end
-
-    # @deprecated Use {FailedExampleNotification} instead.
-    class PendingExampleFailedAsExpectedNotification < FailedExampleNotification; end
 
     # The `SkippedExampleNotification` extends `ExampleNotification` with
     # things useful for specs that are skipped.
