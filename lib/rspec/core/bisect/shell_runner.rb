@@ -37,7 +37,7 @@ module RSpec
 
         def run_locations(*capture_args)
           @server.capture_run_results(*capture_args) do
-            run_command @shell_command.command_for([], @server)
+            run_command @shell_command.command_for([])
           end
         end
 

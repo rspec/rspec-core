@@ -101,15 +101,6 @@ module RSpec::Core
           options[:error_exit_code] = code
         end
 
-        parser.on('-X', '--[no-]drb', 'Run examples via DRb.') do |use_drb|
-          options[:drb] = use_drb
-          options[:runner] = RSpec::Core::Invocations::DRbWithFallback.new if use_drb
-        end
-
-        parser.on('--drb-port PORT', 'Port to connect to the DRb server.') do |o|
-          options[:drb_port] = o.to_i
-        end
-
         parser.separator("\n  **** Output ****\n\n")
 
         parser.on('-f', '--format FORMATTER', 'Choose a formatter.',

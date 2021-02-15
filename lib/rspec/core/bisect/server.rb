@@ -10,6 +10,8 @@ module RSpec
       # A DRb server that receives run results from a separate RSpec process
       # started by the bisect process.
       class Server
+        DRB_URI = "druby://localhost:8787"
+
         def self.run
           server = new
           server.start
@@ -36,15 +38,11 @@ module RSpec
           DRb.install_acl ACL.new(%w[ deny all allow localhost allow 127.0.0.1 allow ::1 ])
 
           # We pass `nil` as the first arg to allow it to pick a DRb port.
-          @drb = DRb.start_service(nil, self)
+          @drb = DRb.start_service(DRB_URI, self)
         end
 
         def stop
           @drb.stop_service
-        end
-
-        def drb_port
-          @drb_port ||= Integer(@drb.uri[/\d+$/])
         end
 
         # Fetched via DRb by the BisectDRbFormatter to determine when to abort.

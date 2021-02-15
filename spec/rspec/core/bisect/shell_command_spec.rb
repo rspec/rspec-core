@@ -3,7 +3,6 @@ require 'rspec/core/formatters/bisect_drb_formatter'
 
 module RSpec::Core
   RSpec.describe Bisect::ShellCommand do
-    let(:server) { instance_double("RSpec::Core::Bisect::Server", :drb_port => 1234) }
     let(:shell_command) { described_class.new(original_cli_args) }
 
     describe "#command_for" do
@@ -11,7 +10,7 @@ module RSpec::Core
         load_path = options.fetch(:load_path) { [] }
         orig_load_path = $LOAD_PATH.dup
         $LOAD_PATH.replace(load_path)
-        shell_command.command_for(locations, server)
+        shell_command.command_for(locations)
       ensure
         $LOAD_PATH.replace(orig_load_path)
       end
@@ -35,18 +34,6 @@ module RSpec::Core
         else
           expect(cmd).to include('path/with\ spaces/to/spec.rb')
         end
-      end
-
-      it "includes an option for the server's DRB port" do
-        cmd = command_for([])
-        expect(cmd).to include("--drb-port #{server.drb_port}")
-      end
-
-      it "ignores an existing --drb-port option (since we use the server's port instead)" do
-        original_cli_args << "--drb-port" << "9999"
-        cmd = command_for([])
-        expect(cmd).to include("--drb-port #{server.drb_port}").and exclude("9999")
-        expect(cmd.scan("--drb-port").count).to eq(1)
       end
 
       %w[ --bisect --bisect=verbose --bisect=blah ].each do |value|
@@ -163,7 +150,7 @@ module RSpec::Core
 
       it 'includes original options that `command_for` excludes' do
         original_cli_args << "--format" << "progress"
-        expect(shell_command.command_for(%w[ ./foo.rb[1:1] ], server)).to exclude("--format progress")
+        expect(shell_command.command_for(%w[ ./foo.rb[1:1] ])).to exclude("--format progress")
         expect(repro_command_from(%w[ ./foo.rb[1:1] ])).to include("--format progress")
       end
 

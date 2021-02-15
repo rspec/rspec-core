@@ -31,9 +31,9 @@ module RSpec
     #
     # @example Standard settings
     #     RSpec.configure do |c|
-    #       c.drb          = true
-    #       c.drb_port     = 1234
+    #       c.color_mode   = :on
     #       c.default_path = 'behavior'
+    #       c.filter_gems_from_backtrace "rack", "rake"
     #     end
     #
     # @example Hooks
@@ -123,16 +123,6 @@ module RSpec
         project_source_dirs << path
         @default_path = path
       end
-
-      # @macro add_setting
-      # Run examples over DRb (default: `false`). RSpec doesn't supply the DRb
-      # server, but you can use tools like spork.
-      # @return [Boolean]
-      add_setting :drb
-
-      # @macro add_setting
-      # The drb_port (default: nil).
-      add_setting :drb_port
 
       # @macro add_setting
       # Default: `$stderr`.

@@ -6,7 +6,7 @@ module RSpec
   module Core
     module Bisect
       # Provides an API to generate shell commands to run the suite for a
-      # set of locations, using the given bisect server to capture the results.
+      # set of locations, using the bisect server to capture the results.
       # @private
       class ShellCommand
         attr_reader :original_cli_args
@@ -15,14 +15,13 @@ module RSpec
           @original_cli_args = original_cli_args.reject { |arg| arg.start_with?("--bisect") }
         end
 
-        def command_for(locations, server)
+        def command_for(locations)
           parts = []
 
           parts << RUBY << load_path
           parts << open3_safe_escape(RSpec::Core.path_to_executable)
 
           parts << "--format"   << "bisect-drb"
-          parts << "--drb-port" << server.drb_port
 
           parts.concat(reusable_cli_options)
           parts.concat(locations.map { |l| open3_safe_escape(l) })
@@ -84,10 +83,6 @@ module RSpec
         def reusable_cli_options
           @reusable_cli_options ||= begin
             opts = original_cli_args_without_locations
-
-            if (port = parsed_original_cli_options[:drb_port])
-              opts -= %W[ --drb-port #{port} ]
-            end
 
             parsed_original_cli_options.fetch(:formatters) { [] }.each do |(name, out)|
               opts -= %W[ --format #{name} -f -f#{name} ]

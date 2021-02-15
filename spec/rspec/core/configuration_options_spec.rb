@@ -1,5 +1,4 @@
 require 'ostruct'
-require 'rspec/core/drb'
 
 RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :isolated_home => true do
   include ConfigOptionsHelper
@@ -162,7 +161,6 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
       ["--default-path", "behavior", :default_path, "behavior"],
       ["--order", "rand", :order, "rand"],
       ["--seed", "37", :order, "rand:37"],
-      ["--drb-port", "37", :drb_port, 37]
     ].each do |cli_option, cli_value, config_key, config_value|
       it "forces #{config_key}" do
         opts = config_options_object(cli_option, cli_value)
@@ -350,20 +348,6 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
     end
   end
 
-  describe "--no-drb" do
-    it "disables drb" do
-      expect(parse_options("--no-drb")).to include(:drb => false)
-    end
-
-    it "overrides a previous drb => true" do
-      expect(parse_options("--drb", "--no-drb")).to include(:drb => false)
-    end
-
-    it "gets overriden by a subsquent drb => true" do
-      expect(parse_options("--no-drb", "--drb")).to include(:drb => true)
-    end
-  end
-
   describe "files_or_directories_to_run" do
     it "parses files from '-c file.rb dir/file.rb'" do
       expect(parse_options("-c", "file.rb", "dir/file.rb")).to include(
@@ -467,7 +451,7 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
       create_fixture_file("~/.rspec", "--force-color")
       create_fixture_file("~/.config/rspec/options", "--order defined")
       with_env_vars 'SPEC_OPTS' => "--example 'foo bar'" do
-        options = parse_options("--drb")
+        options = parse_options("--profile", "5")
         # $XDG_CONFIG_HOME/rspec/options file ("order") is read, but ~/.rspec
         # file ("color") is not read because ~/.rspec has lower priority over
         # the file in the XDG config directory.
@@ -476,7 +460,7 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
 
         expect(options[:requires]).to eq(["some_file"])
         expect(options[:full_description]).to eq([/foo\ bar/])
-        expect(options[:drb]).to be(true)
+        expect(options[:profile_examples]).to be(5)
         expect(options[:formatters]).to eq([['global']])
       end
     end

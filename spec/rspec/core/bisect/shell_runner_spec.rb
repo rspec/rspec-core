@@ -4,7 +4,7 @@ require 'rspec/core/bisect/utilities'
 
 module RSpec::Core
   RSpec.describe Bisect::ShellRunner do
-    let(:server) { instance_double("RSpec::Core::Bisect::Server", :drb_port => 1234) }
+    let(:server) { instance_double("RSpec::Core::Bisect::Server") }
     let(:shell_command) { Bisect::ShellCommand.new(original_cli_args) }
     let(:runner) { described_class.new(server, shell_command) }
 

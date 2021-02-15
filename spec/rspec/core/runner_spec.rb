@@ -1,4 +1,4 @@
-require 'rspec/core/drb'
+require 'drb'
 require 'support/runner_support'
 
 module RSpec::Core

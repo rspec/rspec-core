@@ -1,4 +1,3 @@
-require 'rspec/core/drb'
 require 'rspec/core/bisect/coordinator'
 
 module RSpec::Core
@@ -49,7 +48,6 @@ module RSpec::Core
       '--init'         => ['-i','--I'],
       '--default-path' => ['-d'],
       '--dry-run'      => ['-d'],
-      '--drb-port'     => ['-d'],
     }.each do |long, shorts|
       shorts.each do |option|
         it "won't parse #{option} as a shorthand for #{long}" do
@@ -78,24 +76,6 @@ module RSpec::Core
           options = parser.parse
 
           expect(options[:runner]).to be_instance_of(RSpec::Core::Invocations::PrintVersion)
-        end
-      end
-    end
-
-    %w[ -X --drb ].each do |option|
-      describe option do
-        let(:parser) { Parser.new([option]) }
-
-        it 'sets the `:drb` option to true' do
-          options = parser.parse
-
-          expect(options[:drb]).to be(true)
-        end
-
-        it 'sets the `:runner` option with the `DrbWithFallback` invocation' do
-          options = parser.parse
-
-          expect(options[:runner]).to be_instance_of(RSpec::Core::Invocations::DRbWithFallback)
         end
       end
     end

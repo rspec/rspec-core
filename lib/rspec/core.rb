@@ -78,7 +78,7 @@ module RSpec
   # convention is to use [RSpec.configure](RSpec#configure-class_method).
   #
   # @example
-  #     RSpec.configuration.drb_port = 1234
+  #     RSpec.configuration.profile_examples = 10
   # @see RSpec.configure
   # @see Core::Configuration
   def self.configuration

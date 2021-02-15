@@ -12,19 +12,6 @@ module RSpec
       end
 
       # @private
-      class DRbWithFallback
-        def call(options, err, out)
-          require 'rspec/core/drb'
-          begin
-            return DRbRunner.new(options).run(err, out)
-          rescue DRb::DRbConnError
-            err.puts "No DRb server is running. Running in local process instead ..."
-          end
-          RSpec::Core::Runner.new(options).run(err, out)
-        end
-      end
-
-      # @private
       class Bisect
         def call(options, err, out)
           RSpec::Support.require_rspec_core "bisect/coordinator"

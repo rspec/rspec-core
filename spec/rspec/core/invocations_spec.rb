@@ -1,4 +1,3 @@
-require 'rspec/core/drb'
 require 'rspec/core/bisect/coordinator'
 require 'rspec/core/project_initializer'
 
@@ -21,56 +20,6 @@ module RSpec::Core
 
         expect(project_init).to have_received(:run)
         expect(exit_code).to eq(0)
-      end
-    end
-
-    describe Invocations::DRbWithFallback do
-      context 'when a DRb server is running' do
-        it "builds a DRbRunner and runs the specs" do
-          drb_proxy = instance_double(RSpec::Core::DRbRunner, :run => 0)
-          allow(RSpec::Core::DRbRunner).to receive(:new).and_return(drb_proxy)
-
-          exit_code = run_invocation
-
-          expect(drb_proxy).to have_received(:run).with(err, out)
-          expect(exit_code).to eq(0)
-        end
-      end
-
-      context 'when a DRb server is not running' do
-        let(:runner) { instance_double(RSpec::Core::Runner, :run => 0) }
-
-        before(:each) do
-          allow(RSpec::Core::Runner).to receive(:new).and_return(runner)
-          allow(RSpec::Core::DRbRunner).to receive(:new).and_raise(DRb::DRbConnError)
-        end
-
-        it "outputs a message" do
-          run_invocation
-
-          expect(err.string).to include(
-            "No DRb server is running. Running in local process instead ..."
-          )
-        end
-
-        it "builds a runner instance and runs the specs" do
-          run_invocation
-
-          expect(RSpec::Core::Runner).to have_received(:new).with(configuration_options)
-          expect(runner).to have_received(:run).with(err, out)
-        end
-
-        it "prevents the DRb error from being listed as the cause of expectation failures" do
-          allow(RSpec::Core::Runner).to receive(:new) do |configuration_options|
-            raise RSpec::Expectations::ExpectationNotMetError
-          end
-
-          expect {
-            run_invocation
-          }.to raise_error(RSpec::Expectations::ExpectationNotMetError) do |e|
-            expect(e.cause).to be_nil
-          end
-        end
       end
     end
 
