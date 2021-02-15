@@ -83,9 +83,9 @@ module RSpec::Core::Formatters
         end
 
         it "issues a deprecation" do
-          expect_warn_deprecation(
-            /The #{formatter_class} formatter uses the deprecated formatter interface.+#{__FILE__}:#{__LINE__ + 1}/)
-          loader.add formatter_class, output
+          expect {
+            loader.add formatter_class, output
+          }.to raise_error(ArgumentError, /The #{formatter_class} formatter uses the deprecated formatter interface not supported directly by RSpec 4/)
         end
       end
 

@@ -29,6 +29,8 @@ Breaking Changes:
 * Remove deprecated `PendingExampleFixedNotification` and
   `PendingExampleFailedAsExpectedNotification` classes. (Phil Pirozhkov, #2864)
 * Remove deprecated `rerun_argument` example method. (Phil Pirozhkov, #2864)
+* Raise on attempt to use a legacy formatter without `rspec-legacy_formatters`.
+  (Phil Pirozhkov, #2864)
 
 Enhancements:
 
