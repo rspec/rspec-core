@@ -5,7 +5,7 @@ module RSpec::Core::Formatters
     let(:config)      { RSpec::Core::Configuration.new.tap { |config| config.color_mode = :on } }
     let(:highlighter) { SyntaxHighlighter.new(config)  }
 
-    context "when CodeRay is available", :unless => RSpec::Support::OS.windows? do
+    context "when CodeRay is available", :skip => RSpec::Support::OS.windows? do
       before { expect { require 'coderay' }.not_to raise_error }
 
       it 'highlights the syntax of the provided lines' do

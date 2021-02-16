@@ -77,7 +77,7 @@ module RSpec::Core
     include_examples 'a bisect runner'
   end
 
-  RSpec.describe Bisect::ForkRunner, :if => RSpec::Support::RubyFeatures.fork_supported? do
+  RSpec.describe Bisect::ForkRunner, :skip => !RSpec::Support::RubyFeatures.fork_supported? do
     include_examples 'a bisect runner'
 
     context 'when a `--require` option has been provided' do

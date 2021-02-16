@@ -469,7 +469,7 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
         expect(get_all.call).to eq opts.fetch(:post_gc)
       end
 
-      it 'releases references to the examples / their ivars', :if => reliable_gc do
+      it 'releases references to the examples / their ivars', :skip => !reliable_gc do
         config        = RSpec::Core::Configuration.new
         real_reporter = RSpec::Core::Reporter.new(config) # in case it is the cause of a leak
         garbage       = Struct.new :defined_in
@@ -505,7 +505,7 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
       end
     end
 
-    it "leaves raised exceptions unmodified (GH-1103)", :if => RUBY_VERSION < '2.5' do
+    it "leaves raised exceptions unmodified (GH-1103)", :skip => RUBY_VERSION >= '2.5' do
       # set the backtrace, otherwise MRI will build a whole new object,
       # and thus mess with our expectations. Rubinius and JRuby are not
       # affected.
