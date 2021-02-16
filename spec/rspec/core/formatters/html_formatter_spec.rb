@@ -30,7 +30,7 @@ module RSpec
 
         # Uncomment this group temporarily in order to overwrite the expected
         # with actual.  Use with care!!!
-        describe "file generator", :if => ENV['GENERATE'] do
+        describe "file generator", :skip => !ENV['GENERATE'] do
           it "generates a new comparison file" do
             Dir.chdir(root) do
               File.open(expected_file, 'w') {|io| io.write(actual_html)}

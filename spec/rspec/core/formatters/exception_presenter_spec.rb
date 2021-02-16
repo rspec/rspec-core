@@ -345,7 +345,7 @@ module RSpec::Core
           end
         end
 
-        context 'with multiline expression and single line RSpec exception message', :if => RSpec::Support::RubyFeatures.ripper_supported? do
+        context 'with multiline expression and single line RSpec exception message', :skip => !RSpec::Support::RubyFeatures.ripper_supported? do
           let(:expression) do
             expect('RSpec').
               to be_a(Integer)
@@ -383,7 +383,7 @@ module RSpec::Core
           end
         end
 
-        context 'with multiline expression and multiline RSpec exception message', :if => RSpec::Support::RubyFeatures.ripper_supported? do
+        context 'with multiline expression and multiline RSpec exception message', :skip => !RSpec::Support::RubyFeatures.ripper_supported? do
           let(:expression) do
             expect('RSpec').
               to be_falsey
@@ -424,7 +424,7 @@ module RSpec::Core
           end
         end
 
-        context 'with multiline expression and RSpec exception message starting with linefeed (like `eq` matcher)', :if => RSpec::Support::RubyFeatures.ripper_supported? do
+        context 'with multiline expression and RSpec exception message starting with linefeed (like `eq` matcher)', :skip => !RSpec::Support::RubyFeatures.ripper_supported? do
           let(:expression) do
             expect('Rspec').
               to eq('RSpec')
@@ -465,7 +465,7 @@ module RSpec::Core
           end
         end
 
-        context 'with multiline expression and single line non-RSpec exception message', :if => RSpec::Support::RubyFeatures.ripper_supported? do
+        context 'with multiline expression and single line non-RSpec exception message', :skip => !RSpec::Support::RubyFeatures.ripper_supported? do
           let(:expression) do
             expect { fail 'Something is wrong!' }.
               to change { RSpec }
@@ -493,7 +493,7 @@ module RSpec::Core
         presenter.send(:read_failed_lines)
       end
 
-      context 'when the failed expression spans multiple lines', :if => RSpec::Support::RubyFeatures.ripper_supported? do
+      context 'when the failed expression spans multiple lines', :skip => !RSpec::Support::RubyFeatures.ripper_supported? do
         let(:exception) do
           begin
             expect('RSpec').to be_a(String).

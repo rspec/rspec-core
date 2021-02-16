@@ -21,7 +21,7 @@ module RSpec::Core
         expect(make_backtrace_formatter.exclude?("exe/rspec")).to be true
       end
 
-      it "excludes java files (for JRuby)", :if => (RUBY_PLATFORM == 'java')  do
+      it "excludes java files (for JRuby)", :skip => RUBY_PLATFORM != 'java'  do
         expect(make_backtrace_formatter.exclude?("org/jruby/RubyArray.java:2336")).to be true
       end
 
@@ -172,7 +172,7 @@ module RSpec::Core
       end
 
       context "when rspec is installed in the current working directory" do
-        it "excludes lines from rspec libs by default", :unless => RSpec::Support::OS.windows? do
+        it "excludes lines from rspec libs by default", :skip => RSpec::Support::OS.windows? do
           backtrace = [
             "#{Dir.getwd}/.bundle/path/to/rspec-expectations/lib/rspec/expectations/foo.rb:37",
             "#{Dir.getwd}/.bundle/path/to/rspec-expectations/lib/rspec/matchers/foo.rb:37",

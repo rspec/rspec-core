@@ -1,6 +1,6 @@
 require 'rspec/core/drb'
 
-RSpec.describe RSpec::Core::DRbRunner, :isolated_directory => true, :isolated_home => true, :type => :drb, :unless => RUBY_PLATFORM == 'java' do
+RSpec.describe RSpec::Core::DRbRunner, :isolated_directory => true, :isolated_home => true, :type => :drb, :skip => RUBY_PLATFORM == 'java' do
   let(:config) { RSpec::Core::Configuration.new }
   let(:out)    { StringIO.new }
   let(:err)    { StringIO.new }
