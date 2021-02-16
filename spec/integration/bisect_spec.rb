@@ -38,7 +38,7 @@ module RSpec::Core
         expect(output).to include("No failures found.")
       end
 
-      it 'does not leave zombie processes', :unless => RSpec::Support::OS.windows? do
+      it 'does not leave zombie processes', :skip => RSpec::Support::OS.windows? do
         bisect(['--format', 'json', 'spec/rspec/core/resources/blocking_pipe_bisect_spec.rb_'], 1)
 
         zombie_process = RSpecChildProcess.new(Process.pid).zombie_process

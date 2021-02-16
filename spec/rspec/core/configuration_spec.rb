@@ -611,12 +611,12 @@ module RSpec::Core
           expect(config.files_to_run).to contain_files("spec/rspec/core/resources/a_spec.rb", "spec/rspec/core/resources/acceptance/foo_spec.rb")
         end
 
-        it "loads files in Windows", :if => RSpec::Support::OS.windows? do
+        it "loads files in Windows", :skip => !RSpec::Support::OS.windows? do
           assign_files_or_directories_to_run "C:\\path\\to\\project\\spec\\sub\\foo_spec.rb"
           expect(config.files_to_run).to contain_files("C:/path/to/project/spec/sub/foo_spec.rb")
         end
 
-        it "loads files in Windows when directory is specified", :failing_on_windows_ci, :if => RSpec::Support::OS.windows? do
+        it "loads files in Windows when directory is specified", :failing_on_windows_ci, :skip => !RSpec::Support::OS.windows? do
           assign_files_or_directories_to_run "spec\\rspec\\core\\resources"
           expect(config.files_to_run).to contain_files("spec/rspec/core/resources/a_spec.rb")
         end
@@ -1233,7 +1233,7 @@ module RSpec::Core
       end
     end
 
-    describe "#prepend", :if => RSpec::Support::RubyFeatures.module_prepends_supported? do
+    describe "#prepend", :skip => !RSpec::Support::RubyFeatures.module_prepends_supported? do
       include_examples "warning of deprecated `:example_group` during filtering configuration", :prepend, Enumerable
 
       module SomeRandomMod
@@ -2337,7 +2337,7 @@ module RSpec::Core
       end
 
       it "doesn't prepend a module when already present in ancestor chain",
-        :if => RSpec::Support::RubyFeatures.module_prepends_supported? do
+        :skip => !RSpec::Support::RubyFeatures.module_prepends_supported? do
         config.prepend(IncludeExtendOrPrependMeOnce, :foo => :bar)
 
         group = RSpec.describe("group", :foo => :bar)

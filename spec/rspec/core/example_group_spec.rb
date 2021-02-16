@@ -140,7 +140,7 @@ module RSpec::Core
         expect(child).to have_class_const("SomeParentGroup::Hash")
       end
 
-      it 'disambiguates name collisions by appending a number', :unless => RUBY_VERSION == '1.9.2' do
+      it 'disambiguates name collisions by appending a number', :skip => RUBY_VERSION == '1.9.2' do
         groups = 10.times.map { RSpec.describe("Collision") }
         expect(groups[0]).to have_class_const("Collision")
         expect(groups[1]).to have_class_const("Collision_2")
@@ -178,7 +178,7 @@ module RSpec::Core
         )
       end
 
-      it 'does not have problems with example groups named "Core"', :unless => RUBY_VERSION == '1.9.2' do
+      it 'does not have problems with example groups named "Core"', :skip => RUBY_VERSION == '1.9.2' do
         RSpec.describe("Core")
         expect(defined?(::RSpec::ExampleGroups::Core)).to be
 
@@ -188,7 +188,7 @@ module RSpec::Core
         expect(group).to have_class_const("AnotherGroup")
       end
 
-      it 'does not have problems with example groups named "RSpec"', :unless => RUBY_VERSION == '1.9.2' do
+      it 'does not have problems with example groups named "RSpec"', :skip => RUBY_VERSION == '1.9.2' do
         RSpec.describe("RSpec")
         expect(defined?(::RSpec::ExampleGroups::RSpec)).to be
 
@@ -1919,7 +1919,7 @@ module RSpec::Core
       }.to raise_error(/not allowed/)
     end
 
-    describe 'inspect output', :unless => RUBY_VERSION == '1.9.2' do
+    describe 'inspect output', :skip => RUBY_VERSION == '1.9.2' do
       context 'when there is no inspect output provided' do
         it "uses '(no description provided)' instead" do
           expect(ExampleGroup.new.inspect).to eq('#<RSpec::Core::ExampleGroup (no description provided)>')
