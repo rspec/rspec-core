@@ -62,27 +62,25 @@ module RSpec::Core
     end
 
     context "with rspec_opts" do
-      include RSpec::Core::ShellEscape
-
       it "adds the rspec_opts" do
         task.rspec_opts = "-Ifoo"
-        expect(spec_command).to match(/#{task.rspec_path}.*-Ifoo/).and(
-          include(escape(RSpec::Core::RakeTask::DEFAULT_PATTERN)) # sanity check for following specs
-        )
+        expect(spec_command).to match(/#{task.rspec_path}.*-Ifoo/)
       end
 
-      it 'correctly excludes the default pattern if rspec_opts includes --pattern' do
+      it "doesn't add a default pattern that would override CLI configuration from files" do
+        expect(spec_command).to exclude("--pattern")
+      end
+
+      it 'only uses the pattern passed via rspec_opts' do
         task.rspec_opts = "--pattern some_specs"
-        expect(spec_command).to include("--pattern some_specs").and(
-          exclude(escape(RSpec::Core::RakeTask::DEFAULT_PATTERN))
-        )
+        expect(spec_command).to include("--pattern some_specs")
+        expect(spec_command).to include("--pattern").once
       end
 
       it 'behaves properly if rspec_opts is an array' do
         task.rspec_opts = %w[--pattern some_specs]
-        expect(spec_command).to include("--pattern some_specs").and(
-          exclude(escape(RSpec::Core::RakeTask::DEFAULT_PATTERN))
-        )
+        expect(spec_command).to include("--pattern some_specs")
+        expect(spec_command).to include("--pattern").once
       end
     end
 

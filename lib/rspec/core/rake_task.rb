@@ -24,14 +24,11 @@ module RSpec
       # Default path to the RSpec executable.
       DEFAULT_RSPEC_PATH = File.expand_path('../../../../exe/rspec', __FILE__)
 
-      # Default pattern for spec files.
-      DEFAULT_PATTERN = 'spec/**{,/*/**}/*_spec.rb'
-
       # Name of task. Defaults to `:spec`.
       attr_accessor :name
 
       # Files matching this pattern will be loaded.
-      # Defaults to `'spec/**{,/*/**}/*_spec.rb'`.
+      # Defaults to `nil`.
       attr_accessor :pattern
 
       # Files matching this pattern will be excluded.
@@ -81,7 +78,7 @@ module RSpec
         @verbose       = true
         @fail_on_error = true
         @rspec_path    = DEFAULT_RSPEC_PATH
-        @pattern       = DEFAULT_PATTERN
+        @pattern       = nil
 
         define(args, &task_block)
       end
@@ -124,6 +121,8 @@ module RSpec
         elsif String === pattern && !File.exist?(pattern)
           return if [*rspec_opts].any? { |opt| opt =~ /--pattern/ }
           "--pattern #{escape pattern}"
+        elsif pattern.nil?
+          ""
         else
           # Before RSpec 3.1, we used `FileList` to get the list of matched
           # files, and then pass that along to the `rspec` command. Starting
