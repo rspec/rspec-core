@@ -109,7 +109,7 @@ RSpec.describe 'Filtering' do
       expect(formatter.passed_examples).to eq 1
     end
 
-    it "trumps exclusions, except for :if/:unless (which are absolute exclusions)" do
+    it "trumps exclusions" do
       write_file_formatted 'spec/a_spec.rb', "
         RSpec.configure do |c|
           c.filter_run_excluding :slow
@@ -123,21 +123,17 @@ RSpec.describe 'Filtering' do
         RSpec.describe 'A group with a slow example' do
           example('ex 3'              ) { }
           example('ex 4', :slow       ) { }
-          example('ex 5', :if => false) { }
         end
       "
 
       run_command "spec/a_spec.rb -fd"
-      expect(last_cmd_stdout).to include("1 example, 0 failures", "ex 3").and exclude("ex 1", "ex 2", "ex 4", "ex 5")
+      expect(last_cmd_stdout).to include("1 example, 0 failures", "ex 3").and exclude("ex 1", "ex 2", "ex 4")
 
       run_command "spec/a_spec.rb:5 -fd" # selecting 'A slow group'
-      expect(last_cmd_stdout).to include("2 examples, 0 failures", "ex 1", "ex 2").and exclude("ex 3", "ex 4", "ex 5")
+      expect(last_cmd_stdout).to include("2 examples, 0 failures", "ex 1", "ex 2").and exclude("ex 3", "ex 4")
 
       run_command "spec/a_spec.rb:12 -fd" # selecting slow example
-      expect(last_cmd_stdout).to include("1 example, 0 failures", "ex 4").and exclude("ex 1", "ex 2", "ex 3", "ex 5")
-
-      run_command "spec/a_spec.rb:13 -fd" # selecting :if => false example
-      expect(last_cmd_stdout).to include("0 examples, 0 failures").and exclude("ex 1", "ex 2", "ex 3", "ex 4", "ex 5")
+      expect(last_cmd_stdout).to include("1 example, 0 failures", "ex 4").and exclude("ex 1", "ex 2", "ex 3")
     end
 
     it 'works correctly when line numbers align with a shared example group line number from another file' do

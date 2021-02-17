@@ -39,8 +39,6 @@ module RSpec
         # `examples` will be empty.
         return examples if examples.empty?
 
-        examples = prune_conditionally_filtered_examples(examples)
-
         if inclusions.standalone?
           examples.select { |e| inclusions.include_example?(e) }
         else
@@ -84,13 +82,6 @@ module RSpec
         filter = inclusions.delete(filter_key) || Hash.new { |h, k| h[k] = [] }
         filter[path].concat(values)
         inclusions.add(filter_key => filter)
-      end
-
-      def prune_conditionally_filtered_examples(examples)
-        examples.reject do |ex|
-          meta = ex.metadata
-          !meta.fetch(:if, true) || meta[:unless]
-        end
       end
 
       # When a user specifies a particular spec location, that takes priority
