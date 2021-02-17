@@ -9,7 +9,7 @@ module RSpec
 
           RSpec.describe "parent group", :caller => ["/foo_spec.rb:#{__LINE__}"] do; container.parent_group_metadata = metadata
             describe "group", :caller => ["/foo_spec.rb:#{__LINE__}"] do; container.group_metadata = metadata
-              container.example_metadata = it("example", :caller => ["/foo_spec.rb:#{__LINE__}"], :if => true).metadata
+              container.example_metadata = it("example", :caller => ["/foo_spec.rb:#{__LINE__}"], :foo => true).metadata
             end
           end
         end
@@ -85,15 +85,15 @@ module RSpec
         end
 
         it "matches a proc with no arguments that evaluates to true" do
-          expect(filter_applies?(:if, lambda { true }, example_metadata)).to be(true)
+          expect(filter_applies?(:foo, lambda { true }, example_metadata)).to be(true)
         end
 
         it "matches a proc that evaluates to true" do
-          expect(filter_applies?(:if, lambda { |v| v }, example_metadata)).to be(true)
+          expect(filter_applies?(:foo, lambda { |v| v }, example_metadata)).to be(true)
         end
 
         it "does not match a proc that evaluates to false" do
-          expect(filter_applies?(:if, lambda { |v| !v }, example_metadata)).to be(false)
+          expect(filter_applies?(:foo, lambda { |v| !v }, example_metadata)).to be(false)
         end
 
         it "matches a proc with an arity of 2" do
@@ -103,7 +103,7 @@ module RSpec
 
         it "raises an error when the proc has an incorrect arity" do
           expect {
-            filter_applies?(:if, lambda { |a,b,c| true }, example_metadata)
+            filter_applies?(:foo, lambda { |a,b,c| true }, example_metadata)
           }.to raise_error(ArgumentError)
         end
 

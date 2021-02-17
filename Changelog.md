@@ -18,6 +18,7 @@ Breaking Changes:
 * Remove deprecated Hash-like behavior from example
   execution result. (Phil Pirozhkov, #2862)
 * Skip setting the default pattern from Rake task. (Phil Pirozhkov, #2868)
+* Remove special `:if`/`:unless` filtering metadata. (Phil Pirozhkov, #2870)
 
 Enhancements:
 
