@@ -4,7 +4,7 @@ module RSpec
       FilterableItem = Struct.new(:name)
 
       def self.it_behaves_like_a_filterable_item_repo(&when_the_repo_has_items_with_metadata)
-        let(:repo)   { described_class.new(:any?) }
+        let(:repo)   { described_class.new }
         let(:item_1) { FilterableItem.new("Item 1") }
         let(:item_2) { FilterableItem.new("Item 2") }
         let(:item_3) { FilterableItem.new("Item 3") }
@@ -96,28 +96,12 @@ module RSpec
                 end
               end
 
-              context "when initialized with the `:any?` predicate" do
-                let(:repo) { FilterableItemRepository::QueryOptimized.new(:any?) }
+              it 'matches against multi-entry items when all of the metadata entries match' do
+                add_item item_4, :key_1 => "val_1", :key_2 => "val_2"
 
-                it 'matches against multi-entry items when any of the metadata entries match' do
-                  add_item item_4, :key_1 => "val_1", :key_2 => "val_2"
-
-                  expect(repo.items_for(:key_1 => "val_1")).to contain_exactly(item_4)
-                  expect(repo.items_for(:key_2 => "val_2")).to contain_exactly(item_4)
-                  expect(repo.items_for(:key_1 => "val_1", :key_2 => "val_2")).to contain_exactly(item_4)
-                end
-              end
-
-              context "when initialized with the `:all?` predicate" do
-                let(:repo) { FilterableItemRepository::QueryOptimized.new(:all?) }
-
-                it 'matches against multi-entry items when all of the metadata entries match' do
-                  add_item item_4, :key_1 => "val_1", :key_2 => "val_2"
-
-                  expect(repo.items_for(:key_1 => "val_1")).to eq([])
-                  expect(repo.items_for(:key_2 => "val_2")).to eq([])
-                  expect(repo.items_for(:key_1 => "val_1", :key_2 => "val_2")).to contain_exactly(item_4)
-                end
+                expect(repo.items_for(:key_1 => "val_1")).to eq([])
+                expect(repo.items_for(:key_2 => "val_2")).to eq([])
+                expect(repo.items_for(:key_1 => "val_1", :key_2 => "val_2")).to contain_exactly(item_4)
               end
 
               module_eval(&when_the_repo_has_items_with_metadata) if when_the_repo_has_items_with_metadata
@@ -156,8 +140,8 @@ module RSpec
                   [item_2, { :foo => true }]
                 ]).
               and change { repo.items_for({ :foo => true }) }.
-                from([item_1, item_1, item_1, item_2]).
-                to([item_1, item_1, item_2]).
+                from([item_1, item_1, item_2]).
+                to([item_1, item_2]).
               and change { repo.items_for({ :foo => true, :bar => true }) }.
                 from([item_1, item_1, item_1, item_2]).
                 to([item_1, item_1, item_2]).
@@ -221,9 +205,9 @@ module RSpec
 
             def track_metadata_filter_apply_calls
               Hash.new(0).tap do |call_counts|
-                allow(MetadataFilter).to receive(:apply?).and_wrap_original do |original, predicate, item_meta, request_meta|
+                allow(MetadataFilter).to receive(:apply?).and_wrap_original do |original, item_meta, request_meta|
                   call_counts[item_meta] += 1
-                  original.call(predicate, item_meta, request_meta)
+                  original.call(item_meta, request_meta)
                 end
               end
             end

@@ -1828,20 +1828,18 @@ module RSpec::Core
           expect(e3.metadata).not_to include(:reverse_description)
         end
 
-        it 'applies if any of multiple filters apply (to align with module inclusion semantics)' do
+        it 'applies if all of multiple filters apply (to align with module inclusion semantics)' do
           RSpec.configure do |c|
             c.define_derived_metadata(:a => 1, :b => 2) do |metadata|
               metadata[:reverse_description] = metadata[:description].reverse
             end
           end
 
-          g1 = RSpec.describe("G1", :a => 1)
+          g1 = RSpec.describe("G1", :a => 1, :b => 2)
           g2 = RSpec.describe("G2", :b => 2)
-          g3 = RSpec.describe("G3", :c => 3)
 
           expect(g1.metadata).to include(:reverse_description => "1G")
-          expect(g2.metadata).to include(:reverse_description => "2G")
-          expect(g3.metadata).not_to include(:reverse_description)
+          expect(g2.metadata).not_to include(:reverse_description)
         end
 
         it 'allows a metadata filter to be passed as a raw symbol' do
@@ -2099,13 +2097,22 @@ module RSpec::Core
         expect(group.included_modules).to include(mod)
       end
 
-      it "requires only one matching filter" do
+      it "requires exact matching filter" do
+        mod = Module.new
+        group = RSpec.describe("group", :foo => :bar, :baz => :bam)
+
+        config.include(mod, :foo => :bar, :baz => :bam)
+        config.configure_group(group)
+        expect(group.included_modules).to include(mod)
+      end
+
+      it "doesn't include on incomplete matching filter" do
         mod = Module.new
         group = RSpec.describe("group", :foo => :bar)
 
         config.include(mod, :foo => :bar, :baz => :bam)
         config.configure_group(group)
-        expect(group.included_modules).to include(mod)
+        expect(group.included_modules).not_to include(mod)
       end
 
       module IncludeExtendOrPrependMeOnce

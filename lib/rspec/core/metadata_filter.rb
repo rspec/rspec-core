@@ -8,8 +8,8 @@ module RSpec
     module MetadataFilter
       class << self
         # @private
-        def apply?(predicate, filters, metadata)
-          filters.__send__(predicate) { |k, v| filter_applies?(k, v, metadata) }
+        def apply?(filters, metadata)
+          filters.all? { |k, v| filter_applies?(k, v, metadata) }
         end
 
         # @private
@@ -88,8 +88,7 @@ module RSpec
       class UpdateOptimized
         attr_reader :items_and_filters
 
-        def initialize(applies_predicate)
-          @applies_predicate = applies_predicate
+        def initialize
           @items_and_filters = []
         end
 
@@ -108,7 +107,7 @@ module RSpec
         def items_for(request_meta)
           @items_and_filters.each_with_object([]) do |(item, item_meta), to_return|
             to_return << item if item_meta.empty? ||
-                                 MetadataFilter.apply?(@applies_predicate, item_meta, request_meta)
+                                 MetadataFilter.apply?(item_meta, request_meta)
           end
         end
       end
@@ -129,7 +128,7 @@ module RSpec
         alias find_items_for items_for
         private :find_items_for
 
-        def initialize(applies_predicate)
+        def initialize
           super
           @applicable_keys   = Set.new
           @proc_keys         = Set.new

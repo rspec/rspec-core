@@ -413,9 +413,9 @@ module RSpec
         @start_time = $_rspec_core_load_started_at || ::RSpec::Core::Time.now
         # rubocop:enable Style/GlobalVars
         @expectation_frameworks = []
-        @include_modules = FilterableItemRepository::QueryOptimized.new(:any?)
-        @extend_modules  = FilterableItemRepository::QueryOptimized.new(:any?)
-        @prepend_modules = FilterableItemRepository::QueryOptimized.new(:any?)
+        @include_modules = FilterableItemRepository::QueryOptimized.new
+        @extend_modules  = FilterableItemRepository::QueryOptimized.new
+        @prepend_modules = FilterableItemRepository::QueryOptimized.new
 
         @bisect_runner = RSpec::Support::RubyFeatures.fork_supported? ? :fork : :shell
         @bisect_runner_class = nil
@@ -455,7 +455,7 @@ module RSpec
         @profile_examples = false
         @requires = []
         @libs = []
-        @derived_metadata_blocks = FilterableItemRepository::QueryOptimized.new(:any?)
+        @derived_metadata_blocks = FilterableItemRepository::QueryOptimized.new
         @threadsafe = true
         @max_displayed_failure_line_count = 10
         @world = World::Null
@@ -2134,7 +2134,7 @@ module RSpec
       end
 
       def metadata_applies_to_group?(meta, group)
-        meta.empty? || MetadataFilter.apply?(:any?, meta, group.metadata)
+        meta.empty? || MetadataFilter.apply?(meta, group.metadata)
       end
 
       def safe_prepend(mod, host)
