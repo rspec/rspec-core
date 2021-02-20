@@ -38,7 +38,7 @@ module RSpec
       # @param message [String] optional message to add to the summary report.
       #
       # @example
-      #     describe "an example" do
+      #     describe "some behaviour" do
       #       # reported as "Pending: no reason given"
       #       it "is pending with no message" do
       #         pending
@@ -52,21 +52,42 @@ module RSpec
       #       end
       #     end
       #
-      # @note `before(:example)` hooks are eval'd when you use the `pending`
-      #   method within an example. If you want to declare an example `pending`
-      #   and bypass the `before` hooks as well, you can pass `:pending => true`
-      #   to the `it` method:
+      # @example Alternatively, you can use the `pending` example alias method:
       #
-      #       it "does something", :pending => true do
+      #     describe "SomeClass" do
+      #       pending "does not implement something yet" do
       #         # ...
       #       end
+      #     end
       #
-      #   or pass `:pending => "something else getting finished"` to add a
-      #   message to the summary report:
+      #   or specify metadata on an example:
       #
-      #       it "does something", :pending => "something else getting finished" do
-      #         # ...
-      #       end
+      #     it "does this", :pending => "is not yet implemented" do
+      #        # ...
+      #     end
+      #
+      #   even without an explicit pending message:
+      #
+      #     it "does something", :pending do
+      #       # ...
+      #     end
+      #
+      # @note There is a difference between using `pending` inside the example
+      # body and `pending` example group alias/`pending` metadata. In the case
+      # when the failure is caused by the code in the `before` hook, the example
+      # would not be considered pending, as the example body wouldn't be reached.
+      # If you intend the failure in the `before` hook to be considered a part
+      # of the example, use the latter.
+      #
+      # @example Failure in `before` hook causes the example to fail
+      #     before { fail 'BOOM' }
+      #     it 'fails' do
+      #       pending 'this never gets executed'
+      #     end
+      #
+      #     pending 'is considered pending' do
+      #       not_implemented
+      #     end
       def pending(message=nil)
         current_example = RSpec.current_example
 
