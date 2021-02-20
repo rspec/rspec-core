@@ -40,12 +40,10 @@ module RSpec
 
       def options
         argv = []
-        argv << "--color"        if @submitted_options[:color]
         argv << "--force-color"  if @submitted_options[:color_mode] == :on
         argv << "--no-color"     if @submitted_options[:color_mode] == :off
         argv << "--profile"      if @submitted_options[:profile_examples]
         argv << "--backtrace"    if @submitted_options[:full_backtrace]
-        argv << "--tty"          if @submitted_options[:tty]
         argv << "--fail-fast"    if @submitted_options[:fail_fast]
         argv << "--options"      << @submitted_options[:custom_options_file] if @submitted_options[:custom_options_file]
         argv << "--order"        << @submitted_options[:order]               if @submitted_options[:order]

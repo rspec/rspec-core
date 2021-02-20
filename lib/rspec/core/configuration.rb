@@ -348,18 +348,6 @@ module RSpec
       # return [Boolean]
       add_setting :silence_filter_announcements
 
-      # @deprecated This config option was added in RSpec 2 to pave the way
-      #   for this being the default behavior in RSpec 3. Now this option is
-      #   a no-op.
-      def treat_symbols_as_metadata_keys_with_true_values=(_value)
-        RSpec.deprecate(
-          "RSpec::Core::Configuration#treat_symbols_as_metadata_keys_with_true_values=",
-          :message => "RSpec::Core::Configuration#treat_symbols_as_metadata_keys_with_true_values= " \
-                      "is deprecated, it is now set to true as default and " \
-                      "setting it to false has no effect."
-        )
-      end
-
       # Record the start time of the spec suite to measure load time.
       # return [Time]
       add_setting :start_time
@@ -409,9 +397,6 @@ module RSpec
       end
 
       # @private
-      # @deprecated Use {#color_mode} = :on, instead of {#color} with {#tty}
-      add_setting :tty
-      # @private
       attr_writer :files_to_run
       # @private
       attr_accessor :filter_manager, :world
@@ -441,7 +426,6 @@ module RSpec
         @mock_framework = nil
         @files_or_directories_to_run = []
         @loaded_spec_files = Set.new
-        @color = false
         @color_mode = :automatic
         @pattern = '**{,/*/**}/*_spec.rb'
         @exclude_pattern = ''
@@ -803,20 +787,6 @@ module RSpec
         @backtrace_formatter.full_backtrace = true_or_false
       end
 
-      # Enables color output if the output is a TTY.  As of RSpec 3.6, this is
-      # the default behavior and this option is retained only for backwards
-      # compatibility.
-      #
-      # @deprecated No longer recommended because of complex behavior. Instead,
-      #   rely on the fact that TTYs will display color by default, or set
-      #   {#color_mode} to :on to display color on a non-TTY output.
-      # @see color_mode
-      # @see color_enabled?
-      # @return [Boolean]
-      def color
-        value_for(:color) { @color }
-      end
-
       # The mode for determining whether to display output in color. One of:
       #
       # - :automatic - the output will be in color if the output is a TTY (the
@@ -839,19 +809,12 @@ module RSpec
         when :on then true
         when :off then false
         else # automatic
-          output_to_tty?(output) || (color && tty?)
+          output_to_tty?(output)
         end
       end
 
       # Set the color mode.
       attr_writer :color_mode
-
-      # Toggle output color.
-      #
-      # @deprecated No longer recommended because of complex behavior. Instead,
-      #   rely on the fact that TTYs will display color by default, or set
-      #   {:color_mode} to :on to display color on a non-TTY output.
-      attr_writer :color
 
       # @private
       def libs=(libs)
@@ -1101,8 +1064,8 @@ module RSpec
         RSpec::Core::ExampleGroup.define_example_group_method(new_name, extra_options)
       end
 
-      # Define an alias for it_should_behave_like that allows different
-      # language (like "it_has_behavior" or "it_behaves_like") to be
+      # Define an alias for it_behaves_like that allows different
+      # language (like "it_has_behavior" or "it_is_able_to") to be
       # employed when including shared examples.
       #
       # @example
@@ -1124,13 +1087,10 @@ module RSpec
       #   #     ...sortability examples here
       #
       # @note Use with caution. This extends the language used in your
-      #   specs, but does not add any additional documentation. We use this
-      #   in RSpec to define `it_should_behave_like` (for backward
-      #   compatibility), but we also add docs for that method.
+      #   specs, but does not add any additional documentation.
       def alias_it_behaves_like_to(new_name, report_label='')
         RSpec::Core::ExampleGroup.define_nested_shared_group_method(new_name, report_label)
       end
-      alias_method :alias_it_should_behave_like_to, :alias_it_behaves_like_to
 
       # Adds key/value pairs to the `inclusion_filter`. If `args`
       # includes any symbols that are not part of the hash, each symbol

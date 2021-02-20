@@ -32,11 +32,11 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
     end
   end
 
-  describe "#rerun_argument" do
+  describe "#location_rerun_argument" do
     it "returns the location-based rerun argument" do
       allow(RSpec.configuration).to receive_messages(:loaded_spec_files => [__FILE__])
       example = RSpec.describe.example
-      expect(example.rerun_argument).to eq("#{RSpec::Core::Metadata.relative_path(__FILE__)}:#{__LINE__ - 1}")
+      expect(example.location_rerun_argument).to eq("#{RSpec::Core::Metadata.relative_path(__FILE__)}:#{__LINE__ - 1}")
     end
   end
 
@@ -744,7 +744,7 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
         group.run
         expect(example).to fail_with ArgumentError
         expect(example.exception.message).to match(
-          /Passing a block within an example is now deprecated./
+          /Passing a block within an example is not supported./
         )
       end
     end

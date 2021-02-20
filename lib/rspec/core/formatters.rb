@@ -160,19 +160,15 @@ module RSpec::Core::Formatters
         formatter = RSpec::LegacyFormatters.load_formatter formatter_class, *args
         register formatter, formatter.notifications
       else
-        call_site = "Formatter added at: #{::RSpec::CallerFilter.first_non_rspec_line}"
-
-        RSpec.warn_deprecation <<-WARNING.gsub(/\s*\|/, ' ')
+        raise ArgumentError, <<-ERROR.gsub(/\s*\|/, ' ')
           |The #{formatter_class} formatter uses the deprecated formatter
-          |interface not supported directly by RSpec 3.
+          |interface not supported directly by RSpec 4.
           |
           |To continue to use this formatter you must install the
           |`rspec-legacy_formatters` gem, which provides support
           |for legacy formatters or upgrade the formatter to a
           |compatible version.
-          |
-          |#{call_site}
-        WARNING
+        ERROR
       end
     end
 

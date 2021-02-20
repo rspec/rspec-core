@@ -19,6 +19,18 @@ Breaking Changes:
   execution result. (Phil Pirozhkov, #2862)
 * Skip setting the default pattern from Rake task. (Phil Pirozhkov, #2868)
 * Remove special `:if`/`:unless` filtering metadata. (Phil Pirozhkov, #2870)
+* Remove deprecated `color` configuration option and `--color` command line
+  option. (Phil Pirozhkov, #2864)
+* Remove `it_should_behave_like` nested shared group method and
+  `alias_it_should_behave_like_to` configuration option. (Phil Pirozhkov, #2864)
+* Remove deprecated `treat_symbols_as_metadata_keys_with_true_values` configuration
+  option. (Phil Pirozhkov, #2864)
+* Remove support for Mocha version < 1.0. (Phil Pirozhkov, #2864)
+* Remove deprecated `PendingExampleFixedNotification` and
+  `PendingExampleFailedAsExpectedNotification` classes. (Phil Pirozhkov, #2864)
+* Remove deprecated `rerun_argument` example method. (Phil Pirozhkov, #2864)
+* Raise on attempt to use a legacy formatter without `rspec-legacy_formatters`.
+  (Phil Pirozhkov, #2864)
 
 Enhancements:
 

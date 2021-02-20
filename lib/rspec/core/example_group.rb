@@ -314,7 +314,7 @@ module RSpec
       #   @!scope class
       #
       #   @see SharedExampleGroup
-      def self.define_nested_shared_group_method(new_name, report_label="it should behave like")
+      def self.define_nested_shared_group_method(new_name, report_label="behaves like")
         idempotently_define_singleton_method(new_name) do |name, *args, &customization_block|
           # Pass :caller so the :location metadata is set properly.
           # Otherwise, it'll be set to the next line because that's
@@ -329,10 +329,7 @@ module RSpec
 
       # Generates a nested example group and includes the shared content
       # mapped to `name` in the nested group.
-      define_nested_shared_group_method :it_behaves_like, "behaves like"
-      # Generates a nested example group and includes the shared content
-      # mapped to `name` in the nested group.
-      define_nested_shared_group_method :it_should_behave_like
+      define_nested_shared_group_method :it_behaves_like
 
       # Includes shared content mapped to `name` directly in the group in which
       # it is declared, as opposed to `it_behaves_like`, which creates a nested

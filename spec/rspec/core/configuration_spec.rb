@@ -1265,216 +1265,85 @@ module RSpec::Core
 
     end
 
-    describe "#color_mode" do
-      context ":automatic" do
-        before do
-          config.color_mode = :automatic
-        end
-
-        context "with output.tty?" do
-          it "sets color_enabled?" do
-            config.output_stream = StringIO.new
-            allow(config.output_stream).to receive_messages(:tty? => true)
-            expect(config.color_enabled?).to be true
-          end
-        end
-
-        context "with !output.tty?" do
-          it "sets !color_enabled?" do
-            config.output_stream = StringIO.new
-            allow(config.output_stream).to receive_messages(:tty? => false)
-            expect(config.color_enabled?).to be false
-          end
-        end
-      end
-
-      context ":on" do
-        before do
-          config.color_mode = :on
-        end
-
-        context "with output.tty?" do
-          it "sets color_enabled?" do
-            config.output_stream = StringIO.new
-            allow(config.output_stream).to receive_messages(:tty? => true)
-            expect(config.color_enabled?).to be true
-          end
-        end
-
-        context "with !output.tty?" do
-          it "sets color_enabled?" do
-            config.output_stream = StringIO.new
-            allow(config.output_stream).to receive_messages(:tty? => false)
-            expect(config.color_enabled?).to be true
-          end
-        end
-      end
-
-      context ":off" do
-        before do
-          config.color_mode = :off
-        end
-
-        context "with output.tty?" do
-          it "sets !color_enabled?" do
-            config.output_stream = StringIO.new
-            allow(config.output_stream).to receive_messages(:tty? => true)
-            expect(config.color_enabled?).to be false
-          end
-        end
-
-        context "with !output.tty?" do
-          it "sets !color_enabled?" do
-            config.output_stream = StringIO.new
-            allow(config.output_stream).to receive_messages(:tty? => false)
-            expect(config.color_enabled?).to be false
-          end
-        end
-
-        it "prefers incoming cli_args" do
-          config.output_stream = StringIO.new
-          config.force :color_mode => :on
-          config.color_mode = :off
-          expect(config.color_mode).to be :on
-        end
-      end
-    end
-
     describe "#color_enabled?" do
       it "allows overriding instance output stream with an argument" do
         config.output_stream = StringIO.new
         output_override = StringIO.new
 
-        config.color_mode = :automatic
         allow(config.output_stream).to receive_messages(:tty? => false)
         allow(output_override).to receive_messages(:tty? => true)
 
         expect(config.color_enabled?).to be false
         expect(config.color_enabled?(output_override)).to be true
       end
+
+      context "with color_mode :automatic" do
+        before { config.color_mode = :automatic }
+
+        context "with output.tty?" do
+          it "sets color_enabled?" do
+            config.output_stream = StringIO.new
+            allow(config.output_stream).to receive_messages(:tty? => true)
+            expect(config.color_enabled?).to be true
+          end
+        end
+
+        context "with !output.tty?" do
+          it "sets !color_enabled?" do
+            config.output_stream = StringIO.new
+            allow(config.output_stream).to receive_messages(:tty? => false)
+            expect(config.color_enabled?).to be false
+          end
+        end
+      end
+
+      context "with color_mode :on" do
+        before { config.color_mode = :on }
+
+        context "with output.tty?" do
+          it "sets color_enabled?" do
+            config.output_stream = StringIO.new
+            allow(config.output_stream).to receive_messages(:tty? => true)
+            expect(config.color_enabled?).to be true
+          end
+        end
+
+        context "with !output.tty?" do
+          it "sets color_enabled?" do
+            config.output_stream = StringIO.new
+            allow(config.output_stream).to receive_messages(:tty? => false)
+            expect(config.color_enabled?).to be true
+          end
+        end
+      end
+
+      context "with color_mode :off" do
+        before { config.color_mode = :off }
+
+        context "with output.tty?" do
+          it "sets !color_enabled?" do
+            config.output_stream = StringIO.new
+            allow(config.output_stream).to receive_messages(:tty? => true)
+            expect(config.color_enabled?).to be false
+          end
+        end
+
+        context "with !output.tty?" do
+          it "sets !color_enabled?" do
+            config.output_stream = StringIO.new
+            allow(config.output_stream).to receive_messages(:tty? => false)
+            expect(config.color_enabled?).to be false
+          end
+        end
+      end
     end
 
-    describe "#color=" do
-      before { config.color_mode = :automatic }
-
-      context "given false" do
-        before { config.color = false }
-
-        context "with config.tty? and output.tty?" do
-          it "sets color_enabled?" do
-            output = StringIO.new
-            config.output_stream = output
-
-            config.tty = true
-            allow(config.output_stream).to receive_messages(:tty? => true)
-
-            expect(config.color_enabled?).to be true
-            expect(config.color_enabled?(output)).to be true
-          end
-        end
-
-        context "with config.tty? and !output.tty?" do
-          it "does not set color_enabled?" do
-            output = StringIO.new
-            config.output_stream = output
-
-            config.tty = true
-            allow(config.output_stream).to receive_messages(:tty? => false)
-
-            expect(config.color_enabled?).to be false
-            expect(config.color_enabled?(output)).to be false
-          end
-        end
-
-        context "with !config.tty? and output.tty?" do
-          it "sets color_enabled?" do
-            output = StringIO.new
-            config.output_stream = output
-
-            config.tty = false
-            allow(config.output_stream).to receive_messages(:tty? => true)
-
-            expect(config.color_enabled?).to be true
-            expect(config.color_enabled?(output)).to be true
-          end
-        end
-
-        context "with !config.tty? and !output.tty?" do
-          it "does not set color_enabled?" do
-            output = StringIO.new
-            config.output_stream = output
-
-            config.tty = false
-            allow(config.output_stream).to receive_messages(:tty? => false)
-
-            expect(config.color_enabled?).to be false
-            expect(config.color_enabled?(output)).to be false
-          end
-        end
-      end
-
-      context "given true" do
-        before { config.color = true }
-
-        context "with config.tty? and output.tty?" do
-          it "sets color_enabled?" do
-            output = StringIO.new
-            config.output_stream = output
-
-            config.tty = true
-            allow(config.output_stream).to receive_messages(:tty? => true)
-
-            expect(config.color_enabled?).to be true
-            expect(config.color_enabled?(output)).to be true
-          end
-        end
-
-        context "with config.tty? and !output.tty?" do
-          it "sets color_enabled?" do
-            output = StringIO.new
-            config.output_stream = output
-
-            config.tty = true
-            allow(config.output_stream).to receive_messages(:tty? => false)
-
-            expect(config.color_enabled?).to be true
-            expect(config.color_enabled?(output)).to be true
-          end
-        end
-
-        context "with !config.tty? and output.tty?" do
-          it "sets color_enabled?" do
-            output = StringIO.new
-            config.output_stream = output
-
-            config.tty = false
-            allow(config.output_stream).to receive_messages(:tty? => true)
-
-            expect(config.color_enabled?).to be true
-            expect(config.color_enabled?(output)).to be true
-          end
-        end
-
-        context "with !config.tty? and !output.tty?" do
-          it "does not set color_enabled?" do
-            output = StringIO.new
-            config.output_stream = output
-
-            config.tty = false
-            allow(config.output_stream).to receive_messages(:tty? => false)
-
-            expect(config.color_enabled?).to be false
-            expect(config.color_enabled?(output)).to be false
-          end
-        end
-      end
-
+    describe '#color_mode' do
       it "prefers incoming cli_args" do
         config.output_stream = StringIO.new
-        allow(config.output_stream).to receive_messages(:tty? => true)
-        config.force :color => true
-        config.color = false
-        expect(config.color).to be true
+        config.force :color_mode => :on
+        config.color_mode = :off
+        expect(config.color_mode).to be :on
       end
     end
 
@@ -1713,13 +1582,6 @@ module RSpec::Core
     end
     it_behaves_like "a spec filter", :inclusion_filter
     it_behaves_like "a spec filter", :exclusion_filter
-
-    describe "#treat_symbols_as_metadata_keys_with_true_values=" do
-      it 'is deprecated' do
-        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1)
-        config.treat_symbols_as_metadata_keys_with_true_values = true
-      end
-    end
 
     describe "#full_backtrace=" do
       it "doesn't impact other instances of config" do
