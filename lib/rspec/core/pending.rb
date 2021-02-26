@@ -57,7 +57,7 @@ module RSpec
       #   a failure from the code in the `before` hook will prevent the example
       #   from being considered pending, as the example body would not be
       #   executed. If you need to consider hooks as pending as well you can use
-      #   the pending metadata as an alternative, e.g. 
+      #   the pending metadata as an alternative, e.g.
       #   `it "does something", pending: "message"`.
       def pending(message=nil)
         current_example = RSpec.current_example
