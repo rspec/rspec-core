@@ -185,3 +185,27 @@ Feature: Explicit Subject
       """
     When I run `rspec named_subject_bang_spec.rb`
     Then the examples should all pass
+
+  Scenario: Use 'subject.call' to call a subject without testing it's return
+		Given a file named "subject_call_spec.rb" with:
+			"""ruby
+			class TestSubjectCall
+				define test(a,b,c)
+					test1(c, b, a)
+				end
+				
+				def test1(x, y, z)
+					# Do something interesting with x, y, and z
+				end
+			end
+			Rspec.describe "called subject" do
+				subject { |a, b, c| TestSubjectCall.new.test(a, b, c) }
+				
+				it "receives the expected parameters from the call" do
+					expect(subject).to receive(:test1).with(3,2,1)
+					subject.call(1, 2, 3)
+				end
+			end
+			"""
+		When I run 'rspec subject_call_spec.rb
+		Then the example should pass
