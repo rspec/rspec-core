@@ -108,7 +108,7 @@ Given(/^a vendored gem named "(.*?)" containing a file named "(.*?)" with:$/) do
   set_environment_variable('RUBYOPT', ENV['RUBYOPT'] + " -I#{gem_dir}/lib")
 end
 
-When "I accept the recommended settings by removing `=begin` and `=end` from `spec/spec_helper.rb`" do
+When /I accept the recommended settings by removing `=begin` and `=end` from `spec\/spec_helper.rb`/ do
   cd('.') do
     spec_helper = File.read("spec/spec_helper.rb")
     expect(spec_helper).to include("=begin", "=end")
