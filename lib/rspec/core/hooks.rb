@@ -112,9 +112,9 @@ module RSpec
       #
       # ### Warning: implicit before blocks
       #
-      # `before` hooks can also be declared in shared contexts which get
-      # included implicitly either by you or by extension libraries. Since
-      # RSpec runs these in the order in which they are declared within each
+      # `before` hooks can also be declared in configuration-level shared contexts
+      # which get included implicitly either by you or by extension libraries.
+      # Since RSpec runs these in the order in which they are declared within each
       # scope, load order matters, and can lead to confusing results when one
       # before block depends on state that is prepared in another before block
       # that gets run later.
