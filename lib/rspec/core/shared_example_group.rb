@@ -45,9 +45,8 @@ module RSpec
     # examples that you wish to use in multiple example groups.
     #
     # When defined, the shared group block is stored for later evaluation.
-    # It can later be included in an example group either explicitly
-    # (using `include_examples`, `include_context` or `it_behaves_like`)
-    # or implicitly (via matching metadata).
+    # It can later be included in an example group explicitly using
+    # `include_examples`, `include_context` or `it_behaves_like`.
     #
     # Named shared example groups are scoped based on where they are
     # defined. Shared groups defined in an example group are available
@@ -62,9 +61,7 @@ module RSpec
       # @overload shared_examples(name, metadata, &block)
       #   @param name [String, Symbol, Module] identifer to use when looking up
       #     this shared group
-      #   @param metadata [Array<Symbol>, Hash] metadata to attach to this
-      #     group; any example group or example with matching metadata will
-      #     automatically include this shared example group.
+      #   @param metadata [Array<Symbol>, Hash] metadata to attach to this group
       #   @param block The block to be eval'd
       #
       # Stores the block for later use. The block will be evaluated

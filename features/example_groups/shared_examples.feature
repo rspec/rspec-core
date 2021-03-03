@@ -10,7 +10,6 @@ Feature: shared examples
   ```ruby
   include_examples "name"      # include the examples in the current context
   it_behaves_like "name"       # include the examples in a nested context
-  matching metadata            # include the examples in the current context
   ```
 
   **WARNING:** Files containing shared groups must be loaded before the files that
