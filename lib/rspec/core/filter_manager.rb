@@ -46,7 +46,7 @@ module RSpec
 
           examples.select do |ex|
             file_scoped_include?(ex.metadata, ids, locations) do
-              !exclusions.include_example?(ex) && non_scoped_inclusions.include_example?(ex)
+              (exclusions.empty? || !exclusions.include_example?(ex)) && non_scoped_inclusions.include_example?(ex)
             end
           end
         end
@@ -166,7 +166,7 @@ module RSpec
       end
 
       def include_example?(example)
-        MetadataFilter.apply?(:any?, @rules, example.metadata)
+        MetadataFilter.apply?(@rules, example.metadata)
       end
     end
 

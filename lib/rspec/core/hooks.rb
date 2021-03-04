@@ -540,18 +540,18 @@ module RSpec
         def ensure_hooks_initialized_for(position, scope)
           if position == :before
             if scope == :example
-              @before_example_hooks ||= @filterable_item_repo_class.new(:all?)
+              @before_example_hooks ||= @filterable_item_repo_class.new
             else
-              @before_context_hooks ||= @filterable_item_repo_class.new(:all?)
+              @before_context_hooks ||= @filterable_item_repo_class.new
             end
           elsif position == :after
             if scope == :example
-              @after_example_hooks ||= @filterable_item_repo_class.new(:all?)
+              @after_example_hooks ||= @filterable_item_repo_class.new
             else
-              @after_context_hooks ||= @filterable_item_repo_class.new(:all?)
+              @after_context_hooks ||= @filterable_item_repo_class.new
             end
           else # around
-            @around_example_hooks ||= @filterable_item_repo_class.new(:all?)
+            @around_example_hooks ||= @filterable_item_repo_class.new
           end
         end
 
