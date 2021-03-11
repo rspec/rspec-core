@@ -660,11 +660,13 @@ module RSpec::Core
     subject { 'value or a Proc' }
 
     it '`should` prints a deprecation warning when given a value' do
+      expect_deprecation_with_call_site(__FILE__, __LINE__ + 2, /Monkey-patching `should`/)
       expect_warn_deprecation(/The implicit block expectation syntax is deprecated, you should pass/)
       expect { should block_matcher }.not_to raise_error
     end
 
     it '`should_not` prints a deprecation warning when given a value' do
+      expect_deprecation_with_call_site(__FILE__, __LINE__ + 2, /Monkey-patching `should_not`/)
       expect_warn_deprecation(/The implicit block expectation syntax is deprecated, you should pass/)
       expect { should_not block_matcher }.to raise_error(Exception)
     end

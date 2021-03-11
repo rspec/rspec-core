@@ -1883,6 +1883,14 @@ module RSpec::Core
           end
         }.to raise_error("boom").and avoid_changing(RSpec::Support, :thread_local_data)
       end
+
+      it "emits a deprecation warning when used" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 3, /it_should_behave_like/)
+        RSpec.describe do
+          shared_examples_for("stuff") { }
+          it_should_behave_like "stuff"
+        end
+      end
     end
 
     it 'minimizes the number of methods that users could inadvertantly overwrite' do

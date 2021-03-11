@@ -109,6 +109,7 @@ module RSpec
       # @note If there are multiple examples identified by this location, they will use {#id}
       #   to rerun instead, but this method will still return the location (that's why it is deprecated!).
       def rerun_argument
+        RSpec.deprecate("`rerun_argument`", :replacement => "`location_rerun_argument`")
         location_rerun_argument
       end
 

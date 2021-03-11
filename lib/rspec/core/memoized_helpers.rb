@@ -78,6 +78,7 @@ module RSpec
       # @note If you are using RSpec's newer expect-based syntax you may
       #       want to use `is_expected.to` instead of `should`.
       def should(matcher=nil, message=nil)
+        RSpec.deprecate("Monkey-patching `should`", :replacement => "RSpec Expectations' `is_expected.to`")
         enforce_value_expectation(matcher, 'should')
         RSpec::Expectations::PositiveExpectationHandler.handle_matcher(subject, matcher, message)
       end
@@ -98,6 +99,7 @@ module RSpec
       # @note If you are using RSpec's newer expect-based syntax you may
       #       want to use `is_expected.to_not` instead of `should_not`.
       def should_not(matcher=nil, message=nil)
+        RSpec.deprecate("Monkey-patching `should_not`", :replacement => "RSpec Expectations' `is_expected.not_to`")
         enforce_value_expectation(matcher, 'should_not')
         RSpec::Expectations::NegativeExpectationHandler.handle_matcher(subject, matcher, message)
       end

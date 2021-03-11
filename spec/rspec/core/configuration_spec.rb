@@ -1306,6 +1306,18 @@ module RSpec::Core
         config.run_all_when_everything_filtered = true
         expect(config.run_all_when_everything_filtered?).to be(true)
       end
+
+      it "emits a deprecation message when set" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /run_all_when_everything_filtered/)
+        config.run_all_when_everything_filtered = true
+      end
+    end
+
+    describe "#tty=" do
+      it "emits a deprecation message when set" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /tty/)
+        config.tty = true
+      end
     end
 
     describe "#color_mode" do
@@ -1399,6 +1411,11 @@ module RSpec::Core
 
     describe "#color=" do
       before { config.color_mode = :automatic }
+
+      it "emits a deprecation message when set" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /color/)
+        config.color = true
+      end
 
       context "given false" do
         before { config.color = false }
@@ -2369,6 +2386,13 @@ module RSpec::Core
         end
       end
 
+      describe '#alias_it_should_behave_like_to' do
+        it "emits a deprecation message when used" do
+          expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /alias_it_should_behave_like_to/)
+          config.alias_it_should_behave_like_to :it_should_have_behaved_like
+        end
+      end
+
       it_behaves_like "metadata hash builder" do
         def metadata_hash(*args)
           config.alias_example_group_to :my_group_method, *args
@@ -2903,6 +2927,16 @@ module RSpec::Core
           "shared_context_metadata_behavior",
           ":another_value", ":trigger_inclusion", ":apply_to_host_groups"
         ))
+      end
+
+      it "emits a deprecation message when set to :trigger_inclusion" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /shared_context_metadata_behavior/)
+        config.shared_context_metadata_behavior = :trigger_inclusion
+      end
+
+      it "does not emit a deprecation message when set to :apply_to_host_groups" do
+        expect_no_deprecation
+        config.shared_context_metadata_behavior = :apply_to_host_groups
       end
     end
 
