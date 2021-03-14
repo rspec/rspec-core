@@ -633,17 +633,17 @@ module RSpec::Core
 
     describe Object do
       context 'with implicit subject' do
-        it_should_behave_like 'a subject'
+        it_behaves_like 'a subject'
       end
 
       context 'with explicit subject' do
         subject { Object.new }
-        it_should_behave_like 'a subject'
+        it_behaves_like 'a subject'
       end
 
       context 'with a constant subject'do
         subject { 123 }
-        it_should_behave_like 'a subject'
+        it_behaves_like 'a subject'
       end
     end
   end

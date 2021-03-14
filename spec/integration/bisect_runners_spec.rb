@@ -53,8 +53,7 @@ module RSpec::Core
     it 'honors `run_all_when_everything_filtered`' do
       write_file 'spec/a_spec.rb', "
         RSpec.configure do |c|
-          c.filter_run :focus
-          c.run_all_when_everything_filtered = true
+          c.filter_run_when_matching :focus
         end
 
         RSpec.describe 'A group' do
