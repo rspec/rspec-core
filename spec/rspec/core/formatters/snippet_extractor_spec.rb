@@ -161,7 +161,7 @@ module RSpec::Core::Formatters
         end
       end
 
-      argument_error_points_invoker = RSpec::Support::Ruby.jruby? && !RUBY_VERSION.start_with?('1.8.')
+      argument_error_points_invoker = RSpec::Support::Ruby.jruby? || RUBY_VERSION.start_with?('1.8.')
       context 'when the expression is a method definition and ends with "end"-only line', :skip => argument_error_points_invoker do
         let(:source) do
           obj = Object.new
