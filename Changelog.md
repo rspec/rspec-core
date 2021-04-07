@@ -32,6 +32,7 @@ Breaking Changes:
 * Raise on attempt to use a legacy formatter without `rspec-legacy_formatters`.
   (Phil Pirozhkov, #2864)
 * Unify multi-condition filtering to use "all" semantic. (Phil Pirozhkov, #2874)
+* Remove support for RR test double framework version < 3.0. (Phil Pirozhkov, #2884)
 
 Enhancements:
 
