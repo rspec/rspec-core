@@ -3,8 +3,6 @@ module RR
     BACKTRACE_IDENTIFIER = /doesn't matter/
   end
 
-  module Extensions
-    module InstanceMethods
-    end
+  module DSL
   end
 end

@@ -12,7 +12,7 @@ module RSpec
           :rr
         end
 
-        include ::RR::Extensions::InstanceMethods
+        include ::RR::DSL
 
         def setup_mocks_for_rspec
           ::RR::Space.instance.reset
