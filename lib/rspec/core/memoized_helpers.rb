@@ -317,7 +317,7 @@ EOS
 
           unless matching_reserved_name.nil?
             raise(
-              "#let or #subject called with reserved name ##{matching_reserved_name.to_s}"
+              "#let or #subject called with reserved name ##{matching_reserved_name}"
             )
           end
           our_module = MemoizedHelpers.module_for(self)
