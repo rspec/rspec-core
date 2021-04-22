@@ -77,6 +77,7 @@ module RSpec::Core::Formatters
 
       context "when a legacy formatter is added without RSpec::LegacyFormatters" do
         formatter_class = Struct.new(:output)
+        reserved = %w(. ( ) )
 
         before do
           allow_deprecation
@@ -84,7 +85,7 @@ module RSpec::Core::Formatters
 
         it "issues a deprecation" do
           expect_warn_deprecation(
-            /The #{formatter_class} formatter uses the deprecated formatter interface.+#{__FILE__}:#{__LINE__ + 1}/)
+            /The #{formatter_class} formatter uses the deprecated formatter interface not supported directly by RSpec 3\.  To continue to use this formatter you must install the `rspec-legacy_formatters` gem, which provides support for legacy formatters or upgrade the formatter to a compatible version\.  Formatter added at: #{::RSpec::CallerFilter.first_non_rspec_line.gsub(/:\d+:/) { |text| ":#{text[/\d+/].succ}:" }.gsub(/\W/) { |char| reserved.include?(char) ? "\\#{char}" : char }}/)
           loader.add formatter_class, output
         end
       end
