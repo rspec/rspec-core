@@ -544,8 +544,6 @@ module RSpec::Core
       end.to raise_error(/#let or #subject called with reserved name `to_s`/)
     end
 
-
-
     let(:a_value) { "a string" }
 
     context 'when overriding let in a nested context' do
