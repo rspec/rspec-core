@@ -236,9 +236,13 @@ EOS
           # We have to pass the block directly to `define_method` to
           # allow it to use method constructs like `super` and `return`.
           raise "#let or #subject called without a block" if block.nil?
-          raise(
-            "#let or #subject called with a reserved name #initialize"
-          ) if :initialize == name
+
+          # A list of reserved words that can't be used as a name for a memoized helper
+          # Matches for both symbols and passed strings
+          if [:initialize, :to_s].include?(name.to_sym)
+            raise ArgumentError, "#let or #subject called with reserved name `#{name}`"
+          end
+
           our_module = MemoizedHelpers.module_for(self)
 
           # If we have a module clash in our helper module
