@@ -520,10 +520,28 @@ module RSpec::Core
       end.to raise_error(/#let or #subject called without a block/)
     end
 
-    it 'raises an error when attempting to define a reserved method name' do
+    it 'raises an error when attempting to define a reserved name #initialize' do
       expect do
-        RSpec.describe { let(:initialize) { true }}
-      end.to raise_error(/#let or #subject called with a reserved name #initialize/)
+        RSpec.describe { let(:initialize) { true } }
+      end.to raise_error(/#let or #subject called with reserved name `initialize`/)
+    end
+
+    it 'raises an error when attempting to define a reserved name #initialize as a string' do
+      expect do
+        RSpec.describe { let('initialize') { true } }
+      end.to raise_error(/#let or #subject called with reserved name `initialize`/)
+    end
+
+    it 'raises an error when attempting to define a reserved name #to_s' do
+      expect do
+        RSpec.describe { let(:to_s) { true } }
+      end.to raise_error(/#let or #subject called with reserved name `to_s`/)
+    end
+
+    it 'raises an error when attempting to define a reserved name #to_s as a string' do
+      expect do
+        RSpec.describe { let('to_s') { true } }
+      end.to raise_error(/#let or #subject called with reserved name `to_s`/)
     end
 
     let(:a_value) { "a string" }
