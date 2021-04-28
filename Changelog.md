@@ -5,7 +5,7 @@ Enhancements:
 
 * Improve pluralisation of words ending with `s` (like process). (Joshua Pinter, #2779)
 * Add ordering by file modification time (most recent first). (Matheus Richard, #2778)
-* Extend reserved memoized helper name checking for #let and #subject. (Nick Flückiger, #2886)
+* Add `to_s` to reserved names for #let and #subject. (Nick Flückiger, #2886)
 
 Bug fixes:
 
