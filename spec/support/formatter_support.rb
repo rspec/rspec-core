@@ -64,6 +64,7 @@ module FormatterSupport
         |
         |       expected: 2
         |            got: 1
+        |           diff: 1
         |
         |       (compared using ==)
         |     # ./spec/rspec/core/resources/formatter_specs.rb:18
@@ -84,6 +85,7 @@ module FormatterSupport
         |
         |       expected: 2
         |            got: 1
+        |           diff: 1
         |
         |       (compared using ==)
         |     # ./spec/rspec/core/resources/formatter_specs.rb:37
@@ -99,6 +101,7 @@ module FormatterSupport
         |
         |            expected: 2
         |                 got: 1
+        |                diff: 1
         |
         |            (compared using ==)
         |          # ./spec/rspec/core/resources/formatter_specs.rb:41
@@ -107,6 +110,7 @@ module FormatterSupport
         |
         |            expected: 4
         |                 got: 3
+        |                diff: 1
         |
         |            (compared using ==)
         |          # ./spec/rspec/core/resources/formatter_specs.rb:42
@@ -159,6 +163,7 @@ module FormatterSupport
         |
         |       expected: 2
         |            got: 1
+        |           diff: 1
         |
         |       (compared using ==)
         |     # ./spec/rspec/core/resources/formatter_specs.rb:18:in `block (3 levels) in <top (required)>'
@@ -179,6 +184,7 @@ module FormatterSupport
         |
         |       expected: 2
         |            got: 1
+        |           diff: 1
         |
         |       (compared using ==)
         |     # ./spec/rspec/core/resources/formatter_specs.rb:37:in `block (2 levels) in <top (required)>'
@@ -194,6 +200,7 @@ module FormatterSupport
         |
         |            expected: 2
         |                 got: 1
+        |                diff: 1
         |
         |            (compared using ==)
         |          # ./spec/rspec/core/resources/formatter_specs.rb:41:in `block (2 levels) in <top (required)>'
@@ -202,6 +209,7 @@ module FormatterSupport
         |
         |            expected: 4
         |                 got: 3
+        |                diff: 1
         |
         |            (compared using ==)
         |          # ./spec/rspec/core/resources/formatter_specs.rb:42:in `block (2 levels) in <top (required)>'

@@ -64,6 +64,7 @@ Feature: Aggregating Failures
 
                          expected: 200
                               got: 404
+                             diff: -204
 
                          (compared using ==)
                        # ./spec/use_block_form_spec.rb:19
@@ -200,6 +201,7 @@ Feature: Aggregating Failures
 
                   expected: 302
                        got: 404
+                      diff: -204
 
                   (compared using ==)
                 # ./spec/use_metadata_spec.rb:7
@@ -253,6 +255,7 @@ Feature: Aggregating Failures
 
                   expected: 200
                        got: 404
+                      diff: -204
 
                   (compared using ==)
                 # ./spec/enable_globally_spec.rb:13
@@ -308,6 +311,7 @@ Feature: Aggregating Failures
 
                   expected: 200
                        got: 404
+                      diff: -204
 
                   (compared using ==)
                 # ./spec/enable_globally_spec.rb:13
@@ -362,6 +366,7 @@ Feature: Aggregating Failures
 
                   expected: 200
                        got: 404
+                      diff: -204
 
                   (compared using ==)
                 # ./spec/nested_failure_aggregation_spec.rb:7
@@ -427,6 +432,7 @@ Feature: Aggregating Failures
 
                   expected: 200
                        got: 404
+                      diff: -204
 
                   (compared using ==)
                 # ./spec/nested_failure_aggregation_spec.rb:7
@@ -487,6 +493,7 @@ Feature: Aggregating Failures
 
                   expected: 200
                        got: 404
+                      diff: -204
 
                   (compared using ==)
                 # ./spec/mock_expectation_failure_spec.rb:10
@@ -529,6 +536,7 @@ Feature: Aggregating Failures
 
                   expected: 200
                        got: 404
+                      diff: -204
 
                   (compared using ==)
                 # ./spec/pending_spec.rb:8
@@ -580,6 +588,7 @@ Feature: Aggregating Failures
 
                   expected: 200
                        got: 404
+                      diff: -204
 
                   (compared using ==)
                 # ./spec/pending_spec.rb:8
