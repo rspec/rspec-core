@@ -1,3 +1,5 @@
+require 'support/helper_methods'
+
 if RSpec::Support::Ruby.jruby? && RSpec::Support::Ruby.jruby_version == "9.1.17.0"
   # A regression appeared in require_relative in JRuby 9.1.17.0 where require some
   # how ends up private, this monkey patch uses `send`
@@ -29,6 +31,7 @@ end
 
 RSpec.shared_context "aruba support" do
   include Aruba::Api
+  include RSpecHelpers
   let(:stderr) { StringIO.new }
   let(:stdout) { StringIO.new }
 
@@ -66,13 +69,6 @@ RSpec.shared_context "aruba support" do
     # strip extra indentation.
     formatted_contents = unindent(contents.sub(/\A\n/, ""))
     write_file file_name, formatted_contents
-  end
-
-  # Intended for use with indented heredocs.
-  # taken from Ruby Tapas:
-  # https://rubytapas.dpdcart.com/subscriber/post?id=616#files
-  def unindent(s)
-    s.gsub(/^#{s.scan(/^[ \t]+(?=\S)/).min}/, "")
   end
 end
 
