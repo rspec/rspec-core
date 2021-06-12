@@ -14,6 +14,13 @@ module RSpecHelpers
     result
   end
 
+  # Intended for use with indented heredocs.
+  # taken from Ruby Tapas:
+  # https://rubytapas.dpdcart.com/subscriber/post?id=616#files
+  def unindent(s)
+    s.gsub(/^#{s.scan(/^[ \t]+(?=\S)/).min}/, "")
+  end
+
   # In Ruby 2.7 taint was removed and has no effect, whilst SAFE warns that it
   # has no effect and will become a normal varible in 3.0. Other engines do not
   # implement SAFE.

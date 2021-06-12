@@ -1,7 +1,11 @@
 require 'rspec/core/formatters/snippet_extractor'
+require 'support/helper_methods'
+require 'tempfile'
 
 module RSpec::Core::Formatters
   RSpec.describe SnippetExtractor do
+    include RSpecHelpers
+
     subject(:expression_lines) do
       SnippetExtractor.extract_expression_lines_at(file_path, line_number, max_line_count)
     end
@@ -177,6 +181,56 @@ module RSpec::Core::Formatters
           expect(expression_lines).to eq([
             '          def obj.foo(arg)',
             '            p arg',
+            '          end'
+          ])
+        end
+      end
+
+      context 'when the expression line includes an "end"-less method definition', :if => RUBY_VERSION.to_f >= 3.0 do
+        let(:source) do
+          load(file.path)
+        end
+
+        let(:file) do
+          file = Tempfile.new('source.rb')
+
+          file.write(unindent(<<-END))
+            def foo = raise
+
+            foo
+          END
+
+          file.close
+
+          file
+        end
+
+        after do
+          file.unlink
+        end
+
+        it 'returns only the line' do
+          expect(expression_lines).to eq([
+            'def foo = raise'
+          ])
+        end
+      end
+
+      context 'when the expression is a setter method definition', :unless => argument_error_points_invoker do
+        let(:source) do
+          obj = Object.new
+
+          def obj.foo=(arg1, arg2)
+            @foo = arg1
+          end
+
+          obj.foo = 1
+        end
+
+        it 'returns all the lines without confusing it with "end"-less method' do
+          expect(expression_lines).to eq([
+            '          def obj.foo=(arg1, arg2)',
+            '            @foo = arg1',
             '          end'
           ])
         end
