@@ -580,6 +580,7 @@ module RSpec
 
         should_run_context_hooks = descendant_filtered_examples.any?
         begin
+          RSpec.current_scope = :before_context_hook
           run_before_context_hooks(new('before(:context) hook')) if should_run_context_hooks
           result_for_this_group = run_examples(reporter)
           results_for_descendants = ordering_strategy.order(children).map { |child| child.run(reporter) }.all?
@@ -592,6 +593,7 @@ module RSpec
           RSpec.world.wants_to_quit = true if reporter.fail_fast_limit_met?
           false
         ensure
+          RSpec.current_scope = :after_context_hook
           run_after_context_hooks(new('after(:context) hook')) if should_run_context_hooks
           reporter.example_group_finished(self)
         end
