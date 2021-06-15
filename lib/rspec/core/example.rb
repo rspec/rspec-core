@@ -259,6 +259,7 @@ module RSpec
             with_around_and_singleton_context_hooks do
               begin
                 run_before_example
+                RSpec.current_scope = :example
                 @example_group_instance.instance_exec(self, &@example_block)
 
                 if pending?
@@ -278,6 +279,7 @@ module RSpec
               rescue AllExceptionsExcludingDangerousOnesOnRubiesThatAllowIt => e
                 set_exception(e)
               ensure
+                RSpec.current_scope = :after_example_hook
                 run_after_example
               end
             end
@@ -462,6 +464,7 @@ module RSpec
       end
 
       def with_around_example_hooks
+        RSpec.current_scope = :before_example_hook
         hooks.run(:around, :example, self) { yield }
       rescue Support::AllExceptionsExceptOnesWeMustNotRescue => e
         set_exception(e)
