@@ -534,9 +534,15 @@ module RSpec
         end
       end
 
+      # @deprecated use `RSpec.current_scope` instead
       # Returns true if a `before(:context)` or `after(:context)`
       # hook is currently executing.
       def self.currently_executing_a_context_hook?
+        RSpec.deprecate(
+          "currently_executing_a_context_hook",
+          :replacement => "RSpec.current_scope"
+        )
+
         @currently_executing_a_context_hook
       end
 
