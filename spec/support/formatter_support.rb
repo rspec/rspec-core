@@ -33,6 +33,7 @@ module FormatterSupport
 
     runner = RSpec::Core::Runner.new(options)
     configuration = runner.configuration
+    configuration.filter_gems_from_backtrace "gems/bundler"
     configuration.backtrace_formatter.exclusion_patterns << /rspec_with_simplecov/
     configuration.backtrace_formatter.inclusion_patterns = []
 
@@ -41,6 +42,7 @@ module FormatterSupport
     runner.run(err, out)
     out.string
   end
+  RUN_LINE = __LINE__ - 3
 
   def normalize_durations(output)
     output.gsub(/(?:\d+ minutes? )?\d+(?:\.\d+)?(s| seconds?)/) do |dur|
@@ -67,7 +69,7 @@ module FormatterSupport
         |
         |       (compared using ==)
         |     # ./spec/rspec/core/resources/formatter_specs.rb:18
-        |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
+        |     # ./spec/support/formatter_support.rb:#{RUN_LINE}:in `run_rspec_with_formatter'
         |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
         |     # ./spec/support/sandboxing.rb:16
         |     # ./spec/support/sandboxing.rb:7
@@ -87,7 +89,7 @@ module FormatterSupport
         |
         |       (compared using ==)
         |     # ./spec/rspec/core/resources/formatter_specs.rb:37
-        |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
+        |     # ./spec/support/formatter_support.rb:#{RUN_LINE}:in `run_rspec_with_formatter'
         |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
         |     # ./spec/support/sandboxing.rb:16
         |     # ./spec/support/sandboxing.rb:7
@@ -162,7 +164,7 @@ module FormatterSupport
         |
         |       (compared using ==)
         |     # ./spec/rspec/core/resources/formatter_specs.rb:18:in `block (3 levels) in <top (required)>'
-        |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
+        |     # ./spec/support/formatter_support.rb:#{RUN_LINE}:in `run_rspec_with_formatter'
         |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
         |     # ./spec/support/sandboxing.rb:16:in `block (3 levels) in <top (required)>'
         |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
@@ -182,7 +184,7 @@ module FormatterSupport
         |
         |       (compared using ==)
         |     # ./spec/rspec/core/resources/formatter_specs.rb:37:in `block (2 levels) in <top (required)>'
-        |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
+        |     # ./spec/support/formatter_support.rb:#{RUN_LINE}:in `run_rspec_with_formatter'
         |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
         |     # ./spec/support/sandboxing.rb:16:in `block (3 levels) in <top (required)>'
         |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
@@ -213,7 +215,7 @@ module FormatterSupport
         |       foo
         |     # (erb):1:in `<main>'
         |     # ./spec/rspec/core/resources/formatter_specs.rb:50:in `block (2 levels) in <top (required)>'
-        |     # ./spec/support/formatter_support.rb:41:in `run_rspec_with_formatter'
+        |     # ./spec/support/formatter_support.rb:#{RUN_LINE}:in `run_rspec_with_formatter'
         |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
         |     # ./spec/support/sandboxing.rb:16:in `block (3 levels) in <top (required)>'
         |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
