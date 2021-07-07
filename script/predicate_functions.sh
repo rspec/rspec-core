@@ -129,9 +129,13 @@ function documentation_enforced {
 }
 
 function style_and_lint_enforced {
- if [ -x ./bin/rubocop ]; then
-   return 0
- else
+ if is_ruby_head; then
    return 1
+ else
+   if [ -x ./bin/rubocop ]; then
+     return 0
+   else
+     return 1
+   fi
  fi
 }
