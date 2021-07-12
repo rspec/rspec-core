@@ -23,6 +23,7 @@ RSpec.describe 'Spec file load errors' do
 
     RSpec.configure do |c|
       c.filter_gems_from_backtrace "gems/aruba"
+      c.filter_gems_from_backtrace "gems/bundler"
       c.backtrace_exclusion_patterns << %r{/rspec-core/spec/} << %r{rspec_with_simplecov}
       c.failure_exit_code = failure_exit_code
       c.error_exit_code = error_exit_code
