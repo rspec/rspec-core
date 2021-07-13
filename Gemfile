@@ -20,8 +20,7 @@ group :documentation do
   gem 'github-markup', :platform => :mri
 end
 
-# Until 1.13.2 is released due to Rubygems usage
-gem 'ffi', '~> 1.12.0'
+gem 'ffi', '~> 1.15.0'
 
 gem "jruby-openssl", platforms: :jruby
 
