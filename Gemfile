@@ -52,8 +52,7 @@ elsif RUBY_VERSION < '2.0'
 elsif RUBY_VERSION < '2.3.0'
   gem 'ffi', '~> 1.12.0'
 else
-  # Until 1.13.2 is released due to Rubygems usage
-  gem 'ffi', '~> 1.12.0'
+  gem 'ffi', '~> 1.15.0'
 end
 
 if RUBY_VERSION < '2.3.0' && !!(RbConfig::CONFIG['host_os'] =~ /cygwin|mswin|mingw|bccwin|wince|emx/)

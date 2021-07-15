@@ -201,7 +201,7 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
       it "does not show the error class" do
         group.example("example name") { expect("this").to eq("that") }
         run_all_and_dump_failures
-        expect(formatter_output.string).not_to match(/RSpec/m)
+        expect(formatter_output.string).not_to match(/RSpec::/m)
       end
     end
 
@@ -209,7 +209,7 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
       it "does not show the error class" do
         group.example("example name") { expect("this").to receive("that") }
         run_all_and_dump_failures
-        expect(formatter_output.string).not_to match(/RSpec/m)
+        expect(formatter_output.string).not_to match(/RSpec::/m)
       end
     end
 
