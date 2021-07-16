@@ -202,6 +202,42 @@ module RSpec::Core
         EOS
       end
 
+      context "when the first exception doesn't have a backgrace" do
+        let(:first_exception) { FakeException.new("Real\nculprit", backtrace) }
+
+        shared_examples 'expected result for the case when there is no backtrace' do
+          it 'wont fail for the exception with a nil backtrace', :if => RSpec::Support::RubyFeatures.supports_exception_cause? do
+            the_presenter = Formatters::ExceptionPresenter.new(the_exception, example)
+
+            expect(the_presenter.fully_formatted(1)).to eq(<<-EOS.gsub(/^ +\|/, ''))
+              |
+              |  1) Example
+              |     Failure/Error: # The failure happened here!#{ encoding_check }
+              |
+              |       Boom
+              |       Bam
+              |     # ./spec/rspec/core/formatters/exception_presenter_spec.rb:#{line_num}
+              |     # ------------------
+              |     # --- Caused by: ---
+              |     #   Real
+              |     #   culprit
+            EOS
+          end
+        end
+
+        context 'when backtrace is []' do
+          let(:backtrace) { [] }
+
+          it_behaves_like 'expected result for the case when there is no backtrace'
+        end
+
+        context 'when backtrace is nil' do
+          let(:backtrace) { nil }
+
+          it_behaves_like 'expected result for the case when there is no backtrace'
+        end
+      end
+
       it 'wont produce a stack error when cause is the exception itself', :if => RSpec::Support::RubyFeatures.supports_exception_cause? do
         allow(the_exception).to receive(:cause) { the_exception }
         the_presenter = Formatters::ExceptionPresenter.new(the_exception, example)
