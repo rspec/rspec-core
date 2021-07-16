@@ -53,7 +53,7 @@ module RSpec
               cause << "  #{line}"
             end
 
-            unless last_cause.backtrace.empty?
+            unless last_cause.backtrace.nil? || last_cause.backtrace.empty?
               cause << ("  #{backtrace_formatter.format_backtrace(last_cause.backtrace, example.metadata).first}")
             end
           end
