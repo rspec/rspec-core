@@ -89,6 +89,15 @@ module RSpec
       def prune_conditionally_filtered_examples(examples)
         examples.reject do |ex|
           meta = ex.metadata
+          if meta.key?(:if)
+            RSpec.deprecate("`:if` metadata will have no special meaning in RSpec 4 and",
+                            :replacement => "`:skip` with a negated condition",
+                            :call_site => meta[:location])
+          end
+          if meta.key?(:unless)
+            RSpec.deprecate("`:unless` metadata will have no special meaning in RSpec 4 and",
+                            :replacement => "`:skip`")
+          end
           !meta.fetch(:if, true) || meta[:unless]
         end
       end

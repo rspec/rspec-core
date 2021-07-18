@@ -40,14 +40,14 @@ module RSpec::Core
       end
     end
 
-    context "with space", :unless => RSpec::Support::OS.windows? do
+    context "with space", :skip => RSpec::Support::OS.windows? do
       it "renders rspec with space escaped" do
         task.rspec_path = '/path with space/exe/rspec'
         expect(spec_command).to match(/^#{ruby} #{default_load_path_opts} \/path\\ with\\ space\/exe\/rspec/)
       end
     end
 
-    context "on windows, with a quote in the name", :if => RSpec::Support::OS.windows? do
+    context "on windows, with a quote in the name", :skip => !RSpec::Support::OS.windows? do
       it "renders rspec quoted, with quote escaped" do
         task.rspec_path = "/foo'bar/exe/rspec"
         expect(spec_command).to include(%q|'/foo\'bar/exe/rspec'|)
@@ -92,7 +92,7 @@ module RSpec::Core
         expect(spec_command).to match(/ --pattern '?complex_pattern'?/)
       end
 
-      it "shellescapes the pattern as necessary", :unless => RSpec::Support::OS.windows? do
+      it "shellescapes the pattern as necessary", :skip => RSpec::Support::OS.windows? do
         task.pattern = "foo'bar"
         expect(spec_command).to include(" --pattern foo\\'bar")
       end
@@ -160,7 +160,7 @@ module RSpec::Core
     end
 
     context "with_clean_environment is set" do
-      it "removes the environment variables", :if => RUBY_VERSION >= '1.9.0', :unless => RSpec::Support::Ruby.jruby? do
+      it "removes the environment variables", :skip => (RUBY_VERSION < '1.9.0' || RSpec::Support::Ruby.jruby?) do
         with_env_vars 'MY_ENV' => 'ABC' do
           if RSpec::Support::OS.windows?
             essential_shell_variables = /\["ANSICON", "ANSICON_DEF", "HOME", "TMPDIR", "USER"\]/
@@ -417,7 +417,7 @@ module RSpec::Core
         make_files_in_dir "acceptance"
       end
 
-      it "shellescapes the pattern as necessary", :unless => RSpec::Support::OS.windows? do
+      it "shellescapes the pattern as necessary", :skip => RSpec::Support::OS.windows? do
         task.exclude_pattern = "foo'bar"
         expect(spec_command).to include(" --exclude-pattern foo\\'bar")
       end

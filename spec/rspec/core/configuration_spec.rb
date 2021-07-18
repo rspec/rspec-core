@@ -611,12 +611,12 @@ module RSpec::Core
           expect(config.files_to_run).to contain_files("spec/rspec/core/resources/a_spec.rb", "spec/rspec/core/resources/acceptance/foo_spec.rb")
         end
 
-        it "loads files in Windows", :if => RSpec::Support::OS.windows? do
+        it "loads files in Windows", :skip => !RSpec::Support::OS.windows? do
           assign_files_or_directories_to_run "C:\\path\\to\\project\\spec\\sub\\foo_spec.rb"
           expect(config.files_to_run).to contain_files("C:/path/to/project/spec/sub/foo_spec.rb")
         end
 
-        it "loads files in Windows when directory is specified", :failing_on_windows_ci, :if => RSpec::Support::OS.windows? do
+        it "loads files in Windows when directory is specified", :failing_on_windows_ci, :skip => !RSpec::Support::OS.windows? do
           assign_files_or_directories_to_run "spec\\rspec\\core\\resources"
           expect(config.files_to_run).to contain_files("spec/rspec/core/resources/a_spec.rb")
         end
@@ -1233,7 +1233,7 @@ module RSpec::Core
       end
     end
 
-    describe "#prepend", :if => RSpec::Support::RubyFeatures.module_prepends_supported? do
+    describe "#prepend", :skip => !RSpec::Support::RubyFeatures.module_prepends_supported? do
       include_examples "warning of deprecated `:example_group` during filtering configuration", :prepend, Enumerable
 
       module SomeRandomMod
@@ -1305,6 +1305,18 @@ module RSpec::Core
       it "can be queried by predicate method" do
         config.run_all_when_everything_filtered = true
         expect(config.run_all_when_everything_filtered?).to be(true)
+      end
+
+      it "emits a deprecation message when set" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /run_all_when_everything_filtered/)
+        config.run_all_when_everything_filtered = true
+      end
+    end
+
+    describe "#tty=" do
+      it "emits a deprecation message when set" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /tty/)
+        config.tty = true
       end
     end
 
@@ -1399,6 +1411,11 @@ module RSpec::Core
 
     describe "#color=" do
       before { config.color_mode = :automatic }
+
+      it "emits a deprecation message when set" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /color/)
+        config.color = true
+      end
 
       context "given false" do
         before { config.color = false }
@@ -2337,7 +2354,7 @@ module RSpec::Core
       end
 
       it "doesn't prepend a module when already present in ancestor chain",
-        :if => RSpec::Support::RubyFeatures.module_prepends_supported? do
+        :skip => !RSpec::Support::RubyFeatures.module_prepends_supported? do
         config.prepend(IncludeExtendOrPrependMeOnce, :foo => :bar)
 
         group = RSpec.describe("group", :foo => :bar)
@@ -2366,6 +2383,13 @@ module RSpec::Core
 
         Module.class_exec do
           undef :my_group_method if method_defined? :my_group_method
+        end
+      end
+
+      describe '#alias_it_should_behave_like_to' do
+        it "emits a deprecation message when used" do
+          expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /alias_it_should_behave_like_to/)
+          config.alias_it_should_behave_like_to :it_should_have_behaved_like
         end
       end
 
@@ -2903,6 +2927,16 @@ module RSpec::Core
           "shared_context_metadata_behavior",
           ":another_value", ":trigger_inclusion", ":apply_to_host_groups"
         ))
+      end
+
+      it "emits a deprecation message when set to :trigger_inclusion" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /shared_context_metadata_behavior/)
+        config.shared_context_metadata_behavior = :trigger_inclusion
+      end
+
+      it "does not emit a deprecation message when set to :apply_to_host_groups" do
+        expect_no_deprecation
+        config.shared_context_metadata_behavior = :apply_to_host_groups
       end
     end
 

@@ -81,7 +81,10 @@ module RSpec
       def self.expose_example_group_alias_globally(method_name)
         change_global_dsl do
           remove_method(method_name) if method_defined?(method_name)
-          define_method(method_name) { |*a, &b| ::RSpec.__send__(method_name, *a, &b) }
+          define_method(method_name) do |*a, &b|
+            RSpec.deprecate("Globally-exposed DSL (`#{method_name}`)", :replacement => "`RSpec.#{method_name}`")
+            ::RSpec.__send__(method_name, *a, &b)
+          end
         end
       end
 

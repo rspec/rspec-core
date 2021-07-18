@@ -130,7 +130,7 @@ root
     end
 
     # The backtrace is slightly different on JRuby/Rubinius so we skip there.
-    it 'produces the expected full output', :if => RSpec::Support::Ruby.mri? do
+    it 'produces the expected full output', :skip => !RSpec::Support::Ruby.mri? do
       output = run_example_specs_with_formatter("doc")
       output.gsub!(/ +$/, '') # strip trailing whitespace
 

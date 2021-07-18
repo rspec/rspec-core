@@ -327,7 +327,11 @@ module RSpec
       # (default: `false`).
       # @deprecated Use {#filter_run_when_matching} instead for the specific
       #   filters that you want to be ignored if none match.
-      add_setting :run_all_when_everything_filtered
+      def run_all_when_everything_filtered=(value)
+        RSpec.deprecate("`run_all_when_everything_filtered` setting", :replacement => "`filter_run_when_matching :focus`")
+        @run_all_when_everything_filtered = value
+      end
+      add_read_only_setting :run_all_when_everything_filtered
 
       # @macro add_setting
       # Color to use to indicate success.  Defaults to `:green` but can be set
@@ -440,6 +444,11 @@ module RSpec
             "shared_context_metadata_behavior` to `#{value.inspect}`. Only " \
             "`:trigger_inclusion` and `:apply_to_host_groups` are valid values."
         end
+
+        if value == :trigger_inclusion
+          RSpec.deprecate("`shared_context_metadata_behavior` setting",
+                          :message => "`:apply_to_host_groups` will become the default and only option.")
+        end
       end
 
       # Record the start time of the spec suite to measure load time.
@@ -492,7 +501,12 @@ module RSpec
 
       # @private
       # @deprecated Use {#color_mode} = :on, instead of {#color} with {#tty}
-      add_setting :tty
+      def tty=(value)
+        RSpec.deprecate("`tty` setting", :replacement => "`color_mode`")
+        @tty = value
+      end
+      add_read_only_setting :tty
+
       # @private
       attr_writer :files_to_run
       # @private
@@ -933,8 +947,11 @@ module RSpec
       #
       # @deprecated No longer recommended because of complex behavior. Instead,
       #   rely on the fact that TTYs will display color by default, or set
-      #   {:color_mode} to :on to display color on a non-TTY output.
-      attr_writer :color
+      #   {#color_mode} to :on to display color on a non-TTY output.
+      def color=(value)
+        RSpec.deprecate("`color` setting", :replacement => "`color_mode`")
+        @color = value
+      end
 
       # @private
       def libs=(libs)
@@ -1217,7 +1234,13 @@ module RSpec
       def alias_it_behaves_like_to(new_name, report_label='')
         RSpec::Core::ExampleGroup.define_nested_shared_group_method(new_name, report_label)
       end
-      alias_method :alias_it_should_behave_like_to, :alias_it_behaves_like_to
+
+      # Alias for `alias_it_behaves_like_to`.
+      # @deprecated Use {#alias_it_behaves_like_to} instead.
+      def alias_it_should_behave_like_to(new_name, report_label='')
+        RSpec.deprecate("`alias_it_should_behave_like_to`", :replacement => "`alias_it_behaves_like_to`")
+        alias_it_behaves_like_to(new_name, report_label)
+      end
 
       # Adds key/value pairs to the `inclusion_filter`. If `args`
       # includes any symbols that are not part of the hash, each symbol
