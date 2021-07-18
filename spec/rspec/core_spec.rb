@@ -129,6 +129,20 @@ RSpec.describe RSpec do
     end
   end
 
+  describe ".current_scope" do
+    before :context do
+      expect(RSpec.current_scope).to eq(:before_context_hook)
+    end
+
+    before do
+      expect(RSpec.current_scope).to eq(:before_example_hook)
+    end
+
+    it "returns :example inside an example" do
+      expect(RSpec.current_scope).to eq(:example)
+    end
+  end
+
   describe ".reset" do
     it "resets the configuration and world objects" do
       config_before_reset = RSpec.configuration
