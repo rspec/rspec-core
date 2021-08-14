@@ -33,6 +33,7 @@ Breaking Changes:
   (Phil Pirozhkov, #2864)
 * Unify multi-condition filtering to use "all" semantic. (Phil Pirozhkov, #2874)
 * Remove support for RR test double framework version < 3.0. (Phil Pirozhkov, #2884)
+* Remove deprecated `currently_executing_a_context_hook?`. (Phil Pirozhkov, #2911)
 
 Enhancements:
 
