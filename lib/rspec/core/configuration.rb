@@ -1886,10 +1886,13 @@ module RSpec
         return yield if dry_run?
 
         begin
+          RSpec.current_scope = :before_suite_hook
           run_suite_hooks("a `before(:suite)` hook", @before_suite_hooks)
           yield
         ensure
+          RSpec.current_scope = :after_suite_hook
           run_suite_hooks("an `after(:suite)` hook", @after_suite_hooks)
+          RSpec.current_scope = :suite
         end
       end
 

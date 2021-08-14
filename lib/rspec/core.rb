@@ -111,6 +111,32 @@ module RSpec
     RSpec::Support.thread_local_data[:current_example] = example
   end
 
+  # Set the current scope rspec is executing in
+  # @api private
+  def self.current_scope=(scope)
+    RSpec::Support.thread_local_data[:current_scope] = scope
+  end
+  RSpec.current_scope = :suite
+
+  # Get the current RSpec execution scope
+  #
+  # Returns (in order of lifecycle):
+  #   * `:suite` as an initial value, this is outside of the test lifecycle.
+  #   * `:before_suite_hook` during `before(:suite)` hooks.
+  #   * `:before_context_hook` during `before(:context)` hooks.
+  #   * `:before_example_hook` during `before(:example)` hooks and `around(:example)` before `example.run`.
+  #   * `:example` within the example run.
+  #   * `:after_example_hook` during `after(:example)` hooks and `around(:example)` after `example.run`.
+  #   * `:after_context_hook` during `after(:context)` hooks.
+  #   * `:after_suite_hook` during `after(:suite)` hooks.
+  #   * `:suite` as a final value, again this is outside of the test lifecycle.
+  #
+  # Reminder, `:context` hooks have `:all` alias and `:example` hooks have `:each` alias.
+  # @return [Symbol]
+  def self.current_scope
+    RSpec::Support.thread_local_data[:current_scope]
+  end
+
   # @private
   # Internal container for global non-configuration data.
   def self.world
