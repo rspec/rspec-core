@@ -7,7 +7,7 @@ Feature: RSpec provides the current scope as RSpec.current_scope
     Given a file named "current_scope_spec.rb" with:
       """ruby
       # Outside of the test lifecycle, the current scope is `:suite`
-      exit(1)  unless RSpec.current_scope == :suite
+      exit(1) unless RSpec.current_scope == :suite
 
       at_exit do
         exit(1) unless RSpec.current_scope == :suite
