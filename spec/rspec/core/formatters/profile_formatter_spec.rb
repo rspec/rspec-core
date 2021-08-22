@@ -38,11 +38,12 @@ RSpec.describe RSpec::Core::Formatters::ProfileFormatter do
         example_clock = class_double(RSpec::Core::Time, :now => RSpec::Core::Time.now + 0.5)
 
         profile(RSpec.describe("group") do
-          example("example") do |example|
+          example("example 1") do |example|
             # make it look slow without actually taking up precious time
             example.clock = example_clock
           end
-          example_line_number = __LINE__ - 4
+          example("example 2") { }
+          example_line_number = __LINE__ - 5
         end)
       end
 
@@ -88,6 +89,18 @@ RSpec.describe RSpec::Core::Formatters::ProfileFormatter do
 
       it "prints the location of the slow groups" do
         expect(formatter_output.string).to include("#{RSpec::Core::Metadata.relative_path __FILE__}:#{@slow_group_line_number}")
+      end
+    end
+
+    context "with one example" do
+      before do
+        profile(RSpec.describe("group") do
+          example("example") { }
+        end)
+      end
+
+      it "doesn't profile" do
+        expect(formatter_output.string).to be_empty
       end
     end
   end

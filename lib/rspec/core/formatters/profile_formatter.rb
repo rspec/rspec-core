@@ -30,6 +30,8 @@ module RSpec
       private
 
         def dump_profile_slowest_examples(profile)
+          return if profile.examples.size <= 1
+
           @output.puts "\nTop #{profile.slowest_examples.size} slowest " \
             "examples (#{Helpers.format_seconds(profile.slow_duration)} " \
             "seconds, #{profile.percentage}% of total time):\n"
