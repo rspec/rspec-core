@@ -1,2 +1,2 @@
-default: --require features --strict --format progress --tags ~@wip features
+default: --require features --strict --format progress --tags 'not @wip' features
 wip:     --require features --tags @wip:30 --wip features
