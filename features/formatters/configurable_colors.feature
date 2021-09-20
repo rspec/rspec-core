@@ -10,7 +10,9 @@ Feature: Configurable colors
   * `detail_color`: Color used for miscellaneous test details (default: `:cyan`)
 
   Colors are specified as symbols. Options are `:black`, `:red`, `:green`,
-  `:yellow`, `:blue`, `:magenta`, `:cyan`, and `:white`.
+  `:yellow`, `:blue`, `:magenta`, `:cyan`, `:white`, `:bold_black`, `:bold_red`,
+  `:bold_green`, `:bold_yellow`, `:bold_blue`, `:bold_magenta`, `:bold_cyan`,
+  and `:bold_white`,
 
   @keep-ansi-escape-sequences
   Scenario: Customizing the failure color
