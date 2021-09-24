@@ -41,6 +41,7 @@ Enhancements:
 * Add `to_s` to reserved names for #let and #subject. (Nick Flückiger, #2886)
 * Introduce `RSpec.current_scope` to expose the current scope in which
   RSpec is executing. e.g. `:before_example_hook`, `:example` etc. (@odinhb, #2895)
+* Add named bold colours as options for custom colours. (#2913, #2914)
 
 Bug fixes:
 
