@@ -76,10 +76,16 @@ Then /^the output should not contain any error backtraces$/ do
 end
 
 # This step can be generalized if it's ever used to test other colors
-Then /^the failing example is printed in magenta$/ do
+Then /^the failing example is printed (?:wrapped )?in (.*)$/ do |color|
+  code =
+    case color
+    when "magenta" then "\e[35m"
+    when /"(.*)"/ then "\e[#{$1}m"
+    end
+
   # \e[35m = enable magenta
   # \e[0m  = reset colors
-  expect(all_output).to include("\e[35m" + "F" + "\e[0m")
+  expect(all_output).to include(code + "F" + "\e[0m")
 end
 
 Then /^the output from `([^`]+)` should contain "(.*?)"$/  do |cmd, expected_output|
