@@ -10,7 +10,9 @@ Feature: Configurable colors
   * `detail_color`: Color used for miscellaneous test details (default: `:cyan`)
 
   Colors are specified as symbols. Options are `:black`, `:red`, `:green`,
-  `:yellow`, `:blue`, `:magenta`, `:cyan`, and `:white`.
+  `:yellow`, `:blue`, `:magenta`, `:cyan`, `:white`, `:bold_black`, `:bold_red`,
+  `:bold_green`, `:bold_yellow`, `:bold_blue`, `:bold_magenta`, `:bold_cyan`,
+  and `:bold_white`,
 
   @keep-ansi-escape-sequences
   Scenario: Customizing the failure color
@@ -29,3 +31,21 @@ Feature: Configurable colors
       """
       When I run `rspec custom_failure_color_spec.rb --format progress`
       Then the failing example is printed in magenta
+
+  @keep-ansi-escape-sequences
+  Scenario: Customizing the failure color with a custom console code
+    Given a file named "custom_failure_color_spec.rb" with:
+      """ruby
+      RSpec.configure do |config|
+        config.failure_color = "1;32"
+        config.color_mode = :on
+      end
+
+      RSpec.describe "failure" do
+        it "fails and uses the custom color" do
+          expect(2).to eq(4)
+        end
+      end
+      """
+      When I run `rspec custom_failure_color_spec.rb --format progress`
+      Then the failing example is printed wrapped in "1;32"
