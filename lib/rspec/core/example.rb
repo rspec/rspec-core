@@ -377,7 +377,7 @@ module RSpec
 
         # @private
         def inspect
-          @example.inspect.gsub('Example', 'ExampleProcsy')
+          @example.inspect.gsub('Example', 'Example::Procsy')
         end
       end
 
