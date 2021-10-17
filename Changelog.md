@@ -6,6 +6,8 @@ Bug fixes:
 * Ensure bisect communication uses consistent encoding. (Mike Jarema, #2852)
 * Fix exception presenter when the root cause exception has nil backtrace.
   (Zinovyev Ivan, #2903)
+* Fix `inspect` output of `RSpec::Core::Example::Procsy` to namespace correctly.
+  (Keiko Kaneko, #2915)
 
 ### 3.10.1 / 2020-12-27
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.10.0...v3.10.1)
