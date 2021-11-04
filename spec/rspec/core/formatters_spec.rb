@@ -144,6 +144,28 @@ module RSpec::Core::Formatters
             loader.add :documentation, path
           }.to change { loader.formatters.length }
         end
+
+        context "formatters do not subclass BaseFormatter" do
+          before do
+            stub_const("CustomFormatter", Class.new)
+            stub_const("OtherCustomFormatter", Class.new)
+            Loader.formatters[CustomFormatter] = []
+            Loader.formatters[OtherCustomFormatter] = []
+            loader.add "CustomFormatter"
+          end
+
+          it "adds different formatters" do
+            expect {
+              loader.add "OtherCustomFormatter"
+            }.to change { loader.formatters.length }
+          end
+
+          it "doesn't add the same formatter" do
+            expect {
+              loader.add "CustomFormatter"
+            }.not_to change { loader.formatters.length }
+          end
+        end
       end
 
       context "When a custom formatter exists" do
