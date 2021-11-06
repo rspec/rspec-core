@@ -1,6 +1,5 @@
 require 'rspec/core/formatters/snippet_extractor'
 require 'support/helper_methods'
-require 'tempfile'
 
 module RSpec::Core::Formatters
   RSpec.describe SnippetExtractor do
@@ -184,6 +183,11 @@ module RSpec::Core::Formatters
 
       context 'when the expression line includes an "end"-less method definition', :if => RUBY_VERSION.to_f >= 3.0 do
         include RSpec::Support::InSubProcess
+
+        around(:example) do |example|
+          require 'tempfile'
+          example.call
+        end
 
         let(:source) do
           in_sub_process do
