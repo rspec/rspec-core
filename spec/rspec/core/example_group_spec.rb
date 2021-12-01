@@ -56,12 +56,12 @@ module RSpec::Core
     end
 
     it 'does not treat the first argument as a metadata key even if it is a symbol' do
-      group = RSpec.describe(:symbol)
+      group = with_an_expected_warning { RSpec.describe(:symbol) }
       expect(group.metadata).not_to include(:symbol)
     end
 
     it 'treats the first argument as part of the description when it is a symbol' do
-      group = RSpec.describe(:symbol)
+      group = with_an_expected_warning { RSpec.describe(:symbol) }
       expect(group.description).to eq("symbol")
     end
 

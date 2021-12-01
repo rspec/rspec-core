@@ -313,7 +313,7 @@ module RSpec::Core
           c.after(:each,  :match => false) { filters << "after each in config"}
           c.after(:all,   :match => false) { filters << "after all in config"}
         end
-        group = RSpec.describe(:match => true)
+        group = RSpec.describe('example group', :match => true)
         group.example("example") {}
         group.run
         expect(filters).to eq([])
