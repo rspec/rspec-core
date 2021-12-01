@@ -146,6 +146,10 @@ module RSpec
         idempotently_define_singleton_method(name) do |*all_args, &block|
           desc, *args = *all_args
 
+          unless NilClass === desc || String === desc
+            RSpec.warning "`#{desc.inspect}` is used as example doc string. Use a string instead"
+          end
+
           options = Metadata.build_hash_from(args)
           options.update(:skip => RSpec::Core::Pending::NOT_YET_IMPLEMENTED) unless block
           options.update(extra_options)
@@ -264,6 +268,11 @@ module RSpec
 
           begin
             description = args.shift
+
+            unless NilClass === description || String === description || Module === description
+              RSpec.warning "`#{description.inspect}` is used as example group doc string. Use a string instead"
+            end
+
             combined_metadata = metadata.dup
             combined_metadata.merge!(args.pop) if args.last.is_a? Hash
             args << combined_metadata
