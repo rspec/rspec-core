@@ -1231,6 +1231,72 @@ module RSpec::Core
 
     end
 
+    describe "example group doc string" do
+      it "accepts a string for an example group doc string" do
+        expect { RSpec.describe 'MyClass' }.not_to output.to_stderr
+      end
+
+      it "accepts a class for an example group doc string" do
+        expect { RSpec.describe Numeric }.not_to output.to_stderr
+      end
+
+      it "accepts a module for an example group doc string" do
+        expect { RSpec.describe RSpec }.not_to output.to_stderr
+      end
+
+      it "accepts example group without a doc string" do
+        expect { RSpec.describe }.not_to output.to_stderr
+      end
+
+      it "emits a warning when a Symbol is used as an example group doc string" do
+        expect { RSpec.describe :foo }
+          .to output(/`:foo` is used as example group doc string. Use a string instead/)
+          .to_stderr
+      end
+
+      it "emits a warning when a Hash is used as an example group doc string" do
+        expect { RSpec.describe(foo: :bar) { } }
+          .to output(/`{:foo=>:bar}` is used as example group doc string. Use a string instead/)
+          .to_stderr
+      end
+    end
+
+    describe "example doc string" do
+      let(:group) { RSpec.describe }
+
+      it "accepts a string for an example doc string" do
+        expect { group.it('MyClass') { } }.not_to output.to_stderr
+      end
+
+      it "accepts example without a doc string" do
+        expect { group.it { } }.not_to output.to_stderr
+      end
+
+      it "emits a warning when a Class is used as an example doc string" do
+        expect { group.it(Numeric) { } }
+          .to output(/`Numeric` is used as example doc string. Use a string instead/)
+          .to_stderr
+      end
+
+      it "emits a warning when a Module is used as an example doc string" do
+        expect { group.it(RSpec) { } }
+          .to output(/`RSpec` is used as example doc string. Use a string instead/)
+          .to_stderr
+      end
+
+      it "emits a warning when a Symbol is used as an example doc string" do
+        expect { group.it(:foo) { } }
+          .to output(/`:foo` is used as example doc string. Use a string instead/)
+          .to_stderr
+      end
+
+      it "emits a warning when a Hash is used as an example doc string" do
+        expect { group.it(foo: :bar) { } }
+          .to output(/`{:foo=>:bar}` is used as example doc string. Use a string instead/)
+          .to_stderr
+      end
+    end
+
     describe Object, "describing nested example_groups", :little_less_nested => 'yep' do
 
       describe "A sample nested group", :nested_describe => "yep" do
