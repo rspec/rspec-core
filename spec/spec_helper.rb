@@ -62,6 +62,10 @@ module CommonHelpers
   ensure
     RSpec::Core::Metadata.instance_variable_set(:@relative_path_regex, nil)
   end
+
+  def with_an_expected_warning
+    with_isolated_stderr { yield }
+  end
 end
 
 RSpec.configure do |c|

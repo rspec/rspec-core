@@ -381,24 +381,24 @@ module RSpec
 
           context "with a String" do
             it "returns nil" do
-              expect(value_for "group").to be_nil
+              expect(value_for("group")).to be_nil
             end
           end
 
           context "with a Symbol" do
             it "returns the symbol" do
-              expect(value_for :group).to be(:group)
+              expect(with_an_expected_warning { value_for(:group) }).to be(:group)
             end
           end
 
           context "with a class" do
             it "returns the class" do
-              expect(value_for String).to be(String)
+              expect(value_for(String)).to be(String)
             end
 
             context "when the class is Regexp" do
               it "returns the class" do
-                expect(value_for Regexp).to be(Regexp)
+                expect(value_for(Regexp)).to be(Regexp)
               end
             end
           end
@@ -636,7 +636,7 @@ module RSpec
         it "finds the first non-rspec lib file in the caller array" do
           value = nil
 
-          RSpec.describe(:caller => ["./lib/rspec/core/foo.rb", "#{__FILE__}:#{__LINE__}"]) do
+          RSpec.describe('example group', :caller => ["./lib/rspec/core/foo.rb", "#{__FILE__}:#{__LINE__}"]) do
             value = metadata[:file_path]
           end
 

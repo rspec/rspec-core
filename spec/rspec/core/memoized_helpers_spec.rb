@@ -5,7 +5,7 @@ module RSpec::Core
     before(:each) { RSpec.configuration.configure_expectation_framework }
 
     def subject_value_for(describe_arg, &block)
-      example_group = RSpec.describe(describe_arg, &block)
+      example_group = with_an_expected_warning { RSpec.describe(describe_arg, &block) }
       subject_value = nil
       example_group.example { subject_value = subject }
       example_group.run
@@ -340,10 +340,16 @@ module RSpec::Core
       end
 
       it 'supports a new expect-based syntax' do
-        group = RSpec.describe([1, 2, 3]) do
-          it { is_expected.to be_an Array }
-          it { is_expected.not_to include 4 }
+        math_class = Class.new do
+          def easy?
+            false
+          end
         end
+        group =
+          RSpec.describe(math_class) do
+            it { is_expected.to be_a math_class }
+            it { is_expected.to_not be_easy }
+          end
 
         expect(group.run).to be true
       end
