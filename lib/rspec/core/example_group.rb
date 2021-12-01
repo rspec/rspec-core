@@ -686,6 +686,7 @@ module RSpec
         end
       end
 
+      # @private
       def initialize(inspect_output=nil)
         @__inspect_output = inspect_output || '(no description provided)'
         super() # no args get passed
