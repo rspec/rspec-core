@@ -145,30 +145,26 @@ module RSpec::Core::Formatters
           }.to change { loader.formatters.length }
         end
 
-        context "formatters do not subclass BaseFormatter" do
-          before do
-            stub_const("CustomFormatter", Class.new)
-            stub_const("OtherCustomFormatter", Class.new)
-            Loader.formatters[CustomFormatter] = []
-            Loader.formatters[OtherCustomFormatter] = []
-            loader.add "CustomFormatter"
-          end
+        plain_old_formatter = Class.new do
+          RSpec::Core::Formatters.register self, :example_started
 
-          it "adds different formatters" do
-            expect {
-              loader.add "OtherCustomFormatter"
-            }.to change { loader.formatters.length }
+          def initialize(output)
           end
+        end
 
-          it "doesn't add the same formatter" do
-            expect {
-              loader.add "CustomFormatter"
-            }.not_to change { loader.formatters.length }
-          end
+        it "handles formatters which do not subclass our formatters" do
+          expect {
+            loader.add plain_old_formatter, output
+          }.to change { loader.formatters.length }
+
+          # deliberate duplicate to ensure we can check for them correctly
+          expect {
+            loader.add plain_old_formatter, output
+          }.to_not change { loader.formatters.length }
         end
       end
 
-      context "When a custom formatter exists" do
+      context "when a custom formatter exists" do
         specific_formatter = RSpec::Core::Formatters::JsonFormatter
         generic_formatter = specific_formatter.superclass
 
