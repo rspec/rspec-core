@@ -190,8 +190,14 @@ module RSpec::Core::Formatters
 
     def duplicate_formatter_exists?(new_formatter)
       @formatters.any? do |formatter|
-        formatter.class == new_formatter.class && formatter.output == new_formatter.output
+        formatter.class == new_formatter.class &&
+          has_matching_output?(formatter, new_formatter)
       end
+    end
+
+    def has_matching_output?(formatter, new_formatter)
+      return true unless formatter.respond_to?(:output) && new_formatter.respond_to?(:output)
+      formatter.output == new_formatter.output
     end
 
     def existing_formatter_implements?(notification)
