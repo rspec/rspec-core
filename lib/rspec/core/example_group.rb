@@ -701,6 +701,7 @@ module RSpec
         end
       end
 
+      # @private
       def initialize(inspect_output=nil)
         @__inspect_output = inspect_output || '(no description provided)'
         super() # no args get passed
@@ -782,6 +783,7 @@ module RSpec
       # @return [String] the location where the shared example was included
       attr_reader :inclusion_location
 
+      # @private
       def initialize(shared_group_name, inclusion_location)
         @shared_group_name  = shared_group_name
         @inclusion_location = inclusion_location
