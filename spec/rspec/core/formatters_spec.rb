@@ -144,9 +144,27 @@ module RSpec::Core::Formatters
             loader.add :documentation, path
           }.to change { loader.formatters.length }
         end
+
+        plain_old_formatter = Class.new do
+          RSpec::Core::Formatters.register self, :example_started
+
+          def initialize(output)
+          end
+        end
+
+        it "handles formatters which do not subclass our formatters" do
+          expect {
+            loader.add plain_old_formatter, output
+          }.to change { loader.formatters.length }
+
+          # deliberate duplicate to ensure we can check for them correctly
+          expect {
+            loader.add plain_old_formatter, output
+          }.to_not change { loader.formatters.length }
+        end
       end
 
-      context "When a custom formatter exists" do
+      context "when a custom formatter exists" do
         specific_formatter = RSpec::Core::Formatters::JsonFormatter
         generic_formatter = specific_formatter.superclass
 
