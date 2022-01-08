@@ -1,5 +1,6 @@
 inherit_from:
   - .rubocop_rspec_base.yml
+  - .rubocop_todo.yml
 
 AllCops:
   Exclude:
@@ -10,21 +11,21 @@ AllCops:
 Metrics/ClassLength:
   Max: 330
 
-Encoding:
-  Exclude:
-    - lib/rspec/core/formatters/exception_presenter.rb
+# This can be addressed once Ruby 1.8 support is removed.
+Style/Encoding:
+  Enabled: false
 
 # This should go down over time.
 Metrics/AbcSize:
-  Max: 40
+  Max: 283
 
 # This should go down over time.
-Metrics/LineLength:
-  Max: 130
+Layout/LineLength:
+  Max: 172
 
 # This should go down over time.
 Metrics/MethodLength:
-  Max: 39
+  Max: 134
 
 # This should go down over time.
 Metrics/CyclomaticComplexity:
@@ -33,7 +34,7 @@ Metrics/CyclomaticComplexity:
 Metrics/PerceivedComplexity:
   Max: 15
 
-Lint/HandleExceptions:
+Lint/SuppressedException:
   Exclude:
     - lib/rspec/core/example.rb
     - lib/rspec/core/mocking_adapters/mocha.rb
@@ -89,22 +90,11 @@ Style/RaiseArgs:
     - lib/rspec/core/hooks.rb
     - lib/rspec/core/option_parser.rb
     - lib/rspec/core/pending.rb
-
-Performance/RedundantBlockCall:
-  Exclude:
-    - lib/rspec/core/rake_task.rb
+    - spec/rspec/core/formatters/base_text_formatter_spec.rb
 
 Lint/IneffectiveAccessModifier:
   Exclude:
     - lib/rspec/core/memoized_helpers.rb # Fixing this file was too much of a diff
 
-Performance/Caller:
-  Exclude:
-    # The suggested fix for this cop only works on more recent rubies. The
-    # speed up can be substantial (previous optimization work I've done on
-    # RSpec involved caller optimization) but I haven't benchmarked this
-    # particular case to see if it's worth introducing version branching.
-    - 'lib/rspec/core/example_group.rb'
-
 Metrics/BlockLength:
-  Max: 193
+  Max: 2373
