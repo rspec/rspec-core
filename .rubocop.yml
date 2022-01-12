@@ -17,15 +17,18 @@ Style/Encoding:
 
 # This should go down over time.
 Metrics/AbcSize:
-  Max: 283
+  Max: 40
 
 # This should go down over time.
 Layout/LineLength:
-  Max: 172
+  Max: 130
+  Exclude:
+    - features/**/*
+    - spec/**/*
 
 # This should go down over time.
 Metrics/MethodLength:
-  Max: 134
+  Max: 39
 
 # This should go down over time.
 Metrics/CyclomaticComplexity:
@@ -97,4 +100,6 @@ Lint/IneffectiveAccessModifier:
     - lib/rspec/core/memoized_helpers.rb # Fixing this file was too much of a diff
 
 Metrics/BlockLength:
-  Max: 2373
+  Max: 206
+  Exclude:
+    - spec/**/*.rb
