@@ -3,6 +3,8 @@ module RSpec
     RSpec.describe FilterableItemRepository, "#items_for" do
       FilterableItem = Struct.new(:name)
 
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def self.it_behaves_like_a_filterable_item_repo(&when_the_repo_has_items_with_metadata)
         let(:repo)   { described_class.new(:any?) }
         let(:item_1) { FilterableItem.new("Item 1") }
@@ -166,7 +168,8 @@ module RSpec
           end
         end
       end
-
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
       describe FilterableItemRepository::UpdateOptimized do
         it_behaves_like_a_filterable_item_repo
       end
