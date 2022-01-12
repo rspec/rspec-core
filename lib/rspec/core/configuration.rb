@@ -405,6 +405,9 @@ module RSpec
       # @private
       attr_reader :backtrace_formatter, :ordering_manager, :loaded_spec_files
 
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
+
       # Build an object to store runtime configuration options and set defaults
       def initialize
         # rubocop:disable Style/GlobalVars
@@ -460,6 +463,8 @@ module RSpec
 
         define_built_in_hooks
       end
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       # @private
       #
