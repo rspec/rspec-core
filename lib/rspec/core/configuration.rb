@@ -2124,7 +2124,10 @@ module RSpec
         RSpec.world.wants_to_quit = true
       rescue SystemExit => ex
         relative_file = Metadata.relative_path(file)
-        reporter.notify_non_example_exception(ex, "While loading #{relative_file} an `exit` / `raise SystemExit` occurred, RSpec will now quit.")
+        reporter.notify_non_example_exception(
+          ex,
+          "While loading #{relative_file} an `exit` / `raise SystemExit` occurred, RSpec will now quit."
+        )
         RSpec.world.rspec_is_quitting = true
         raise ex
       end
