@@ -84,6 +84,8 @@ module RSpec::Core
       end
 
       it "passes messages to the formatter in the correct order" do
+        RSpec.configuration.order = :defined
+
         order = []
 
         formatter = double("formatter")

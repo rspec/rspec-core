@@ -71,7 +71,7 @@ Feature: `skip` examples
         end
       end
       """
-    When I run `rspec temporarily_skipped_spec.rb`
+    When I run `rspec temporarily_skipped_spec.rb --order defined`
     Then the exit status should be 0
     And the output should contain "3 examples, 0 failures, 3 pending"
     And the output should contain:

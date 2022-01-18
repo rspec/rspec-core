@@ -36,7 +36,7 @@ Feature: aliasing
       end
     end
     """
-    When I run `rspec nested_example_group_aliases_spec.rb --tag detailed -fdoc`
+    When I run `rspec nested_example_group_aliases_spec.rb --tag detailed -fdoc --order defined`
     Then the output should contain:
       """
       a detail

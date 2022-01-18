@@ -25,6 +25,7 @@ RSpec.describe 'Suite hook errors' do
       c.backtrace_exclusion_patterns << %r{/rspec-core/spec/} << %r{rspec_with_simplecov}
       c.failure_exit_code = failure_exit_code
       c.error_exit_code = error_exit_code
+      c.seed = 123
     end
   end
 
@@ -50,6 +51,8 @@ RSpec.describe 'Suite hook errors' do
     output = run_spec_expecting_non_zero(:before)
     expect(output).to eq unindent(<<-EOS)
 
+      Randomized with seed 123
+
       An error occurred in a `before(:suite)` hook.
       Failure/Error: raise 'boom'
 
@@ -61,12 +64,16 @@ RSpec.describe 'Suite hook errors' do
       Finished in n.nnnn seconds (files took n.nnnn seconds to load)
       0 examples, 0 failures, 1 error occurred outside of examples
 
+      Randomized with seed 123
+
     EOS
   end
 
   it 'nicely formats errors in `after(:suite)` hooks and exits with non-zero' do
     output = run_spec_expecting_non_zero(:after)
     expect(output).to eq unindent(<<-EOS)
+
+      Randomized with seed 123
       .
       An error occurred in an `after(:suite)` hook.
       Failure/Error: raise 'boom'
@@ -78,6 +85,8 @@ RSpec.describe 'Suite hook errors' do
 
       Finished in n.nnnn seconds (files took n.nnnn seconds to load)
       1 example, 0 failures, 1 error occurred outside of examples
+
+      Randomized with seed 123
 
     EOS
   end
@@ -115,6 +124,8 @@ RSpec.describe 'Suite hook errors' do
 
     expect(output).to eq unindent(<<-EOS)
 
+      Randomized with seed 123
+
       An error occurred in a `before(:suite)` hook.
       Failure/Error: c.before(:suite) { raise 'before 1' }
 
@@ -139,6 +150,8 @@ RSpec.describe 'Suite hook errors' do
 
       Finished in n.nnnn seconds (files took n.nnnn seconds to load)
       0 examples, 0 failures, 3 errors occurred outside of examples
+
+      Randomized with seed 123
 
     EOS
   end

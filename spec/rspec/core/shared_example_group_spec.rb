@@ -298,6 +298,8 @@ module RSpec
 
             describe "hooks for individual examples that have matching metadata" do
               it 'runs them' do
+                RSpec.configuration.order = :defined
+
                 sequence = []
 
                 define_top_level_shared_group("name") do

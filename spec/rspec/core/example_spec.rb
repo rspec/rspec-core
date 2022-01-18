@@ -913,7 +913,7 @@ RSpec.describe RSpec::Core::Example, :parent_metadata => 'sample' do
       example2 = group.example("example 2") { current_examples << RSpec.current_example }
 
       group.run
-      expect(current_examples).to eq([example1, example2])
+      expect(current_examples).to match_array([example1, example2])
     end
   end
 

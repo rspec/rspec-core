@@ -45,7 +45,7 @@ Feature: basic structure (`describe`/`it`)
       end
     end
     """
-    When I run `rspec nested_example_groups_spec.rb -fdoc`
+    When I run `rspec nested_example_groups_spec.rb -fdoc --order defined`
     Then the output should contain:
       """
       something

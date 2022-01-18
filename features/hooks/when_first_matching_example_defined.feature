@@ -53,7 +53,7 @@ Feature: `when_first_matching_example_defined` hook
       """
 
   Scenario: Running the entire suite loads the DB setup
-    When I run `rspec`
+    When I run `rspec --order defined`
     Then it should pass with:
       """
       Bootstrapped the DB.

@@ -39,7 +39,7 @@ module RSpec::Core
 
       with_runner do |runner|
         expect(runner.original_results).to have_attributes(
-          :all_example_ids => %w[ ./spec/a_spec.rb[1:1] ./spec/a_spec.rb[1:2] ],
+          :all_example_ids => match_array(%w[ ./spec/a_spec.rb[1:1] ./spec/a_spec.rb[1:2] ]),
           :failed_example_ids => %w[ ./spec/a_spec.rb[1:2] ]
         )
 

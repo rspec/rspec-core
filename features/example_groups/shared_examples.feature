@@ -124,7 +124,7 @@ Feature: shared examples
         it_behaves_like "a collection"
       end
       """
-    When I run `rspec collection_spec.rb --format documentation`
+    When I run `rspec collection_spec.rb --format documentation --order defined`
     Then the examples should all pass
     And the output should contain:
       """
@@ -176,7 +176,7 @@ Feature: shared examples
       end
     end
     """
-    When I run `rspec shared_example_group_spec.rb --format documentation`
+    When I run `rspec shared_example_group_spec.rb --format documentation --order defined`
     Then the examples should all pass
     And the output should contain:
       """
@@ -212,7 +212,7 @@ Feature: shared examples
       it_behaves_like "a measurable object", 6, [:size, :length]
     end
     """
-    When I run `rspec shared_example_group_params_spec.rb --format documentation`
+    When I run `rspec shared_example_group_params_spec.rb --format documentation --order defined`
     Then the examples should all pass
     And the output should contain:
       """
