@@ -89,23 +89,28 @@ RSpec.describe 'Spec file load errors' do
       run_command "--require ./helper_with_exit.rb"
     }.to raise_error(SystemExit)
     output = normalize_durations(last_cmd_stdout)
-    expected_error_line = ->() {
-      if defined?(JRUBY_VERSION) && !JRUBY_VERSION.empty?
-        "Unable to find org/jruby/RubyKernel.java to read failed line"
-      else
-        "exit 999"
-      end
-    }
-    expect(output).to eq unindent(<<-EOS)
+    if defined?(JRUBY_VERSION) && !JRUBY_VERSION.empty?
+      expect(output).to eq unindent(<<-EOS)
 
-      While loading ./helper_with_exit.rb an `exit` / `raise SystemExit` occurred, RSpec will now quit.
-      Failure/Error: #{expected_error_line.call}
+        While loading ./helper_with_exit.rb an `exit` / `raise SystemExit` occurred, RSpec will now quit.
+        Failure/Error: Unable to find org/jruby/RubyKernel.java to read failed line
 
-      SystemExit:
-        exit
-      # ./helper_with_exit.rb:1:in `exit'
-      # ./helper_with_exit.rb:1#{spec_line_suffix}
-    EOS
+        SystemExit:
+          exit
+        # ./helper_with_exit.rb:1#{spec_line_suffix}
+      EOS
+    else
+      expect(output).to eq unindent(<<-EOS)
+
+        While loading ./helper_with_exit.rb an `exit` / `raise SystemExit` occurred, RSpec will now quit.
+        Failure/Error: exit 999
+
+        SystemExit:
+          exit
+        # ./helper_with_exit.rb:1:in `exit'
+        # ./helper_with_exit.rb:1#{spec_line_suffix}
+      EOS
+    end
   end
 
   it 'nicely handles load-time errors in user spec files' do
