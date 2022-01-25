@@ -10,6 +10,13 @@ module RSpec
       # Used internally to determine what to do when a SIGINT is received.
       attr_accessor :wants_to_quit
 
+      # Used internally to signify that a SystemExit occurred in
+      # `Configuration#load_file_handling_errors`, and thus examples cannot
+      # be counted accurately. Specifically, we cannot accurately report
+      # "No examples found".
+      # @private
+      attr_accessor :rspec_is_quitting
+
       # Used internally to signal that a failure outside of an example
       # has occurred, and that therefore the exit status should indicate
       # the run failed.
@@ -18,6 +25,7 @@ module RSpec
 
       def initialize(configuration=RSpec.configuration)
         @wants_to_quit = false
+        @rspec_is_quitting = false
         @configuration = configuration
         configuration.world = self
         @example_groups = []
@@ -184,10 +192,12 @@ module RSpec
         return unless example_count.zero?
 
         example_groups.clear
-        if filter_manager.empty?
-          report_filter_message("No examples found.")
-        elsif exclusion_filter.empty? || inclusion_filter.empty?
-          report_filter_message(everything_filtered_message)
+        unless rspec_is_quitting
+          if filter_manager.empty?
+            report_filter_message("No examples found.")
+          elsif exclusion_filter.empty? || inclusion_filter.empty?
+            report_filter_message(everything_filtered_message)
+          end
         end
       end
 

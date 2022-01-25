@@ -82,6 +82,37 @@ RSpec.describe 'Spec file load errors' do
     EOS
   end
 
+  it 'prints a warning when a helper file exits early' do
+    write_file_formatted "helper_with_exit.rb", "exit 999"
+
+    expect {
+      run_command "--require ./helper_with_exit.rb"
+    }.to raise_error(SystemExit)
+    output = normalize_durations(last_cmd_stdout)
+    if defined?(JRUBY_VERSION) && !JRUBY_VERSION.empty?
+      expect(output).to eq unindent(<<-EOS)
+
+        While loading ./helper_with_exit.rb an `exit` / `raise SystemExit` occurred, RSpec will now quit.
+        Failure/Error: Unable to find org/jruby/RubyKernel.java to read failed line
+
+        SystemExit:
+          exit
+        # ./helper_with_exit.rb:1#{spec_line_suffix}
+      EOS
+    else
+      expect(output).to eq unindent(<<-EOS)
+
+        While loading ./helper_with_exit.rb an `exit` / `raise SystemExit` occurred, RSpec will now quit.
+        Failure/Error: exit 999
+
+        SystemExit:
+          exit
+        # ./helper_with_exit.rb:1:in `exit'
+        # ./helper_with_exit.rb:1#{spec_line_suffix}
+      EOS
+    end
+  end
+
   it 'nicely handles load-time errors in user spec files' do
     write_file_formatted "1_spec.rb", "
       boom
