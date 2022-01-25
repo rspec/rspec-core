@@ -1945,6 +1945,14 @@ module RSpec
         relative_file = Metadata.relative_path(file)
         reporter.notify_non_example_exception(ex, "An error occurred while loading #{relative_file}.")
         RSpec.world.wants_to_quit = true
+      rescue SystemExit => ex
+        relative_file = Metadata.relative_path(file)
+        reporter.notify_non_example_exception(
+          ex,
+          "While loading #{relative_file} an `exit` / `raise SystemExit` occurred, RSpec will now quit."
+        )
+        RSpec.world.rspec_is_quitting = true
+        raise ex
       end
 
       def handle_suite_hook(scope, meta)
