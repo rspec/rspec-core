@@ -42,6 +42,7 @@ Enhancements:
 * Introduce `RSpec.current_scope` to expose the current scope in which
   RSpec is executing. e.g. `:before_example_hook`, `:example` etc. (@odinhb, #2895)
 * Add named bold colours as options for custom colours. (#2913, #2914)
+* Warn when (but not prevent) a `SystemExit` occurs. (Jared Beck, #2926)
 
 Bug fixes:
 
