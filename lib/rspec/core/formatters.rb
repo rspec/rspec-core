@@ -79,7 +79,7 @@ module RSpec::Core::Formatters
 
   # Register the formatter class
   # @param formatter_class [Class] formatter class to register
-  # @param notifications [Symbol, ...] one or more notifications to be
+  # @param notifications [Array<Symbol>] one or more notifications to be
   #   registered to the specified formatter
   #
   # @see RSpec::Core::Formatters::BaseFormatter

@@ -14,7 +14,6 @@ Bug fixes:
 ### 3.10.1 / 2020-12-27
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.10.0...v3.10.1)
 
-
 Bug fixes:
 
 * RSpec warning output was missing deprecations from Ruby, these are now included.
@@ -30,7 +29,7 @@ Enhancements:
 * Add configuration for an error exit code (to disambiguate errored builds from failed builds
   by exit status). (Dana Sherson, #2749)
 
-# 3.9.3 / 2020-09-30
+### 3.9.3 / 2020-09-30
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.9.2...v3.9.3)
 
 Bug Fixes:

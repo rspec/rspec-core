@@ -38,7 +38,7 @@ module RSpec
       # @param message [String] optional message to add to the summary report.
       #
       # @example
-      #     describe "an example" do
+      #     describe "some behaviour" do
       #       # reported as "Pending: no reason given"
       #       it "is pending with no message" do
       #         pending
@@ -52,21 +52,13 @@ module RSpec
       #       end
       #     end
       #
-      # @note `before(:example)` hooks are eval'd when you use the `pending`
-      #   method within an example. If you want to declare an example `pending`
-      #   and bypass the `before` hooks as well, you can pass `:pending => true`
-      #   to the `it` method:
-      #
-      #       it "does something", :pending => true do
-      #         # ...
-      #       end
-      #
-      #   or pass `:pending => "something else getting finished"` to add a
-      #   message to the summary report:
-      #
-      #       it "does something", :pending => "something else getting finished" do
-      #         # ...
-      #       end
+      # @note When using `pending` inside an example body using this method
+      #   hooks, such as `before(:example)`, have already be run. This means that
+      #   a failure from the code in the `before` hook will prevent the example
+      #   from being considered pending, as the example body would not be
+      #   executed. If you need to consider hooks as pending as well you can use
+      #   the pending metadata as an alternative, e.g.
+      #   `it "does something", pending: "message"`.
       def pending(message=nil)
         current_example = RSpec.current_example
 
