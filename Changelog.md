@@ -1,5 +1,5 @@
 ### Development
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.10.1...main)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.10.2...main)
 
 Enhancements:
 
@@ -10,6 +10,9 @@ Enhancements:
   RSpec is executing. e.g. `:before_example_hook`, `:example` etc. (@odinhb, #2895)
 * Add named bold colours as options for custom colours. (#2913, #2914)
 * Warn when (but not prevent) a `SystemExit` occurs. (Jared Beck, #2926)
+
+### 3.10.2 / 2022-01-27
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.10.1...v3.10.2)
 
 Bug fixes:
 
