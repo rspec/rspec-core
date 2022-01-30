@@ -88,6 +88,10 @@ if RUBY_VERSION < '2.4.0'
   gem 'minitest', '< 5.12.0'
 end
 
+if RUBY_VERSION < '2.0.0'
+  gem 'cucumber', "<= 1.3.22"
+end
+
 gem 'contracts', '< 0.16' if RUBY_VERSION < '1.9.0'
 
 eval File.read('Gemfile-custom') if File.exist?('Gemfile-custom')
