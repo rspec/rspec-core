@@ -2,5 +2,9 @@
 ENV['RBXOPT'] = "#{ENV["RBXOPT"]} -Xcompiler.no_rbc"
 
 Around "@unsupported-on-rbx" do |scenario, block|
-  block.call unless defined?(Rubinius)
+  if defined?(Rubinius)
+    block.call
+  else
+    skip_this_scenario "Skipping scenario #{scenario.name} not supported on Rubinius"
+  end
 end

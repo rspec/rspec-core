@@ -1,6 +1,9 @@
 if defined?(Cucumber)
   require 'shellwords'
-  Before('~@allow-should-syntax', '~@with-clean-spec-opts') do
+  use_tilde_tags = !defined?(::RUBY_ENGINE_VERSION) || (::RUBY_ENGINE_VERSION < '2.0.0')
+  exclude_allow_should_syntax = use_tilde_tags ? '~@allow-should-syntax' : 'not @allow-should-syntax'
+  exclude_with_clean_spec_ops = use_tilde_tags ? '~@with-clean-spec-opts' : 'not @with-clean-spec-opts'
+  Before(exclude_allow_should_syntax, exclude_with_clean_spec_ops) do
     set_environment_variable('SPEC_OPTS', "-r#{Shellwords.escape(__FILE__)}")
   end
 
