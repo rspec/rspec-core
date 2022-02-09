@@ -1,5 +1,5 @@
 ### Development
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.10.2...main)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.11.0...main)
 
 Breaking Changes:
 
@@ -34,6 +34,9 @@ Breaking Changes:
   (Phil Pirozhkov, #2864)
 * Unify multi-condition filtering to use "all" semantic. (Phil Pirozhkov, #2874)
 * Remove support for RR test double framework version < 3.0. (Phil Pirozhkov, #2884)
+
+### 3.11.0 / 2022-02-09
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.10.2...v3.11.0)
 
 Enhancements:
 
