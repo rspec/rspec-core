@@ -13,6 +13,10 @@ RSpec.describe RSpec do
   # JRuby appears to not respect `--disable=gem` so rubygems also gets loaded.
   allowed_loaded_features << /rubygems/ if RSpec::Support::Ruby.jruby?
 
+  # Truffleruby cext files
+  allowed_loaded_features << /\/truffle\/cext/ if RSpec::Support::Ruby.truffleruby?
+
+
   disable_autorun_code =
     if RSpec::Support::OS.windows?
       # On Windows, the "redefine autorun" approach results in a different
