@@ -242,6 +242,10 @@ module RSpec
           line_regex = RSpec.configuration.in_project_source_dir_regex
           loaded_spec_files = RSpec.configuration.loaded_spec_files
 
+          exception_backtrace.reject! do |line|
+            line.start_with?("<internal:")
+          end if RSpec::Support::Ruby.truffleruby?
+
           exception_backtrace.find do |line|
             next unless (line_path = line[/(.+?):(\d+)(|:\d+)/, 1])
             path = File.expand_path(line_path)
