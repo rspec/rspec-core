@@ -241,6 +241,10 @@ module RSpec
         def find_failed_line
           line_regex = RSpec.configuration.in_project_source_dir_regex
           loaded_spec_files = RSpec.configuration.loaded_spec_files
+          
+          exception_backtrace.reject! do |line|
+            line =~ /\A<internal:/
+          end if RSpec::Support::Ruby.truffleruby?
 
           exception_backtrace.find do |line|
             next unless (line_path = line[/(.+?):(\d+)(|:\d+)/, 1])

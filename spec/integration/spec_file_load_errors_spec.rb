@@ -25,6 +25,7 @@ RSpec.describe 'Spec file load errors' do
       c.filter_gems_from_backtrace "gems/aruba"
       c.filter_gems_from_backtrace "gems/bundler"
       c.backtrace_exclusion_patterns << %r{/rspec-core/spec/} << %r{rspec_with_simplecov}
+      c.backtrace_exclusion_patterns << %r{/lib/mri/bundler/} if  RSpec::Support::Ruby.truffleruby?
       c.failure_exit_code = failure_exit_code
       c.error_exit_code = error_exit_code
     end
@@ -99,6 +100,9 @@ RSpec.describe 'Spec file load errors' do
           exit
         # ./helper_with_exit.rb:1#{spec_line_suffix}
       EOS
+    elsif RSpec::Support::Ruby.truffleruby?
+      expect(output).to include
+        "While loading ./helper_with_exit.rb an `exit` / `raise SystemExit` occurred, RSpec will now quit."
     else
       expect(output).to eq unindent(<<-EOS)
 
