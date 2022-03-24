@@ -25,7 +25,7 @@ Feature: custom settings
         end
       end
       """
-    When I run `rspec ./additional_setting_spec.rb`
+    When I run `rspec ./additional_setting_spec.rb --order defined`
     Then the examples should all pass
 
   Scenario: Default to `true`
@@ -51,7 +51,7 @@ Feature: custom settings
         end
       end
       """
-    When I run `rspec ./additional_setting_spec.rb`
+    When I run `rspec ./additional_setting_spec.rb --order defined`
     Then the examples should all pass
 
   Scenario: Overridden in a subsequent `RSpec.configure` block

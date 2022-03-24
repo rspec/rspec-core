@@ -73,7 +73,7 @@ Feature: Explicit Subject
         end
       end
       """
-    When I run `rspec memoized_subject_spec.rb`
+    When I run `rspec memoized_subject_spec.rb --order defined`
     Then the examples should all pass
 
   Scenario: The `subject` is available in `before` hooks
@@ -165,7 +165,7 @@ Feature: Explicit Subject
         end
       end
       """
-    When I run `rspec named_subject_spec.rb`
+    When I run `rspec named_subject_spec.rb --order defined`
     Then the examples should all pass
 
   Scenario: Use `subject!(:name)` to define a helper method called before the example

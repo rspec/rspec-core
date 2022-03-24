@@ -1,6 +1,10 @@
 module RSpec::Core
   RSpec.describe "config block hook filtering" do
     context "when hooks are defined after a group has been defined" do
+      before do
+        RSpec.configuration.order = :defined
+      end
+
       it "still applies" do
         sequence = []
 
@@ -444,6 +448,8 @@ module RSpec::Core
       end
 
       it "does not run if some hook filters don't match the group's filters" do
+        RSpec.configuration.order = :defined
+
         sequence = []
 
         RSpec.configure do |c|
@@ -471,6 +477,8 @@ module RSpec::Core
       end
 
       it "does not run for examples that do not match, even if their group matches" do
+        RSpec.configuration.order = :defined
+
         filters = []
 
         RSpec.configure do |c|

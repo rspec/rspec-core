@@ -228,7 +228,7 @@ Feature: filters
         it("", :around_example) { puts "example 4" }
       end
       """
-    When I run `rspec --format progress less_verbose_metadata_filter.rb`
+    When I run `rspec --format progress less_verbose_metadata_filter.rb --order defined`
     Then the examples should all pass
     And the output should contain:
       """

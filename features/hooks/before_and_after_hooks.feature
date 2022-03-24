@@ -103,7 +103,7 @@ Feature: `before` and `after` hooks
         end
       end
       """
-    When I run `rspec before_context_spec.rb`
+    When I run `rspec before_context_spec.rb --order defined`
     Then the examples should all pass
 
     When I run `rspec before_context_spec.rb:15`

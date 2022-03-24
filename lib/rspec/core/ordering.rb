@@ -85,14 +85,13 @@ module RSpec
           @configuration = configuration
           @strategies    = {}
 
-          register(:random, Random.new(configuration))
+          random = Random.new(configuration)
+          register(:random, random)
           register(:recently_modified, RecentlyModified.new)
+          register(:defined, Identity.new)
 
-          identity = Identity.new
-          register(:defined, identity)
-
-          # The default global ordering is --defined.
-          register(:global, identity)
+          # The default global ordering is --random.
+          register(:global, random)
         end
 
         def fetch(name, &fallback)

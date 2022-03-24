@@ -66,10 +66,9 @@ RSpec.configure do |config|
   # particularly slow.
   config.profile_examples = 10
 
-  # Run specs in random order to surface order dependencies. If you find an
-  # order dependency and want to debug it, you can fix the order by providing
-  # the seed, which is printed after each run.
-  #     --seed 1234
+  # RSpec runs specs in a random order by default to surface order dependencies.
+  # We recommend this setting but it can be changed to others, such as `:defined`
+  # to run specs in the defined order. See the documentation for more details.
   config.order = :random
 
   # Seed global randomization in this process using the `--seed` CLI option.

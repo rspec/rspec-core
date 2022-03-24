@@ -20,6 +20,8 @@ RSpec.describe RSpec::Core::Formatters::JsonFormatter do
   end
 
   it "outputs expected json (brittle high level functional test)" do
+    RSpec.configuration.order = :defined
+
     its = []
     group = RSpec.describe("one apiece") do
       its.push it("succeeds") { expect(1).to eq 1 }

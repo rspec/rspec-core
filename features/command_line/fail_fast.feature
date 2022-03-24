@@ -30,15 +30,15 @@ Feature: `--fail-fast` option
       """
 
   Scenario: Using `--fail-fast`
-    When I run `rspec . --fail-fast`
+    When I run `rspec . --fail-fast --order defined`
     Then the output should contain ".F"
     Then the output should not contain ".F."
 
   Scenario: Using `--fail-fast=3`
-    When I run `rspec . --fail-fast=3`
+    When I run `rspec . --fail-fast=3 --order defined`
     Then the output should contain ".FFF"
     Then the output should not contain ".FFFF."
 
   Scenario: Using `--no-fail-fast`
-    When I run `rspec . --no-fail-fast`
+    When I run `rspec . --no-fail-fast --order defined`
     Then the output should contain ".FFFF."

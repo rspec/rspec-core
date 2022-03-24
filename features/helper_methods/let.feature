@@ -27,7 +27,7 @@ Feature: let and let!
         end
       end
       """
-    When I run `rspec let_spec.rb`
+    When I run `rspec let_spec.rb --order defined`
     Then the examples should all pass
 
   Scenario: Use `let!` to define a memoized helper method that is called in a `before` hook
