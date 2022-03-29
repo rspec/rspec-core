@@ -224,7 +224,7 @@ module RSpec
 
           exception_backtrace.reject! do |line|
             line.start_with?("<internal:")
-          end if RSpec::Support::Ruby.truffleruby?
+          end
 
           exception_backtrace.find do |line|
             next unless (line_path = line[/(.+?):(\d+)(|:\d+)/, 1])
