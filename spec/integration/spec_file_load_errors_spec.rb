@@ -95,6 +95,17 @@ RSpec.describe 'Spec file load errors' do
           exit
         # ./helper_with_exit.rb:1#{spec_line_suffix}
       EOS
+    elsif RSpec::Support::Ruby.truffleruby?
+      # No extra ./helper_with_exit.rb:1:in `exit' line on truffleruby, Kernel#exit is defined in Ruby code
+      expect(output).to eq unindent(<<-EOS)
+
+        While loading ./helper_with_exit.rb an `exit` / `raise SystemExit` occurred, RSpec will now quit.
+        Failure/Error: exit 999
+
+        SystemExit:
+          exit
+        # ./helper_with_exit.rb:1#{spec_line_suffix}
+      EOS
     else
       expect(output).to eq unindent(<<-EOS)
 
