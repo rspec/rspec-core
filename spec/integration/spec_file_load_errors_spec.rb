@@ -85,22 +85,14 @@ RSpec.describe 'Spec file load errors' do
       run_command "--require ./helper_with_exit.rb"
     }.to raise_error(SystemExit)
     output = normalize_durations(last_cmd_stdout)
+    # Remove extra line which is only shown on CRuby
+    output = output.sub("# ./helper_with_exit.rb:1:in `exit'\n", "")
+
     if defined?(JRUBY_VERSION) && !JRUBY_VERSION.empty?
       expect(output).to eq unindent(<<-EOS)
 
         While loading ./helper_with_exit.rb an `exit` / `raise SystemExit` occurred, RSpec will now quit.
         Failure/Error: Unable to find org/jruby/RubyKernel.java to read failed line
-
-        SystemExit:
-          exit
-        # ./helper_with_exit.rb:1#{spec_line_suffix}
-      EOS
-    elsif RSpec::Support::Ruby.truffleruby?
-      # No extra ./helper_with_exit.rb:1:in `exit' line on truffleruby, Kernel#exit is defined in Ruby code
-      expect(output).to eq unindent(<<-EOS)
-
-        While loading ./helper_with_exit.rb an `exit` / `raise SystemExit` occurred, RSpec will now quit.
-        Failure/Error: exit 999
 
         SystemExit:
           exit
@@ -114,7 +106,6 @@ RSpec.describe 'Spec file load errors' do
 
         SystemExit:
           exit
-        # ./helper_with_exit.rb:1:in `exit'
         # ./helper_with_exit.rb:1#{spec_line_suffix}
       EOS
     end
