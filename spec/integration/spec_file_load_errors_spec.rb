@@ -89,6 +89,9 @@ RSpec.describe 'Spec file load errors' do
       run_command "--require ./helper_with_exit.rb"
     }.to raise_error(SystemExit)
     output = normalize_durations(last_cmd_stdout)
+    # Remove extra line which is only shown on CRuby
+    output = output.sub("# ./helper_with_exit.rb:1:in `exit'\n", "")
+
     if defined?(JRUBY_VERSION) && !JRUBY_VERSION.empty?
       expect(output).to eq unindent(<<-EOS)
 
@@ -107,7 +110,6 @@ RSpec.describe 'Spec file load errors' do
 
         SystemExit:
           exit
-        # ./helper_with_exit.rb:1:in `exit'
         # ./helper_with_exit.rb:1#{spec_line_suffix}
       EOS
     end
