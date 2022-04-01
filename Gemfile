@@ -16,8 +16,10 @@ if RUBY_VERSION < '1.9.3'
   gem 'rake', '< 11.0.0' # rake 11 requires Ruby 1.9.3 or later
 elsif RUBY_VERSION < '2.0.0'
   gem 'rake', '< 12.0.0' # rake 12 requires Ruby 2.0.0 or later
+elsif RUBY_VERSION < '2.2.0'
+  gem 'rake', '< 13.0.0' # rake 13 requires Ruby 2.2.0 or later
 else
-  gem 'rake', '>= 12.3.3'
+  gem 'rake', '>= 13.0.0'
 end
 
 if ENV['DIFF_LCS_VERSION']
@@ -47,6 +49,8 @@ end
 
 if RUBY_VERSION < '2.2.0' && !!(RbConfig::CONFIG['host_os'] =~ /cygwin|mswin|mingw|bccwin|wince|emx/)
   gem 'ffi', '< 1.10'
+elsif RUBY_VERSION < '2.4.0' && !!(RbConfig::CONFIG['host_os'] =~ /cygwin|mswin|mingw|bccwin|wince|emx/)
+  gem 'ffi', '< 1.15'
 elsif RUBY_VERSION < '2.0'
   gem 'ffi', '< 1.9.19' # ffi dropped Ruby 1.8 support in 1.9.19
 elsif RUBY_VERSION < '2.3.0'
@@ -59,8 +63,10 @@ if RUBY_VERSION < '2.3.0' && !!(RbConfig::CONFIG['host_os'] =~ /cygwin|mswin|min
   gem "childprocess", "< 1.0.0"
 elsif RUBY_VERSION < '2.0.0'
   gem "childprocess", "< 1.0.0"
+elsif RUBY_VERSION < '2.3.0'
+  gem "childprocess", "< 3.0.0"
 else
-  gem "childprocess", "> 1.0.0"
+  gem "childprocess", ">= 3.0.0"
 end
 
 platforms :jruby do
@@ -86,6 +92,10 @@ gem 'test-unit', '~> 3.0' if RUBY_VERSION.to_f >= 2.2
 # Version 5.12 of minitest requires Ruby 2.4
 if RUBY_VERSION < '2.4.0'
   gem 'minitest', '< 5.12.0'
+end
+
+if RUBY_VERSION < '2.0.0'
+  gem 'cucumber', "<= 1.3.22"
 end
 
 gem 'contracts', '< 0.16' if RUBY_VERSION < '1.9.0'
