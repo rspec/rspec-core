@@ -20,7 +20,11 @@ group :documentation do
   gem 'github-markup', :platform => :mri
 end
 
-gem 'ffi', '~> 1.15.0'
+if RUBY_VERSION < '2.4.0' && !!(RbConfig::CONFIG['host_os'] =~ /cygwin|mswin|mingw|bccwin|wince|emx/)
+  gem 'ffi', '< 1.15'
+else
+  gem 'ffi', '~> 1.15.0'
+end
 
 gem "jruby-openssl", platforms: :jruby
 

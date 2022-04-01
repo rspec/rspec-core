@@ -1,2 +1,10 @@
-default: --require features --strict --format progress --tags 'not @wip' features
+<%
+
+NOT_WIP_TAG = '"not @wip"'
+NOT_JRUBY_TAG = '"not @no-jruby"'
+
+exclusions = []
+exclusions << " --tags #{NOT_JRUBY_TAG}" if RUBY_PLATFORM == 'java'
+%>
+default: --require features --strict --format progress --tags <%= NOT_WIP_TAG %><%= exclusions.join %> features
 wip:     --require features --tags @wip:30 --wip features

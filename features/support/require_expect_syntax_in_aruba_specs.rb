@@ -1,6 +1,8 @@
 if defined?(Cucumber)
   require 'shellwords'
-  Before('not @with-clean-spec-opts') do
+  exclude_allow_should_syntax = 'not @allow-should-syntax'
+  exclude_with_clean_spec_ops = 'not @with-clean-spec-opts'
+  Before(exclude_allow_should_syntax, exclude_with_clean_spec_ops) do
     set_environment_variable('SPEC_OPTS', "-r#{Shellwords.escape(__FILE__)}")
   end
 else
