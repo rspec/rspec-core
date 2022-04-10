@@ -1,37 +1,28 @@
 Feature: Randomization can be reproduced across test runs
 
-  In Ruby, randomness is seeded by calling `srand` and passing it the seed that
-  you want to use. By doing this, subsequent calls to `rand`, `shuffle`,
-  `sample`, etc. will all be randomized the same way given the same seed is
-  passed to `srand`.
+  In Ruby, you can call `srand` for randomness and pass it to the seed you want to use. All subsequent calls to `rand`, `shuffle`,
+  `sample` all be randomized the same way.
 
   RSpec takes care not to seed randomization directly when taking action that
-  involves randomness (such as random ordering of examples).
+  involves randomness. 
 
-  Since RSpec does not ever invoke `srand`, this means that you are free to
-  choose which, if any, mechanism is used to seed randomization.
+  RSpec do not trigger randomization directly for actions that involve randomness.
+  RSpec does not invoke `srand`. You can choose any (or no) mechanism to seed randomization. 
+  An example below shows how RSpec uses seeds for this.
 
-  There is an example below of how to use RSpec's seed for this purpose if you
-  wish to do so.
+  To manage seeding randomization without any help from RSpec, keep the following things in mind:
 
-  If you would like to manage seeding randomization without any help from RSpec,
-  please keep the following things in mind:
+    * Do not hard-code the seed.
 
-    * The seed should never be hard-coded.
-
-      The first example below only does this to show that seeding randomization
-      with a seed other than the one used by RSpec will correctly seed
-      randomization.
+      You can still seed the correct randomization with a seed other than the one used by RSpec.
 
     * Report the seed that was chosen.
 
-      The randomization that was used for a given test run can not be reproduced
-      if no one knows what seed was used to begin with.
+      You cannot reproduce the randomization for a given test run if you don't know the starting seed.
 
     * Provide a mechanism to feed the seed into the tests.
 
-      Without this, the call to `srand` will have to be hard-coded any time it
-      is necessary to replicate a given test run's randomness.
+      You cannot replicate the randomness of a particular test run without hard-coding the call to `srand`.
 
   Background:
     Given a file named ".rspec" with:
