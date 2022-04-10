@@ -1,6 +1,6 @@
 Feature: `--warnings` option (run with warnings enabled)
 
-  You can use the `--warnings` option to run specs with warnings enabled
+  Use the `--warnings` option to run specs with warnings enabled.
 
   @unsupported-on-rbx
   Scenario:
