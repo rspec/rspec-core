@@ -25,8 +25,8 @@ Feature: shared examples
 
   ```ruby
   RSpec.shared_examples "some example" do |parameter|
-    \# Same behavior is triggered also with either `def something; 'some value'; end`
-    \# or `define_method(:something) { 'some value' }`
+    # Same behavior is triggered also with either `def something; 'some value'; end`
+    # or `define_method(:something) { 'some value' }`
     let(:something) { parameter }
     it "uses the given parameter" do
       expect(something).to eq(parameter)
@@ -43,12 +43,12 @@ Feature: shared examples
 
   ```ruby
   RSpec.describe SomeClass do
-    \# Reordered code for better understanding of what is happening
+    # Reordered code for better understanding of what is happening
     let(:something) { "parameter1" }
     let(:something) { "parameter2" }
 
     it "uses the given parameter" do
-      \# This example will fail because last let "wins"
+      # This example will fail because last let "wins"
       expect(something).to eq("parameter1")
     end
 
