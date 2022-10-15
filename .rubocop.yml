@@ -3,6 +3,7 @@ inherit_from:
   - .rubocop_todo.yml
 
 AllCops:
+  TargetRubyVersion: 2.4
   Exclude:
     # This code was taken from the backports gem. We don't want to mess with it.
     - lib/rspec/core/backport_random.rb
