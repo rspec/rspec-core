@@ -18,13 +18,6 @@ gem 'yard', '~> 0.9.24', :require => false
 group :documentation do
   gem 'redcarpet', :platform => :mri
   gem 'github-markup', :platform => :mri
-  gem 'yard', '~> 0.9.24', :require => false
-end
-
-if RUBY_VERSION < '2.0.0'
-  gem 'thor', '< 1.0.0'
-else
-  gem 'thor', '> 1.0.0'
 end
 
 if RUBY_VERSION < '2.4.0' && !!(RbConfig::CONFIG['host_os'] =~ /cygwin|mswin|mingw|bccwin|wince|emx/)
@@ -35,9 +28,7 @@ end
 
 gem "jruby-openssl", platforms: :jruby
 
-group :coverage do
-  gem 'simplecov', '~> 0.8'
-end
+gem 'simplecov', '~> 0.8'
 
 # No need to run rubocop on earlier versions
 if RUBY_VERSION >= '2.4' && RUBY_ENGINE == 'ruby'
