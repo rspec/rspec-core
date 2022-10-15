@@ -19,12 +19,6 @@ Aruba.configure do |config|
   end
 end if RUBY_PLATFORM == 'java'
 
-Aruba.configure do |config|
-  config.before(:command) do |cmd|
-    set_environment_variable('RBXOPT', "-Xint=true #{ENV['RBXOPT']}") # disable JIT since these processes are so short lived
-  end
-end if defined?(Rubinius)
-
 module ArubaHelpers
   def all_output
     all_commands.map { |c| c.output }.join("\n")

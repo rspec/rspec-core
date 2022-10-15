@@ -12,7 +12,6 @@ Gemfile.lock
 .bundle
 *.rbc
 bin
-.rbx
 .yardoc
 vendor
 Gemfile-custom
