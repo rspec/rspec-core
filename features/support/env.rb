@@ -6,7 +6,7 @@ Before do
 end
 
 Aruba.configure do |config|
-  config.exit_timeout = if RUBY_PLATFORM =~ /java/ || defined?(Rubinius) || (defined?(RUBY_ENGINE) && RUBY_ENGINE == 'truffleruby')
+  config.exit_timeout = if RUBY_PLATFORM =~ /java/ || (defined?(RUBY_ENGINE) && RUBY_ENGINE == 'truffleruby')
     120
   else
     10

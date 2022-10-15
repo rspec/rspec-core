@@ -96,26 +96,6 @@ module RSpec
       end
 
       # @private
-      def enforce_value_expectation(matcher, method_name)
-        return if matcher_supports_value_expectations?(matcher)
-
-        RSpec.deprecate(
-          "#{method_name} #{RSpec::Support::ObjectFormatter.format(matcher)}",
-          :message =>
-            "The implicit block expectation syntax is deprecated, you should pass " \
-            "a block to `expect` to use the provided block expectation matcher " \
-            "(#{RSpec::Support::ObjectFormatter.format(matcher)}), " \
-            "or the matcher must implement `supports_value_expectations?`."
-        )
-      end
-
-      def matcher_supports_value_expectations?(matcher)
-        matcher.supports_value_expectations?
-      rescue
-        true
-      end
-
-      # @private
       class ThreadsafeMemoized
         def initialize
           @memoized = {}

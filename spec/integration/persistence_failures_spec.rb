@@ -45,7 +45,6 @@ RSpec.describe 'Persistence failures' do
 
 
       it 'emits a helpful warning to the user, indicating we cannot read from it, and still runs the spec suite' do
-        skip "Legacy builds run as root and this will never pass" if ENV['LEGACY_CI']
         run_command "spec/1_spec.rb"
 
         expected_snippets = [
