@@ -654,28 +654,6 @@ module RSpec::Core
     end
   end
 
-  RSpec.describe 'implicit block expectation syntax' do
-    matcher :block_matcher do
-      match { |actual| true }
-      supports_block_expectations
-      def supports_value_expectations?
-        false
-      end
-    end
-
-    subject { 'value or a Proc' }
-
-    it '`should` prints a deprecation warning when given a value' do
-      expect_warn_deprecation(/The implicit block expectation syntax is deprecated, you should pass/)
-      expect { should block_matcher }.not_to raise_error
-    end
-
-    it '`should_not` prints a deprecation warning when given a value' do
-      expect_warn_deprecation(/The implicit block expectation syntax is deprecated, you should pass/)
-      expect { should_not block_matcher }.to raise_error(Exception)
-    end
-  end
-
   RSpec.describe 'Module#define_method' do
     it 'retains its normal private visibility on Ruby versions where it is normally private', :skip => RUBY_VERSION >= '2.5' do
       a_module = Module.new
