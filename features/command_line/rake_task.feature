@@ -39,7 +39,7 @@ Feature: rake task
     When I run `rake`
     Then the output should match:
       """
-      (ruby|rbx) -I\S+ [\/\S]+\/exe\/rspec
+      (ruby(\d\.\d(.\d)?)?|rbx) -I\S+ [\/\S]+\/exe\/rspec
       """
     Then the exit status should be 0
 

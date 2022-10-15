@@ -33,10 +33,8 @@ module RSpec
             "<span class='duration'>#{formatted_run_time}s</span></dd>"
         end
 
-        # rubocop:disable Metrics/ParameterLists
         def print_example_failed(pending_fixed, description, run_time, failure_id,
                                  exception, extra_content)
-          # rubocop:enable Metrics/ParameterLists
           formatted_run_time = "%.5f" % run_time
 
           @output.puts "    <dd class=\"example #{pending_fixed ? 'pending_fixed' : 'failed'}\">"
@@ -215,7 +213,7 @@ function assign_display_style_for_group(classname, display_flag, subgroup_flag) 
   }
 }
 EOF
-        # rubocop:enable LineLength
+        # rubocop:enable Layout/LineLength
 
         GLOBAL_STYLES = <<-EOF
 #rspec-header {

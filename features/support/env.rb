@@ -3,11 +3,13 @@ require 'aruba/cucumber'
 Before do
   # Force ids to be printed unquoted for consistency
   set_environment_variable('SHELL', '/usr/bin/bash')
+end
 
-  if RUBY_PLATFORM =~ /java/ || defined?(Rubinius)
-    @aruba_timeout_seconds = 120
+Aruba.configure do |config|
+  config.exit_timeout = if RUBY_PLATFORM =~ /java/ || defined?(Rubinius) || (defined?(RUBY_ENGINE) && RUBY_ENGINE == 'truffleruby')
+    120
   else
-    @aruba_timeout_seconds = 10
+    10
   end
 end
 

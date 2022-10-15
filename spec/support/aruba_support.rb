@@ -29,6 +29,7 @@ end
 
 RSpec.shared_context "aruba support" do
   include Aruba::Api
+  include RSpecHelpers
   let(:stderr) { StringIO.new }
   let(:stdout) { StringIO.new }
 
@@ -66,13 +67,6 @@ RSpec.shared_context "aruba support" do
     # strip extra indentation.
     formatted_contents = unindent(contents.sub(/\A\n/, ""))
     write_file file_name, formatted_contents
-  end
-
-  # Intended for use with indented heredocs.
-  # taken from Ruby Tapas:
-  # https://rubytapas.dpdcart.com/subscriber/post?id=616#files
-  def unindent(s)
-    s.gsub(/^#{s.scan(/^[ \t]+(?=\S)/).min}/, "")
   end
 end
 

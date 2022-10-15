@@ -1,4 +1,5 @@
 ### Development
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.11.0...main)
 
 Breaking Changes:
 
@@ -34,6 +35,9 @@ Breaking Changes:
 * Unify multi-condition filtering to use "all" semantic. (Phil Pirozhkov, #2874)
 * Remove support for RR test double framework version < 3.0. (Phil Pirozhkov, #2884)
 
+### 3.11.0 / 2022-02-09
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.10.2...v3.11.0)
+
 Enhancements:
 
 * Improve pluralisation of words ending with `s` (like process). (Joshua Pinter, #2779)
@@ -43,6 +47,9 @@ Enhancements:
   RSpec is executing. e.g. `:before_example_hook`, `:example` etc. (@odinhb, #2895)
 * Add named bold colours as options for custom colours. (#2913, #2914)
 * Warn when (but not prevent) a `SystemExit` occurs. (Jared Beck, #2926)
+
+### 3.10.2 / 2022-01-27
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.10.1...v3.10.2)
 
 Bug fixes:
 

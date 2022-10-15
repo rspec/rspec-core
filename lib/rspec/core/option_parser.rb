@@ -32,11 +32,10 @@ module RSpec::Core
 
   private
 
-    # rubocop:disable MethodLength
     # rubocop:disable Metrics/AbcSize
-    # rubocop:disable CyclomaticComplexity
-    # rubocop:disable PerceivedComplexity
-    # rubocop:disable Metrics/BlockLength
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def parser(options)
       OptionParser.new do |parser|
         parser.summary_width = 34
@@ -297,11 +296,10 @@ FILTERING
         end
       end
     end
-    # rubocop:enable Metrics/BlockLength
     # rubocop:enable Metrics/AbcSize
-    # rubocop:enable MethodLength
-    # rubocop:enable CyclomaticComplexity
-    # rubocop:enable PerceivedComplexity
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     def add_tag_filter(options, filter_type, tag_name, value=true)
       (options[filter_type] ||= {})[tag_name] = value

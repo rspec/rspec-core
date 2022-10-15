@@ -34,8 +34,10 @@ require 'benchmark/ips'
 class BenchmarkHelpers
   def self.prepare_implementation(prefix)
     RSpec.world = RSpec::Core::World.new # clear our state
-    RSpec::Core::Example.__send__ :alias_method, :with_around_and_singleton_context_hooks, :"#{prefix}_with_around_and_singleton_context_hooks"
-    RSpec::Core::Hooks::HookCollections.__send__ :alias_method, :register_global_singleton_context_hooks, :"#{prefix}_register_global_singleton_context_hooks"
+    RSpec::Core::Example.__send__ :alias_method, :with_around_and_singleton_context_hooks,
+                                  :"#{prefix}_with_around_and_singleton_context_hooks"
+    RSpec::Core::Hooks::HookCollections.__send__ :alias_method, :register_global_singleton_context_hooks,
+                                                 :"#{prefix}_register_global_singleton_context_hooks"
     RSpec::Core::Configuration.__send__ :alias_method, :configure_example, :"#{prefix}_configure_example"
   end
 
