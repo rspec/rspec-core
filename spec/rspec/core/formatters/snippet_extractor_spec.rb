@@ -181,7 +181,7 @@ module RSpec::Core::Formatters
         end
       end
 
-      context 'when the expression line includes an "end"-less method definition', :if => RUBY_VERSION.to_f >= 3.0 do
+      context 'when the expression line includes an "end"-less method definition', :skip => RUBY_VERSION.to_f < 3.0 do
         include RSpec::Support::InSubProcess
 
         around(:example) do |example|
@@ -222,7 +222,7 @@ module RSpec::Core::Formatters
         end
       end
 
-      context 'when the expression is a setter method definition', :unless => argument_error_points_invoker do
+      context 'when the expression is a setter method definition', :skip => argument_error_points_invoker do
         let(:source) do
           obj = Object.new
 
