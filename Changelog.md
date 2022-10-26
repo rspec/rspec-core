@@ -1,5 +1,10 @@
 ### Development
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.11.0...main)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.0...main)
+
+### 3.12.0 / 2022-10-26
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.11.0...v3.12.0)
+
+* No changes, released to support other gems.
 
 ### 3.11.0 / 2022-02-09
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.10.2...v3.11.0)
