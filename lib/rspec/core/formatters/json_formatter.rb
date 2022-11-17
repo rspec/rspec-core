@@ -37,14 +37,14 @@ module RSpec
             format_example(example)
           end
 
-          @output_hash[:examples] += notification.failure_notifications.map do |notification|
-            format_example(notification.example).tap do |hash|
+          @output_hash[:examples] += notification.failure_notifications.map do |fn|
+            format_example(fn.example).tap do |hash|
               e = example.exception
               if e
                 hash[:exception] = {
                   :class => e.class.name,
                   :message => e.message,
-                  :backtrace => notification.formatted_backtrace,
+                  :backtrace => fn.formatted_backtrace,
                 }
               end
             end
