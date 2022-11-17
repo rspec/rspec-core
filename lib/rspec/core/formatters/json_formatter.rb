@@ -33,14 +33,18 @@ module RSpec
         end
 
         def stop(notification)
-          @output_hash[:examples] = notification.examples.map do |example|
-            format_example(example).tap do |hash|
+          @output_hash[:examples] = notification.examples.reject(&:exception).map do |example|
+            format_example(example)
+          end
+
+          @output_hash[:examples] += notification.failure_notifications.map do |notification|
+            format_example(notification.example).tap do |hash|
               e = example.exception
               if e
-                hash[:exception] =  {
+                hash[:exception] = {
                   :class => e.class.name,
                   :message => e.message,
-                  :backtrace => e.backtrace,
+                  :backtrace => notification.formatted_backtrace,
                 }
               end
             end
