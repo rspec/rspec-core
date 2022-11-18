@@ -39,7 +39,7 @@ module RSpec
 
           @output_hash[:examples] += notification.failure_notifications.map do |fn|
             format_example(fn.example).tap do |hash|
-              e = example.exception
+              e = fn.example.exception
               if e
                 hash[:exception] = {
                   :class => e.class.name,

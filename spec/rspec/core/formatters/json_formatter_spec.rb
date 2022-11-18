@@ -38,7 +38,7 @@ RSpec.describe RSpec::Core::Formatters::JsonFormatter do
 
     # grab the actual backtrace -- kind of a cheat
     examples = formatter.output_hash[:examples]
-    failing_backtrace = examples[1][:exception][:backtrace]
+    failing_backtrace = examples.find { |e| e[:exception] }[:exception][:backtrace]
     this_file = relative_path(__FILE__)
 
     expected = {
@@ -55,29 +55,29 @@ RSpec.describe RSpec::Core::Formatters::JsonFormatter do
           :pending_message => nil,
         },
         {
-          :id => its[1].id,
-          :description => "fails",
-          :full_description => "one apiece fails",
-          :status => "failed",
-          :file_path => this_file,
-          :line_number => failing_line,
-          :run_time => formatter.output_hash[:examples][1][:run_time],
-          :pending_message => nil,
-          :exception => {
-            :class     => "RuntimeError",
-            :message   => "eek",
-            :backtrace => failing_backtrace
-          },
-        },
-        {
           :id => its[2].id,
           :description => "pends",
           :full_description => "one apiece pends",
           :status => "pending",
           :file_path => this_file,
           :line_number => pending_line,
-          :run_time => formatter.output_hash[:examples][2][:run_time],
+          :run_time => formatter.output_hash[:examples][1][:run_time],
           :pending_message => "world peace",
+        },
+        {
+          :id => its[1].id,
+          :description => "fails",
+          :full_description => "one apiece fails",
+          :status => "failed",
+          :file_path => this_file,
+          :line_number => failing_line,
+          :run_time => formatter.output_hash[:examples][2][:run_time],
+          :pending_message => nil,
+          :exception => {
+            :class     => "RuntimeError",
+            :message   => "eek",
+            :backtrace => failing_backtrace
+          },
         },
       ],
       :summary => {
