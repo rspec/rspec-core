@@ -93,6 +93,52 @@ RSpec.describe RSpec::Core::Formatters::JsonFormatter do
     expect(formatter_output.string).to eq expected.to_json
   end
 
+  context "when full backtrace is enabled" do
+    around do |example|
+      original_value = RSpec.configuration.full_backtrace?
+      RSpec.configuration.full_backtrace = true
+      example.run
+      RSpec.configuration.full_backtrace = original_value
+    end
+
+    it "outputs the full backtrace" do
+      group = RSpec.describe do
+        it("fails") { fail "eek" }
+      end
+
+      reporter.report(1) { |r| group.run(r) }
+
+      formatted_backtrace = formatter.output_hash[:examples][0][:exception][:backtrace]
+      exception_backtrace = group.examples[0].exception.backtrace.map { |l| l.gsub(Dir.pwd, ".") }
+
+      expect(formatted_backtrace).to eq(exception_backtrace)
+    end
+  end
+
+  context "when full backtrace is disabled" do
+    around do |example|
+      original_value = RSpec.configuration.full_backtrace?
+      RSpec.configuration.full_backtrace = false
+      example.run
+      RSpec.configuration.full_backtrace = original_value
+    end
+
+    it "outputs a strict subset of the full backtrace" do
+      group = RSpec.describe do
+        it("fails") { fail "eek" }
+      end
+
+      reporter.report(1) { |r| group.run(r) }
+
+      formatted_backtrace = formatter.output_hash[:examples][0][:exception][:backtrace]
+      exception_backtrace = group.examples[0].exception.backtrace.map { |l| l.gsub(Dir.pwd, ".") }
+
+      expect(formatted_backtrace).not_to be_empty
+      expect(formatted_backtrace & exception_backtrace).to eq(formatted_backtrace)
+      expect(exception_backtrace - formatted_backtrace).not_to be_empty
+    end
+  end
+
   describe "#stop" do
     it "adds all examples to the output hash" do
       send_notification :stop, stop_notification
