@@ -33,14 +33,13 @@ module RSpec
         end
 
         def stop(notification)
-          @output_hash[:examples] = notification.examples.reject(&:exception).map do |example|
-            format_example(example)
-          end
+          @output_hash[:examples] = notification.examples.map do |example|
+            format_example(example).tap do |hash|
+              e = example.exception
 
-          @output_hash[:examples] += notification.failure_notifications.map do |fn|
-            format_example(fn.example).tap do |hash|
-              e = fn.example.exception
               if e
+                fn = notification.failure_notifications.find { |f| f.example == example }
+
                 hash[:exception] = {
                   :class => e.class.name,
                   :message => e.message,
