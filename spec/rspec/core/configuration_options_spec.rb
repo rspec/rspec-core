@@ -569,6 +569,13 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
       expect(parse_options[:formatters]).to eq([['local']])
     end
 
+    it 'ignores comment lines in option files' do
+      create_fixture_file("./.rspec", "# --force-color\n  # --format local")
+      options = parse_options()
+      expect(options[:color_mode]).to be_nil
+      expect(parse_options[:formatters]).to be_nil
+    end
+
     context "with custom options file" do
       it "ignores project and global options files" do
         create_fixture_file("./.rspec", "--format project")
