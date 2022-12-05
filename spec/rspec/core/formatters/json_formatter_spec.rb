@@ -134,7 +134,10 @@ RSpec.describe RSpec::Core::Formatters::JsonFormatter do
       exception_backtrace = group.examples[0].exception.backtrace.map { |l| l.gsub(Dir.pwd, ".") }
 
       expect(formatted_backtrace).not_to be_empty
-      expect(formatted_backtrace & exception_backtrace).to eq(formatted_backtrace)
+
+      # Every line in the formatted backtrace is also in the original backtrace
+      expect(formatted_backtrace - exception_backtrace).to be_empty
+      # The original backtrace contains lines not in the formatted backtrace
       expect(exception_backtrace - formatted_backtrace).not_to be_empty
     end
   end
