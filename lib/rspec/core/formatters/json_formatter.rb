@@ -32,15 +32,16 @@ module RSpec
           @output_hash[:summary_line] = summary.totals_line
         end
 
-        def stop(notification)
-          @output_hash[:examples] = notification.examples.map do |example|
-            format_example(example).tap do |hash|
-              e = example.exception
+        def stop(group_notification)
+          @output_hash[:examples] = group_notification.notifications.map do |notification|
+            format_example(notification.example).tap do |hash|
+              e = notification.example.exception
+
               if e
-                hash[:exception] =  {
+                hash[:exception] = {
                   :class => e.class.name,
                   :message => e.message,
-                  :backtrace => e.backtrace,
+                  :backtrace => notification.formatted_backtrace,
                 }
               end
             end
