@@ -4,6 +4,7 @@
 Enhancements:
 
 * Support the `--backtrace` flag when using the JSON formatter. (Matt Larraz, #2980)
+* Ignore commented out lines in CLI config files (e.g. `.rspec`). (Junichi Ito, #2984)
 
 ### 3.12.0 / 2022-10-26
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.11.0...v3.12.0)
