@@ -64,6 +64,8 @@ module RSpec
         @syntax_highlighter = nil
         @example_group_counts_by_spec_file = Hash.new(0)
         @filtered_examples.clear
+        RSpec::Core::AnonymousExampleGroup.examples.clear
+        RSpec::Core::AnonymousExampleGroup.children.clear
       end
 
       # @private
