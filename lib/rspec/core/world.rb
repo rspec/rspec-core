@@ -66,6 +66,7 @@ module RSpec
         @filtered_examples.clear
         RSpec::Core::AnonymousExampleGroup.examples.clear
         RSpec::Core::AnonymousExampleGroup.children.clear
+        shared_example_group_registry.reset
       end
 
       # @private
