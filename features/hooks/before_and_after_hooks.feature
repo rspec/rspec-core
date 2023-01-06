@@ -210,7 +210,7 @@ Feature: `before` and `after` hooks
       before context runs
       before example runs
       after example runs
-      after context runs
+      Fafter context runs
       """
 
   Scenario: Define `before` and `after` blocks in configuration
