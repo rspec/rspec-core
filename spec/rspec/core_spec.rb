@@ -52,7 +52,7 @@ RSpec.describe RSpec do
       # of files in `support/fake_libs` that substitute for the real things when
       # we put that directory on the load path. Here's the list:
       #
-      #   * coderay -- loaded by the HTML formatter if availble for syntax highlighting.
+      #   * coderay -- loaded by the HTML formatter if available for syntax highlighting.
       #   * drb -- loaded when `--drb` is used. Loads other stdlibs (socket, thread, fcntl).
       #   * erb -- loaded by `ConfigurationOptions` so `.rspec` can use ERB. Loads other stdlibs (strscan, cgi/util).
       #   * flexmock -- loaded by our Flexmock mocking adapter.
