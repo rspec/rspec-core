@@ -92,7 +92,7 @@ module RSpec::Core
       end
 
       context "when `example_status_persistence_file_path` is configured" do
-        it 'returns a memoized array of unique spec files that contain failed exaples' do
+        it 'returns a memoized array of unique spec files that contain failed examples' do
           simulate_persisted_examples(
             { :example_id => "./spec_1.rb[1:1]", :status => "failed"  },
             { :example_id => "./spec_1.rb[1:2]", :status => "failed"  },
