@@ -108,7 +108,7 @@ RSpec.describe RSpec::Core::Formatters::Helpers do
         expect(helper.format_seconds(50.330340)).to eq("50.33")
       end
 
-      it "returns human friendly elasped time" do
+      it "returns human friendly elapsed time" do
         expect(helper.format_seconds(50.1)).to eq("50.1")
         expect(helper.format_seconds(5)).to eq("5")
         expect(helper.format_seconds(5.0)).to eq("5")

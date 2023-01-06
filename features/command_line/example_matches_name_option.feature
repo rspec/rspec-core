@@ -103,7 +103,7 @@ Feature: `--example-matches` option
       | nested group second example in nested group |
 
   # https://regex101.com/r/RABd8Q/2
-  Scenario: Match only matching regex with word boundarries
+  Scenario: Match only matching regex with word boundaries
     When I run `rspec . --example-matches "nested[^_]" --format d`
     Then the examples should all pass
     And the output should contain all of these:

@@ -100,7 +100,7 @@ our allocations by:
   - 10K arrays
   - 10K sets
   - 5K FilterableItemRepository
-  - 5K HookCollecion
+  - 5K HookCollection
 
               class_plus                 count
 ---------------------------------------  -----
