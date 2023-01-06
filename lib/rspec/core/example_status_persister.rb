@@ -164,7 +164,7 @@ module RSpec
       end
 
       def formatted_value_rows
-        @foramtted_value_rows ||= rows.map do |row|
+        @formatted_value_rows ||= rows.map do |row|
           formatted_row_from(row)
         end
       end
