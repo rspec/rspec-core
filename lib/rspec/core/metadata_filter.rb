@@ -92,7 +92,7 @@ module RSpec
       #
       # This is ideal for use by a example or example group, which may
       # be updated multiple times with globally configured hooks, etc,
-      # but will not be queried frequently by other examples or examle
+      # but will not be queried frequently by other examples or example
       # groups.
       # @private
       class UpdateOptimized
