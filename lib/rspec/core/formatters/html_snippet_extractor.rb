@@ -43,7 +43,7 @@ module RSpec
         #
         # @param backtrace [String] the backtrace from a test failure
         # @return [String] highlighted code snippet indicating where the test
-        #   failure occured
+        #   failure occurred
         #
         # @see #post_process
         def snippet(backtrace)
@@ -103,7 +103,7 @@ module RSpec
         #
         # @param highlighted [String] syntax-highlighted snippet surrounding the
         #   offending line of code
-        # @param offending_line [Fixnum] line where failure occured
+        # @param offending_line [Fixnum] line where failure occurred
         # @return [String] completed snippet
         def post_process(highlighted, offending_line)
           new_lines = []
