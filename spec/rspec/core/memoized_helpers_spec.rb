@@ -434,7 +434,7 @@ module RSpec::Core
           end
         end
 
-        specify 'memoized blocks prevent other threads from accessing, even when it is accesssed in a superclass' do
+        specify 'memoized blocks prevent other threads from accessing, even when it is accessed in a superclass' do
           describe_successfully do
             let!(:order) { ThreadOrder.new }
             after { order.apocalypse! :join }
