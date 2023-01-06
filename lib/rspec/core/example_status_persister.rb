@@ -63,7 +63,7 @@ module RSpec
     # were loaded but not executed (due to filtering, `--fail-fast`
     # or whatever) should have a `:status` of `UNKNOWN_STATUS`.
     #
-    # This willl produce a new list that:
+    # This will produce a new list that:
     #   - Will be missing examples from previous runs that we know for sure
     #     no longer exist.
     #   - Will have the latest known status for any examples that either
@@ -164,7 +164,7 @@ module RSpec
       end
 
       def formatted_value_rows
-        @foramtted_value_rows ||= rows.map do |row|
+        @formatted_value_rows ||= rows.map do |row|
           formatted_row_from(row)
         end
       end

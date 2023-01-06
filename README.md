@@ -322,14 +322,14 @@ Failures:
             got: nil
 
        (compared using ==)
-     # ./spec/calcalator_spec.rb:6:in `block (3 levels) in <top (required)>'
+     # ./spec/calculator_spec.rb:6:in `block (3 levels) in <top (required)>'
 
 Finished in 0.00131 seconds (files took 0.10968 seconds to load)
 1 example, 1 failure
 
 Failed examples:
 
-rspec ./spec/calcalator_spec.rb:5 # Calculator#add returns the sum of its arguments
+rspec ./spec/calculator_spec.rb:5 # Calculator#add returns the sum of its arguments
 ```
 
 Implement the simplest solution, by changing the definition of `Calculator#add` to:

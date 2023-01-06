@@ -83,7 +83,7 @@ Feature: shared examples
       `rspec-rails`. However, in order to keep your test suite boot time down,
       it's a good idea to not autorequire all files in a directory like this.
       When running only one spec file, loading unneeded dependencies or performing
-      unneeded setup can have a significant, noticable effect on how long it takes
+      unneeded setup can have a significant, noticeable effect on how long it takes
       before the first example runs.
 
   3. When all of the groups that include the shared group reside in the same file,

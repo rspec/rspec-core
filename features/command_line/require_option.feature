@@ -34,7 +34,7 @@ Feature: `--require` option
       """
     And a file named "spec/example_spec.rb" with:
       """ruby
-      RSpec.describe "an embarassing situation" do
+      RSpec.describe "an embarrassing situation" do
         it "happens to everyone" do
         end
       end
