@@ -66,7 +66,7 @@ Feature: custom settings
       end
 
       RSpec.describe "custom setting" do
-        it "returns the value set in the last cofigure block to get eval'd" do
+        it "returns the value set in the last configure block to get eval'd" do
           expect(RSpec.configuration.custom_setting).to be(true)
         end
 
