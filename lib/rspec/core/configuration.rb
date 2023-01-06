@@ -678,7 +678,7 @@ module RSpec
       end
 
       # Set regular expressions used to exclude lines in backtrace.
-      # @param patterns [Array<Regexp>] set backtrace_formatter exlusion_patterns
+      # @param patterns [Array<Regexp>] set backtrace_formatter exclusion_patterns
       def backtrace_exclusion_patterns=(patterns)
         @backtrace_formatter.exclusion_patterns = patterns
       end
