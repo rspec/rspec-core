@@ -111,7 +111,7 @@ module RSpec::Core::Formatters
       end
 
       it "raises ArgumentError if formatter is unknown" do
-        expect { loader.add :progress, output }.to raise_error(ArgumentError)
+        expect { loader.add :nonexistent, output }.to raise_error(ArgumentError)
       end
 
       context "with a 2nd arg defining the output" do
