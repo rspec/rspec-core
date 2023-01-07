@@ -458,6 +458,20 @@ module RSpec
       # return [Integer]
       add_setting :max_displayed_failure_line_count
 
+      # @macro add_setting
+      # Format the output for pending examples. Can be set to:
+      #  - :full (default) - pending examples appear similarly to failures
+      #  - :no_backtrace - same as above, but with no backtrace
+      #  - :skip - do not show the section at all
+      # return [Symbol]
+      add_read_only_setting :pending_failure_output
+      def pending_failure_output=(mode)
+        raise ArgumentError,
+              "`pending_failure_output` can be set to :full, :no_backtrace, " \
+              "or :skip" unless [:full, :no_backtrace, :skip].include?(mode)
+        @pending_failure_output = mode
+      end
+
       # Determines which bisect runner implementation gets used to run subsets
       # of the suite during a bisection. Your choices are:
       #
@@ -559,6 +573,7 @@ module RSpec
         @max_displayed_failure_line_count = 10
         @world = World::Null
         @shared_context_metadata_behavior = :trigger_inclusion
+        @pending_failure_output = :full
 
         define_built_in_hooks
       end

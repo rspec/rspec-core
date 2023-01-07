@@ -69,6 +69,7 @@ module CommonHelpers
 end
 
 RSpec.configure do |c|
+  c.pending_failure_output = :no_backtrace
   c.example_status_persistence_file_path = "./spec/examples.txt"
   c.around(:example, :isolated_directory) do |ex|
     handle_current_dir_change(&ex)

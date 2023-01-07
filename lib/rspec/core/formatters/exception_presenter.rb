@@ -312,10 +312,14 @@ module RSpec
                 ]
               }
             elsif @execution_result.status == :pending
-              {
+              options = {
                 :message_color    => RSpec.configuration.pending_color,
                 :detail_formatter => PENDING_DETAIL_FORMATTER
               }
+              if RSpec.configuration.pending_failure_output == :no_backtrace
+                options[:backtrace_formatter] = EmptyBacktraceFormatter
+              end
+              options
             end
           end
 

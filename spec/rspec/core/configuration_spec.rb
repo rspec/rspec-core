@@ -2906,6 +2906,36 @@ module RSpec::Core
       end
     end
 
+    describe '#pending_failure_output' do
+      it 'defaults to :full' do
+        expect(config.pending_failure_output).to eq :full
+      end
+
+      it 'can be set to :full' do
+        config.pending_failure_output = :full
+        expect(config.pending_failure_output).to eq :full
+      end
+
+      it 'can be set to :no_backtrace' do
+        config.pending_failure_output = :no_backtrace
+        expect(config.pending_failure_output).to eq :no_backtrace
+      end
+
+      it 'can be set to :skip' do
+        config.pending_failure_output = :skip
+        expect(config.pending_failure_output).to eq :skip
+      end
+
+      it 'cannot be set to any other values' do
+        expect {
+          config.pending_failure_output = :another_value
+        }.to raise_error(
+          ArgumentError,
+          '`pending_failure_output` can be set to :full, :no_backtrace, or :skip'
+        )
+      end
+    end
+
     # assigns files_or_directories_to_run and triggers post-processing
     # via `files_to_run`.
     def assign_files_or_directories_to_run(*value)
