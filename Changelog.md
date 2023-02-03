@@ -1,6 +1,11 @@
 ### Development
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.0...3-12-maintenance)
 
+Bug fixes:
+
+* Prevent multiple calls to `extra_failure_lines` from adding additional whitespace
+  around them when the lines already contain whitespace. (Jon Rowe, #3006)
+
 ### 3.12.0 / 2022-10-26
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.11.0...v3.12.0)
 

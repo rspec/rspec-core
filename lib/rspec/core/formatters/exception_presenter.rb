@@ -197,8 +197,8 @@ module RSpec
           @extra_failure_lines ||= begin
             lines = Array(example.metadata[:extra_failure_lines])
             unless lines.empty?
-              lines.unshift('')
-              lines.push('')
+              lines.unshift('') unless lines.first == ''
+              lines.push('') unless lines.last == ''
             end
             lines
           end
