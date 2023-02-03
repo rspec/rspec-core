@@ -1,10 +1,5 @@
 ### Development
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.0...main)
-
-Bug fixes:
-
-* Prevent multiple calls to `extra_failure_lines` from adding additional whitespace
-  around them when the lines already contain whitespace. (Jon Rowe, #3006)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.1...main)
 
 Enhancements:
 
@@ -12,6 +7,14 @@ Enhancements:
 * Ignore commented out lines in CLI config files (e.g. `.rspec`). (Junichi Ito, #2984)
 * Add `pending_failure_output` config option to allow skipping backtraces or
   muting pending specs output. (Phil Pirozhkov, #2957)
+
+### 3.12.1 / 2023-02-03
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.0...v3.12.1)
+
+Bug fixes:
+
+* Prevent multiple calls to `extra_failure_lines` from adding additional whitespace
+  around them when the lines already contain whitespace. (Jon Rowe, #3006)
 
 ### 3.12.0 / 2022-10-26
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.11.0...v3.12.0)
