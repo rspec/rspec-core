@@ -1,6 +1,11 @@
 ### Development
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.0...main)
 
+Bug fixes:
+
+* Prevent multiple calls to `extra_failure_lines` from adding additional whitespace
+  around them when the lines already contain whitespace. (Jon Rowe, #3006)
+
 Enhancements:
 
 * Support the `--backtrace` flag when using the JSON formatter. (Matt Larraz, #2980)
