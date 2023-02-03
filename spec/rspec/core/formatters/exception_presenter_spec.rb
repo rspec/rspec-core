@@ -341,6 +341,25 @@ module RSpec::Core
         EOS
       end
 
+      it "wont add extra blank lines around extra failure lines when lines are already padded" do
+        extra_example = example.clone
+        failure_line = 'http://www.example.com/job_details/123'
+        extra_example.metadata[:extra_failure_lines] = ['', failure_line, '']
+        the_presenter = Formatters::ExceptionPresenter.new(exception, extra_example, :indentation => 4)
+        expect(the_presenter.fully_formatted(1)).to eq(<<-EOS.gsub(/^ +\|/, ''))
+          |
+          |    1) Example
+          |       Failure/Error: # The failure happened here!#{ encoding_check }
+          |
+          |         Boom
+          |         Bam
+          |
+          |       #{failure_line}
+          |
+          |       # ./spec/rspec/core/formatters/exception_presenter_spec.rb:#{line_num}
+        EOS
+      end
+
       describe 'line format' do
         let(:exception) do
           begin
