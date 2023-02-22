@@ -53,6 +53,15 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
       expect(configuration).to have_received(:add_formatter).ordered
     end
 
+    it "sets dry_run before libs and requires" do
+      opts = config_options_object(*%w[--dry-run --require a/path -I a/lib])
+      configuration = double("config").as_null_object
+      expect(configuration).to receive(:dry_run=).ordered
+      expect(configuration).to receive(:libs=).ordered
+      expect(configuration).to receive(:requires=).ordered
+      opts.configure(configuration)
+    end
+
     it "sends libs before requires" do
       opts = config_options_object(*%w[--require a/path -I a/lib])
       configuration = double("config").as_null_object
