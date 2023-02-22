@@ -7,6 +7,8 @@ Enhancements:
 * Ignore commented out lines in CLI config files (e.g. `.rspec`). (Junichi Ito, #2984)
 * Add `pending_failure_output` config option to allow skipping backtraces or
   muting pending specs output. (Phil Pirozhkov, #2957)
+* Process `--dry-run` before configuration flags that read files so that introspecting
+  it returns the correct value. (Xenor Chang, #3008)
 
 ### 3.12.1 / 2023-02-03
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.0...v3.12.1)
