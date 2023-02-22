@@ -79,8 +79,8 @@ module RSpec
         # deprecation (or otherwise access the reporter).
         :deprecation_stream,
 
-        # Dry run was passed through CLI args and must be set before `requires`
-        # to ensure RSpec.configuration.dry_run? is availble in all configure block.
+        # In order for `RSpec.configuration.dry_run?` to return `true` during
+        # processing the `requires` option, it must be parsed before it.
         :dry_run,
 
         # load paths depend on nothing, but must be set before `requires`
