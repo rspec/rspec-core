@@ -56,7 +56,7 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
     it "sets dry_run before libs and requires" do
       opts = config_options_object(*%w[--dry-run --require a/path -I a/lib])
       configuration = double("config").as_null_object
-      expect(configuration).to receive(:dry_run=).ordered
+      expect(configuration).to receive(:force).with({:dry_run => true}).ordered
       expect(configuration).to receive(:libs=).ordered
       expect(configuration).to receive(:requires=).ordered
       opts.configure(configuration)
