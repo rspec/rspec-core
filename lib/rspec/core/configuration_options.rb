@@ -79,6 +79,10 @@ module RSpec
         # deprecation (or otherwise access the reporter).
         :deprecation_stream,
 
+        # In order for `RSpec.configuration.dry_run?` to return `true` during
+        # processing the `requires` option, it must be parsed before it.
+        :dry_run,
+
         # load paths depend on nothing, but must be set before `requires`
         # to support load-path-relative requires.
         :libs,
