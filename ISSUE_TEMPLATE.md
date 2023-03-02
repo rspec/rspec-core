@@ -1,7 +1,7 @@
 <!---
 Note, we know RelishApp is down, its out of our hands...
 
-PLEASE SEARCH FOR EXISTING ISSUES BEFORE REPORTING NEW ONES
+Please search for existing issues before reporting new ones.
 -->
 ### Subject of the issue
 <!---
