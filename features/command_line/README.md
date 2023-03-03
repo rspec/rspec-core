@@ -1,3 +1,5 @@
+# Command line options
+
 The `rspec` command comes with several options you can use to customize RSpec's
 behavior, including output formats, filtering examples, etc.
 

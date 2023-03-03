@@ -1,4 +1,4 @@
-Feature: mock with flexmock
+Feature: Mocking with `flexmock`
 
   Configure RSpec to use flexmock as shown in the scenarios below.
 

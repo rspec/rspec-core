@@ -1,4 +1,4 @@
-Feature: shared context
+Feature: Using `shared_context`
 
   Use `shared_context` to define a block that will be evaluated in the context of example groups either locally, using `include_context` in an example group, or globally using `config.include_context`.
 

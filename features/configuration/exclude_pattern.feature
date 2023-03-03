@@ -1,4 +1,4 @@
-Feature: exclude_pattern
+Feature: Using the `--exclude_pattern` option
 
   Use the `--exclude-pattern` option to tell RSpec to skip looking for specs in files
   that match the pattern specified.

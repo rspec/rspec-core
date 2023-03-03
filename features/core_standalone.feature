@@ -1,4 +1,4 @@
-Feature: Use rspec-core without rspec-mocks or rspec-expectations
+Feature: Use `rspec-core` without `rspec-mocks` or `rspec-expectations`
 
   It is most common to use rspec-core with rspec-mocks and rspec-expectations,
   and rspec-core will take care of loading those libraries automatically if

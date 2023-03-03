@@ -1,4 +1,4 @@
-Feature: configure expectation framework
+Feature: Configuring an expectation framework
 
   By default, RSpec is configured to include rspec-expectations for expressing
   desired outcomes. You can also configure RSpec to use:

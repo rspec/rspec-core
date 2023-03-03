@@ -1,4 +1,4 @@
-Feature: fail fast
+Feature: Setting the `fail_fast` option
 
   Use the `fail_fast` option to tell RSpec to abort the run after N failures:
 

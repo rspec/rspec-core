@@ -1,3 +1,5 @@
+# Using the `--order` option
+
 Use the `--order` option to tell RSpec how to order the files, groups, and
 examples. The available ordering schemes are `defined` and `rand`.
 

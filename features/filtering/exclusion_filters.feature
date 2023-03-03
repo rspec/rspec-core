@@ -1,4 +1,4 @@
-Feature: exclusion filters
+Feature: Exclusion filters
 
   You can exclude examples from a run by declaring an exclusion filter and then
   tagging examples, or entire groups, with that filter. You can also specify

@@ -1,4 +1,4 @@
-Feature: Profile examples
+Feature: Profiling examples (`--profile`)
 
   The `--profile` command line option (available from `RSpec.configure` as
   `#profile_examples`), when set, will cause RSpec to dump out a list of your

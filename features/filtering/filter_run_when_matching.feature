@@ -1,4 +1,4 @@
-Feature: filter_run_when_matching
+Feature: Using `filter_run_when_matching`
 
   You can configure a _conditional_ filter that only applies if there are any matching
   examples using `config.filter_run_when_matching`. This is commonly used for focus

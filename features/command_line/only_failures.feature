@@ -1,4 +1,4 @@
-Feature: Only Failures
+Feature: Using the `--only-failures` option
 
   The `--only-failures` option filters what examples are run so that only those that failed the last time they ran are executed. To use this option, you first have to configure `config.example_status_persistence_file_path`, which RSpec will use to store the status of each example the last time it ran.
 

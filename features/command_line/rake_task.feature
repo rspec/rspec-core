@@ -1,4 +1,4 @@
-Feature: rake task
+Feature: Creating a rake task
 
   RSpec ships with a rake task with a number of useful options.
 

@@ -1,4 +1,4 @@
-Feature: aliasing
+Feature: Aliasing
 
   `describe` and `context` are the default aliases for `example_group`. You can
   define your own aliases for `example_group` and give those custom aliases

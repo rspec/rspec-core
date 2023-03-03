@@ -1,4 +1,4 @@
-Feature: `when_first_matching_example_defined` hook
+Feature: Using `when_first_matching_example_defined` hook
 
   In large projects that use RSpec, it's common to have some expensive setup logic
   that is only needed when certain kinds of specs have been loaded. If that kind of

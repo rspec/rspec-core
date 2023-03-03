@@ -1,4 +1,4 @@
-Feature: arbitrary helper methods
+Feature: Defining arbitrary helper methods
 
   You can define methods in any example group using Ruby's `def` keyword or
   `define_method` method. These _helper_ methods are exposed to examples in the

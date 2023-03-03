@@ -1,4 +1,4 @@
-Feature: `pending` examples
+Feature: Using `pending` with examples
 
   RSpec offers a number of different ways to indicate that an example is
   disabled pending some action.

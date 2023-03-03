@@ -1,4 +1,4 @@
-Feature: custom formatters
+Feature: Custom formatters
 
   RSpec ships with general purpose output formatters. You can tell RSpec which
   one to use using the [`--format` command line option](../command-line/format-option).

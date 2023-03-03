@@ -1,4 +1,4 @@
-Feature: Pending failure output
+Feature: Configuring pending failure output
 
   Configure the format of pending examples output with an option (defaults to `:full`):
 

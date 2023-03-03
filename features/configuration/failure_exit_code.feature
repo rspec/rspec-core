@@ -1,4 +1,4 @@
-Feature: failure exit code
+Feature: Setting a failure exit code
 
   Use the `failure_exit_code` option to set a custom exit code when RSpec fails.
 
