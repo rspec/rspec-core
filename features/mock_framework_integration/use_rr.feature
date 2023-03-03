@@ -1,4 +1,4 @@
-Feature: mock with rr
+Feature: Mocking with `rr`
 
   Configure RSpec to use rr as shown in the scenarios below.
 

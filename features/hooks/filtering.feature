@@ -1,4 +1,4 @@
-Feature: filters
+Feature: Filtering
 
   `before`, `after`, and `around` hooks defined in the block passed to
   `RSpec.configure` can be constrained to specific examples and/or groups using

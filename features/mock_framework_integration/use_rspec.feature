@@ -1,4 +1,4 @@
-Feature: mock with rspec
+Feature: Mocking with `rspec`
 
   RSpec uses its own mocking framework by default. You can also configure it
   explicitly if you wish.

@@ -1,4 +1,4 @@
-Feature: line number appended to file path
+Feature: `<file>:<line_number>` (line number appended to file path)
 
   To run one or more examples or groups, you can append the line number to the
   path, e.g.

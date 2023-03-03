@@ -1,4 +1,4 @@
-Feature: run all when everything filtered
+Feature: Using `run_all_when_everything_filtered`
 
   Note: this feature has been superseded by
   [filter_run_when_matching](../filtering/filter-run-when-matching) and will be

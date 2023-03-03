@@ -1,4 +1,4 @@
-Feature: current example
+Feature: Using the current example
 
   You can reference the example object, and access its metadata, using the block
   argument provided to: `it`, `subject`, `let`, and the `before`, `after`, and

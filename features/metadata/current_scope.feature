@@ -1,4 +1,4 @@
-Feature: RSpec provides the current scope as RSpec.current_scope
+Feature: `RSpec` provides the current scope as `RSpec.current_scope`
 
   You can detect which rspec scope your helper methods or library code is executing in.
   This is useful if for example, your method only makes sense to call in a certain context.

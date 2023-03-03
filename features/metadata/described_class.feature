@@ -1,4 +1,4 @@
-Feature: described class
+Feature: Using `described_class`
 
   If the first argument to an example group is a class, the class is exposed to
   each example in that example group via the `described_class()` method.

@@ -1,4 +1,4 @@
-Feature: fail if no examples
+Feature: Setting the `fail_if_no_examples` option
 
   Use the `fail_if_no_examples` option to make RSpec exit with a failure status (by default 1) if there are no examples. Using this option, it is recommended to add a `--require spec_helper` option to `.rspec` file to ensure the `fail_if_no_examples` option is set even if no spec files are loaded.
 

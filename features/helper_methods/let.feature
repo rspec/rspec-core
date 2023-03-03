@@ -1,4 +1,4 @@
-Feature: let and let!
+Feature: `let` and `let!`
 
   Use `let` to define a memoized helper method. The value will be cached across
   multiple calls in the same example but not across examples.

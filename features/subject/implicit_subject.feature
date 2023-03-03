@@ -1,4 +1,4 @@
-Feature: implicitly defined subject
+Feature: Implicitly defined subject
 
   If the first argument to an example group is a class, an instance of that
   class is exposed to each example in that example group via the `subject`

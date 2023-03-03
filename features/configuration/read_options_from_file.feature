@@ -1,4 +1,4 @@
-Feature: read command line configuration options from files
+Feature: Reading command line configuration options from files
 
   RSpec reads command line configuration options from several different files,
   all conforming to a specific level of specificity. Options from a higher

@@ -1,4 +1,4 @@
-Feature: arbitrary file suffix
+Feature: Using an arbitrary file suffix
 
   Scenario: `.spec`
     Given a file named "a.spec" with:

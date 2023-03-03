@@ -1,4 +1,4 @@
-Feature: pattern
+Feature: Using the `--pattern` option
 
   Use the `pattern` option to configure RSpec to look for specs in files that match
   a pattern instead of the default `"**/*_spec.rb"`.
