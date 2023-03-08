@@ -939,7 +939,12 @@ module RSpec
         when :on then true
         when :off then false
         else # automatic
-          output_to_tty?(output) || (color && tty?)
+          case
+          when ENV["TERM"] == "dumb"
+            false
+          else
+            output_to_tty?(output) || (color && tty?)
+          end
         end
       end
 
