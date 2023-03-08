@@ -63,7 +63,7 @@ jobs:
               JRUBY_OPTS: "--dev"
           - ruby: jruby-9.1.17.0
             bundler: 1
-            os: ubuntu-18.04
+            os: ubuntu-20.04
             env:
               JRUBY_OPTS: "--dev"
           - ruby: 2.7
