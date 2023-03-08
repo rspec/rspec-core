@@ -1312,7 +1312,7 @@ module RSpec::Core
       context ":automatic" do
         before do
           config.color_mode = :automatic
-          allow(ENV).to receive_messages("TERM" => nil)
+          allow(ENV).to receive_messages("TERM" => nil, "NO_COLOR" => nil)
         end
 
         context "with output.tty?" do
@@ -1336,6 +1336,15 @@ module RSpec::Core
             config.output_stream = StringIO.new
             allow(config.output_stream).to receive_messages(:tty? => true)
             allow(ENV).to receive_messages("TERM" => "dumb")
+            expect(config.color_enabled?).to be false
+          end
+        end
+
+        context "with NO_COLOR" do
+          it "sets !color_enabled?" do
+            config.output_stream = StringIO.new
+            allow(config.output_stream).to receive_messages(:tty? => true)
+            allow(ENV).to receive_messages("NO_COLOR" => "1")
             expect(config.color_enabled?).to be false
           end
         end

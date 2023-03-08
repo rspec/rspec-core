@@ -942,6 +942,8 @@ module RSpec
           case
           when ENV["TERM"] == "dumb"
             false
+          when (nc = ENV["NO_COLOR"]) and !nc.empty?
+            false
           else
             output_to_tty?(output) || (color && tty?)
           end
