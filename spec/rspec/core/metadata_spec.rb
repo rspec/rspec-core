@@ -868,7 +868,7 @@ module RSpec
             end
           end
 
-          context "an an example metadata hash" do
+          context "on an example metadata hash" do
             it 'returns the described_class' do
               meta = nil
 

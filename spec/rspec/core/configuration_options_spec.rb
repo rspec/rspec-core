@@ -368,7 +368,7 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
       expect(parse_options("--drb", "--no-drb")).to include(:drb => false)
     end
 
-    it "gets overriden by a subsquent drb => true" do
+    it "gets overridden by a subsequent drb => true" do
       expect(parse_options("--no-drb", "--drb")).to include(:drb => true)
     end
   end

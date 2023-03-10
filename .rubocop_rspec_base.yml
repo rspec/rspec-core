@@ -32,7 +32,7 @@ Metrics/CyclomaticComplexity:
 
 # We use YARD to enforce documentation. It works better than rubocop's
 # enforcement...rubocop complains about the places we re-open
-# `RSpec::Expectations` and `RSpec::Matchers` w/o having doc commments.
+# `RSpec::Expectations` and `RSpec::Matchers` w/o having doc comments.
 Style/Documentation:
   Enabled: false
 
@@ -104,7 +104,7 @@ Style/SignalException:
 Layout/SpaceAroundEqualsInParameterDefault:
   EnforcedStyle: no_space
 
-# We don't care about single vs double qoutes.
+# We don't care about single vs double quotes.
 Style/StringLiterals:
   Enabled: false
 

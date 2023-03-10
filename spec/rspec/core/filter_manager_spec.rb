@@ -414,13 +414,13 @@ module RSpec::Core
         expect(description).to eq({ :foo => :bar }.inspect)
       end
 
-      it 'includes an overriden :if filter' do
+      it 'includes an overridden :if filter' do
         allow(RSpec).to receive(:deprecate)
         filter_manager.exclude :if => :custom_filter
         expect(description).to eq({ :if => :custom_filter }.inspect)
       end
 
-      it 'includes an overriden :unless filter' do
+      it 'includes an overridden :unless filter' do
         allow(RSpec).to receive(:deprecate)
         filter_manager.exclude :unless => :custom_filter
         expect(description).to eq({ :unless => :custom_filter }.inspect)
