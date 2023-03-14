@@ -67,7 +67,7 @@ module RSpec::Core
         end
       end
 
-      it "can be overriden and super'd to from a nested group" do
+      it "can be overridden and super'd to from a nested group" do
         outer_subject_value = inner_subject_value = nil
 
         RSpec.describe(Array) do
@@ -161,7 +161,7 @@ module RSpec::Core
           expect(subject_value).to eq([4, 5, 6])
         end
 
-        it "can be overriden and super'd to from a nested group" do
+        it "can be overridden and super'd to from a nested group" do
           subject_value = nil
           group.describe("Nested") do
             subject { super() + [:override] }
@@ -271,7 +271,7 @@ module RSpec::Core
           expect(subject_value).to eq(:inner)
         end
 
-        it 'is not overriden when an inner group defines a new method with the same name' do
+        it 'is not overridden when an inner group defines a new method with the same name' do
           subject_value = nil
 
           RSpec.describe do

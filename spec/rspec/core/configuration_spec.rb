@@ -91,7 +91,7 @@ module RSpec::Core
         end
       end
 
-      context "when string represeting an integer number" do
+      context "when string representing an integer number" do
         it 'is set to number' do
           config.fail_fast = '5'
           expect(config.fail_fast).to eq 5
@@ -1793,7 +1793,7 @@ module RSpec::Core
         expect(config.full_backtrace?).to eq true
       end
 
-      it 'returns false when backtrace patterns isnt empty' do
+      it "returns false when backtrace patterns are not empty" do
         config.backtrace_exclusion_patterns = [:lib]
         expect(config.full_backtrace?).to eq false
       end
@@ -2377,7 +2377,7 @@ module RSpec::Core
         end
       end
 
-      it 'overrides existing definitions of the aliased method name without issueing warnings' do
+      it 'overrides existing definitions of the aliased method name without issuing warnings' do
         config.expose_dsl_globally = true
 
         class << ExampleGroup

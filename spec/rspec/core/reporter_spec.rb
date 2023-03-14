@@ -58,7 +58,7 @@ module RSpec::Core
         reporter.start 3, (start_time + 5)
       end
 
-      it 'notifies the formatter of the seed used before notifing of start' do
+      it 'notifies the formatter of the seed used before notifying of start' do
         formatter = double("formatter")
         reporter.register_listener formatter, :seed
         reporter.register_listener formatter, :start

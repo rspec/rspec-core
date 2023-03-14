@@ -15,7 +15,7 @@ if RSpec::Support::Ruby.jruby? && RSpec::Support::Ruby.jruby_version == "9.1.17.
 
         absolute_feature = File.expand_path(relative_arg, File.dirname(File.realpath(file)))
 
-        # This was the orginal:
+        # This was the original:
         # ::Kernel.require absolute_feature
         ::Kernel.send(:require, absolute_feature)
       end
