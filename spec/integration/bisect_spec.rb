@@ -15,6 +15,12 @@ module RSpec::Core
       normalize_durations(formatter_output.string)
     end
 
+    before do
+      if RSpec::Support::Ruby.jruby? && RSpec::Support::Ruby.jruby_version == '9.1.17.0'
+        skip "These specs are currently broken on JRuby 9.1.17.0"
+      end
+    end
+
     context "when a load-time problem occurs while running the suite" do
       it 'surfaces the stdout and stderr output to the user' do
         output = bisect(%w[spec/rspec/core/resources/fail_on_load_spec.rb_], 1)

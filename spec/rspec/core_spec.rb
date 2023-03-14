@@ -79,6 +79,10 @@ RSpec.describe RSpec do
       before(:example) do
         skip "Not reliably working on #{RUBY_DESCRIPTION}"
       end
+    elsif RSpec::Support::Ruby.jruby? && JRUBY_VERSION =~ /9\.1\.17\.0/
+      before(:example, :description => /spec files/) do
+        pending "JRuby 9.1.17.0 generates unrelated warnings"
+      end
     end
   end
 
