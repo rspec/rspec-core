@@ -50,7 +50,7 @@ Lint/LiteralInInterpolation:
 Lint/NonLocalExitFromIterator:
   Enabled: false
 
-# We don't care about single vs double qoutes.
+# We don't care about single vs double quotes.
 Style/StringLiteralsInInterpolation:
   Enabled: false
 

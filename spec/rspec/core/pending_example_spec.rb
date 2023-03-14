@@ -22,7 +22,7 @@ RSpec.describe "an example" do
       expect(example).to be_pending_with('No reason given')
     end
 
-    it "passes if a mock expectation is not satisifed" do
+    it "passes if a mock expectation is not satisfied" do
       group = RSpec.describe('group') do
         example "example", :pending => "because" do
           expect(RSpec).to receive(:a_message_in_a_bottle)

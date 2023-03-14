@@ -30,7 +30,7 @@ module RSpec::Core
     # Registers a listener to a list of notifications. The reporter will send
     # notification of events to all registered listeners.
     #
-    # @param listener [Object] An obect that wishes to be notified of reporter
+    # @param listener [Object] An object that wishes to be notified of reporter
     #   events
     # @param notifications [Array] Array of symbols represents the events a
     #   listener wishes to subscribe too
