@@ -147,20 +147,28 @@ RSpec.describe 'Spec file load errors' do
     run_command "1_spec.rb 2_spec.rb 3_spec.rb"
     expect(last_cmd_exit_status).to eq(error_exit_code)
     output = normalize_durations(last_cmd_stdout)
+
+    object_suffix =
+      if RUBY_VERSION.to_f > 3.2
+        ""
+      else
+        ":Object"
+      end
+
     expect(output).to eq unindent(<<-EOS)
 
       An error occurred while loading ./1_spec.rb.
       Failure/Error: boom
 
       NameError:
-        undefined local variable or method `boom' for main:Object
+        undefined local variable or method `boom' for main#{object_suffix}
       # ./1_spec.rb:1#{spec_line_suffix}
 
       An error occurred while loading ./3_spec.rb.
       Failure/Error: boom
 
       NameError:
-        undefined local variable or method `boom' for main:Object
+        undefined local variable or method `boom' for main#{object_suffix}
       # ./3_spec.rb:1#{spec_line_suffix}
 
 
