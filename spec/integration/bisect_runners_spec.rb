@@ -82,11 +82,18 @@ module RSpec::Core
         end
       "
 
+      rspec_description =
+        if RUBY_VERSION.to_f > 3.2
+          "module RSpec"
+        else
+          "RSpec:Module"
+        end
+
       with_runner do |runner|
         expect {
           runner.original_results
         }.to raise_error(Bisect::BisectFailedError, a_string_including(
-          "undefined method `escribe' for RSpec:Module",
+          "undefined method `escribe' for #{rspec_description}",
           'stdout in a_spec',
           'stderr in a_spec'
         ))
