@@ -1,7 +1,7 @@
 Feature: Using `run_all_when_everything_filtered`
 
   Note: this feature has been superseded by
-  [filter_run_when_matching](../filtering/filter-run-when-matching) and will be
+  [`filter_run_when_matching`](../filtering/filter-run-when-matching) and will be
   removed in a future version of RSpec.
 
   Use the `run_all_when_everything_filtered` option to tell RSpec to run all the
