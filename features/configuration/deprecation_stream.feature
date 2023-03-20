@@ -73,7 +73,7 @@ Feature: Custom deprecation stream
     But the output should contain "1 deprecation logged to deprecations.txt"
     And the file "deprecations.txt" should contain "Foo#bar is deprecated"
 
-  Scenario: configure using the CLI `--deprecation-out` option
+  Scenario: Configure using the CLI `--deprecation-out` option
     Given a file named "spec/example_spec.rb" with:
       """ruby
       require "foo"
