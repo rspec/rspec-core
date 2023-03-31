@@ -69,6 +69,32 @@ Scenario: Order can be psuedo randomised (seed used here to fix the ordering for
         does something
       """
 
+Scenario: Configure custom ordering
+  Given a file named "example_spec.rb" with:
+    """ruby
+    RSpec.configure do |config|
+      config.register_ordering(:reverse) do |examples|
+        examples.reverse
+      end
+      config.order = :reverse
+    end
+
+    RSpec.describe "something" do
+      it "does something" do
+      end
+
+      it "in order" do
+      end
+    end
+    """
+    When I run `rspec example_spec.rb --format documentation --order reverse`
+    Then the output should contain:
+      """
+      something
+        in order
+        does something
+      """
+
 Scenario: Override order to `defined` when another order is set
   Given a file named "example_spec.rb" with:
     """ruby

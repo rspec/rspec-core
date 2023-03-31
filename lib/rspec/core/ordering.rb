@@ -171,9 +171,20 @@ module RSpec
                             :defined
                           elsif order == 'recently-modified'
                             :recently_modified
+                          else
+                            order.to_sym
                           end
 
-          register_ordering(:global, ordering_registry.fetch(ordering_name)) if ordering_name
+          if ordering_name
+            strategy =
+              if ordering_registry.has_strategy?(ordering_name)
+                ordering_registry.fetch(ordering_name)
+              else
+                Delayed.new(ordering_registry, ordering_name)
+              end
+
+            register_ordering(:global, strategy)
+          end
         end
 
         def force(hash)

@@ -2602,6 +2602,49 @@ module RSpec::Core
           expect(ordering_strategy.order(list)).to eq([1, 2, 3, 4])
         end
       end
+
+      context 'given a custom ordering strategy' do
+        before do
+          allow(RSpec).to receive_messages(:configuration => config)
+        end
+
+        it 'will lookup a previously registed ordering strategy' do
+          config.register_ordering(:custom_scheme) { |list| list.reverse }
+
+          config.order = :custom_scheme
+
+          strategy = config.ordering_registry.fetch(:global)
+          expect(strategy.order([1, 2, 3, 4])).to eq [4, 3, 2, 1]
+        end
+
+        it 'will defer lookup until running' do
+          config.order = :custom_scheme
+
+          strategy = config.ordering_registry.fetch(:global)
+          expect(strategy).to be_an_instance_of(Ordering::Delayed)
+
+          config.register_ordering(:custom_scheme) { |list| list.reverse }
+          expect(strategy.order([1, 2, 3, 4])).to eq [4, 3, 2, 1]
+        end
+
+        it 'will raise an error if ordering is not present when needed' do
+          config.order = :custom_scheme
+
+          strategy = config.ordering_registry.fetch(:global)
+          expect(strategy).to be_an_instance_of(Ordering::Delayed)
+
+          expect { strategy.order([1, 2, 3, 4]) }.to raise_error("Undefined ordering strategy :custom_scheme")
+        end
+
+        it 'will lookup schemes as symbols even if given as strings' do
+          config.order = 'custom_scheme'
+
+          config.register_ordering(:custom_scheme) { |list| list.reverse }
+
+          strategy = config.ordering_registry.fetch(:global)
+          expect(strategy.order([1, 2, 3, 4])).to eq [4, 3, 2, 1]
+        end
+      end
     end
 
     describe "#register_ordering" do
