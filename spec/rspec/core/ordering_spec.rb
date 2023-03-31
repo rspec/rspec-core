@@ -144,6 +144,15 @@ module RSpec
             end
           end
         end
+
+        describe "#has_strategy?(name)" do
+          it "returns true if the strategy was registered" do
+            expect {
+              registry.register(:reverse, Custom.new(proc { |list| list.reverse }))
+            }.to change { registry.has_strategy?(:reverse) }.from(false).to(true)
+          end
+        end
+
       end
     end
   end

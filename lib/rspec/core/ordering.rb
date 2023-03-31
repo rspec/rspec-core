@@ -99,6 +99,10 @@ module RSpec
           @strategies.fetch(name, &fallback)
         end
 
+        def has_strategy?(name)
+          @strategies.key?(name)
+        end
+
         def register(sym, strategy)
           @strategies[sym] = strategy
         end
