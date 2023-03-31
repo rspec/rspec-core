@@ -104,6 +104,18 @@ module RSpec
         end
       end
 
+      RSpec.describe Delayed do
+        let(:registry) { Registry.new(Configuration.new) }
+
+        it 'looks up a strategy to order the list later on' do
+          strategy = Delayed.new(registry, :reverse)
+          expect { strategy.order([1, 2, 3, 4]) }.to raise_error("Undefined ordering strategy :reverse")
+
+          registry.register(:reverse, Custom.new(proc { |list| list.reverse }))
+          expect(strategy.order([1, 2, 3, 4])).to eq([4, 3, 2, 1])
+        end
+      end
+
       RSpec.describe Registry do
         let(:configuration) { Configuration.new }
         subject(:registry) { Registry.new(configuration) }

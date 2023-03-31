@@ -79,6 +79,30 @@ module RSpec
       end
 
       # @private
+      # A strategy which delays looking up the ordering until needed
+      class Delayed
+        def initialize(registry, name)
+          @registry = registry
+          @name = name
+        end
+
+        def order(list)
+          strategy.order(list)
+        end
+
+        private
+
+        def strategy
+          @strategy ||= lookup_strategy
+        end
+
+        def lookup_strategy
+          raise "Undefined ordering strategy #{@name.inspect}" unless @registry.has_strategy?(@name)
+          @registry.fetch(@name)
+        end
+      end
+
+      # @private
       # Stores the different ordering strategies.
       class Registry
         def initialize(configuration)
