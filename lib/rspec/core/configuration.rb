@@ -2135,10 +2135,6 @@ module RSpec
         suggestions = DidYouMean.new(relative_file).call
         reporter.notify_non_example_exception(ex, "An error occurred while loading #{relative_file}.#{suggestions}")
         RSpec.world.wants_to_quit = true
-      rescue Support::AllExceptionsExceptOnesWeMustNotRescue => ex
-        relative_file = Metadata.relative_path(file)
-        reporter.notify_non_example_exception(ex, "An error occurred while loading #{relative_file}.")
-        RSpec.world.wants_to_quit = true
       rescue SyntaxError => ex
         relative_file = Metadata.relative_path(file)
         reporter.notify_non_example_exception(
@@ -2146,7 +2142,10 @@ module RSpec
           "While loading #{relative_file} a `raise SyntaxError` occurred, RSpec will now quit."
         )
         RSpec.world.rspec_is_quitting = true
-        raise ex
+      rescue Support::AllExceptionsExceptOnesWeMustNotRescue => ex
+        relative_file = Metadata.relative_path(file)
+        reporter.notify_non_example_exception(ex, "An error occurred while loading #{relative_file}.")
+        RSpec.world.wants_to_quit = true
       rescue SystemExit => ex
         relative_file = Metadata.relative_path(file)
         reporter.notify_non_example_exception(

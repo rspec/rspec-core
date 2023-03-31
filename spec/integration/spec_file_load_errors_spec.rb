@@ -178,30 +178,67 @@ RSpec.describe 'Spec file load errors' do
     EOS
   end
 
-  it 'handles syntax errors with the native handling', :skip => RUBY_VERSION.to_f < 1.9 || RSpec::Support::Ruby.jruby? do
-    write_file_formatted "broken_file.rb", "
-    class WorkInProgress
-      def initialize(arg)
-      def foo
+  describe 'handling syntax errors' do
+    let(:formatted_output) { normalize_durations(last_cmd_stdout).gsub(Dir.pwd, '.').gsub(/\e\[[0-9;]+m/, '') }
+
+    before(:example) do
+      write_file_formatted "broken_file.rb", "
+      class WorkInProgress
+        def initialize(arg)
+        def foo
+        end
+      end
+      "
+    end
+
+    if RSpec::Support::RubyFeatures.supports_syntax_suggest?
+      it 'uses syntax_suggest formatting when available' do
+        in_sub_process do
+          require "syntax_suggest"
+
+          run_command "--require ./broken_file"
+          expect(last_cmd_exit_status).to eq(error_exit_code)
+
+          expect(formatted_output).to include unindent(<<-EOS)
+            While loading ./broken_file a `raise SyntaxError` occurred, RSpec will now quit.
+            Failure/Error: __send__(method, file)
+          EOS
+
+          expect(formatted_output).to include unindent(<<-EOS)
+          SyntaxError:
+            --> ./tmp/aruba/broken_file.rb
+            Unmatched keyword, missing `end' ?
+              1  class WorkInProgress
+            > 2    def initialize(arg)
+              4    end
+              5  end
+          EOS
+          expect(formatted_output).to include "./tmp/aruba/broken_file.rb:5: syntax error"
+
+          expect(formatted_output).to include unindent(<<-EOS)
+            Finished in n.nnnn seconds (files took n.nnnn seconds to load)
+            0 examples, 0 failures, 1 error occurred outside of examples
+          EOS
+        end
+      end
+    else
+      it 'prints a basic error when no syntax_suggest is available/loaded', :skip => RUBY_VERSION.to_f < 1.9 || RSpec::Support::Ruby.jruby? do
+        run_command "--require ./broken_file"
+        expect(last_cmd_exit_status).to eq(error_exit_code)
+
+        expect(formatted_output).to include unindent(<<-EOS)
+          While loading ./broken_file a `raise SyntaxError` occurred, RSpec will now quit.
+          Failure/Error: __send__(method, file)
+        EOS
+
+        # This is subset of the formatted_output, it continues slightly but differs on different Rubies
+        expect(formatted_output).to include "SyntaxError:\n  ./tmp/aruba/broken_file.rb:5: syntax error"
+
+        expect(formatted_output).to include unindent(<<-EOS)
+          Finished in n.nnnn seconds (files took n.nnnn seconds to load)
+          0 examples, 0 failures, 1 error occurred outside of examples
+        EOS
       end
     end
-    "
-    run_command "--require ./broken_file"
-    expect(last_cmd_exit_status).to eq(error_exit_code)
-    output = normalize_durations(last_cmd_stdout).gsub(Dir.pwd, '.')
-    expect(output).to include unindent(<<-EOS)
-      An error occurred while loading ./broken_file.
-      Failure/Error: __send__(method, file)
-
-      SyntaxError:
-        ./tmp/aruba/broken_file.rb:5: syntax error, unexpected end-of-input, expecting `end'
-    EOS
-    expect(output).to include unindent(<<-EOS)
-      No examples found.
-
-
-      Finished in n.nnnn seconds (files took n.nnnn seconds to load)
-      0 examples, 0 failures, 1 error occurred outside of examples
-    EOS
   end
 end
