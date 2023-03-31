@@ -177,4 +177,31 @@ RSpec.describe 'Spec file load errors' do
 
     EOS
   end
+
+  it 'handles syntax errors with the native handling', :skip => RUBY_VERSION.to_f < 1.9 || RSpec::Support::Ruby.jruby? do
+    write_file_formatted "broken_file.rb", "
+    class WorkInProgress
+      def initialize(arg)
+      def foo
+      end
+    end
+    "
+    run_command "--require ./broken_file"
+    expect(last_cmd_exit_status).to eq(error_exit_code)
+    output = normalize_durations(last_cmd_stdout).gsub(Dir.pwd, '.')
+    expect(output).to include unindent(<<-EOS)
+      An error occurred while loading ./broken_file.
+      Failure/Error: __send__(method, file)
+
+      SyntaxError:
+        ./tmp/aruba/broken_file.rb:5: syntax error, unexpected end-of-input, expecting `end'
+    EOS
+    expect(output).to include unindent(<<-EOS)
+      No examples found.
+
+
+      Finished in n.nnnn seconds (files took n.nnnn seconds to load)
+      0 examples, 0 failures, 1 error occurred outside of examples
+    EOS
+  end
 end
