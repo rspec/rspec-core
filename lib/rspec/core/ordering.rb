@@ -79,6 +79,30 @@ module RSpec
       end
 
       # @private
+      # A strategy which delays looking up the ordering until needed
+      class Delayed
+        def initialize(registry, name)
+          @registry = registry
+          @name = name
+        end
+
+        def order(list)
+          strategy.order(list)
+        end
+
+        private
+
+        def strategy
+          @strategy ||= lookup_strategy
+        end
+
+        def lookup_strategy
+          raise "Undefined ordering strategy #{@name.inspect}" unless @registry.has_strategy?(@name)
+          @registry.fetch(@name)
+        end
+      end
+
+      # @private
       # Stores the different ordering strategies.
       class Registry
         def initialize(configuration)
@@ -97,6 +121,10 @@ module RSpec
 
         def fetch(name, &fallback)
           @strategies.fetch(name, &fallback)
+        end
+
+        def has_strategy?(name)
+          @strategies.key?(name)
         end
 
         def register(sym, strategy)
@@ -143,9 +171,20 @@ module RSpec
                             :defined
                           elsif order == 'recently-modified'
                             :recently_modified
+                          else
+                            order.to_sym
                           end
 
-          register_ordering(:global, ordering_registry.fetch(ordering_name)) if ordering_name
+          if ordering_name
+            strategy =
+              if ordering_registry.has_strategy?(ordering_name)
+                ordering_registry.fetch(ordering_name)
+              else
+                Delayed.new(ordering_registry, ordering_name)
+              end
+
+            register_ordering(:global, strategy)
+          end
         end
 
         def force(hash)
