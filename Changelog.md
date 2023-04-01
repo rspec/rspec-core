@@ -9,6 +9,7 @@ Enhancements:
   muting pending specs output. (Phil Pirozhkov, #2957)
 * Process `--dry-run` before configuration flags that read files so that introspecting
   it returns the correct value. (Xenor Chang, #3008)
+* Allow specifying custom ordering strategies via `--order`. (Jon Rowe, #3025)
 
 ### 3.12.1 / 2023-02-03
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.0...v3.12.1)
