@@ -49,7 +49,9 @@ RSpec.shared_context "aruba support" do
 
     handle_current_dir_change do
       cd '.' do
-        @last_cmd_exit_status = RSpec::Core::Runner.run(cmd_parts, temp_stderr, temp_stdout)
+        with_isolated_stderr do
+          @last_cmd_exit_status = RSpec::Core::Runner.run(cmd_parts, temp_stderr, temp_stdout)
+        end
       end
     end
   ensure

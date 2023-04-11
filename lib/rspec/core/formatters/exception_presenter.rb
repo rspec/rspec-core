@@ -175,10 +175,22 @@ module RSpec
         end
 
         # rubocop:disable Lint/RescueException
-        def exception_message_string(exception)
-          exception.message.to_s
-        rescue Exception => other
-          "A #{exception.class} for which `exception.message.to_s` raises #{other.class}."
+        if SyntaxError.instance_methods.include?(:detailed_message)
+          def exception_message_string(exception)
+            case exception
+            when SyntaxError then exception.detailed_message.to_s
+            else
+              exception.message.to_s
+            end
+          rescue Exception => other
+            "A #{exception.class} for which `exception.message.to_s` raises #{other.class}."
+          end
+        else
+          def exception_message_string(exception)
+            exception.message.to_s
+          rescue Exception => other
+            "A #{exception.class} for which `exception.message.to_s` raises #{other.class}."
+          end
         end
         # rubocop:enable Lint/RescueException
 
