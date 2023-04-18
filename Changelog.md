@@ -1,6 +1,10 @@
 ### Development
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.1...3-12-maintenance)
 
+Bug fixes:
+
+* Remove link to outdated documentation in generated output. (Jon Rowe, #3035)
+
 ### 3.12.1 / 2023-02-03
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.0...v3.12.1)
 
