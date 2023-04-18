@@ -1,5 +1,5 @@
 ### Development
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.1...main)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.2...main)
 
 Enhancements:
 
@@ -12,6 +12,13 @@ Enhancements:
 * Allow specifying custom ordering strategies via `--order`. (Jon Rowe, #3025)
 * Use the improved `syntax_suggest` output for `SyntaxError` when available.
   (Richard Schneeman, #3015, #3026)
+
+### 3.12.2 / 2023-04-18
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.1...v3.12.2)
+
+Bug fixes:
+
+* Remove link to outdated documentation in generated output. (Jon Rowe, #3035)
 
 ### 3.12.1 / 2023-02-03
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.0...v3.12.1)
