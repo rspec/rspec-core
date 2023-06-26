@@ -150,5 +150,5 @@ jobs:
           bundler: '2.2.22'
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-      - run: cinst ansicon
+      - run: choco install ansicon
       - run: bundle exec rspec --backtrace
