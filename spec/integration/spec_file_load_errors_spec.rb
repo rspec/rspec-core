@@ -204,15 +204,28 @@ RSpec.describe 'Spec file load errors' do
             Failure/Error: __send__(method, file)
           EOS
 
-          expect(formatted_output).to include unindent(<<-EOS)
-          SyntaxError:
-            --> ./tmp/aruba/broken_file.rb
-            Unmatched keyword, missing `end' ?
-              1  class WorkInProgress
-            > 2    def initialize(arg)
-              4    end
-              5  end
-          EOS
+          if RUBY_VERSION.to_f > 3.2
+            expect(formatted_output).to include unindent(<<-EOS)
+            SyntaxError:
+              --> ./tmp/aruba/broken_file.rb
+              Unmatched keyword, missing `end' ?
+                1  class WorkInProgress
+              > 2    def initialize(arg)
+                3    def foo
+                4    end
+                5  end
+            EOS
+          else
+            expect(formatted_output).to include unindent(<<-EOS)
+            SyntaxError:
+              --> ./tmp/aruba/broken_file.rb
+              Unmatched keyword, missing `end' ?
+                1  class WorkInProgress
+              > 2    def initialize(arg)
+                4    end
+                5  end
+            EOS
+          end
           expect(formatted_output).to include "./tmp/aruba/broken_file.rb:5: syntax error"
 
           expect(formatted_output).to include unindent(<<-EOS)
