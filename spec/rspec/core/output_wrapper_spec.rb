@@ -9,6 +9,14 @@ module RSpec::Core
       expect(output.string).to eq("message\nanother message").and eq(wrapper.string)
     end
 
+    it 'redirects calls when send is overridden' do
+      class << output
+        undef :send
+      end
+      wrapper.puts('message')
+      expect(output.string).to eq("message\n").and eq(wrapper.string)
+    end
+
     describe '#output=' do
       let(:another_output) { StringIO.new }
 

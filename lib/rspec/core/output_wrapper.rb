@@ -15,13 +15,13 @@ module RSpec
       end
 
       def method_missing(name, *args, &block)
-        output.send(name, *args, &block)
+        output.__send__(name, *args, &block)
       end
 
       # Redirect calls for IO interface methods
       IO.instance_methods(false).each do |method|
         define_method(method) do |*args, &block|
-          output.send(method, *args, &block)
+          output.__send__(method, *args, &block)
         end
       end
     end
