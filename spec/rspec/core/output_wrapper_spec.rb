@@ -1,12 +1,21 @@
+require 'socket'
+
 module RSpec::Core
   RSpec.describe OutputWrapper do
-    let(:output) { StringIO.new }
+    let(:socket_pair) { UNIXSocket.pair }
+    let(:output) { socket_pair.first }
+    let(:destination) {socket_pair.last}
     let(:wrapper) { OutputWrapper.new(output) }
 
-    it 'redirects calls to the wrapped object' do
+    it 'redirects IO method calls to the wrapped object' do
       wrapper.puts('message')
       wrapper.print('another message')
-      expect(output.string).to eq("message\nanother message").and eq(wrapper.string)
+      expect(destination.recv(32)).to eq("message\nanother message")
+    end
+
+    it 'redirects unknown method calls to the wrapped object' do
+      expect(output).to receive(:addr).with(no_args)
+      wrapper.addr
     end
 
     describe '#output=' do
