@@ -13,6 +13,11 @@ Enhancements:
 * Use the improved `syntax_suggest` output for `SyntaxError` when available.
   (Richard Schneeman, #3015, #3026)
 
+Bug fixes:
+
+* Use `__send__` in output wrapper to avoid issues with IO objects that implement `send`
+  like `Socket`. (Richard Platel, #3045)
+
 ### 3.12.2 / 2023-04-18
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.1...v3.12.2)
 
