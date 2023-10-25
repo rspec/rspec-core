@@ -116,22 +116,10 @@ pretty much the same as `shared_examples` and `include_examples`, providing
 more accurate naming when you share hooks, `let` declarations, helper methods,
 etc, but no examples.
 
-If you want to reuse shared context between multipple specs you can put it into
-a file(`foo.rb`) under a separate directory(`spec/support/shared_contexts`).
-In this case you have to require the context in each spec with
-```ruby
-require 'spec/support/shared_contexts/foo.rb'
-```
-or you can require every context inside the directory by placing this code
-```ruby
-Dir['spec/support/**/*.rb'].each do |f|
-  require File.expand_path(f)
-end
-```
-into the  _spec_helper.rb_ file.
-
-The directory structure and the way ruby files are included completely depends
-on your needs.
+If you want to reuse shared examples or contexts across your RSpec suite you can
+define them in a stand alone _*.rb_ files (_spec/support/shared_examples/definition.rb_
+for example). But you will have to manually `require` them (there is no autoloading of
+_spec/support/_ directory unless you set it up yourself).
 
 ## Metadata
 
