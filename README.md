@@ -116,6 +116,11 @@ pretty much the same as `shared_examples` and `include_examples`, providing
 more accurate naming when you share hooks, `let` declarations, helper methods,
 etc, but no examples.
 
+If you want to reuse shared examples or contexts across your RSpec suite you can
+define them in a stand alone _*.rb_ files (_spec/support/shared_examples/definition.rb_
+for example). But you will have to manually `require` them (there is no autoloading of
+_spec/support/_ directory unless you set it up yourself).
+
 ## Metadata
 
 rspec-core stores a metadata hash with every example and group, which
