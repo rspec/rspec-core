@@ -96,6 +96,9 @@ end
 
 if RUBY_VERSION < '2.0.0'
   gem 'cucumber', "<= 1.3.22"
+elsif !ENV['DIFF_LCS_VERSION'].to_s.empty? && ENV['DIFF_LCS_VERSION'].scan(/\d\.\d/).first.to_f < 1.5
+  # Older version of diff-lcs cause a downstream error with cucumber and modern rails
+  gem "activesupport", "< 7"
 end
 
 gem 'contracts', '< 0.16' if RUBY_VERSION < '1.9.0'
