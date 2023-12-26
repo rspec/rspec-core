@@ -199,10 +199,17 @@ RSpec.describe 'Spec file load errors' do
           run_command "--require ./broken_file"
           expect(last_cmd_exit_status).to eq(error_exit_code)
 
-          expect(formatted_output).to include unindent(<<-EOS)
-            While loading ./broken_file a `raise SyntaxError` occurred, RSpec will now quit.
-            Failure/Error: __send__(method, file)
-          EOS
+          if RUBY_VERSION.to_f < 3.3
+            expect(formatted_output).to include unindent(<<-EOS)
+              While loading ./broken_file a `raise SyntaxError` occurred, RSpec will now quit.
+              Failure/Error: __send__(method, file)
+            EOS
+          else
+            expect(formatted_output).to include unindent(<<-EOS)
+              While loading ./broken_file a `raise SyntaxError` occurred, RSpec will now quit.
+              Failure/Error: kernel_class.send(:no_warning_require, name)
+            EOS
+          end
 
           if RUBY_VERSION.to_f > 3.2
             expect(formatted_output).to include unindent(<<-EOS)
