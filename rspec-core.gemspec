@@ -45,6 +45,8 @@ Gem::Specification.new do |s|
     s.add_runtime_dependency "rspec-support", "~> #{RSpec::Core::Version::STRING.split('.')[0..1].concat(['0']).join('.')}"
   end
 
+  s.add_runtime_dependency "drb", "~> 2.2.0"
+
   s.add_development_dependency "cucumber", ">= 1.3"
   s.add_development_dependency "minitest", "~> 5.3"
   s.add_development_dependency "aruba",    "~> 0.14.9"
