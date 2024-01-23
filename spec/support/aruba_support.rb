@@ -38,8 +38,6 @@ RSpec.shared_context "aruba support" do
   attr_reader :last_cmd_stdout, :last_cmd_stderr, :last_cmd_exit_status
 
   def run_command(cmd)
-    RSpec.configuration.color = true
-
     temp_stdout = StringIO.new
     temp_stderr = StringIO.new
 
@@ -56,7 +54,6 @@ RSpec.shared_context "aruba support" do
     end
   ensure
     RSpec.reset
-    RSpec.configuration.color = true
 
     # Ensure it gets cached with a proper value -- if we leave it set to nil,
     # and the next spec operates in a different dir, it could get set to an

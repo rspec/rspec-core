@@ -23,7 +23,7 @@ module RSpec
             end
           end
         end
-        context "when `DidYouMean::SpellChecker` is not available", :unless => defined?(::DidYouMean::SpellChecker) do
+        context "when `DidYouMean::SpellChecker` is not available", :skip => defined?(::DidYouMean::SpellChecker) do
           describe 'Success' do
             let(:name) { './spec/rspec/core/did_you_mean_spec.rb' }
             it 'returns a hint' do

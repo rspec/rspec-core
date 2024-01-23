@@ -122,12 +122,12 @@ module RSpec
             end
           end
 
-          it "displays a warning when adding an example group without a block", :unless => RUBY_VERSION == '1.8.7' do
+          it "displays a warning when adding an example group without a block", :skip => RUBY_VERSION == '1.8.7' do
             expect_warning_with_call_site(__FILE__, __LINE__ + 1)
             group.send(shared_method_name, 'name but no block')
           end
 
-          it "displays a warning when adding an example group without a block", :if => RUBY_VERSION == '1.8.7' do
+          it "displays a warning when adding an example group without a block", :skip => RUBY_VERSION != '1.8.7' do
             # In 1.8.7 this spec breaks unless we run it isolated like this
             in_sub_process do
               expect_warning_with_call_site(__FILE__, __LINE__ + 1)

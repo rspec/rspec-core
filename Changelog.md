@@ -64,6 +64,10 @@ Bug fixes:
 * Ensure formatters not exposing `#output` will not crash duplicate check.
   (@niceking, #2916)
 
+Deprecations:
+
+* Add RSpec 4 deprecation warnings. (Phil Pirozhkov, #2880)
+
 ### 3.10.1 / 2020-12-27
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.10.0...v3.10.1)
 
