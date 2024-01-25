@@ -181,7 +181,7 @@ module RSpec::Core
       end
 
       caused_by_line_num = __LINE__ + 1
-      let(:first_exception) { FakeException.new("Real\nculprit", ["#{__FILE__}:#{__LINE__}"]) }
+      let(:first_exception) { FakeException.new("Real\nculprit", ["#{__FILE__}:#{__LINE__}", "#{__FILE__}:#{__LINE__}"]) }
 
       it 'includes the first exception that caused the failure', :if => RSpec::Support::RubyFeatures.supports_exception_cause? do
         the_presenter = Formatters::ExceptionPresenter.new(the_exception, example)
@@ -200,6 +200,32 @@ module RSpec::Core
           |     #   culprit
           |     #   ./spec/rspec/core/formatters/exception_presenter_spec.rb:#{caused_by_line_num}
         EOS
+      end
+
+      context 'with RSpec.configuration.full_cause_backtrace enabled' do
+        before do
+          RSpec.configuration.full_cause_backtrace = true
+        end
+
+        it 'prints full cause backtrace', :if => RSpec::Support::RubyFeatures.supports_exception_cause? do
+          the_presenter = Formatters::ExceptionPresenter.new(the_exception, example)
+
+          expect(the_presenter.fully_formatted(1)).to eq(<<-EOS.gsub(/^ +\|/, ''))
+            |
+            |  1) Example
+            |     Failure/Error: # The failure happened here!#{ encoding_check }
+            |
+            |       Boom
+            |       Bam
+            |     # ./spec/rspec/core/formatters/exception_presenter_spec.rb:#{line_num}
+            |     # ------------------
+            |     # --- Caused by: ---
+            |     #   Real
+            |     #   culprit
+            |     #   ./spec/rspec/core/formatters/exception_presenter_spec.rb:#{caused_by_line_num}
+            |     #   ./spec/rspec/core/formatters/exception_presenter_spec.rb:#{caused_by_line_num}
+          EOS
+        end
       end
 
       context "when the first exception doesn't have a backgrace" do

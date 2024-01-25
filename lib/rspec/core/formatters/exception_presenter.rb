@@ -56,7 +56,12 @@ module RSpec
               end
 
               unless last_cause.backtrace.nil? || last_cause.backtrace.empty?
-                cause << ("  #{backtrace_formatter.format_backtrace(last_cause.backtrace, example.metadata).first}")
+                lines = backtrace_formatter.format_backtrace(last_cause.backtrace, example.metadata)
+                lines = [lines[0]] unless RSpec.configuration.full_cause_backtrace # rubocop:disable Metrics/BlockNesting
+
+                lines.each do |line|
+                  cause << ("  #{line}")
+                end
               end
             end
 

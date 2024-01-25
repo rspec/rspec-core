@@ -458,6 +458,12 @@ module RSpec
       # return [Integer]
       add_setting :max_displayed_failure_line_count
 
+      # @macro full_cause_backtrace
+      # Display the full backtrace of causing exceptions
+      # (default false).
+      # return [Boolean]
+      add_setting :full_cause_backtrace
+
       # @macro add_setting
       # Format the output for pending examples. Can be set to:
       #  - :full (default) - pending examples appear similarly to failures
@@ -571,6 +577,7 @@ module RSpec
         @derived_metadata_blocks = FilterableItemRepository::QueryOptimized.new(:any?)
         @threadsafe = true
         @max_displayed_failure_line_count = 10
+        @full_cause_backtrace = false
         @world = World::Null
         @shared_context_metadata_behavior = :trigger_inclusion
         @pending_failure_output = :full

@@ -12,6 +12,8 @@ Enhancements:
 * Allow specifying custom ordering strategies via `--order`. (Jon Rowe, #3025)
 * Use the improved `syntax_suggest` output for `SyntaxError` when available.
   (Richard Schneeman, #3015, #3026)
+* Add `full_cause_backtrace` config option to print the entire cause  backtrace.
+  (David Taylor, #3046)
 
 Bug fixes:
 
