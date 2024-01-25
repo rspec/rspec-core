@@ -103,4 +103,6 @@ end
 
 gem 'contracts', '< 0.16' if RUBY_VERSION < '1.9.0'
 
+gem 'drb' if RUBY_VERSION >= '3.4'
+
 eval File.read('Gemfile-custom') if File.exist?('Gemfile-custom')
