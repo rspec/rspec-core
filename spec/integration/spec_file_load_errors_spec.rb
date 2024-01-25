@@ -204,7 +204,7 @@ RSpec.describe 'Spec file load errors' do
             Failure/Error: __send__(method, file)
           EOS
 
-          if RUBY_VERSION.to_f > 3.2
+          if RUBY_VERSION > '3.2.2'
             expect(formatted_output).to include unindent(<<-EOS)
             SyntaxError:
               --> ./tmp/aruba/broken_file.rb
