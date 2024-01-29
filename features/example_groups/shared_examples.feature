@@ -276,7 +276,7 @@ Feature: Using shared examples
 
   Scenario: Shared examples are nestable by context
     Given a file named "context_specific_examples_spec.rb" with:
-      """Ruby
+      """ruby
       RSpec.describe "shared examples" do
         context "per context" do
 
@@ -296,7 +296,7 @@ Feature: Using shared examples
 
   Scenario: Shared examples are accessible from offspring contexts
     Given a file named "context_specific_examples_spec.rb" with:
-      """Ruby
+      """ruby
       RSpec.describe "shared examples" do
         shared_examples "shared examples are nestable" do
           specify { expect(true).to eq true }
@@ -319,7 +319,7 @@ Feature: Using shared examples
 
   Scenario: Shared examples are isolated per context
     Given a file named "isolated_shared_examples_spec.rb" with:
-      """Ruby
+      """ruby
       RSpec.describe "shared examples" do
         context do
           shared_examples "shared examples are isolated" do
