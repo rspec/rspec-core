@@ -89,7 +89,7 @@ module RSpec
 
         # `files_or_directories_to_run` uses `default_path` so it must be
         # set before it.
-        :default_path, :only_failures,
+        :default_path, :only_failures, :only_pending,
 
         # These must be set before `requires` to support checking
         # `config.files_to_run` from within `spec_helper.rb` when a
