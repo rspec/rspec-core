@@ -183,7 +183,7 @@ module RSpec
           end
         end
 
-        if @configuration.run_all_when_everything_filtered? && example_count.zero? && !@configuration.only_failures?
+        if @configuration.run_all_when_everything_filtered? && example_count.zero? && !@configuration.only_flag_set?
           report_filter_message("#{everything_filtered_message}; ignoring #{inclusion_filter.description}")
           filtered_examples.clear
           inclusion_filter.clear
@@ -250,13 +250,21 @@ module RSpec
       end
 
       def fail_if_config_and_cli_options_invalid
-        return unless @configuration.only_flag_but_not_configured?
+        if @configuration.only_flag_but_not_configured?
+          reporter.abort_with(
+            "\nTo use `--only-failures` or `--only-pending`, you must first set " \
+            "`config.example_status_persistence_file_path`.",
+            1 # exit code
+          )
+        end
 
-        reporter.abort_with(
-          "\nTo use `--only-failures` or `--only-pending`, you must first set " \
-          "`config.example_status_persistence_file_path`.",
-          1 # exit code
-        )
+        if @configuration.multiple_only_flags?
+          reporter.abort_with(
+            "\nYou cannot use `--only-failures` and `--only-pending` together. " \
+            "Please set one or the other.",
+            1 # exit code
+          )
+        end
       end
 
       # @private
