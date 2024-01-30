@@ -195,13 +195,18 @@ module RSpec
       end
 
       # @macro define_reader
-      # Indicates if the `--only-failures`, `--only-pending` (or `--next-failure`) flag is being used.
+      # Indicates if the `--only-failures` (or `--next-failure`) flag is being used.
       define_reader :only_failures
       alias_method :only_failures?, :only_failures
 
+      # @macro define_reader
+      # Indicates if the `--only-pending` flag is being used.
+      define_reader :only_pending
+      alias_method :only_pending?, :only_pending
+
       # @private
-      def only_failures_but_not_configured?
-        only_failures? && !example_status_persistence_file_path
+      def only_flag_but_not_configured?
+        (only_failures? || only_pending?) && !example_status_persistence_file_path
       end
 
       # @macro define_reader

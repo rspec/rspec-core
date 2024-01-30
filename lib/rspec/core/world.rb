@@ -250,7 +250,7 @@ module RSpec
       end
 
       def fail_if_config_and_cli_options_invalid
-        return unless @configuration.only_failures_but_not_configured?
+        return unless @configuration.only_flag_but_not_configured?
 
         reporter.abort_with(
           "\nTo use `--only-failures` or `--only-pending`, you must first set " \
