@@ -253,7 +253,7 @@ module RSpec
         return unless @configuration.only_failures_but_not_configured?
 
         reporter.abort_with(
-          "\nTo use `--only-failures`, you must first set " \
+          "\nTo use `--only-failures` or `--only-pending`, you must first set " \
           "`config.example_status_persistence_file_path`.",
           1 # exit code
         )

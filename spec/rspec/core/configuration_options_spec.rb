@@ -124,6 +124,13 @@ RSpec.describe RSpec::Core::ConfigurationOptions, :isolated_directory => true, :
       opts.configure(config)
     end
 
+    it 'configures `only_pending` before `files_or_directories_to_run` since it affects loaded files' do
+      opts = config_options_object(*%w[ --only-pending ])
+      expect(config).to receive(:force).with({:only_pending => true}).ordered
+      expect(config).to receive(:files_or_directories_to_run=).ordered
+      opts.configure(config)
+    end
+
     { "pattern" => :pattern, "exclude-pattern" => :exclude_pattern }.each do |flag, attr|
       it "sets #{attr} before `requires` so users can check `files_to_run` in a `spec_helper` loaded by `--require`" do
         opts = config_options_object(*%W[--require spec_helper --#{flag} **/*.spec])

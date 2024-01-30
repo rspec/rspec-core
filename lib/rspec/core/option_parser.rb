@@ -217,6 +217,10 @@ FILTERING
           options[:order] ||= 'defined'
         end
 
+        parser.on('--only-pending', "Filter to just the examples that were pending the last time they ran.") do
+          configure_only_pending(options)
+        end
+
         parser.on('-P', '--pattern PATTERN', 'Load files matching pattern (default: "spec/**/*_spec.rb").') do |o|
           if options[:pattern]
             options[:pattern] += ',' + o
@@ -318,6 +322,11 @@ FILTERING
     def configure_only_failures(options)
       options[:only_failures] = true
       add_tag_filter(options, :inclusion_filter, :last_run_status, 'failed')
+    end
+
+    def configure_only_pending(options)
+      options[:only_pending] = true
+      add_tag_filter(options, :inclusion_filter, :last_run_status, 'pending')
     end
   end
 end
