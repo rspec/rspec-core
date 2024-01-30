@@ -110,4 +110,4 @@ Feature: Using the `--only-failures` option
   Scenario: Clear error given when using `--only-failures` without configuring `example_status_persistence_file_path`
     Given I have not configured `example_status_persistence_file_path`
      When I run `rspec --only-failures`
-     Then it should fail with "To use `--only-failures`, you must first set `config.example_status_persistence_file_path`."
+     Then it should fail with "To use `--only-failures` or `--only-pending`, you must first set `config.example_status_persistence_file_path`."
