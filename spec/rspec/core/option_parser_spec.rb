@@ -207,7 +207,7 @@ module RSpec::Core
     end
 
     describe "--only-pending" do
-      it 'is equivalent to `--tag last_run_status:failed`' do
+      it 'is equivalent to `--tag last_run_status:pending`' do
         tag = Parser.parse(%w[ --tag last_run_status:pending ])
         only_failures = Parser.parse(%w[ --only-pending ])
 
