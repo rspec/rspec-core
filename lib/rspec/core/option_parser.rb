@@ -207,18 +207,18 @@ module RSpec::Core
 FILTERING
 
         parser.on('--only-failures', "Filter to just the examples that failed the last time they ran.") do
-          configure_only_failures(options)
+          configure_only(options, :only_failures, 'failed')
         end
 
         parser.on("-n", "--next-failure", "Apply `--only-failures` and abort after one failure.",
                   "  (Equivalent to `--only-failures --fail-fast --order defined`)") do
-          configure_only_failures(options)
+          configure_only(options, :only_failures, 'failed')
           set_fail_fast(options, 1)
           options[:order] ||= 'defined'
         end
 
         parser.on('--only-pending', "Filter to just the examples that were pending the last time they ran.") do
-          configure_only_pending(options)
+          configure_only(options, :only_pending, 'pending')
         end
 
         parser.on('-P', '--pattern PATTERN', 'Load files matching pattern (default: "spec/**/*_spec.rb").') do |o|
@@ -319,14 +319,9 @@ FILTERING
       options[:fail_fast] = value
     end
 
-    def configure_only_failures(options)
-      options[:only_failures] = true
-      add_tag_filter(options, :inclusion_filter, :last_run_status, 'failed')
-    end
-
-    def configure_only_pending(options)
-      options[:only_pending] = true
-      add_tag_filter(options, :inclusion_filter, :last_run_status, 'pending')
+    def configure_only(options, type, value)
+      options[type] = true
+      add_tag_filter(options, :inclusion_filter, :last_run_status, value)
     end
   end
 end
