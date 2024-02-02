@@ -204,6 +204,7 @@ RSpec.describe 'Spec file load errors' do
             Failure/Error: __send__(method, file)
           EOS
 
+          # A fix was backported to 3.2.3
           if RUBY_VERSION > '3.2.2'
             expect(formatted_output).to include unindent(<<-EOS)
             SyntaxError:
