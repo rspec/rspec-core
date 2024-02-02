@@ -453,14 +453,13 @@ module RSpec
       add_setting :threadsafe
 
       # @macro add_setting
-      # Maximum count of failed source lines to display in the failure reports.
-      # (default `10`).
+      # Maximum count of failed source lines to display in the failure reports
+      # (defaults to `10`).
       # return [Integer]
       add_setting :max_displayed_failure_line_count
 
       # @macro full_cause_backtrace
-      # Display the full backtrace of causing exceptions
-      # (default false).
+      # Display the full backtrace of an exceptions cause (defaults to `false`).
       # return [Boolean]
       add_setting :full_cause_backtrace
 
