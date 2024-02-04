@@ -1,6 +1,9 @@
 ### Development
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.3...main)
 
+### 3.13.0 / 2024-02-04
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.3...v3.13.0)
+
 Enhancements:
 
 * Support the `--backtrace` flag when using the JSON formatter. (Matt Larraz, #2980)
