@@ -453,8 +453,8 @@ module RSpec
       add_setting :threadsafe
 
       # @macro add_setting
-      # Maximum count of failed source lines to display in the failure reports.
-      # (default `10`).
+      # Maximum count of failed source lines to display in the failure reports
+      # (defaults to `10`).
       # return [Integer]
       add_setting :max_displayed_failure_line_count
 
