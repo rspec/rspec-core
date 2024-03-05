@@ -63,6 +63,10 @@ module RSpec
         @sources_by_path.clear if defined?(@sources_by_path)
         @syntax_highlighter = nil
         @example_group_counts_by_spec_file = Hash.new(0)
+        @filtered_examples.clear
+        RSpec::Core::AnonymousExampleGroup.examples.clear
+        RSpec::Core::AnonymousExampleGroup.children.clear
+        shared_example_group_registry.reset
       end
 
       # @private
