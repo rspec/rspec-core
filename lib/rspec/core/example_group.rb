@@ -144,7 +144,8 @@ module RSpec
       #
       def self.define_example_method(name, extra_options={})
         idempotently_define_singleton_method(name) do |*all_args, &block|
-          desc, *args = *all_args
+          desc = all_args.shift if all_args.first.is_a? String
+          args = all_args
 
           options = Metadata.build_hash_from(args)
           options.update(:skip => RSpec::Core::Pending::NOT_YET_IMPLEMENTED) unless block
