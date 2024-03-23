@@ -1257,7 +1257,28 @@ module RSpec::Core
         expect(group.examples[1].description).to eq('should 2')
         expect(group.examples[2].description).to eq('should 3')
       end
+    end
 
+    describe "deprecation warnings for example" do
+      it "does not output deprecation warning when description is a string" do
+        expect_no_deprecation
+        RSpec.describe.it('hoge')
+      end
+
+      it "does not output deprecation warning when description is nil" do
+        expect_no_deprecation
+        RSpec.describe.it
+      end
+
+      it "outputs deprecation warining when description is a symbol" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /Symbol object `:symbol` as example doc string/)
+        RSpec.describe.it(:symbol)
+      end
+
+      it "outputs deprication warning when description is a hash" do
+        expect_deprecation_with_call_site(__FILE__, __LINE__ + 1, /Hash object `{"foo"=>"bar"}` as example doc string/)
+        RSpec.describe.it({ "foo" => "bar" })
+      end
     end
 
     describe Object, "describing nested example_groups", :little_less_nested => 'yep' do
