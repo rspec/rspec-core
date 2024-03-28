@@ -1263,39 +1263,43 @@ module RSpec::Core
       end
     end
 
-    describe "example doc string" do
-      let(:group) { RSpec.describe }
+    describe "example doc string and metadata" do
+      context "when first argument of example is a string" do
+        it "returns the string as description" do
+          example = RSpec.describe.it("my example")
+          expect(example.metadata[:description]).to eq("my example")
+        end
 
-      it "accepts a string for an example doc string" do
-        expect { group.it('MyClass') { } }.not_to output.to_stderr
+        it "returns the string as description and symbol is set in metadata" do
+          example = RSpec.describe.it("my example", :foo)
+          expect(example.metadata[:description]).to eq("my example")
+          expect(example.metadata[:foo]).to be_truthy
+        end
+
+        it "returns the string as description and hash is set in metadata" do
+          example = RSpec.describe.it("my example", { "foo" => "bar" })
+          expect(example.metadata[:description]).to eq("my example")
+          expect(example.metadata["foo"]).to eq("bar")
+        end
       end
 
-      it "accepts example without a doc string" do
-        expect { group.it { } }.not_to output.to_stderr
-      end
+      context "when first argument of example is NOT a string" do
+        it "returns empty string as description" do
+          example = RSpec.describe.it
+          expect(example.metadata[:description]).to be_empty
+        end
 
-      it "emits a warning when a Class is used as an example doc string" do
-        expect { group.it(Numeric) { } }
-          .to output(/`Numeric` is used as example doc string. Use a string instead/)
-          .to_stderr
-      end
+        it "returns empty string as description and symbol is set in metadata" do
+          example = RSpec.describe.it(:foo)
+          expect(example.metadata[:description]).to be_empty
+          expect(example.metadata[:foo]).to be_truthy
+        end
 
-      it "emits a warning when a Module is used as an example doc string" do
-        expect { group.it(RSpec) { } }
-          .to output(/`RSpec` is used as example doc string. Use a string instead/)
-          .to_stderr
-      end
-
-      it "emits a warning when a Symbol is used as an example doc string" do
-        expect { group.it(:foo) { } }
-          .to output(/`:foo` is used as example doc string. Use a string instead/)
-          .to_stderr
-      end
-
-      it "emits a warning when a Hash is used as an example doc string" do
-        expect { group.it(foo: :bar) { } }
-          .to output(/`{:foo=>:bar}` is used as example doc string. Use a string instead/)
-          .to_stderr
+        it "returns empty string as description and hash is set in metadata" do
+          example = RSpec.describe.it({ "foo" => "bar" })
+          expect(example.metadata[:description]).to be_empty
+          expect(example.metadata["foo"]).to eq("bar")
+        end
       end
     end
 
