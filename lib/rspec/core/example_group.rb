@@ -144,17 +144,14 @@ module RSpec
       #
       def self.define_example_method(name, extra_options={})
         idempotently_define_singleton_method(name) do |*all_args, &block|
-          desc, *args = *all_args
+          description = all_args.shift if all_args.first.is_a? String
+          metadata = all_args
 
-          unless NilClass === desc || String === desc
-            RSpec.warning "`#{desc.inspect}` is used as example doc string. Use a string instead"
-          end
-
-          options = Metadata.build_hash_from(args)
+          options = Metadata.build_hash_from(metadata)
           options.update(:skip => RSpec::Core::Pending::NOT_YET_IMPLEMENTED) unless block
           options.update(extra_options)
 
-          RSpec::Core::Example.new(self, desc, options, block)
+          RSpec::Core::Example.new(self, description, options, block)
         end
       end
 
