@@ -1,4 +1,4 @@
-Feature: `--pattern` option
+Feature: `--pattern` and `--exclude-pattern` options
 
   When you run RSpec without giving it specific file names, it determines which
   files to load by applying a pattern to the provided directory arguments or
@@ -7,7 +7,7 @@ Feature: `--pattern` option
 
       "**{,/*/**}/*_spec.rb"
 
-  Use the `--pattern` option to declare a different pattern.
+  Use the `--pattern` or `--exclude-pattern` options to declare a different pattern.
 
   Background:
     Given a file named "spec/example_spec.rb" with:
