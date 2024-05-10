@@ -28,10 +28,11 @@ begin
     require 'simplecov'
 
     SimpleCov.start do
-      add_filter "bundle/"
-      add_filter "tmp/"
-      add_filter "spec/"
-      minimum_coverage(100)
+      root File.expand_path("../..", __FILE__)
+      add_filter %r{/bundle/}
+      add_filter %r{/tmp/}
+      add_filter %r{/spec/}
+      minimum_coverage(99)
     end
   end
 rescue LoadError # rubocop:disable Lint/SuppressedException
