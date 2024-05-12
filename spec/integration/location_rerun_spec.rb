@@ -64,7 +64,7 @@ RSpec.describe 'Failed spec rerun location' do
 
   end
 
-  context "when config.location_rerun_uses_line_number is set to false" do
+  context "when config.use_line_number_for_failed_spec_location_rerun is set to false" do
     it 'prints the example id of the failed assertion' do
       run_command("#{Dir.pwd}/tmp/aruba/local_shared_examples_spec.rb")
 
@@ -95,9 +95,9 @@ rspec './non_local_shared_examples_spec.rb[1:2:1:2:1]' #  the second context beh
     end
   end
 
-  context "when config.location_rerun_uses_line_number is set to true" do
+  context "when config.use_line_number_for_failed_spec_location_rerun is set to true" do
     before do
-      allow(RSpec.configuration).to receive(:location_rerun_uses_line_number).and_return(true)
+      allow(RSpec.configuration).to receive(:use_line_number_for_failed_spec_location_rerun).and_return(true)
     end
 
     context "when the shared examples are defined in the same file as the spec" do
