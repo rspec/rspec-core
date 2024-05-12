@@ -37,9 +37,9 @@ RSpec.describe 'Failed spec rerun location' do
     expect(last_cmd_stdout).to include("/failing_spec.rb[1:2:1:1]")
   end
 
-  context "when config.location_rerun_failed_example_uses_line_number is set to true" do
+  context "when config.location_rerun_uses_line_number is set to true" do
     before do
-      RSpec.configuration.location_rerun_failed_example_uses_line_number = true
+      RSpec.configuration.location_rerun_uses_line_number = true
     end
 
     it 'prints the line numbers' do
