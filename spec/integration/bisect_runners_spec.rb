@@ -10,17 +10,6 @@ module RSpec::Core
 
     let(:shell_command) { Bisect::ShellCommand.new([]) }
 
-    def with_runner(&block)
-      handle_current_dir_change do
-        cd '.' do
-          options = ConfigurationOptions.new(shell_command.original_cli_args)
-          runner = Runner.new(options)
-          output = StringIO.new
-          runner.configure(output, output)
-          described_class.start(shell_command, runner, &block)
-        end
-      end
-    end
 
     it 'runs the specs in an isolated environment and reports the results' do
       RSpec.configuration.formatter = 'progress'
