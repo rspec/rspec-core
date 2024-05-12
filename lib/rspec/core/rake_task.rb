@@ -47,6 +47,7 @@ module RSpec
 
       if RUBY_VERSION < "1.9.0" || Support::Ruby.jruby?
         # Run RSpec with a clean (empty) environment is not supported
+        # :nocov:
         def with_clean_environment=(_value)
           raise ArgumentError, "Running in a clean environment is not supported on Ruby versions before 1.9.0"
         end
@@ -55,6 +56,7 @@ module RSpec
         def with_clean_environment
           false
         end
+        # :nocov:
       else
         # Run RSpec with a clean (empty) environment.
         attr_accessor :with_clean_environment
