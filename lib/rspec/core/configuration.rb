@@ -477,6 +477,12 @@ module RSpec
         @pending_failure_output = mode
       end
 
+      # @macro location_rerun_failed_example_uses_line_number
+      # Display the line number (`my_spec.rb:10`), as opposed to the example id (`my_spec.rb[1:1:1]`)
+      # for shared or nested examples (defaults to `false`).
+      # return [Boolean]
+      add_setting :location_rerun_failed_example_uses_line_number
+
       # Determines which bisect runner implementation gets used to run subsets
       # of the suite during a bisection. Your choices are:
       #
@@ -580,6 +586,7 @@ module RSpec
         @world = World::Null
         @shared_context_metadata_behavior = :trigger_inclusion
         @pending_failure_output = :full
+        @location_rerun_failed_example_uses_line_number = false
 
         define_built_in_hooks
       end
