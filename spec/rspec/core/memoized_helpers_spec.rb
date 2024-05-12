@@ -670,6 +670,28 @@ module RSpec::Core
     end
   end
 
+  RSpec.describe 'custom matcher that does not specify if it supports value expectations' do
+    let(:value_matcher_class) do
+      Class.new do
+        def matches?(_actual); true; end
+        def failure_message_when_negated; "oops"; end
+      end
+    end
+    let(:value_matcher) { value_matcher_class.new }
+
+    before { expect(value_matcher).not_to respond_to(:supports_value_expectations?) }
+
+    it '`should` does not print a deprecation warning when given a value' do
+      expect_no_deprecations
+      expect { should value_matcher }.not_to raise_error
+    end
+
+    it '`should_not` does not print a deprecation warning when given a value' do
+      expect_no_deprecations
+      expect { should_not value_matcher }.to raise_error(Exception)
+    end
+  end
+
   RSpec.describe 'Module#define_method' do
     it 'retains its normal private visibility on Ruby versions where it is normally private', :if => RUBY_VERSION < '2.5' do
       a_module = Module.new
