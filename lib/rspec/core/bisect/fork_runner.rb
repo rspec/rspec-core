@@ -102,6 +102,7 @@ module RSpec
         private
 
           def run_specs(run_descriptor)
+            # :nocov: - Executed in a forked process, by integration/bisect_spec
             $stdout = $stderr = @spec_output
             formatter = CaptureFormatter.new(run_descriptor.failed_example_ids)
 
@@ -125,6 +126,7 @@ module RSpec
             else
               @channel.send(latest_run_results)
             end
+            # :nocov:
           end
         end
 
