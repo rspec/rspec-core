@@ -93,7 +93,9 @@ module RSpec
             "# Couldn't get snippet for #{file}"
           end
         rescue SecurityError
+          # :nocov: - SecurityError is no longer produced starting in ruby 2.7
           "# Couldn't get snippet for #{file}"
+          # :nocov:
         end
 
         # @api private

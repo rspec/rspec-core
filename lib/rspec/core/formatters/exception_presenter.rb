@@ -254,7 +254,9 @@ module RSpec
         rescue SnippetExtractor::NoSuchLineError
           ["Unable to find matching line in #{file_path}"]
         rescue SecurityError
+          # :nocov: - SecurityError is no longer produced starting in ruby 2.7
           ["Unable to read failed line"]
+          # :nocov:
         end
 
         def find_failed_line

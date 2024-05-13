@@ -633,7 +633,7 @@ module RSpec::Core
         end
       end
 
-      context "when backtrace will generate a security error" do
+      context "when backtrace will generate a security error", :skip => !RSpec::Support::RubyFeatures.supports_taint? do
         let(:exception) { instance_double(Exception, :backtrace => [ "#{__FILE__}:#{__LINE__}"]) }
 
         it "is handled gracefully" do
