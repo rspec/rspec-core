@@ -47,7 +47,7 @@ module RSpec
         return nil if line == '-e:1'.freeze
         line
       rescue SecurityError
-        # :nocov:
+        # :nocov: - SecurityError is no longer produced starting in ruby 2.7
         nil
         # :nocov:
       end

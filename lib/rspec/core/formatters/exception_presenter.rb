@@ -191,11 +191,13 @@ module RSpec
             "A #{exception.class} for which `exception.message.to_s` raises #{other.class}."
           end
         else
+          # :nocov:
           def exception_message_string(exception)
             exception.message.to_s
           rescue Exception => other
             "A #{exception.class} for which `exception.message.to_s` raises #{other.class}."
           end
+          # :nocov:
         end
         # rubocop:enable Lint/RescueException
 
@@ -252,7 +254,9 @@ module RSpec
         rescue SnippetExtractor::NoSuchLineError
           ["Unable to find matching line in #{file_path}"]
         rescue SecurityError
+          # :nocov: - SecurityError is no longer produced starting in ruby 2.7
           ["Unable to read failed line"]
+          # :nocov:
         end
 
         def find_failed_line
@@ -284,9 +288,11 @@ module RSpec
             encoded_string(description)
           end
         else # for 1.8.7
+          # :nocov:
           def encoded_description(description)
             description
           end
+          # :nocov:
         end
 
         def exception_backtrace

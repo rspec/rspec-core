@@ -20,6 +20,7 @@ env:
   RSPEC_CI: true
   # This tells rspec-rails what branch to run in ci
   RSPEC_VERSION: '= 3.14.0.pre'
+  ENFORCE_COVERAGE_AFTER: "3.2"
 jobs:
   rubocop:
     name: Rubocop
@@ -83,6 +84,13 @@ jobs:
       - run: bundle install --standalone
       - run: bundle binstubs --all
       - run: script/run_build
+      - name: Store coverage output for reference
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: coverage-report-${{ matrix.ruby }}
+          path: coverage/index.html
+          retention-days: 14
 
   legacy:
     name: Legacy Ruby Builds (${{ matrix.container.version }})
@@ -122,6 +130,7 @@ jobs:
             options: "--add-host rubygems.org:151.101.129.227 --add-host api.rubygems.org:151.101.129.227"
     env:
       LEGACY_CI: true
+      NO_COVERAGE: true
       JRUBY_OPTS: ${{ matrix.container.jruby_opts || '--dev' }}
     steps:
       - uses: actions/checkout@v3
