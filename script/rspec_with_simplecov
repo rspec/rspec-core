@@ -32,7 +32,7 @@ begin
       add_filter %r{/bundle/}
       add_filter %r{/tmp/}
       add_filter %r{/spec/}
-      minimum_coverage(99)
+      minimum_coverage(100) if RUBY_VERSION.to_f >= ENV['ENFORCE_COVERAGE_AFTER'].to_f
     end
   end
 rescue LoadError # rubocop:disable Lint/SuppressedException

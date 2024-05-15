@@ -138,6 +138,10 @@ RSpec.describe RSpec::Core::DRbOptions, :isolated_directory => true, :isolated_h
       expect(drb_argv_for(%w[--failure-exit-code 2])).to include("--failure-exit-code", "2")
     end
 
+    it "includes --error-exit-code" do
+      expect(drb_argv_for(%w[--error-exit-code 5])).to include("--error-exit-code", "5")
+    end
+
     it "includes --options" do
       expect(drb_argv_for(%w[--options custom.opts])).to include("--options", "custom.opts")
     end

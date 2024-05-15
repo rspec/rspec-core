@@ -30,6 +30,23 @@ RSpec.describe 'Spec file load errors' do
     end
   end
 
+  it 'nicely handles load errors from --require files' do
+    run_command "--require ./helper_with_load_error"
+    expect(last_cmd_exit_status).to eq(error_exit_code)
+    output = normalize_durations(last_cmd_stdout)
+    expect(output).to include("An error occurred while loading ./helper_with_load_error.")
+    expect(output).to include("LoadError:")
+  end
+
+  it 'nicely handles syntax errors from --require files' do
+    write_file_formatted "helper_with_syntax_error.rb", "3 = hello"
+
+    run_command "--require ./helper_with_syntax_error"
+    expect(last_cmd_exit_status).to eq(error_exit_code)
+    output = normalize_durations(last_cmd_stdout)
+    expect(output).to include("While loading ./helper_with_syntax_error a `raise SyntaxError` occurred, RSpec will now quit.")
+  end
+
   it 'nicely handles load-time errors from --require files' do
     write_file_formatted "helper_with_error.rb", "raise 'boom'"
 

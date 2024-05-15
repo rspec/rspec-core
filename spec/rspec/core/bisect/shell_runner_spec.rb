@@ -8,6 +8,10 @@ module RSpec::Core
     let(:shell_command) { Bisect::ShellCommand.new(original_cli_args) }
     let(:runner) { described_class.new(server, shell_command) }
 
+    it "has the expected name" do
+      expect(described_class.name).to eq(:shell)
+    end
+
     describe "#run" do
       let(:original_cli_args) { %w[ spec/1_spec.rb ] }
       let(:target_specs) { %w[ spec/1_spec.rb[1:1] spec/1_spec.rb[1:2] ] }

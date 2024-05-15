@@ -181,7 +181,9 @@ module RSpec
         if RUBY_VERSION >= '2.6'
           ERB.new(File.read(path), :trim_mode => '-').result(binding)
         else
+          # :nocov:
           ERB.new(File.read(path), nil, '-').result(binding)
+          # :nocov:
         end
       end
 

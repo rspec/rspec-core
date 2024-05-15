@@ -11,6 +11,7 @@ module RSpec
 
       if defined?(::DidYouMean::SpellChecker)
         # provide probable suggestions
+        # :nocov: - not installed on CI
         def call
           checker = ::DidYouMean::SpellChecker.new(:dictionary => Dir["spec/**/*.rb"])
           probables = checker.correct(relative_file_name.sub('./', ''))[0..2]
@@ -18,15 +19,19 @@ module RSpec
 
           formats probables
         end
+        # :nocov:
       else
         # return a hint if API for ::DidYouMean::SpellChecker not supported
+        # :nocov:
         def call
           "\nHint: Install the `did_you_mean` gem in order to provide suggestions for similarly named files."
         end
+        # :nocov:
       end
 
       private
 
+      # :nocov:
       def formats(probables)
         rspec_format = probables.map { |s, _| "rspec ./#{s}" }
         red_font(top_and_tail rspec_format)
@@ -41,6 +46,7 @@ module RSpec
         colorizer = ::RSpec::Core::Formatters::ConsoleCodes
         colorizer.wrap mytext, :failure
       end
+      # :nocov:
     end
   end
 end
