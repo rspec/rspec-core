@@ -24,10 +24,7 @@ begin
   # Simplecov emits some ruby warnings when loaded, so silence them.
   old_verbose, $VERBOSE = $VERBOSE, false
 
-  skip_because_no_coverage = ENV['NO_COVERAGE']
-  skip_because_wrong_version = ENV['COVERAGE_ONLY_ON'] && ENV['COVERAGE_ONLY_ON'].to_f != RUBY_VERSION.to_f
-
-  unless skip_because_no_coverage || skip_because_wrong_version
+  unless ENV['NO_COVERAGE'] || RUBY_VERSION.to_f < 2.1
     require 'simplecov'
 
     SimpleCov.start do
@@ -35,7 +32,7 @@ begin
       add_filter %r{/bundle/}
       add_filter %r{/tmp/}
       add_filter %r{/spec/}
-      minimum_coverage(100) if RUBY_VERSION.to_f >= 3.1
+      minimum_coverage(100) if RUBY_VERSION.to_f >= ENV['ENFORCE_COVERAGE_AFTER'].to_f
     end
   end
 rescue LoadError # rubocop:disable Lint/SuppressedException
