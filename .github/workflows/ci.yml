@@ -20,7 +20,7 @@ env:
   RSPEC_CI: true
   # This tells rspec-rails what branch to run in ci
   RSPEC_VERSION: '= 3.14.0.pre'
-  ENFORCE_COVERAGE_AFTER: "3.1"
+  ENFORCE_COVERAGE_AFTER: "3.2"
 jobs:
   rubocop:
     name: Rubocop
