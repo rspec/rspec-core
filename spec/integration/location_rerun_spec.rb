@@ -12,7 +12,7 @@ RSpec.describe 'Failed spec rerun location' do
     write_file "some_examples.rb", "
       RSpec.shared_examples_for 'a failing spec' do
         it 'fails' do
-            expect(1).to eq(2)
+          expect(1).to eq(2)
         end
 
         context 'when you reverse it' do
@@ -20,48 +20,48 @@ RSpec.describe 'Failed spec rerun location' do
             expect(2).to eq(1)
           end
         end
-    end
+      end
     "
 
     file = cd('.') { "#{Dir.pwd}/some_examples.rb" }
     load file
 
     write_file "non_local_shared_examples_spec.rb", "
-    RSpec.describe do
+      RSpec.describe do
         context 'the first context' do
-            it_behaves_like 'a failing spec'
+          it_behaves_like 'a failing spec'
         end
 
         context 'the second context' do
-            it_behaves_like 'a failing spec'
+          it_behaves_like 'a failing spec'
         end
-    end
-"
-    # Setup some shared examples in the same file as where they are called
-    write_file "local_shared_examples_spec.rb", "
-      RSpec.describe do
-          shared_examples_for 'a failing spec' do
-              it 'fails' do
-                  expect(1).to eq(2)
-              end
-
-              context 'when you reverse it' do
-                it 'still fails' do
-                  expect(2).to eq(1)
-                end
-              end
-          end
-
-          context 'the first context' do
-              it_behaves_like 'a failing spec'
-          end
-
-          context 'the second context' do
-              it_behaves_like 'a failing spec'
-          end
       end
     "
 
+    # Setup some shared examples in the same file as where they are called
+    write_file "local_shared_examples_spec.rb", "
+      RSpec.describe do
+        shared_examples_for 'a failing spec' do
+          it 'fails' do
+            expect(1).to eq(2)
+          end
+
+          context 'when you reverse it' do
+            it 'still fails' do
+              expect(2).to eq(1)
+            end
+          end
+        end
+
+        context 'the first context' do
+          it_behaves_like 'a failing spec'
+        end
+
+        context 'the second context' do
+          it_behaves_like 'a failing spec'
+        end
+      end
+    "
   end
 
   context "when config.force_line_number_for_spec_rerun is set to false" do
