@@ -2979,7 +2979,6 @@ module RSpec::Core
     end
 
     describe "#force_line_number_for_spec_rerun" do
-
       it "defaults to false" do
         expect(config.force_line_number_for_spec_rerun).to eq false
       end

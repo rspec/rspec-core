@@ -77,6 +77,7 @@ RSpec.describe 'Failed spec rerun location' do
           rspec './local_shared_examples_spec.rb[1:2:1:2:1]' #  the second context behaves like a failing spec when you reverse it still fails
         EOS
     end
+
     context "and the shared examples are defined in a separate file" do
       it 'prints the example id of the failed assertion' do
         run_command("#{Dir.pwd}/tmp/aruba/non_local_shared_examples_spec.rb")
@@ -113,6 +114,7 @@ RSpec.describe 'Failed spec rerun location' do
         EOS
       end
     end
+
     context "and the shared examples are defined in a separate file" do
       it 'prints the line number where the `it_behaves_like` was called in the local file' do
         run_command("#{Dir.pwd}/tmp/aruba/non_local_shared_examples_spec.rb")
