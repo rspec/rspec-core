@@ -1,6 +1,7 @@
 require 'support/aruba_support'
 
 RSpec.describe 'Failed spec rerun location' do
+  include RSpecHelpers
 
   include_context "aruba support"
 
@@ -68,29 +69,27 @@ RSpec.describe 'Failed spec rerun location' do
     it 'prints the example id of the failed assertion' do
       run_command("#{Dir.pwd}/tmp/aruba/local_shared_examples_spec.rb")
 
-      expect(last_cmd_stdout).to include(<<-MSG
-Failed examples:
+      expect(last_cmd_stdout).to include unindent(<<-EOS)
+          Failed examples:
 
-rspec './local_shared_examples_spec.rb[1:1:1:1]' #  the first context behaves like a failing spec fails
-rspec './local_shared_examples_spec.rb[1:1:1:2:1]' #  the first context behaves like a failing spec when you reverse it still fails
-rspec './local_shared_examples_spec.rb[1:2:1:1]' #  the second context behaves like a failing spec fails
-rspec './local_shared_examples_spec.rb[1:2:1:2:1]' #  the second context behaves like a failing spec when you reverse it still fails
-      MSG
-      )
+          rspec './local_shared_examples_spec.rb[1:1:1:1]' #  the first context behaves like a failing spec fails
+          rspec './local_shared_examples_spec.rb[1:1:1:2:1]' #  the first context behaves like a failing spec when you reverse it still fails
+          rspec './local_shared_examples_spec.rb[1:2:1:1]' #  the second context behaves like a failing spec fails
+          rspec './local_shared_examples_spec.rb[1:2:1:2:1]' #  the second context behaves like a failing spec when you reverse it still fails
+        EOS
     end
     context "and the shared examples are defined in a separate file" do
       it 'prints the example id of the failed assertion' do
         run_command("#{Dir.pwd}/tmp/aruba/non_local_shared_examples_spec.rb")
 
-        expect(last_cmd_stdout).to include(<<-MSG
-Failed examples:
+        expect(last_cmd_stdout).to include unindent(<<-EOS)
+          Failed examples:
 
-rspec './non_local_shared_examples_spec.rb[1:1:1:1]' #  the first context behaves like a failing spec fails
-rspec './non_local_shared_examples_spec.rb[1:1:1:2:1]' #  the first context behaves like a failing spec when you reverse it still fails
-rspec './non_local_shared_examples_spec.rb[1:2:1:1]' #  the second context behaves like a failing spec fails
-rspec './non_local_shared_examples_spec.rb[1:2:1:2:1]' #  the second context behaves like a failing spec when you reverse it still fails
-        MSG
-        )
+          rspec './non_local_shared_examples_spec.rb[1:1:1:1]' #  the first context behaves like a failing spec fails
+          rspec './non_local_shared_examples_spec.rb[1:1:1:2:1]' #  the first context behaves like a failing spec when you reverse it still fails
+          rspec './non_local_shared_examples_spec.rb[1:2:1:1]' #  the second context behaves like a failing spec fails
+          rspec './non_local_shared_examples_spec.rb[1:2:1:2:1]' #  the second context behaves like a failing spec when you reverse it still fails
+        EOS
       end
     end
   end
@@ -105,30 +104,29 @@ rspec './non_local_shared_examples_spec.rb[1:2:1:2:1]' #  the second context beh
       it 'prints the line number where the assertion failed in the local file' do
         run_command("#{Dir.pwd}/tmp/aruba/local_shared_examples_spec.rb")
 
-        expect(last_cmd_stdout).to include(<<-MSG
-Failed examples:
+        expect(last_cmd_stdout).to include unindent(<<-EOS)
+          Failed examples:
 
-rspec ./local_shared_examples_spec.rb:4 #  the first context behaves like a failing spec fails
-rspec ./local_shared_examples_spec.rb:9 #  the first context behaves like a failing spec when you reverse it still fails
-rspec ./local_shared_examples_spec.rb:4 #  the second context behaves like a failing spec fails
-rspec ./local_shared_examples_spec.rb:9 #  the second context behaves like a failing spec when you reverse it still fails
-        MSG
-        )
+          rspec ./local_shared_examples_spec.rb:4 #  the first context behaves like a failing spec fails
+          rspec ./local_shared_examples_spec.rb:9 #  the first context behaves like a failing spec when you reverse it still fails
+          rspec ./local_shared_examples_spec.rb:4 #  the second context behaves like a failing spec fails
+          rspec ./local_shared_examples_spec.rb:9 #  the second context behaves like a failing spec when you reverse it still fails
+        EOS
       end
     end
     context "and the shared examples are defined in a separate file" do
       it 'prints the line number where the `it_behaves_like` was called in the local file' do
-
         run_command("#{Dir.pwd}/tmp/aruba/non_local_shared_examples_spec.rb")
-        expect(last_cmd_stdout).to include(<<-MSG
-Failed examples:
 
-rspec ./non_local_shared_examples_spec.rb:4 #  the first context behaves like a failing spec fails
-rspec ./non_local_shared_examples_spec.rb:4 #  the first context behaves like a failing spec when you reverse it still fails
-rspec ./non_local_shared_examples_spec.rb:8 #  the second context behaves like a failing spec fails
-rspec ./non_local_shared_examples_spec.rb:8 #  the second context behaves like a failing spec when you reverse it still fails
-        MSG
-        )
+        expect(last_cmd_stdout).to include unindent(<<-EOS)
+          Failed examples:
+
+          rspec ./non_local_shared_examples_spec.rb:4 #  the first context behaves like a failing spec fails
+          rspec ./non_local_shared_examples_spec.rb:4 #  the first context behaves like a failing spec when you reverse it still fails
+          rspec ./non_local_shared_examples_spec.rb:8 #  the second context behaves like a failing spec fails
+          rspec ./non_local_shared_examples_spec.rb:8 #  the second context behaves like a failing spec when you reverse it still fails
+        EOS
+        
       end
     end
   end
