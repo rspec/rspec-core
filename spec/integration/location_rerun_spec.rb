@@ -9,7 +9,7 @@ RSpec.describe 'Failed spec rerun location' do
 
     # Setup some shared examples and call them in a separate file
     # from where they are called to demonstrate how nested example ids work
-    write_file "some_examples.rb", "
+    write_file_formatted "some_examples.rb", "
       RSpec.shared_examples_for 'a failing spec' do
         it 'fails' do
           expect(1).to eq(2)
@@ -26,7 +26,7 @@ RSpec.describe 'Failed spec rerun location' do
     file = cd('.') { "#{Dir.pwd}/some_examples.rb" }
     load file
 
-    write_file "non_local_shared_examples_spec.rb", "
+    write_file_formatted "non_local_shared_examples_spec.rb", "
       RSpec.describe do
         context 'the first context' do
           it_behaves_like 'a failing spec'
@@ -39,7 +39,7 @@ RSpec.describe 'Failed spec rerun location' do
     "
 
     # Setup some shared examples in the same file as where they are called
-    write_file "local_shared_examples_spec.rb", "
+    write_file_formatted "local_shared_examples_spec.rb", "
       RSpec.describe do
         shared_examples_for 'a failing spec' do
           it 'fails' do
@@ -107,10 +107,10 @@ RSpec.describe 'Failed spec rerun location' do
         expect(last_cmd_stdout).to include unindent(<<-EOS)
           Failed examples:
 
-          rspec ./local_shared_examples_spec.rb:4 #  the first context behaves like a failing spec fails
-          rspec ./local_shared_examples_spec.rb:9 #  the first context behaves like a failing spec when you reverse it still fails
-          rspec ./local_shared_examples_spec.rb:4 #  the second context behaves like a failing spec fails
-          rspec ./local_shared_examples_spec.rb:9 #  the second context behaves like a failing spec when you reverse it still fails
+          rspec ./local_shared_examples_spec.rb:3 #  the first context behaves like a failing spec fails
+          rspec ./local_shared_examples_spec.rb:8 #  the first context behaves like a failing spec when you reverse it still fails
+          rspec ./local_shared_examples_spec.rb:3 #  the second context behaves like a failing spec fails
+          rspec ./local_shared_examples_spec.rb:8 #  the second context behaves like a failing spec when you reverse it still fails
         EOS
       end
     end
@@ -122,10 +122,10 @@ RSpec.describe 'Failed spec rerun location' do
         expect(last_cmd_stdout).to include unindent(<<-EOS)
           Failed examples:
 
-          rspec ./non_local_shared_examples_spec.rb:4 #  the first context behaves like a failing spec fails
-          rspec ./non_local_shared_examples_spec.rb:4 #  the first context behaves like a failing spec when you reverse it still fails
-          rspec ./non_local_shared_examples_spec.rb:8 #  the second context behaves like a failing spec fails
-          rspec ./non_local_shared_examples_spec.rb:8 #  the second context behaves like a failing spec when you reverse it still fails
+          rspec ./non_local_shared_examples_spec.rb:3 #  the first context behaves like a failing spec fails
+          rspec ./non_local_shared_examples_spec.rb:3 #  the first context behaves like a failing spec when you reverse it still fails
+          rspec ./non_local_shared_examples_spec.rb:7 #  the second context behaves like a failing spec fails
+          rspec ./non_local_shared_examples_spec.rb:7 #  the second context behaves like a failing spec when you reverse it still fails
         EOS
       end
     end
