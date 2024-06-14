@@ -403,7 +403,7 @@ module RSpec::Core
         location = example.location_rerun_argument
 
         return location unless duplicate_rerun_locations.include?(location)
-        return location if RSpec.configuration.use_line_number_for_failed_spec_location_rerun
+        return location if RSpec.configuration.force_line_number_for_spec_rerun
         conditionally_quote(example.id)
       end
 

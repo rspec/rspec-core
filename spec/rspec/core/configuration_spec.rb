@@ -2978,15 +2978,15 @@ module RSpec::Core
       end
     end
 
-    describe "#use_line_number_for_failed_spec_location_rerun" do
+    describe "#force_line_number_for_spec_rerun" do
 
       it "defaults to false" do
-        expect(config.use_line_number_for_failed_spec_location_rerun).to eq false
+        expect(config.force_line_number_for_spec_rerun).to eq false
       end
 
       it "is configurable" do
-        config.use_line_number_for_failed_spec_location_rerun = true
-        expect(config.use_line_number_for_failed_spec_location_rerun).to eq true
+        config.force_line_number_for_spec_rerun = true
+        expect(config.force_line_number_for_spec_rerun).to eq true
       end
     end
 
