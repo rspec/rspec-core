@@ -2,7 +2,6 @@ require 'support/aruba_support'
 
 RSpec.describe 'Failed spec rerun location' do
   include RSpecHelpers
-
   include_context "aruba support"
 
   before do
