@@ -179,7 +179,7 @@ module RSpec
 
       # @macro define_reader
       # The file path to use for persisting example statuses. Necessary for the
-      # `--only-failures` and `--next-failure` CLI options.
+      # `--only-failures`, `--only-pending`, and `--next-failure` CLI options.
       #
       # @overload example_status_persistence_file_path
       #   @return [String] the file path
@@ -188,7 +188,7 @@ module RSpec
       define_reader :example_status_persistence_file_path
 
       # Sets the file path to use for persisting example statuses. Necessary for the
-      # `--only-failures` and `--next-failure` CLI options.
+      # `--only-failures`, `--only-pending`, and `--next-failure` CLI options.
       def example_status_persistence_file_path=(value)
         @example_status_persistence_file_path = value
         clear_values_derived_from_example_status_persistence_file_path
@@ -199,9 +199,24 @@ module RSpec
       define_reader :only_failures
       alias_method :only_failures?, :only_failures
 
+      # @macro define_reader
+      # Indicates if the `--only-pending` flag is being used.
+      define_reader :only_pending
+      alias_method :only_pending?, :only_pending
+
       # @private
-      def only_failures_but_not_configured?
-        only_failures? && !example_status_persistence_file_path
+      def only_flag_set?
+        only_failures? || only_pending?
+      end
+
+      # @private
+      def multiple_only_flags?
+        only_failures && only_pending?
+      end
+
+      # @private
+      def only_flag_but_not_configured?
+        only_flag_set? && !example_status_persistence_file_path
       end
 
       # @macro define_reader
@@ -1138,6 +1153,14 @@ module RSpec
       def spec_files_with_failures
         @spec_files_with_failures ||= last_run_statuses.inject(Set.new) do |files, (id, status)|
           files << Example.parse_id(id).first if status == FAILED_STATUS
+          files
+        end.to_a
+      end
+
+      # @private
+      def spec_files_with_pending
+        @spec_files_with_pending ||= last_run_statuses.inject(Set.new) do |files, (id, status)|
+          files << Example.parse_id(id).first if status == PENDING_STATUS
           files
         end.to_a
       end
@@ -2195,15 +2218,27 @@ module RSpec
         end
       end
 
-      def get_files_to_run(paths)
-        files = FlatMap.flat_map(paths_to_check(paths)) do |path|
+      def get_files(paths)
+        FlatMap.flat_map(paths_to_check(paths)) do |path|
           path = path.gsub(File::ALT_SEPARATOR, File::SEPARATOR) if File::ALT_SEPARATOR
           File.directory?(path) ? gather_directories(path) : extract_location(path)
         end.uniq
+      end
 
-        return files unless only_failures?
+      def get_files_to_run(paths)
+        files = get_files(paths)
+        return files unless only_flag_set?
+
         relative_files = files.map { |f| Metadata.relative_path(File.expand_path f) }
-        intersection = (relative_files & spec_files_with_failures.to_a)
+
+        # If both are set, #fail_if_config_and_cli_options_invalid should have caught it.
+        case [only_failures?, only_pending?]
+        in [true, _]
+          intersection = (relative_files & spec_files_with_failures.to_a)
+        in [_, true]
+          intersection = (relative_files & spec_files_with_pending.to_a)
+        end
+
         intersection.empty? ? files : intersection
       end
 
@@ -2338,6 +2373,7 @@ module RSpec
       def clear_values_derived_from_example_status_persistence_file_path
         @last_run_statuses = nil
         @spec_files_with_failures = nil
+        @spec_files_with_pending = nil
       end
 
       def configure_group_with(group, module_list, application_method)
