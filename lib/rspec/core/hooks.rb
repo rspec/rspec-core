@@ -461,7 +461,7 @@ module RSpec
             # TODO: consider making this an error in RSpec 4. For SemVer reasons,
             # we are only warning in RSpec 3.
             RSpec.warn_with "WARNING: `around(:context)` hooks are not supported and " \
-                            "behave like `around(:example)."
+                            "behave like `around(:example)`."
           end
 
           hook = HOOK_TYPES[position][scope].new(block, options)
