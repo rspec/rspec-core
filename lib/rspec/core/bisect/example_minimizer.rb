@@ -136,7 +136,7 @@ module RSpec
         end
 
         def get_expected_failures_for?(ids)
-          ids_to_run = ids + failed_example_ids
+          ids_to_run = all_example_ids & (ids + failed_example_ids)
           notify(
             :bisect_individual_run_start,
             :command => shell_command.repro_command_from(ids_to_run),
