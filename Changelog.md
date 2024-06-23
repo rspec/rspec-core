@@ -1,6 +1,10 @@
 ### Development
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.13.0...main)
 
+Bug fixes:
+
+* Sort ids to run as the original order to fix `--bisect`. (Maki Kawahara, #3093)
+
 ### 3.13.0 / 2024-02-04
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.3...v3.13.0)
 
