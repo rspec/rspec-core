@@ -1,5 +1,5 @@
 ### Development
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.3...main)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.13.0...main)
 
 ### 3.13.0 / 2024-02-04
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.3...v3.13.0)
