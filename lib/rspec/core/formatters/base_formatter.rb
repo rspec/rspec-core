@@ -48,7 +48,7 @@ module RSpec
         # @param _notification [NullNotification] (Ignored)
         # @see RSpec::Core::Formatters::Protocol#close
         def close(_notification)
-          restore_sync_output
+          restore_sync_output if output_supports_sync && !output.closed?
         end
 
       private
