@@ -10,7 +10,7 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
 
     before do
       # Call `formatter.start` in order to initialize `@old_sync` before using in `BaseFormatter#close`
-      formatter.start(RSpec::Core::Notifications::StartNotification.new({count: 1}))
+      formatter.start(RSpec::Core::Notifications::StartNotification.new({:count => 1}))
     end
 
     after do
