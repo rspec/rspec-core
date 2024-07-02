@@ -62,7 +62,10 @@ module RSpec
         end
 
         def restore_sync_output
-          output.sync = @old_sync if sync_started? && !output.closed?
+          if sync_started?
+            @sync_started = false
+            output.sync = @old_sync unless output.closed?
+          end
         end
 
         def output_supports_sync

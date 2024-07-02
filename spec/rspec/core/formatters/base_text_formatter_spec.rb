@@ -37,9 +37,6 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
     end
 
     it "restores the output's sync setting" do
-      if !output_to_close.respond_to?(:sync=)
-        skip "output_to_close does not support sync, so closing the formatter will not reset it"
-      end
       expect {
         formatter.close(RSpec::Core::Notifications::NullNotification)
       }.to change(output_to_close, :sync).from(true).to(false)
