@@ -35,6 +35,19 @@ module RSpec::Core
       end
     end
 
+    context "when the spec ordering is consistent" do
+      it 'returns the minimal reproduction command' do
+        output = bisect(%w[
+          --order defined
+          spec/rspec/core/resources/bisect/consistently_ordered_1_specs.rb
+          spec/rspec/core/resources/bisect/consistently_ordered_2_specs.rb
+          spec/rspec/core/resources/bisect/consistently_ordered_3_specs.rb
+          spec/rspec/core/resources/bisect/consistently_ordered_4_specs.rb
+        ])
+        expect(output).to include("Bisect complete!", "rspec ./spec/rspec/core/resources/bisect/consistently_ordered_2_specs.rb[1:1] ./spec/rspec/core/resources/bisect/consistently_ordered_3_specs.rb[1:1]")
+      end
+    end
+
     context "when the bisect command saturates the pipe" do
       # On OSX and Linux a file descriptor limit meant that the bisect process got stuck at a certain limit.
       # This test demonstrates that we can run large bisects above this limit (found to be at time of commit).
