@@ -129,6 +129,7 @@ jobs:
             tag: ghcr.io/rspec/docker-ci:jruby-9.1.17.0
             options: "--add-host rubygems.org:151.101.129.227 --add-host api.rubygems.org:151.101.129.227"
     env:
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       LEGACY_CI: true
       NO_COVERAGE: true
       JRUBY_OPTS: ${{ matrix.container.jruby_opts || '--dev' }}
