@@ -8,16 +8,13 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
     let(:output_to_close) { File.new("./output_to_close", "w") }
     let(:formatter) { described_class.new(output_to_close) }
 
-    before do
-      # Call `formatter.start` in order to initialize `@old_sync` before using in `BaseFormatter#close`
-      formatter.start(RSpec::Core::Notifications::StartNotification.new({:count => 1}))
-    end
-
     after do
       # Windows appears to not let the `:isolated_directory` shared group
       # cleanup if the file isn't closed.
       output_to_close.close unless output_to_close.closed?
     end
+
+    it_behaves_like "formatter stream reset sync on close"
 
     it 'does not error on an already closed output stream' do
       output_to_close.close
@@ -34,12 +31,6 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
     it "does not close the stream so that it can be reused within a process" do
       formatter.close(RSpec::Core::Notifications::NullNotification)
       expect(output_to_close.closed?).to be(false)
-    end
-
-    it "restores the output's sync setting" do
-      expect {
-        formatter.close(RSpec::Core::Notifications::NullNotification)
-      }.to change(output_to_close, :sync).from(true).to(false)
     end
   end
 
