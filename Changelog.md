@@ -17,6 +17,9 @@ Enhancements:
   (Richard Schneeman, #3015, #3026)
 * Add config option (`RSpec::Core::Configuration#full_cause_backtrace`) to print the
   entire backtrace of an exception cause. (David Taylor, #3046)
+* Add config option (`RSpec::Core::Configuration#force_line_number_for_spec_rerun`) to
+  allways print a line number rather than an example id when the line number is ambiguous.
+  (Baden Ashford, #3085)
 
 ### 3.12.3 / 2024-02-04
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.12.2...v3.12.3)
