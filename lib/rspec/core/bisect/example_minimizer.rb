@@ -132,7 +132,10 @@ module RSpec
         end
 
         def non_failing_example_ids
-          @non_failing_example_ids ||= all_example_ids - failed_example_ids
+          return @non_failing_example_ids if defined?(@non_failing_example_ids)
+
+          last_failed_example_id_index = all_example_ids.rindex(failed_example_ids.last) || -1
+          @non_failing_example_ids = all_example_ids[0..last_failed_example_id_index] - failed_example_ids
         end
 
         def get_expected_failures_for?(ids)
