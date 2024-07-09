@@ -16,7 +16,7 @@ FakeBisectRunner = Struct.new(:all_ids, :always_failures, :dependent_failures) d
       failures << failing_example if dependency_satisfied?(depends_upon, ids)
     end
 
-    RSpec::Core::Bisect::ExampleSetDescriptor.new(ids.sort, failures.sort)
+    RSpec::Core::Bisect::ExampleSetDescriptor.new(ids, failures.sort)
   end
 
 private
