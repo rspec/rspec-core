@@ -1,6 +1,5 @@
 require 'tmpdir'
 require 'rspec/support/spec/in_sub_process'
-
 module RSpec::Core
   RSpec.describe Configuration do
     include RSpec::Support::InSubProcess
@@ -2976,6 +2975,17 @@ module RSpec::Core
           ArgumentError,
           '`pending_failure_output` can be set to :full, :no_backtrace, or :skip'
         )
+      end
+    end
+
+    describe "#force_line_number_for_spec_rerun" do
+      it "defaults to false" do
+        expect(config.force_line_number_for_spec_rerun).to eq false
+      end
+
+      it "is configurable" do
+        config.force_line_number_for_spec_rerun = true
+        expect(config.force_line_number_for_spec_rerun).to eq true
       end
     end
 
