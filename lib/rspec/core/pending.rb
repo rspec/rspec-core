@@ -59,7 +59,7 @@ module RSpec
       #   executed. If you need to consider hooks as pending as well you can use
       #   the pending metadata as an alternative, e.g.
       #   `it "does something", pending: "message"`.
-      def pending(message=nil)
+      def pending(message=nil, &_block)
         current_example = RSpec.current_example
 
         if block_given?
