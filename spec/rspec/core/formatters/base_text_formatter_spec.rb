@@ -201,7 +201,7 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
       it "does not show the error class" do
         group.example("example name") { expect("this").to eq("that") }
         run_all_and_dump_failures
-        expect(formatter_output.string).not_to match(/RSpec::/m)
+        expect(formatter_output_without_formatter_module).not_to match(/RSpec::/m)
       end
     end
 
@@ -209,7 +209,7 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
       it "does not show the error class" do
         group.example("example name") { expect("this").to receive("that") }
         run_all_and_dump_failures
-        expect(formatter_output.string).not_to match(/RSpec::/m)
+        expect(formatter_output_without_formatter_module).not_to match(/RSpec::/m)
       end
     end
 
@@ -292,5 +292,11 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
       send_notification :dump_summary, summary_notification(0, examples(1), [], [], 0)
       expect(formatter_output.string).to include("\e[36m")
     end
+  end
+
+  # Ruby 3.4 includes modules names in stack traces but two of our tests are looking for RSpec module names, remove
+  # this one as it is considered 'safe'
+  def formatter_output_without_formatter_module
+    formatter_output.string.tr('RSpec::ExampleGroups::RSpecCoreFormattersBaseTextFormatter::DumpFailures#','')
   end
 end
