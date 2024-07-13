@@ -1,4 +1,4 @@
-# This file was generated on 2024-02-23T14:21:31+00:00 from the rspec-dev repo.
+# This file was generated on 2024-07-09T08:51:38+02:00 from the rspec-dev repo.
 # DO NOT modify it by hand as your changes will get lost the next time it is generated.
 
 name: RSpec CI
@@ -20,7 +20,6 @@ env:
   RSPEC_CI: true
   # This tells rspec-rails what branch to run in ci
   RSPEC_VERSION: '= 3.14.0.pre'
-  ENFORCE_COVERAGE_AFTER: "3.2"
 jobs:
   rubocop:
     name: Rubocop
@@ -131,8 +130,8 @@ jobs:
     env:
       ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       LEGACY_CI: true
-      NO_COVERAGE: true
       JRUBY_OPTS: ${{ matrix.container.jruby_opts || '--dev' }}
+      NO_COVERAGE: true
     steps:
       - uses: actions/checkout@v3
       - run: ${{ matrix.container.pre }}

@@ -180,6 +180,7 @@ module RSpec
         end
 
         # rubocop:disable Lint/RescueException
+        # :nocov:
         if SyntaxError.instance_methods.include?(:detailed_message)
           def exception_message_string(exception)
             case exception
@@ -191,14 +192,13 @@ module RSpec
             "A #{exception.class} for which `exception.message.to_s` raises #{other.class}."
           end
         else
-          # :nocov:
           def exception_message_string(exception)
             exception.message.to_s
           rescue Exception => other
             "A #{exception.class} for which `exception.message.to_s` raises #{other.class}."
           end
-          # :nocov:
         end
+        # :nocov:
         # rubocop:enable Lint/RescueException
 
         def exception_lines
