@@ -148,6 +148,7 @@ module FormatterSupport
     end
   else
     def expected_summary_output_for_example_specs
+      maybe_module = RUBY_VERSION.to_f > 3.3 ? 'FormatterSupport#' : ''
       <<-EOS.gsub(/^\s+\|/, '').chomp
         |Pending: (Failures listed here are expected and do not affect your suite's status)
         |
@@ -163,11 +164,11 @@ module FormatterSupport
         |            got: 1
         |
         |       (compared using ==)
-        |     # ./spec/rspec/core/resources/formatter_specs.rb:18:in `block (3 levels) in <top (required)>'
-        |     # ./spec/support/formatter_support.rb:#{RUN_LINE}:in `run_rspec_with_formatter'
-        |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
-        |     # ./spec/support/sandboxing.rb:16:in `block (3 levels) in <top (required)>'
-        |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
+        |     # ./spec/rspec/core/resources/formatter_specs.rb:18:in #{quoted('block (3 levels) in <top (required)>')}
+        |     # ./spec/support/formatter_support.rb:#{RUN_LINE}:in #{quoted(maybe_module + 'run_rspec_with_formatter')}
+        |     # ./spec/support/formatter_support.rb:3:in #{quoted(maybe_module + 'run_example_specs_with_formatter')}
+        |     # ./spec/support/sandboxing.rb:16:in #{quoted('block (3 levels) in <top (required)>')}
+        |     # ./spec/support/sandboxing.rb:7:in #{quoted('block (2 levels) in <top (required)>')}
         |
         |Failures:
         |
@@ -183,11 +184,11 @@ module FormatterSupport
         |            got: 1
         |
         |       (compared using ==)
-        |     # ./spec/rspec/core/resources/formatter_specs.rb:37:in `block (2 levels) in <top (required)>'
-        |     # ./spec/support/formatter_support.rb:#{RUN_LINE}:in `run_rspec_with_formatter'
-        |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
-        |     # ./spec/support/sandboxing.rb:16:in `block (3 levels) in <top (required)>'
-        |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
+        |     # ./spec/rspec/core/resources/formatter_specs.rb:37:in #{quoted('block (2 levels) in <top (required)>')}
+        |     # ./spec/support/formatter_support.rb:#{RUN_LINE}:in #{quoted(maybe_module + 'run_rspec_with_formatter')}
+        |     # ./spec/support/formatter_support.rb:3:in #{quoted(maybe_module + 'run_example_specs_with_formatter')}
+        |     # ./spec/support/sandboxing.rb:16:in #{quoted('block (3 levels) in <top (required)>')}
+        |     # ./spec/support/sandboxing.rb:7:in #{quoted('block (2 levels) in <top (required)>')}
         |
         |  3) failing spec fails twice
         |     Got 2 failures:
@@ -198,7 +199,7 @@ module FormatterSupport
         |                 got: 1
         |
         |            (compared using ==)
-        |          # ./spec/rspec/core/resources/formatter_specs.rb:41:in `block (2 levels) in <top (required)>'
+        |          # ./spec/rspec/core/resources/formatter_specs.rb:41:in #{quoted('block (2 levels) in <top (required)>')}
         |
         |     3.2) Failure/Error: expect(3).to eq(4)
         |
@@ -206,19 +207,19 @@ module FormatterSupport
         |                 got: 3
         |
         |            (compared using ==)
-        |          # ./spec/rspec/core/resources/formatter_specs.rb:42:in `block (2 levels) in <top (required)>'
+        |          # ./spec/rspec/core/resources/formatter_specs.rb:42:in #{quoted('block (2 levels) in <top (required)>')}
         |
         |  4) a failing spec with odd backtraces fails with a backtrace that has no file
         |     Failure/Error: ERB.new("<%= raise 'foo' %>").result
         |
         |     RuntimeError:
         |       foo
-        |     # (erb):1:in `<main>'
-        |     # ./spec/rspec/core/resources/formatter_specs.rb:50:in `block (2 levels) in <top (required)>'
-        |     # ./spec/support/formatter_support.rb:#{RUN_LINE}:in `run_rspec_with_formatter'
-        |     # ./spec/support/formatter_support.rb:3:in `run_example_specs_with_formatter'
-        |     # ./spec/support/sandboxing.rb:16:in `block (3 levels) in <top (required)>'
-        |     # ./spec/support/sandboxing.rb:7:in `block (2 levels) in <top (required)>'
+        |     # (erb):1:in #{quoted('<main>')}
+        |     # ./spec/rspec/core/resources/formatter_specs.rb:50:in #{quoted('block (2 levels) in <top (required)>')}
+        |     # ./spec/support/formatter_support.rb:#{RUN_LINE}:in #{quoted(maybe_module + 'run_rspec_with_formatter')}
+        |     # ./spec/support/formatter_support.rb:3:in #{quoted(maybe_module + 'run_example_specs_with_formatter')}
+        |     # ./spec/support/sandboxing.rb:16:in #{quoted('block (3 levels) in <top (required)>')}
+        |     # ./spec/support/sandboxing.rb:7:in #{quoted('block (2 levels) in <top (required)>')}
         |
         |  5) a failing spec with odd backtraces fails with a backtrace containing an erb file
         |     Failure/Error: Unable to find /foo.html.erb to read failed line

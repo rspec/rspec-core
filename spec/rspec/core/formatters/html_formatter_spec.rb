@@ -26,7 +26,17 @@ module RSpec
         end
 
         let(:expected_html) do
-          File.read(expected_file)
+          handle_ruby34_quoting(File.read(expected_file))
+        end
+
+        if RUBY_VERSION.to_f > 3.3
+          def handle_ruby34_quoting(string)
+            string.gsub('`block', '&#39;block')
+          end
+        else
+          def handle_ruby34_quoting(string)
+            string
+          end
         end
 
         # Uncomment this group temporarily in order to overwrite the expected
