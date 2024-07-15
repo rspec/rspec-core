@@ -146,6 +146,11 @@ module RSpec
         idempotently_define_singleton_method(name) do |*all_args, &block|
           desc, *args = *all_args
 
+          unless NilClass === desc || String === desc
+            RSpec.deprecate("#{desc.class} object `#{desc.inspect}` as example doc string",
+                            :replacement => 'a string')
+          end
+
           options = Metadata.build_hash_from(args)
           options.update(:skip => RSpec::Core::Pending::NOT_YET_IMPLEMENTED) unless block
           options.update(extra_options)
