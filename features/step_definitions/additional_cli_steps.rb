@@ -257,6 +257,12 @@ Given(/^I have changed `([^`]+)` to `([^`]+)` in "(.*?)"$/) do |old_code, new_co
   end
 end
 
+Then /^the file `([^`]+)` should exist$/ do |file|
+  cd('.') do
+    File.exist?(file)
+  end
+end
+
 module Normalization
   def normalize_failure_output(text)
     whitespace_normalized = text.lines.map { |line| line.sub(/\s+$/, '').sub(/:in .*$/, '') }.join
