@@ -207,7 +207,10 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
 
     context "with a failed message expectation (rspec-mocks)" do
       it "does not show the error class" do
-        group.example("example name") { expect("this").to receive("that") }
+        group.example("example name") do
+          this = Object.new
+          expect(this).to receive(:that)
+        end
         run_all_and_dump_failures
         expect(formatter_output_without_formatter_module).not_to match(/RSpec::/m)
       end
