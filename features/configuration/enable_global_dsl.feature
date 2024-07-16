@@ -59,7 +59,7 @@ Feature: Global namespace DSL
       end
       """
    When I run `rspec`
-   Then the output should contain "undefined method `describe'"
+   Then the output should contain %R{undefined method (`|')describe'}
 
   Scenario: Regardless of setting
     Given a file named "spec/example_spec.rb" with:
