@@ -21,6 +21,16 @@ module RSpecHelpers
     s.gsub(/^#{s.scan(/^[ \t]+(?=\S)/).min}/, "")
   end
 
+  if RUBY_VERSION.to_f > 3.3
+    def quoted(string)
+      "'#{string}'"
+    end
+  else
+    def quoted(string)
+      "`#{string}'"
+    end
+  end
+
   # In Ruby 2.7 taint was removed and has no effect, whilst SAFE warns that it
   # has no effect and will become a normal variable in 3.0. Other engines do not
   # implement SAFE.

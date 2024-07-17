@@ -119,7 +119,7 @@ Feature: Excluding lines from the backtrace
     """
     When I run `rspec --backtrace`
     Then the output should contain "1 example, 1 failure"
-    And the output should contain "spec/support/custom_helper.rb:2:in `assert_baz'"
+    And the output should contain %R{spec/support/custom_helper.rb:2:in ('Object#|`)assert_baz'}
     And the output should contain "lib/rspec/expectations"
     And the output should contain "lib/rspec/core"
 
@@ -150,5 +150,5 @@ Feature: Excluding lines from the backtrace
         config.filter_gems_from_backtrace "my_gem"
       end
       """
-    Then the output from `rspec` should contain "vendor/my_gem-1.2.3/lib/my_gem.rb:4:in `do_amazing_things!'"
-    But the output from `rspec --require spec_helper` should not contain "vendor/my_gem-1.2.3/lib/my_gem.rb:4:in `do_amazing_things!'"
+    Then the output from `rspec` should contain %R{vendor/my_gem-1.2.3/lib/my_gem.rb:4:in (`|'MyGem\.)do_amazing_things!'}
+    But the output from `rspec --require spec_helper` should not contain %R{vendor/my_gem-1.2.3/lib/my_gem.rb:4:in (`|'MyGem\.)do_amazing_things!'}

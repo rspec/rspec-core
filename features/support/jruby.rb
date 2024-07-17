@@ -6,3 +6,12 @@ Around "@broken-on-jruby-9000" do |scenario, block|
     block.call
   end
 end
+
+Around "@broken-on-jruby" do |scenario, block|
+  require 'rspec/support/ruby_features'
+  if RSpec::Support::Ruby.jruby?
+    skip_this_scenario "Skipping scenario #{scenario.name} not supported on JRuby"
+  else
+    block.call
+  end
+end

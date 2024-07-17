@@ -24,7 +24,7 @@ module RSpec::Core
     context "when a load-time problem occurs while running the suite" do
       it 'surfaces the stdout and stderr output to the user' do
         output = bisect(%w[spec/rspec/core/resources/fail_on_load_spec.rb_], 1)
-        expect(output).to include("Bisect failed!", "undefined method `contex'", "About to call misspelled method")
+        expect(output).to include("Bisect failed!", "undefined method #{quoted('contex')}", "About to call misspelled method")
       end
     end
 

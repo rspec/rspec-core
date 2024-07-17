@@ -98,6 +98,19 @@ Then /^the output from `([^`]+)` should not contain "(.*?)"$/  do |cmd, expected
   step %Q{the output from "#{cmd}" should not contain "#{expected_output}"}
 end
 
+Then /^the output from `([^`]+)` should( not)? contain %R{(.*?)}$/  do |cmd, negated, expected_output|
+  step %Q{I run `#{cmd}`}
+
+  command = aruba.command_monitor.find(Aruba.platform.detect_ruby(cmd))
+  regexp = Regexp.new(expected_output)
+
+  if negated
+    expect(command.output).to_not match regexp
+  else
+    expect(command.output).to match regexp
+  end
+end
+
 Given /^I have a brand new project with no files$/ do
   cd('.') do
     expect(Dir["**/*"]).to eq([])
@@ -135,6 +148,10 @@ end
 Given(/^I have run `([^`]*)` once, resulting in "([^"]*)"$/) do |command, output_snippet|
   step %Q{I run `#{command}`}
   step %Q{the output from "#{command}" should contain "#{output_snippet}"}
+end
+
+Then /^the output should contain %R{(.*)}$/ do |output_regexp|
+  expect(all_output).to match(Regexp.new(output_regexp))
 end
 
 When(/^I fix "(.*?)" by replacing "(.*?)" with "(.*?)"$/) do |file_name, original, replacement|
@@ -237,6 +254,12 @@ Given(/^I have changed `([^`]+)` to `([^`]+)` in "(.*?)"$/) do |old_code, new_co
     expect(file_content).to include(old_code)
     new_file_content = file_content.sub(old_code, new_code)
     File.open(file_name, "w") { |f| f.write(new_file_content) }
+  end
+end
+
+Then /^the file `([^`]+)` should exist$/ do |file|
+  cd('.') do
+    File.exist?(file)
   end
 end
 

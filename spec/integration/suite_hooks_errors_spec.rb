@@ -9,15 +9,15 @@ RSpec.describe 'Suite hook errors' do
   let(:error_exit_code) { failure_exit_code + 2 } # 4..101
 
   if RSpec::Support::Ruby.jruby_9000? && RSpec::Support::Ruby.jruby_version > '9.2.0.0'
-    let(:spec_line_suffix) { ":in `block in <main>'" }
+    let(:spec_line_suffix) { ":in #{quoted('block in <main>')}" }
   elsif RSpec::Support::Ruby.jruby_9000?
-    let(:spec_line_suffix) { ":in `block in (root)'" }
+    let(:spec_line_suffix) { ":in #{quoted('block in (root)')}" }
   elsif RSpec::Support::Ruby.jruby?
-    let(:spec_line_suffix) { ":in `(root)'" }
+    let(:spec_line_suffix) { ":in #{quoted('(root)')}" }
   elsif RUBY_VERSION == "1.8.7"
     let(:spec_line_suffix) { "" }
   else
-    let(:spec_line_suffix) { ":in `block (2 levels) in <top (required)>'" }
+    let(:spec_line_suffix) { ":in #{quoted('block (2 levels) in <top (required)>')}" }
   end
 
   before do
@@ -107,7 +107,7 @@ RSpec.describe 'Suite hook errors' do
           # --- Caused by: ---
           # RuntimeError:
           #   before 1
-          #   ./the_spec.rb:3:in `block in <main>'
+          #   ./the_spec.rb:3:in #{quoted('block in <main>')}
         EOS
       else
         ""
