@@ -29,13 +29,12 @@ module RSpec::Core
         expect(output).to eq(<<-EOS.gsub(/^\s+\|/, ''))
           |Bisect started using options: ""
           |Running suite to find failures... (n.nnnn seconds)
-          |Starting bisect with 2 failing examples and 6 non-failing examples.
+          |Starting bisect with 2 failing examples and 3 non-failing examples.
           |Checking that failure(s) are order-dependent... failure appears to be order-dependent
           |
-          |Round 1: bisecting over non-failing examples 1-6 .. ignoring examples 4-6 (n.nnnn seconds)
-          |Round 2: bisecting over non-failing examples 1-3 .. multiple culprits detected - splitting candidates (n.nnnn seconds)
-          |Round 3: bisecting over non-failing examples 1-2 .. ignoring example 2 (n.nnnn seconds)
-          |Bisect complete! Reduced necessary non-failing examples from 6 to 2 in n.nnnn seconds.
+          |Round 1: bisecting over non-failing examples 1-3 .. multiple culprits detected - splitting candidates (n.nnnn seconds)
+          |Round 2: bisecting over non-failing examples 1-2 .. ignoring example 2 (n.nnnn seconds)
+          |Bisect complete! Reduced necessary non-failing examples from 3 to 2 in n.nnnn seconds.
           |
           |The minimal reproduction command is:
           |  rspec 1.rb[1:1] 2.rb[1:1] 4.rb[1:1] 5.rb[1:1]
@@ -54,32 +53,18 @@ module RSpec::Core
         | - Failing examples (2):
         |    - 2.rb[1:1]
         |    - 5.rb[1:1]
-        | - Non-failing examples (6):
+        | - Non-failing examples (3):
         |    - 1.rb[1:1]
         |    - 3.rb[1:1]
         |    - 4.rb[1:1]
-        |    - 6.rb[1:1]
-        |    - 7.rb[1:1]
-        |    - 8.rb[1:1]
         |Checking that failure(s) are order-dependent..
         | - Running: rspec 2.rb[1:1] 5.rb[1:1] (n.nnnn seconds)
         | - Failure appears to be order-dependent
-        |Round 1: bisecting over non-failing examples 1-6
-        | - Running: rspec 2.rb[1:1] 5.rb[1:1] 6.rb[1:1] 7.rb[1:1] 8.rb[1:1] (n.nnnn seconds)
-        | - Running: rspec 1.rb[1:1] 2.rb[1:1] 3.rb[1:1] 4.rb[1:1] 5.rb[1:1] (n.nnnn seconds)
-        | - Examples we can safely ignore (3):
-        |    - 6.rb[1:1]
-        |    - 7.rb[1:1]
-        |    - 8.rb[1:1]
-        | - Remaining non-failing examples (3):
-        |    - 1.rb[1:1]
-        |    - 3.rb[1:1]
-        |    - 4.rb[1:1]
-        |Round 2: bisecting over non-failing examples 1-3
+        |Round 1: bisecting over non-failing examples 1-3
         | - Running: rspec 2.rb[1:1] 4.rb[1:1] 5.rb[1:1] (n.nnnn seconds)
         | - Running: rspec 1.rb[1:1] 2.rb[1:1] 3.rb[1:1] 5.rb[1:1] (n.nnnn seconds)
         | - Multiple culprits detected - splitting candidates
-        |Round 3: bisecting over non-failing examples 1-2
+        |Round 2: bisecting over non-failing examples 1-2
         | - Running: rspec 2.rb[1:1] 3.rb[1:1] 4.rb[1:1] 5.rb[1:1] (n.nnnn seconds)
         | - Running: rspec 1.rb[1:1] 2.rb[1:1] 4.rb[1:1] 5.rb[1:1] (n.nnnn seconds)
         | - Examples we can safely ignore (1):
@@ -87,7 +72,7 @@ module RSpec::Core
         | - Remaining non-failing examples (2):
         |    - 1.rb[1:1]
         |    - 4.rb[1:1]
-        |Bisect complete! Reduced necessary non-failing examples from 6 to 2 in n.nnnn seconds.
+        |Bisect complete! Reduced necessary non-failing examples from 3 to 2 in n.nnnn seconds.
         |
         |The minimal reproduction command is:
         |  rspec 1.rb[1:1] 2.rb[1:1] 4.rb[1:1] 5.rb[1:1]
@@ -105,10 +90,10 @@ module RSpec::Core
         expect(output).to eq(<<-EOS.gsub(/^\s+\|/, ''))
           |Bisect started using options: ""
           |Running suite to find failures... (n.nnnn seconds)
-          |Starting bisect with 1 failing example and 7 non-failing examples.
+          |Starting bisect with 1 failing example and 1 non-failing example.
           |Checking that failure(s) are order-dependent... failure(s) do not require any non-failures to run first
           |
-          |Bisect complete! Reduced necessary non-failing examples from 7 to 0 in n.nnnn seconds.
+          |Bisect complete! Reduced necessary non-failing examples from 1 to 0 in n.nnnn seconds.
           |
           |The minimal reproduction command is:
           |  rspec 2.rb[1:1]
@@ -125,7 +110,7 @@ module RSpec::Core
         expect(output).to eq(<<-EOS.gsub(/^\s+\|/, ''))
           |Bisect started using options: ""
           |Running suite to find failures... (n.nnnn seconds)
-          |Starting bisect with 1 failing example and 7 non-failing examples.
+          |Starting bisect with 1 failing example and 1 non-failing example.
           |Checking that failure(s) are order-dependent... failure(s) do not require any non-failures to run first
           |
           |================================================================================
@@ -135,7 +120,7 @@ module RSpec::Core
           |is unexpected, consider setting `config.bisect_runner = :shell` and trying again.
           |================================================================================
           |
-          |Bisect complete! Reduced necessary non-failing examples from 7 to 0 in n.nnnn seconds.
+          |Bisect complete! Reduced necessary non-failing examples from 1 to 0 in n.nnnn seconds.
           |
           |The minimal reproduction command is:
           |  rspec 2.rb[1:1]
@@ -154,18 +139,12 @@ module RSpec::Core
           |Running suite to find failures... (n.nnnn seconds)
           | - Failing examples (1):
           |    - 2.rb[1:1]
-          | - Non-failing examples (7):
+          | - Non-failing examples (1):
           |    - 1.rb[1:1]
-          |    - 3.rb[1:1]
-          |    - 4.rb[1:1]
-          |    - 5.rb[1:1]
-          |    - 6.rb[1:1]
-          |    - 7.rb[1:1]
-          |    - 8.rb[1:1]
           |Checking that failure(s) are order-dependent..
           | - Running: rspec 2.rb[1:1] (n.nnnn seconds)
           | - Failure is not order-dependent
-          |Bisect complete! Reduced necessary non-failing examples from 7 to 0 in n.nnnn seconds.
+          |Bisect complete! Reduced necessary non-failing examples from 1 to 0 in n.nnnn seconds.
           |
           |The minimal reproduction command is:
           |  rspec 2.rb[1:1]
@@ -207,10 +186,10 @@ module RSpec::Core
         expect(output).to eq(<<-EOS.gsub(/^\s+\|/, ''))
           |Bisect started using options: ""
           |Running suite to find failures... (n.nnnn seconds)
-          |Starting bisect with 2 failing examples and 6 non-failing examples.
+          |Starting bisect with 2 failing examples and 3 non-failing examples.
           |Checking that failure(s) are order-dependent... failure appears to be order-dependent
           |
-          |Round 1: bisecting over non-failing examples 1-6 .. ignoring examples 4-6 (n.nnnn seconds)
+          |Round 1: bisecting over non-failing examples 1-3 .. multiple culprits detected - splitting candidates (n.nnnn seconds)
           |
           |Bisect aborted!
           |
