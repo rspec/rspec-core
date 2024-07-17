@@ -93,7 +93,7 @@ module RSpec::Core
         expect {
           runner.original_results
         }.to raise_error(Bisect::BisectFailedError, a_string_including(
-          "undefined method `escribe' for #{rspec_description}",
+          "undefined method #{quoted('escribe')} for #{rspec_description}",
           'stdout in a_spec',
           'stderr in a_spec'
         ))

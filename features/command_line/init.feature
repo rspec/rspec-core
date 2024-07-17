@@ -10,8 +10,7 @@ Feature: `--init` option
 
   Scenario: Generate `.rspec`
     When I run `rspec --init`
-    Then the following files should exist:
-      | .rspec |
+    Then the file `.rspec` should exist
     And the output should contain "create   .rspec"
 
   Scenario: `.rspec` file already exists

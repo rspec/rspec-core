@@ -9,13 +9,13 @@ RSpec.describe 'Spec file load errors' do
   let(:error_exit_code) { failure_exit_code + 1 } # 3..100
 
   if RSpec::Support::Ruby.jruby_9000?
-    let(:spec_line_suffix) { ":in `<main>'" }
+    let(:spec_line_suffix) { ":in #{quoted('<main>')}" }
   elsif RSpec::Support::Ruby.jruby?
-    let(:spec_line_suffix) { ":in `(root)'" }
+    let(:spec_line_suffix) { ":in #{quoted('(root)')}" }
   elsif RUBY_VERSION == "1.8.7"
     let(:spec_line_suffix) { "" }
   else
-    let(:spec_line_suffix) { ":in `<top (required)>'" }
+    let(:spec_line_suffix) { ":in #{quoted('<top (required)>')}" }
   end
 
   before do
@@ -107,7 +107,7 @@ RSpec.describe 'Spec file load errors' do
     }.to raise_error(SystemExit)
     output = normalize_durations(last_cmd_stdout)
     # Remove extra line which is only shown on CRuby
-    output = output.sub("# ./helper_with_exit.rb:1:in `exit'\n", "")
+    output = output.sub("# ./helper_with_exit.rb:1:in #{quoted('exit')}\n", "")
 
     if defined?(JRUBY_VERSION) && !JRUBY_VERSION.empty?
       expect(output).to eq unindent(<<-EOS)
@@ -120,15 +120,17 @@ RSpec.describe 'Spec file load errors' do
         # ./helper_with_exit.rb:1#{spec_line_suffix}
       EOS
     else
-      expect(output).to eq unindent(<<-EOS)
+      string = <<-EOS
 
         While loading ./helper_with_exit.rb an `exit` / `raise SystemExit` occurred, RSpec will now quit.
         Failure/Error: exit 999
 
         SystemExit:
           exit
-        # ./helper_with_exit.rb:1#{spec_line_suffix}
       EOS
+      string += "# ./helper_with_exit.rb:1:in 'Kernel#exit'\n" if RUBY_VERSION.to_f > 3.3
+      string += "# ./helper_with_exit.rb:1#{spec_line_suffix}\n"
+      expect(output).to eq unindent(string)
     end
   end
 
@@ -178,14 +180,14 @@ RSpec.describe 'Spec file load errors' do
       Failure/Error: boom
 
       NameError:
-        undefined local variable or method `boom' for main#{object_suffix}
+        undefined local variable or method #{quoted('boom')} for main#{object_suffix}
       # ./1_spec.rb:1#{spec_line_suffix}
 
       An error occurred while loading ./3_spec.rb.
       Failure/Error: boom
 
       NameError:
-        undefined local variable or method `boom' for main#{object_suffix}
+        undefined local variable or method #{quoted('boom')} for main#{object_suffix}
       # ./3_spec.rb:1#{spec_line_suffix}
 
 

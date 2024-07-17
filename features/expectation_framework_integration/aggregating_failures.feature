@@ -19,7 +19,7 @@ Feature: Aggregating Failures
       end
       """
 
-  @skip-when-diff-lcs-1.3
+  @skip-when-diff-lcs-1.3 @broken-on-jruby
   Scenario: Use `aggregate_failures` block form
     Given a file named "spec/use_block_form_spec.rb" with:
       """ruby

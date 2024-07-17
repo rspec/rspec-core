@@ -80,11 +80,10 @@ Feature: Zero monkey patching mode
       end
       """
     When I run `rspec spec/example_should_spec.rb`
-    Then the output should contain all of these:
-      | undefined method `should'   |
-      | unexpected message :stub    |
+    Then the output should contain %R{undefined method (`|')should'}
+    And the output should contain "unexpected message :stub"
     When I run `rspec spec/example_describe_spec.rb`
-    Then the output should contain "undefined method `describe'"
+    Then the output should contain %R{undefined method (`|')describe'}
 
   Scenario: `allow` and `expect` syntax works with monkey patching
     Given a file named "spec/spec_helper.rb" with:

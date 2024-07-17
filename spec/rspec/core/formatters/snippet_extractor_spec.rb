@@ -46,7 +46,7 @@ module RSpec::Core::Formatters
     # Note that MRI 1.9 strangely reports backtrace line as the first argument line instead of the
     # beginning of the method invocation. It's not SnippetExtractor's fault and even affects to the
     # simple single line extraction.
-    def do_something_fail(*)
+    def do_something_fail(*, &_block)
       raise
     end
 
