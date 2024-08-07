@@ -16,6 +16,11 @@ if is_mri_192_plus; then
   export RUBYOPT="--disable=gem"
 fi
 
+if is_ruby_34_plus; then
+  export RUBYOPT="$RUBYOPT -W:deprecated"
+  export RUBYOPT="$RUBYOPT --enable=frozen-string-literal --debug=frozen-string-literal"
+fi
+
 function clone_repo {
   if [ ! -d $1 ]; then # don't clone if the dir is already there
     if [ -z "$2" ]; then
