@@ -178,6 +178,20 @@ RSpec.describe RSpec::Core::Formatters::JsonFormatter do
       formatter.close(RSpec::Core::Notifications::NullNotification)
       expect(formatter_output.closed?).to be(false)
     end
+
+    context "file output", :isolated_directory => true do
+      # Use a File output because StringIO.sync is always true
+      let(:output_to_close) { File.new("./output_to_close", "w") }
+      let(:formatter) { described_class.new(output_to_close) }
+
+      after do
+        # Windows appears to not let the `:isolated_directory` shared group
+        # cleanup if the file isn't closed.
+        output_to_close.close unless output_to_close.closed?
+      end
+
+      it_behaves_like "formatter stream reset sync on close"
+    end
   end
 
   describe "#message" do

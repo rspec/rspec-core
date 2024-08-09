@@ -63,11 +63,11 @@ module RSpec
         #
         # @param _notification [NullNotification] (Ignored)
         def close(_notification)
-          return if output.closed?
-
-          output.puts
-
-          output.flush
+          unless output.closed?
+            output.puts
+            output.flush
+          end
+          super
         end
       end
     end

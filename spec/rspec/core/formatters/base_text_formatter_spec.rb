@@ -14,6 +14,8 @@ RSpec.describe RSpec::Core::Formatters::BaseTextFormatter do
       output_to_close.close unless output_to_close.closed?
     end
 
+    it_behaves_like "formatter stream reset sync on close"
+
     it 'does not error on an already closed output stream' do
       output_to_close.close
 

@@ -45,3 +45,16 @@ RSpec.shared_examples_for "handling symlinked directories when loading spec file
     expect(loaded_files).to contain_files("spec/lib/DD/dd_foo_spec.rb")
   end
 end
+
+RSpec.shared_examples_for "formatter stream reset sync on close" do
+  before do
+    # Call `formatter.start` in order to initialize `@old_sync` before using in `BaseFormatter#close`
+    formatter.start(RSpec::Core::Notifications::StartNotification.new({:count => 1}))
+  end
+
+  it "restores the output's sync setting" do
+    expect {
+      formatter.close(RSpec::Core::Notifications::NullNotification)
+    }.to change(output_to_close, :sync).from(true).to(false)
+  end
+end
