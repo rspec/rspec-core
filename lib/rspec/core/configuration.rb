@@ -1771,8 +1771,9 @@ module RSpec
       # @private
       RAISE_ERROR_WARNING_NOTIFIER = lambda { |message| raise message }
 
-      # Turns warnings into errors. This can be useful when
+      # Turns RSpec warnings into errors. This can be useful when
       # you want RSpec to run in a 'strict' no warning situation.
+      # (Note this does not capture or raise on Ruby warnings).
       #
       # @example
       #
