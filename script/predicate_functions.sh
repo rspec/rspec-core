@@ -112,13 +112,8 @@ function is_ruby_31_plus {
 }
 
 function rspec_rails_compatible {
-  if is_ruby_25_plus; then
-    # TODO remove when RSpec-Rails build is 3.1 safe by default
-    if is_ruby_31_plus; then
-      return 1
-    else
-      return 0
-    fi
+  if is_ruby_27_plus; then
+    return 0
   else
     return 1
   fi
