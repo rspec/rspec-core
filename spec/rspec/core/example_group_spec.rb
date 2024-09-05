@@ -1267,35 +1267,31 @@ module RSpec::Core
       let(:group) { RSpec.describe }
 
       it "accepts a string for an example doc string" do
-        expect { group.it('MyClass') { } }.not_to output.to_stderr
+        expect { group.it('MyClass') { } }.not_to raise_error
       end
 
       it "accepts example without a doc string" do
-        expect { group.it { } }.not_to output.to_stderr
+        expect { group.it { } }.not_to raise_error
       end
 
-      it "emits a warning when a Class is used as an example doc string" do
+      it "raises ArgumentError when a Class is used as an example doc string" do
         expect { group.it(Numeric) { } }
-          .to output(/`Numeric` is used as example doc string. Use a string instead/)
-          .to_stderr
+          .to raise_error(ArgumentError, /`Numeric` is not acceptable for doc_string.\nit must be a string./)
       end
 
-      it "emits a warning when a Module is used as an example doc string" do
+      it "raises ArgumentError when a Module is used as an example doc string" do
         expect { group.it(RSpec) { } }
-          .to output(/`RSpec` is used as example doc string. Use a string instead/)
-          .to_stderr
+          .to raise_error(ArgumentError, /`RSpec` is not acceptable for doc_string.\nit must be a string./)
       end
 
-      it "emits a warning when a Symbol is used as an example doc string" do
+      it "raises ArgumentError when a Symbol is used as an example doc string" do
         expect { group.it(:foo) { } }
-          .to output(/`:foo` is used as example doc string. Use a string instead/)
-          .to_stderr
+          .to raise_error(ArgumentError, /`:foo` is not acceptable for doc_string.\nit must be a string./)
       end
 
-      it "emits a warning when a Hash is used as an example doc string" do
+      it "raises ArgumentError when a Hash is used as an example doc string" do
         expect { group.it(foo: :bar) { } }
-          .to output(/`{:foo=>:bar}` is used as example doc string. Use a string instead/)
-          .to_stderr
+          .to raise_error(ArgumentError, /`{:foo=>:bar}` is not acceptable for doc_string.\nit must be a string./)
       end
     end
 

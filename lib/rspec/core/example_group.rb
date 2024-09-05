@@ -147,7 +147,7 @@ module RSpec
           desc, *args = *all_args
 
           unless NilClass === desc || String === desc
-            RSpec.warning "`#{desc.inspect}` is used as example doc string. Use a string instead"
+            raise ArgumentError, "Examples must be described with a string, got: `#{desc.inspect}`"
           end
 
           options = Metadata.build_hash_from(args)
