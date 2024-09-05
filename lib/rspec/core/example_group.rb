@@ -147,8 +147,7 @@ module RSpec
           desc, *args = *all_args
 
           unless NilClass === desc || String === desc
-            raise ArgumentError,
-              "`#{desc.inspect}` is not acceptable for doc_string.\nit must be a string."
+            raise ArgumentError, "Examples must be described with a string, got: `#{desc.inspect}`"
           end
 
           options = Metadata.build_hash_from(args)
