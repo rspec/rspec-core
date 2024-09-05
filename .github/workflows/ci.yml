@@ -20,7 +20,6 @@ env:
   RSPEC_CI: true
   # This tells rspec-rails what branch to run in ci
   RSPEC_VERSION: '~> 3.13.0'
-  ENFORCE_COVERAGE_AFTER: "3.2"
 jobs:
   rubocop:
     name: Rubocop
@@ -131,7 +130,6 @@ jobs:
     env:
       ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       LEGACY_CI: true
-      NO_COVERAGE: true
       JRUBY_OPTS: ${{ matrix.container.jruby_opts || '--dev' }}
       NO_COVERAGE: true
     steps:

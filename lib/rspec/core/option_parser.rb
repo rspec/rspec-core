@@ -185,7 +185,9 @@ module RSpec::Core
 
         parser.on('-w', '--warnings', 'Enable ruby warnings') do
           if Object.const_defined?(:Warning) && Warning.respond_to?(:[]=)
+            # :nocov: on older Ruby without Warning
             Warning[:deprecated] = true
+            # :nocov:
           end
           $VERBOSE = true
         end
