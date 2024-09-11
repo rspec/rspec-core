@@ -1411,7 +1411,7 @@ module RSpec
       #       config.include(AuthenticationHelpers, :type => :request)
       #
       #       # included in examples where the `:type` metadata matches a proc condition
-      #       config.include(AuthenticationHelpers, :type => ->(type, _metadata) { [:request, :controller].include?(type) })
+      #       config.include(AuthenticationHelpers, :type => proc { |type, _metadata| [:request, :controller].include?(type) })
       #     end
       #
       #     describe "edit profile", :preferences, :type => :request do
