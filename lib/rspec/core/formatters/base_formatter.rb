@@ -23,6 +23,7 @@ module RSpec
         def initialize(output)
           @output = output || StringIO.new
           @example_group = nil
+          @sync_started = false
         end
 
         # @api public
@@ -54,15 +55,25 @@ module RSpec
       private
 
         def start_sync_output
-          @old_sync, output.sync = output.sync, true if output_supports_sync
+          if output_supports_sync
+            @sync_started = true
+            @old_sync, output.sync = output.sync, true
+          end
         end
 
         def restore_sync_output
-          output.sync = @old_sync if output_supports_sync && !output.closed?
+          if sync_started?
+            @sync_started = false
+            output.sync = @old_sync unless output.closed?
+          end
         end
 
         def output_supports_sync
           output.respond_to?(:sync=)
+        end
+
+        def sync_started?
+          @sync_started
         end
       end
     end
