@@ -68,6 +68,13 @@ module RSpec::Core
       end
     end
 
+    context "when specs use the `output` expectation" do
+      it 'does not break the capture helper' do
+        output = bisect(%w[spec/rspec/core/resources/bisect/output_capture_specs.rb])
+        expect(output).to include("No failures found")
+      end
+    end
+
     class RSpecChildProcess
       Ps = Struct.new(:pid, :ppid, :state, :command)
 

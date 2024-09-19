@@ -81,7 +81,8 @@ module RSpec
             @runner = runner
             @channel = channel
 
-            @spec_output = StringIO.new
+            require "tempfile"
+            @spec_output = Tempfile.new
 
             runner.configuration.tap do |c|
               c.reset_reporter
@@ -122,7 +123,7 @@ module RSpec
             latest_run_results = formatter.results
 
             if latest_run_results.nil? || latest_run_results.all_example_ids.empty?
-              @channel.send(@spec_output.string)
+              @channel.send(@spec_output.tap(&:rewind).read)
             else
               @channel.send(latest_run_results)
             end
