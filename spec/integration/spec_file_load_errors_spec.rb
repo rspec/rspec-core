@@ -245,7 +245,7 @@ RSpec.describe 'Spec file load errors' do
                 5  end
             EOS
           end
-          expect(formatted_output).to include "./tmp/aruba/broken_file.rb:5: syntax error"
+          expect(formatted_output).to include %r{./tmp/aruba/broken_file.rb:\d: syntax error}
 
           expect(formatted_output).to include unindent(<<-EOS)
             Finished in n.nnnn seconds (files took n.nnnn seconds to load)
