@@ -1604,8 +1604,10 @@ module RSpec
       def requires=(paths)
         directories = ['lib', default_path].select { |p| File.directory? p }
         RSpec::Core::RubyProject.add_to_load_path(*directories)
-        paths.each { |path| load_file_handling_errors(:require, path) }
-        @requires += paths
+        paths.each { |path|
+          load_file_handling_errors(:require, path)
+          @requires << path
+        }
       end
 
       # @private
