@@ -2,6 +2,15 @@ require 'rspec/core'  # to fix annoying "undefined method `configuration' for RS
 
 require './spec/support/formatter_support'
 
+# For Ruby 3.4.0 hash formatting
+Then /^the output should print the (include|exclude)d tags {(\w+): (.*)}$/ do |word, key, value|
+  if RUBY_VERSION.to_f > 3.3
+    expect(all_output).to include "#{word} {#{key}: #{value}}"
+  else
+    expect(all_output).to include "#{word} {:#{key}=>#{value}}"
+  end
+end
+
 Then /^the output should contain all of these:$/ do |table|
   table.raw.flatten.each do |string|
     expect(all_output).to include(string)

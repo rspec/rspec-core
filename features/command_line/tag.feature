@@ -39,61 +39,49 @@ Feature: `--tag` option
 
   Scenario: Filter examples with a simple tag
     When I run `rspec . --tag focus`
-    Then the output should contain "include {:focus=>true}"
+    Then the output should print the included tags {focus: true}
     And the examples should all pass
 
   Scenario: Filter examples with a simple tag and @
     When I run `rspec . --tag @focus`
-    Then the output should contain "include {:focus=>true}"
+    Then the output should print the included tags {focus: true}
     Then the examples should all pass
 
   Scenario: Filter examples with a `name:value` tag
     When I run `rspec . --tag type:special`
-    Then the output should contain:
-      """
-      include {:type=>"special"}
-      """
+    Then the output should print the included tags {type: "special"}
     And the output should contain "2 examples"
     And the examples should all pass
 
   Scenario: Filter examples with a `name:value` tag and @
     When I run `rspec . --tag @type:special`
-    Then the output should contain:
-      """
-      include {:type=>"special"}
-      """
+    Then the output should print the included tags {type: "special"}
     And the examples should all pass
 
   Scenario: Exclude examples with a simple tag
     When I run `rspec . --tag ~skip`
-    Then the output should contain "exclude {:skip=>true}"
+    Then the output should print the excluded tags {skip: true}
     Then the examples should all pass
 
   Scenario: Exclude examples with a simple tag and @
     When I run `rspec . --tag ~@skip`
-    Then the output should contain "exclude {:skip=>true}"
+    Then the output should print the excluded tags {skip: true}
     Then the examples should all pass
 
   Scenario: Exclude examples with a `name:value` tag
     When I run `rspec . --tag ~speed:slow`
-    Then the output should contain:
-      """
-      exclude {:speed=>"slow"}
-      """
+    Then the output should print the excluded tags {speed: "slow"}
     Then the examples should all pass
 
   Scenario: Exclude examples with a `name:value` tag and @
     When I run `rspec . --tag ~@speed:slow`
-    Then the output should contain:
-      """
-      exclude {:speed=>"slow"}
-      """
+    Then the output should print the excluded tags {speed: "slow"}
     Then the examples should all pass
 
   Scenario: Filter examples with a simple tag, exclude examples with another tag
     When I run `rspec . --tag focus --tag ~skip`
-    Then the output should contain "include {:focus=>true}"
-    And the output should contain "exclude {:skip=>true}"
+    Then the output should print the included tags {focus: true}
+    And the output should print the excluded tags {skip: true}
     And the examples should all pass
 
   Scenario: Exclude examples with multiple tags
@@ -101,4 +89,6 @@ Feature: `--tag` option
     Then the output should contain one of the following:
       | exclude {:skip=>true, :speed=>"slow"} |
       | exclude {:speed=>"slow", :skip=>true} |
+      | exclude {skip: true, speed: "slow"} |
+      | exclude {speed: "slow", skip: true} |
     Then the examples should all pass
