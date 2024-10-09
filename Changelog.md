@@ -7,6 +7,11 @@ Enhancements:
   allways print a line number rather than an example id when the line number is ambiguous.
   (Baden Ashford, #3085)
 
+Bug fixes:
+
+* `RSpec::Configuration#requires` will reflect files already required, whilst requiring
+  them. (Jon Rowe, #3117)
+
 ### 3.13.1 / 2024-09-02
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.13.0...v3.13.1)
 
