@@ -11,6 +11,14 @@ Then /^the output should print the (include|exclude)d tags {(\w+): (.*)}$/ do |w
   end
 end
 
+Then /^the output should contain in either hash syntax "(.*)"$/ do |string|
+  if RUBY_VERSION.to_f > 3.3
+    step "the output should contain \"#{string.gsub(/:(\w+)=>/, '\1: ')}\""
+  else
+    step "the output should contain \"#{string}\""
+  end
+end
+
 Then /^the output should contain all of these:$/ do |table|
   table.raw.flatten.each do |string|
     expect(all_output).to include(string)
