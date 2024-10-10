@@ -1,6 +1,11 @@
 ### Development
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.13.1...3-13-maintenance)
 
+Bug fixes:
+
+* `RSpec::Configuration#requires` will reflect files already required, whilst requiring
+  them. (Jon Rowe, #3117)
+
 ### 3.13.1 / 2024-09-02
 [Full Changelog](http://github.com/rspec/rspec-core/compare/v3.13.0...v3.13.1)
 

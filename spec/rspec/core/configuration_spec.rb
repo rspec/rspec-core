@@ -238,6 +238,16 @@ module RSpec::Core
         expect(config.requires).to eq ['a/path']
       end
 
+      it 'stores required paths "per file"' do
+        allow(config).to receive(:require).with('a/path')
+        expect(config).to receive(:require).with('another/path') do
+          expect(config.requires).to eq ['a/path']
+        end
+
+        config.requires = ['a/path', 'another/path']
+        expect(config.requires).to eq ['a/path', 'another/path']
+      end
+
       context "when `default_path` refers to a file rather than a directory" do
         it 'does not add it to the load path' do
           config.default_path = 'Rakefile'
