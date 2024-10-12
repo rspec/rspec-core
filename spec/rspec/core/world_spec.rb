@@ -267,6 +267,59 @@ module RSpec::Core
         end
       end
 
+      context "when --only-pending is passed" do
+        before { configuration.force(:only_pending => true) }
+
+        context "and all examples are filtered out" do
+          before do
+            configuration.filter_run_including :foo => 'bar'
+          end
+
+          it 'will ignore run_all_when_everything_filtered' do
+            configuration.run_all_when_everything_filtered = true
+            expect(world.filtered_examples).to_not receive(:clear)
+            expect(world.inclusion_filter).to_not receive(:clear)
+            world.announce_filters
+          end
+        end
+
+        context "and `example_status_persistence_file_path` is not configured" do
+          it 'aborts with a message explaining the config option must be set first' do
+            configuration.example_status_persistence_file_path = nil
+            world.announce_filters
+            expect(reporter).to have_received(:abort_with).with(/example_status_persistence_file_path/, 1)
+          end
+        end
+
+        context "and `example_status_persistence_file_path` is configured" do
+          it 'does not abort' do
+            configuration.example_status_persistence_file_path = "foo.txt"
+            world.announce_filters
+            expect(reporter).not_to have_received(:abort_with)
+          end
+        end
+      end
+
+      context "when --only-pending is not passed" do
+        before { expect(configuration.only_pending?).not_to eq true }
+
+        context "and `example_status_persistence_file_path` is not configured" do
+          it 'does not abort' do
+            configuration.example_status_persistence_file_path = nil
+            world.announce_filters
+            expect(reporter).not_to have_received(:abort_with)
+          end
+        end
+
+        context "and `example_status_persistence_file_path` is configured" do
+          it 'does not abort' do
+            configuration.example_status_persistence_file_path = "foo.txt"
+            world.announce_filters
+            expect(reporter).not_to have_received(:abort_with)
+          end
+        end
+      end
+
       context "with no examples" do
         before { allow(world).to receive(:example_count) { 0 } }
 
