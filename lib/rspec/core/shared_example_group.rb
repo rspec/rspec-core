@@ -180,6 +180,10 @@ module RSpec
           shared_example_groups[:main][name]
         end
 
+        def reset
+          shared_example_groups.delete_if { |k, _| k != :main }
+        end
+
       private
 
         # TODO: remove this in RSpec 4. This exists only to support
