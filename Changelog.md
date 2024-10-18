@@ -1,11 +1,14 @@
 ### Development
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.13.1...main)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.13.2...main)
 
 Enhancements:
 
 * Add config option (`RSpec::Core::Configuration#force_line_number_for_spec_rerun`) to
   allways print a line number rather than an example id when the line number is ambiguous.
   (Baden Ashford, #3085)
+
+### 3.13.2 / 2024-10-18
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.13.1...v3.13.2)
 
 Bug fixes:
 
