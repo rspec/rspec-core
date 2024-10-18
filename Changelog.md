@@ -1,5 +1,8 @@
 ### Development
-[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.13.1...3-13-maintenance)
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.13.2...3-13-maintenance)
+
+### 3.13.2 / 2024-10-18
+[Full Changelog](http://github.com/rspec/rspec-core/compare/v3.13.1...v3.13.2)
 
 Bug fixes:
 
