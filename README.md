@@ -383,6 +383,7 @@ can treat each RSpec repo as an independent project.
 
 ## Also see
 
+* [https://github.com/rspec/rspec-metagem](https://github.com/rspec/rspec-metagem)
 * [https://github.com/rspec/rspec-expectations](https://github.com/rspec/rspec-expectations)
 * [https://github.com/rspec/rspec-mocks](https://github.com/rspec/rspec-mocks)
 * [https://github.com/rspec/rspec-rails](https://github.com/rspec/rspec-rails)
