@@ -11,7 +11,12 @@ module RSpec
       class ExceptionPresenter
         attr_reader :exception, :example, :description, :message_color,
                     :detail_formatter, :extra_detail_formatter, :backtrace_formatter
+
+        # We want private attr_reader but that issues a warning on older rubies, refactor later
+        #
+        # rubocop:disable Style/AccessModifierDeclarations
         private :message_color, :detail_formatter, :extra_detail_formatter, :backtrace_formatter
+        # rubocop:enable Style/AccessModifierDeclarations
 
         def initialize(exception, example, options={})
           @exception               = exception
