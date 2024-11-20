@@ -222,9 +222,9 @@ RSpec.describe 'Spec file load errors' do
             While loading ./broken_file a `raise SyntaxError` occurred, RSpec will now quit.
           EOS
 
-          # A fix was backported to 3.2.3
+          # There was a fix was backported in 3.2.3, but syntax changed in 3.4.0 in terms of line endings
           if RUBY_VERSION > '3.2.2'
-            expect(formatted_output).to include unindent(<<-EOS)
+            expect(formatted_output.gsub(/\n\n/, "\n")).to include unindent(<<-EOS)
             SyntaxError:
               --> ./tmp/aruba/broken_file.rb
               Unmatched keyword, missing `end' ?
