@@ -4,6 +4,8 @@ rspec-core provides the structure for writing executable examples of how your
 code should behave, and an `rspec` command with tools to constrain which
 examples get run and tailor the output.
 
+*This is the old rspec metagem repository, please see the monorepo rspec/rspec for new issues and releases.*
+
 ## Install
 
     gem install rspec      # for rspec-core, rspec-expectations, rspec-mocks
